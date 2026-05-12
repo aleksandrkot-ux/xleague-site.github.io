@@ -4423,26 +4423,22 @@ html, body {
       return achievementValue(row, ["achievement_code", "achievement code", "code", "Code", "Код", "B", "J"], "");
     }
 
-    function achievementDescription(row) {
-      const direct = achievementValue(row, [
-        "achievement_description", "achievement description",
-        "description", "Description", "Описание", "desc", "Desc",
-        // В твоей таблице: B = код ачивки, C = описание/название для сайта.
-        // Поэтому C/M проверяем до запасных колонок, чтобы не показывать INSIDER и другие коды.
-        "C", "M", "G", "I", "O"
-      ], "");
-      if (direct) return direct;
-
-      const code = String(achievementCode(row) || "").trim().toUpperCase();
-      const byCode = {
-        NEXTT: "Самый низкий кэф с 0 очков",
-        NEXT: "Самый низкий кэф с 0 очков",
-        GOLD: "1 место в туре",
-        SILVER: "2 место в туре",
-        BRONZE: "3 место в туре"
-      };
-      return byCode[code] || "";
-    }
+function achievementDescription(row) {
+  return achievementValue(row, [
+    "achievement_descr",
+    "achievement_desc",
+    "achievement_description",
+    "achievement description",
+    "description",
+    "Description",
+    "Описание",
+    "desc",
+    "Desc",
+    "G",
+    "I",
+    "O"
+  ], "");
+}
 
     function achievementIcon(row) {
       return achievementValue(row, ["achievement_icon", "achievement icon", "icon", "Icon", "Ссылка", "D", "L"], "");
