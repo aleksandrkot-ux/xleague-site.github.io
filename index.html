@@ -2891,7 +2891,7 @@ html, body {
           <div class="profile-head">
             <div>
               <div class="profile-name" id="profileName">Alex</div>
-              <div class="profile-sub" id="profileSub">Tour 5 · active</div>
+              <div class="profile-sub" id="profileSub">#1 в общем зачёте</div>
             </div>
             <div class="profile-avatar" id="profileAvatar">A</div>
           </div>
@@ -4241,9 +4241,11 @@ html, body {
       const avgPts = toursPlayed ? (totalPts / toursPlayed).toFixed(1).replace(".", ",") : "0";
       const wr = settledPicks.length ? Math.round(wins / settledPicks.length * 100) : 0;
 
+      const overall = siteOverall.find(p => String(p.name).trim() === String(playerName).trim()) || {};
       const nameEl = document.getElementById("profileName");
       if (nameEl) nameEl.innerHTML = `${escapeHtml(playerName)}${playerInlineAchievementsHtml(playerName)}`;
-      setText("profileSub", `Тур ${currentTour || "—"} · ${currentPrediction ? "участвует" : "нет прогноза"}`);
+     
+      setText("profileSub", `#${overall.rank || "-"} в общем зачёте`);
       setText("profileAvatar", playerName[0] || "X");
 
       const countryEl = document.getElementById("profileCountry");
