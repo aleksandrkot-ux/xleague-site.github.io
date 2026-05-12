@@ -4332,15 +4332,9 @@ html, body {
 
       const history = predictionsForPlayer(playerName);
       const currentPrediction = predictionForPlayerTour(playerName, currentTour);
-     const displayPrediction = currentPrediction;
+      const displayPrediction = currentPrediction || history[history.length - 1];
+      if (!displayPrediction) return;
 
-if (!displayPrediction) {
-  const picksEl = document.getElementById("profileCurrentPicks");
-  if (picksEl) {
-    picksEl.innerHTML = `<div class="empty-block">Нет прогноза на текущий тур</div>`;
-  }
-  return;
-}
       const settledPicks = history.flatMap(p => p.picks).filter(p => p.result !== "pending");
       const wins = settledPicks.filter(p => p.result === "win").length;
       const totalPts = history.reduce((sum, p) => sum + toNum(p.pts, 0), 0);
