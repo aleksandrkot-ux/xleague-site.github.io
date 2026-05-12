@@ -1141,7 +1141,28 @@ html, body {
         radial-gradient(circle at 65% 35%, rgba(255,255,255,.32), transparent 18%),
         var(--accent);
     }
+.brand-logo-wide {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 
+.brand-logo-wide::after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0,0,0,0) 40%,
+    rgba(0,0,0,0.45) 72%,
+    rgba(0,0,0,0.95) 100%
+  );
+
+  pointer-events: none;
+}
     .table-toolbar {
       margin-bottom: 10px;
     }
