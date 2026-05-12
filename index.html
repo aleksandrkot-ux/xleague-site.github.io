@@ -4571,12 +4571,19 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
             renderFilter("matches");
           });
         });
-      } else if (screen === "picks") {
-        row.innerHTML = `
-          <button class="filter-btn ${picksMode === "alive" ? "active" : ""}" data-picks-mode="alive">В игре</button>
-          <button class="filter-btn ${picksMode === "all" ? "active" : ""}" data-picks-mode="all">Все прогнозы</button>
-          <button class="filter-btn ${picksMode === "finished" ? "active" : ""}" data-picks-mode="finished">Отыгранные</button>
-        `;
+     } else if (screen === "picks") {
+
+  const hasAlivePredictions = predictions.some(p => getPickStats(p).alive);
+
+  if (picksMode === "alive" && !hasAlivePredictions) {
+    picksMode = "all";
+  }
+
+  row.innerHTML = `
+    <button class="filter-btn ${picksMode === "alive" ? "active" : ""}" data-picks-mode="alive">В игре</button>
+    <button class="filter-btn ${picksMode === "all" ? "active" : ""}" data-picks-mode="all">Все прогнозы</button>
+    <button class="filter-btn ${picksMode === "finished" ? "active" : ""}" data-picks-mode="finished">Отыгранные</button>
+  `;
 
         row.querySelectorAll("[data-picks-mode]").forEach(btn => {
           btn.addEventListener("click", () => {
