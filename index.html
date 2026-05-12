@@ -3080,6 +3080,7 @@ html, body {
     let sitePlayers = [];
     let siteAchievements = [];
     let siteTours = [];
+    let rankHistory = [];
     let siteConfig = {};
     let selectedTour = null;
     let selectedPlayerName = null;
@@ -3126,13 +3127,14 @@ html, body {
     }
 
     function applySheetsPayload(payload) {
-      const { m = [], p = [], t = [], o = [], pl = [], a = [], toursRows = [], cfgRows = [] } = payload || {};
+     const { m = [], p = [], t = [], o = [], pl = [], a = [], rh = [], toursRows = [], cfgRows = [] } = payload || {};
       matches = m.map(mapMatchRow).filter(x => x.id && x.teams);
       predictions = p.map(mapPredictionRow).filter(x => x.name && x.picks.length);
       siteTable = t;
       siteOverall = o.map(mapOverallRow).filter(x => x.name);
       sitePlayers = pl;
       siteAchievements = a;
+      rankHistory = rh;
       siteTours = toursRows;
       siteConfig = rowsToConfig(cfgRows);
       matchById = new Map(matches.map(x => [x.id, x]));
@@ -3161,16 +3163,17 @@ html, body {
     }
 
     const TABS = {
-      matches: "site_matches",
-      predictions: "site_predictions",
-      table: "site_table",
-      overall: "site_overall",
-      players: "site_players",
-      stats: "site_stats",
-      achievements: "site_player_achievements",
-      tours: "site_tours",
-      config: "site_config"
-    };
+  matches: "site_matches",
+  predictions: "site_predictions",
+  table: "site_table",
+  overall: "site_overall",
+  players: "site_players",
+  stats: "site_stats",
+  achievements: "site_player_achievements",
+  rankHistory: "site_rank_history",
+  tours: "site_tours",
+  config: "site_config"
+};
 
     function normalizeKeyName(value) {
       return String(value ?? "")
@@ -3321,18 +3324,19 @@ html, body {
       }
 
       try {
-        const [m, p, t, o, pl, a, toursRows, cfgRows] = await Promise.all([
+        const [m, p, t, o, pl, a, rh, toursRows, cfgRows] = await Promise.all([
           loadTab(TABS.matches),
           loadTab(TABS.predictions),
           loadTab(TABS.table).catch(() => []),
           loadTab(TABS.overall).catch(() => []),
           loadTab(TABS.players).catch(() => []),
           loadTab(TABS.achievements).catch(() => []),
+          loadTab(TABS.rankHistory).catch(() => []),
           loadTab(TABS.tours).catch(() => []),
           loadTab(TABS.config).catch(() => [])
         ]);
 
-        const payload = { m, p, t, o, pl, a, toursRows, cfgRows };
+        const payload = { m, p, t, o, pl, a, rh, toursRows, cfgRows };
         applySheetsPayload(payload);
         saveCachedSheetsData(payload);
         hideDataNotice();
