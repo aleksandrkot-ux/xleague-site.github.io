@@ -4015,12 +4015,12 @@ html, body {
       }
 
       el.innerHTML = rows.map((row) => `
-        <div class="achievement-item">
-          <span>${achievementIconHtml(row.icon)}</span>
-          <strong>${escapeHtml(row.title)}</strong>
-          <small>${escapeHtml(row.player)}${row.desc || row.code ? ` · ${escapeHtml(row.desc || achievementDescription(row))}` : ""}</small>
-        </div>
-      `).join("");
+  <div class="achievement-item">
+    <span>${achievementIconHtml(row.icon)}</span>
+    <strong>${escapeHtml(row.title)}</strong>
+    <small>${escapeHtml(row.desc || achievementDescription(row) || row.code || "")}${row.tour ? ` · Тур ${escapeHtml(row.tour)}` : ""}</small>
+  </div>
+`).join("");
     }
 
     function formatRuNumber(value, digits = 2) {
