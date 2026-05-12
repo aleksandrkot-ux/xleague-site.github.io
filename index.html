@@ -3348,7 +3348,9 @@ html, body {
 
 
     let matchMode = "home";
-    let picksMode = "alive";
+    let picksMode = predictions.some(p => getPickStats(p).alive)
+  ? "alive"
+  : "all";
 
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, (char) => ({
