@@ -1278,7 +1278,38 @@ html, body {
       padding-top: 0;
       border-top: 0;
     }
+.rank-chart-panel {
+  margin-top: 10px;
+}
 
+.rank-chart-svg {
+  width: 100%;
+  height: 140px;
+}
+
+.rank-chart-line {
+  fill: none;
+  stroke: #b6ff3b;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rank-chart-dot {
+  fill: #b6ff3b;
+}
+
+.rank-chart-label {
+  fill: #8a8a8a;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.rank-chart-rank {
+  fill: #ffffff;
+  font-size: 10px;
+  font-weight: 900;
+}
     .chart-head {
       display: flex;
       align-items: flex-start;
@@ -2937,7 +2968,10 @@ html, body {
           <div class="stats-panel-title">🏅 Ачивки игрока</div>
           <div class="achievement-strip" id="profileAchievements"></div>
         </div>
-
+<div class="stats-panel rank-chart-panel">
+  <div class="stats-panel-title">📈 ДИНАМИКА МЕСТА</div>
+  <div id="profileRankChart"></div>
+</div>
         <div class="stats-panel">
           <div class="stats-panel-title">🕘 Прошлые туры</div>
           <div class="stack" id="profilePastTours"></div>
@@ -3593,6 +3627,53 @@ html, body {
       document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= 5);
     }
 
+   function renderRankHistory(playerName) {
+  const el = document.getElementById("profileRankChart");
+  if (!el) return;
+
+  const rows = rankHistory
+    .filter(r => String(r.player).trim() === String(playerName).trim())
+    .sort((a, b) => Number(a.tour) - Number(b.tour));
+
+  if (!rows.length) {
+    el.innerHTML = `<div class="empty-state">Нет данных</div>`;
+    return;
+  }
+
+  const width = 320;
+  const height = 120;
+  const padding = 20;
+
+  const maxRank = Math.max(...rows.map(r => Number(r.rank)));
+
+  const points = rows.map((r, i) => {
+    const x = padding + (i * ((width - padding * 2) / Math.max(rows.length - 1, 1)));
+    const y = padding + ((Number(r.rank) - 1) / Math.max(maxRank - 1, 1)) * (height - padding * 2);
+
+    return {
+      x,
+      y,
+      rank: r.rank,
+      tour: r.tour
+    };
+  });
+
+  const path = points.map((p, i) =>
+    `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`
+  ).join(" ");
+
+  el.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" class="rank-chart-svg">
+      <path d="${path}" class="rank-chart-line"></path>
+
+      ${points.map(p => `
+        <circle cx="${p.x}" cy="${p.y}" r="4" class="rank-chart-dot"></circle>
+        <text x="${p.x}" y="${p.y - 10}" text-anchor="middle" class="rank-chart-rank">#${p.rank}</text>
+        <text x="${p.x}" y="${height - 4}" text-anchor="middle" class="rank-chart-label">T${p.tour}</text>
+      `).join("")}
+    </svg>
+  `;
+}
     function dot(status) {
       return `<span class="dot ${escapeHtml(status)}"></span>`;
     }
@@ -4264,6 +4345,7 @@ html, body {
       if (nameEl) nameEl.innerHTML = `${escapeHtml(playerName)}${playerInlineAchievementsHtml(playerName)}`;
      
       setText("profileSub", `#${overall.rank || "-"} в общем зачёте`);
+      renderRankHistory(playerName);
       setText("profileAvatar", playerName[0] || "X");
 
       const countryEl = document.getElementById("profileCountry");
