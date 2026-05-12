@@ -2683,6 +2683,20 @@ html, body {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
+    .past-tour-pick-name.pick-win {
+  color: #34d399 !important;
+  -webkit-text-fill-color: #34d399 !important;
+}
+
+.past-tour-pick-name.pick-lose {
+  color: #fb7185 !important;
+  -webkit-text-fill-color: #fb7185 !important;
+}
+
+.past-tour-pick-name.pick-pending {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
   </style>
 </head>
 <body>
@@ -4314,15 +4328,22 @@ html, body {
         const past = history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
         pastEl.innerHTML = past.length ? past.map(p => {
           const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : "⏳").join("");
-          const picksHtml = p.picks.map((pick, index) => {
-            const match = matchById.get(pick.matchId);
-            return `
-              <div class="past-tour-pick">
-                <span class="past-tour-pick-name">${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}</span>
-                <span class="past-tour-pick-odd">x${escapeHtml(pick.odd)}</span>
-              </div>
-            `;
-          }).join("");
+        const picksHtml = p.picks.map((pick, index) => {
+  const match = matchById.get(pick.matchId);
+  const pickResult = pick.result || match?.status || "pending";
+
+  const resultClass =
+    pickResult === "win" ? "pick-win" :
+    pickResult === "lose" ? "pick-lose" :
+    "pick-pending";
+
+  return `
+    <div class="past-tour-pick">
+      <span class="past-tour-pick-name ${resultClass}">${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}</span>
+      <span class="past-tour-pick-odd">x${escapeHtml(pick.odd)}</span>
+    </div>
+  `;
+}).join("");
           return `
             <details class="past-tour-details">
               <summary class="past-tour-summary">
