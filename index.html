@@ -4488,10 +4488,11 @@ if (screenMatches) {
         const past = history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
         pastEl.innerHTML = past.length ? past.map(p => {
           const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : "⏳").join("");
-      const picksHtml = p.picks.map((pick, index) => {
+const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
   const pickResult = pick.result || match?.status || "pending";
   const score = pick.score || match?.score || "";
+  const scoreText = score ? " | " + escapeHtml(score) : "";
 
   const resultClass =
     pickResult === "win" ? "pick-win" :
@@ -4500,11 +4501,9 @@ if (screenMatches) {
 
   return `
     <div class="past-tour-pick">
-    <span class="past-tour-pick-name ${resultClass}">
- ${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}
-${score ? ` | ${escapeHtml(score)}` : ""}
- 
-</span>
+      <span class="past-tour-pick-name ${resultClass}">
+        ${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}${scoreText}
+      </span>
       <span class="past-tour-pick-odd">x${escapeHtml(pick.odd)}</span>
     </div>
   `;
