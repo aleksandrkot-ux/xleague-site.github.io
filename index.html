@@ -3650,9 +3650,10 @@ html, body {
       const scopedMatches = currentTourMatches();
       const upcoming = scopedMatches.filter(m => m.status === "pending" || m.api_status === "pending").sort(compareDateTimeAsc);
       const finished = scopedMatches.filter(m => ["win", "lose"].includes(m.status) || ["win", "lose"].includes(m.api_status)).sort(compareDateTimeDesc);
-
+const hasUpcoming = upcoming.length > 0;
       const homeLimit = matchMode === "home";
       const showUpcoming = matchMode !== "finished";
+      
       const showFinished = matchMode !== "upcoming";
 
       document.getElementById("upcomingList").innerHTML = showUpcoming
