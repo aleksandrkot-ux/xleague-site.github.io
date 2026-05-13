@@ -3823,11 +3823,13 @@ if (screenMatches) {
 
 
 return `
-  <div class="pick">
-    <div class="pick-name ${resultClass}">
-      <span class="pick-num">${index + 1}.</span>
-      ${escapeHtml(pick.match || match?.teams || "Unknown match")}
-    </div>
+ <div class="pick-name ${resultClass}">
+  <span class="pick-num">${index + 1}.</span>
+  ${escapeHtml(pick.match || match?.teams || "Unknown match")}
+  ${(pick.score || match?.score || match?.result_score || match?.fulltime)
+    ? ` | ${escapeHtml(pick.score || match?.score || match?.result_score || match?.fulltime)}`
+    : ""}
+</div>
     <div class="pick-odd">${escapeHtml(pick.odd)}</div>
   </div>
 `;
