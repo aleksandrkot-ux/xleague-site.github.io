@@ -3443,11 +3443,23 @@ html, body {
     }
 
     function getMatchTimestamp(match) {
-      const date = normalizeDate(match.sortDate || match.date);
-      const time = normalizeTime(match.time);
-      const ts = Date.parse(`${date}T${time}:00`);
-      return Number.isNaN(ts) ? 0 : ts;
-    }
+  const rawDate = normalizeDate(match.sortDate || match.date);
+  const rawTime = normalizeTime(match.time);
+
+  if (!rawDate) return 0;
+
+  const [year, month, day] = rawDate.split("-").map(Number);
+  const [hour, minute] = rawTime.split(":").map(Number);
+
+  return new Date(
+    year,
+    month - 1,
+    day,
+    hour || 0,
+    minute || 0,
+    0
+  ).getTime();
+}
 
     function compareDateTimeAsc(a, b) {
       return getMatchTimestamp(a) - getMatchTimestamp(b);
