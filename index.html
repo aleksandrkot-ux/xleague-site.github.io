@@ -2771,15 +2771,21 @@ html, body {
 
     <div class="filter-row" id="filterRow"></div>
 
-    <main>
-      <section class="screen active" id="screen-matches">
-        <div class="section-title">
-          <div class="section-title-left">⏳ Предстоящие</div>
-          <div class="section-title-right">Ближайшие 7</div>
-        </div>
-        <div class="stack" id="upcomingList"></div>
-        <button class="cta-card" id="allUpcomingBtn">Все предстоящие матчи ›</button>
+  <main>
+  <section class="screen active" id="screen-matches">
 
+    <div id="upcomingSection">
+      <div class="section-title">
+        <div class="section-title-left">⏳ Предстоящие</div>
+        <div class="section-title-right">Ближайшие 7</div>
+      </div>
+
+      <div class="stack" id="upcomingList"></div>
+
+      <button class="cta-card" id="allUpcomingBtn">
+        Все предстоящие матчи ›
+      </button>
+    </div>
         <div class="section-title">
           <div class="section-title-left">🏁 Сыгравшие</div>
           <div class="section-title-right">Последние 5</div>
@@ -3651,6 +3657,8 @@ html, body {
       const upcoming = scopedMatches.filter(m => m.status === "pending" || m.api_status === "pending").sort(compareDateTimeAsc);
       const finished = scopedMatches.filter(m => ["win", "lose"].includes(m.status) || ["win", "lose"].includes(m.api_status)).sort(compareDateTimeDesc);
 const hasUpcoming = upcoming.length > 0;
+      document.getElementById("upcomingSection").style.display =
+  hasUpcoming ? "" : "none";
       const homeLimit = matchMode === "home";
       const showUpcoming = matchMode !== "finished";
       
