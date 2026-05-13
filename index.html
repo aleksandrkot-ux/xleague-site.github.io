@@ -3443,24 +3443,33 @@ html, body {
     }
 
     function getMatchTimestamp(match) {
-  const rawDate = normalizeDate(match.sortDate || match.date);
-  const rawTime = normalizeTime(match.time);
+  const rawDate = String(match.sortDate || match.date || "").trim();
+  const rawTime = String(match.time || "").trim();
 
-  if (!rawDate) return 0;
+  let year, month, day;
 
-  const [year, month, day] = rawDate.split("-").map(Number);
+  if (rawDate.includes("-")) {
+    [year, month, day] = rawDate.split("-").map(Number);
+  } else if (rawDate.includes(".")) {
+    const parts = rawDate.split(".").map(Number);
+
+    day = parts[0];
+    month = parts[1];
+    year = parts[2] || new Date().getFullYear();
+  }
+
   const [hour, minute] = rawTime.split(":").map(Number);
 
-  return new Date(
+  const ts = new Date(
     year,
     month - 1,
     day,
     hour || 0,
-    minute || 0,
-    0
+    minute || 0
   ).getTime();
-}
 
+  return Number.isNaN(ts) ? 0 : ts;
+}
     function compareDateTimeAsc(a, b) {
       return getMatchTimestamp(a) - getMatchTimestamp(b);
     }
