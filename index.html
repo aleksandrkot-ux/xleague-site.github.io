@@ -2456,36 +2456,28 @@ html, body {
         box-shadow: 0 0 24px rgba(182,255,59,.12);
       }
 
-      .screen.active#screen-matches {
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
-        column-gap: 18px;
-        align-items: start;
-      }
+     .screen.active#screen-matches {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  column-gap: 18px;
+  align-items: start;
+}
 
-      #screen-matches .section-title:nth-of-type(1),
-      #screen-matches #upcomingList,
-      #screen-matches #allUpcomingBtn {
-        grid-column: 1;
-      }
+#upcomingSection {
+  grid-column: 1;
+}
 
-      #screen-matches .section-title:nth-of-type(2),
-      #screen-matches #finishedList,
-      #screen-matches #allFinishedBtn {
-        grid-column: 2;
-      }
+#finishedSection {
+  grid-column: 2;
+}
 
-      #screen-matches .section-title:nth-of-type(2) {
-        grid-row: 1;
-      }
+#screen-matches.no-upcoming {
+  grid-template-columns: minmax(0, .9fr);
+}
 
-      #screen-matches #finishedList {
-        grid-row: 2;
-      }
-
-      #screen-matches #allFinishedBtn {
-        grid-row: 3;
-      }
+#screen-matches.no-upcoming #finishedSection {
+  grid-column: 1;
+}
 
       .screen.active#screen-picks {
         max-width: 760px;
@@ -2786,13 +2778,18 @@ html, body {
         Все предстоящие матчи ›
       </button>
     </div>
-        <div class="section-title">
-          <div class="section-title-left">🏁 Сыгравшие</div>
-          <div class="section-title-right">Последние 5</div>
-        </div>
-        <div class="stack" id="finishedList"></div>
-        <button class="cta-card" id="allFinishedBtn">Все сыгранные матчи ›</button>
-      </section>
+    <div id="finishedSection">
+  <div class="section-title">
+    <div class="section-title-left">🏁 Сыгравшие</div>
+    <div class="section-title-right">Последние 5</div>
+  </div>
+
+  <div class="stack" id="finishedList"></div>
+
+  <button class="cta-card" id="allFinishedBtn">
+    Все сыгранные матчи ›
+  </button>
+</div>
 
       <section class="screen" id="screen-picks">
         <div class="section-title">
@@ -3652,17 +3649,30 @@ html, body {
       return scoped.filter(m => m.status !== "cancelled" && m.api_status !== "cancelled");
     }
 
-    function renderMatches() {
-      const scopedMatches = currentTourMatches();
-      const upcoming = scopedMatches.filter(m => m.status === "pending" || m.api_status === "pending").sort(compareDateTimeAsc);
-      const finished = scopedMatches.filter(m => ["win", "lose"].includes(m.status) || ["win", "lose"].includes(m.api_status)).sort(compareDateTimeDesc);
-const hasUpcoming = upcoming.length > 0;
-      document.getElementById("upcomingSection").style.display =
-  hasUpcoming ? "" : "none";
-      const homeLimit = matchMode === "home";
-      const showUpcoming = matchMode !== "finished";
-      
-      const showFinished = matchMode !== "upcoming";
+   function renderMatches() {
+  const scopedMatches = currentTourMatches();
+
+  const upcoming = scopedMatches
+    .filter(m => m.status === "pending" || m.api_status === "pending")
+    .sort(compareDateTimeAsc);
+
+  const finished = scopedMatches
+    .filter(m => ["win", "lose"].includes(m.status) || ["win", "lose"].includes(m.api_status))
+    .sort(compareDateTimeDesc);
+
+  const hasUpcoming = upcoming.length > 0;
+
+  document.getElementById("upcomingSection").style.display =
+    hasUpcoming ? "" : "none";
+
+  document.getElementById("screen-matches").classList.toggle(
+    "no-upcoming",
+    !hasUpcoming
+  );
+
+  const homeLimit = matchMode === "home";
+  const showUpcoming = matchMode !== "finished";
+  const showFinished = matchMode !== "upcoming";
 
       document.getElementById("upcomingList").innerHTML = showUpcoming
   ? (
