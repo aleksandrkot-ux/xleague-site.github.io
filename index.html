@@ -3336,7 +3336,7 @@ function scoreByMatchId(id) {
       };
     }
 
- function mapPredictionRow(row) {
+function mapPredictionRow(row) {
   const player = get(row, ["player", "Player", "Игрок", "игрок", "B"], "Unknown");
 
   const pick = (n) => {
@@ -3345,8 +3345,8 @@ function scoreByMatchId(id) {
     const resultRaw = get(row, [`res${n}`, `result${n}`, `result_${n}`], "pending");
     const result = normalizeStatus(resultRaw, resultRaw);
     const odd = get(row, [`odd${n}`, `odds${n}`, `coef${n}`, `коэф${n}`], "");
-
     const score = get(row, [`score${n}`, `score_${n}`, `счет${n}`, `счёт${n}`, `Счет${n}`, `Счёт${n}`], "");
+
     return { matchId: id, match: matchName, result, odd, score };
   };
 
