@@ -3821,14 +3821,12 @@ if (screenMatches) {
     pickResult === "lose" ? "pick-lose" :
     "pick-pending";
 
-const scoreText = " | TEST";
-const scoreText = score ? " | " + escapeHtml(score) : "";
 
 return `
   <div class="pick">
     <div class="pick-name ${resultClass}">
       <span class="pick-num">${index + 1}.</span>
-      ${escapeHtml(pick.match || match?.teams || "Unknown match")}${scoreText}
+      ${escapeHtml(pick.match || match?.teams || "Unknown match")}
     </div>
     <div class="pick-odd">${escapeHtml(pick.odd)}</div>
   </div>
