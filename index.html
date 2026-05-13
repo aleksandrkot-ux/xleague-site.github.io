@@ -3821,7 +3821,7 @@ if (screenMatches) {
     pickResult === "lose" ? "pick-lose" :
     "pick-pending";
 
-const score = pick.score || match?.score || "";
+const scoreText = " | TEST";
 const scoreText = score ? " | " + escapeHtml(score) : "";
 
 return `
