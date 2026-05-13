@@ -3662,13 +3662,18 @@ html, body {
 
   const hasUpcoming = upcoming.length > 0;
 
-  document.getElementById("upcomingSection").style.display =
-    hasUpcoming ? "" : "none";
+const hasUpcoming = upcoming.length > 0;
 
-  document.getElementById("screen-matches").classList.toggle(
-    "no-upcoming",
-    !hasUpcoming
-  );
+const upcomingSection = document.getElementById("upcomingSection");
+const screenMatches = document.getElementById("screen-matches");
+
+if (upcomingSection) {
+  upcomingSection.style.display = hasUpcoming ? "" : "none";
+}
+
+if (screenMatches) {
+  screenMatches.classList.toggle("no-upcoming", !hasUpcoming);
+}
 
   const homeLimit = matchMode === "home";
   const showUpcoming = matchMode !== "finished";
