@@ -3346,10 +3346,7 @@ function scoreByMatchId(id) {
     const result = normalizeStatus(resultRaw, resultRaw);
     const odd = get(row, [`odd${n}`, `odds${n}`, `coef${n}`, `коэф${n}`], "");
 
-    const score =
-      get(row, [`score${n}`, `score_${n}`, `счет${n}`, `счёт${n}`, `Счет${n}`, `Счёт${n}`], "")
-      || scoreByMatchId(id);
-
+    const score = get(row, [`score${n}`, `score_${n}`, `счет${n}`, `счёт${n}`, `Счет${n}`, `Счёт${n}`], "");
     return { matchId: id, match: matchName, result, odd, score };
   };
 
