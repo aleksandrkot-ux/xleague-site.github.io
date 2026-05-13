@@ -4448,7 +4448,10 @@ return `
             return `
               <div class="profile-pick-card">
                 <div class="profile-pick-top">
-                  <div class="profile-pick-match">${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}</div>
+                 <div class="profile-pick-match">
+  ${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}
+  ${pick.score ? ` | ${escapeHtml(pick.score)}` : ""}
+</div>
                   ${dot(pick.result)}
                 </div>
                 <div class="profile-pick-meta">
