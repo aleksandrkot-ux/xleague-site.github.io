@@ -4181,7 +4181,20 @@ return `
           title: achievementField(row, ["achievement_title", "achievement title", "title", "Title", "Название", "C", "M"], ""),
           icon: achievementField(row, ["achievement_icon", "achievement icon", "icon", "Icon", "Ссылка", "D", "L"], ""),
           order: toNum(achievementField(row, ["order", "Order", "Порядок_в_туре", "Порядок", "F", "K"], 999), 999),
-          desc: achievementField(row, ["description", "Description", "Описание", "I", "O"], "")
+         desc: achievementField(row, [
+  "achievement_descr",
+  "achievement_desc",
+  "achievement_description",
+  "achievement description",
+  "description",
+  "Description",
+  "Описание",
+  "desc",
+  "Desc",
+  "G",
+  "I",
+  "O"
+], "")
         }))
       .filter((row) =>
   row.player &&
@@ -4218,9 +4231,9 @@ return `
     ${escapeHtml(row.player || "")}
   </small>
 
-  <small class="achievement-desc">
-    ${escapeHtml(achievementDescription(row) || "")}
-  </small>
+<small class="achievement-desc">
+  ${escapeHtml(row.desc || "")}
+</small>
 </div>
 </div>
 `).join("");
