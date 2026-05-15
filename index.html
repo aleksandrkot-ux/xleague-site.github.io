@@ -4209,17 +4209,19 @@ return `
  <div class="achievement-item">
   <span>${achievementIconHtml(row.achievement_icon || row.icon)}</span>
 
-  <div class="achievement-text">
-    <strong>
-      ${escapeHtml(row.achievement_title || row.title || row.achievement_code || row.code || "")}
-    </strong>
+ <div class="achievement-text">
+  <strong>
+    ${escapeHtml(row.achievement_title || row.title || row.achievement_code || row.code || "")}
+  </strong>
 
-    <small>${escapeHtml(row.player || "")}</small>
+  <small class="achievement-player">
+    ${escapeHtml(row.player || "")}
+  </small>
 
-    <small>${escapeHtml(row.achievement_descr || "")}</small>
-
-
-  </div>
+  <small class="achievement-desc">
+    ${escapeHtml(achievementDescription(row) || "")}
+  </small>
+</div>
 </div>
 `).join("");
     }
