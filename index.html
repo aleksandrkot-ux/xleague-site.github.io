@@ -891,7 +891,18 @@ html, body {
   font-weight: 500;
   opacity: 0.9;
 }
+.achievement-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
 
+.achievement-text strong,
+.achievement-text small {
+  display: block;
+  line-height: 1.2;
+}
 
     .player-toolbar {
       display: grid;
@@ -4196,27 +4207,21 @@ return `
       }
 
     el.innerHTML = rows.map((row) => `
-  <div class="achievement-item">
-    <span>${achievementIconHtml(row.achievement_icon || row.icon)}</span>
+ <div class="achievement-item">
+  <span>${achievementIconHtml(row.achievement_icon || row.icon)}</span>
 
-    <div class="achievement-text">
-      <strong>
-        ${escapeHtml(row.achievement_title || row.title || row.achievement_code || row.code || "")}
-      </strong>
+  <div class="achievement-text">
+    <strong>
+      ${escapeHtml(row.achievement_title || row.title || row.achievement_code || row.code || "")}
+    </strong>
 
-      <small class="achievement-player">
-        ${escapeHtml(row.player || "")}
-      </small>
+    <small>${escapeHtml(row.player || "")}</small>
 
-      <small class="achievement-desc">
-        ${escapeHtml(row.achievement_descr || row.description || "")}
-      </small>
+    <small>${escapeHtml(row.achievement_descr || "")}</small>
 
-      <small class="achievement-tour">
-        Тур ${escapeHtml(row.tour || "")}
-      </small>
-    </div>
+    <small>Тур ${escapeHtml(row.tour || "")}</small>
   </div>
+</div>
 `).join("");
     }
 
