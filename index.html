@@ -4011,19 +4011,26 @@ return `
         .trim();
     }
 
-    function normalizeContinentName(value, country = "") {
-      const raw = String(value ?? "").trim();
-      const low = raw.toLowerCase();
-      if (low.includes("europe") || low.includes("европ")) return "Европа";
-      if (low.includes("asia") || low.includes("ази")) return "Азия";
-      if (low.includes("africa") || low.includes("африк")) return "Африка";
-      if (low.includes("south") || low.includes("юж")) return "Южная Америка";
-      if (low.includes("north") || low.includes("север")) return "Северная Америка";
-      if (low.includes("oceania") || low.includes("океан") || low.includes("australia") || low.includes("австрал")) return "Океания";
+   function normalizeContinentName(value, country = "") {
+  const raw = String(value ?? "").trim();
+  const low = raw.toLowerCase();
 
-      const countryKey = cleanCountryName(country).toLowerCase();
-      return COUNTRY_CONTINENT_MAP[countryKey] || "";
-    }
+  if (low.includes("europe") || low.includes("европ")) return "Европа";
+  if (low.includes("asia") || low.includes("ази")) return "Азия";
+  if (low.includes("africa") || low.includes("африк")) return "Африка";
+  if (low.includes("south") || low.includes("юж")) return "Южная Америка";
+  if (low.includes("north") || low.includes("север")) return "Северная Америка";
+
+  // ДОБАВИТЬ ЭТО
+  if (low.includes("concacaf") || low.includes("конкакаф")) {
+    return "Северная Америка";
+  }
+
+  if (low.includes("oceania") || low.includes("океан") || low.includes("australia") || low.includes("австрал")) return "Океания";
+
+  const countryKey = cleanCountryName(country).toLowerCase();
+  return COUNTRY_CONTINENT_MAP[countryKey] || "";
+}
 
     function buildMetaCharts(tour) {
     const tourKey = String(tour || getCurrentTour() || "");
