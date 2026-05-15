@@ -4026,39 +4026,43 @@ return `
     }
 
     function buildMetaCharts(tour) {
-      const tourKey = String(tour || getCurrentTour() || "");
-      const sourcePredictions = tourKey === "overall"
-        ? predictions
-        : predictions.filter(p => String(p.tour) === tourKey);
+    const tourKey = String(tour || getCurrentTour() || "");
 
-      const continentCounts = Object.fromEntries(FIXED_CONTINENTS.map(c => [c, 0]));
-      const countryVolume = new Map();
-      const countryWins = new Map();
-      const countryFlags = new Map();
+const sourceMatches = tourKey === "overall"
+  ? matches
+  : matches.filter(match => String(match.tour) === tourKey);
 
-      sourcePredictions.forEach(player => {
-        (player.picks || []).forEach(pick => {
-          const match = matchById.get(pick.matchId);
-          if (!match || match.api_status === "cancelled" || match.status === "cancelled") return;
+const continentCounts = Object.fromEntries(FIXED_CONTINENTS.map(c => [c, 0]));
+const countryVolume = new Map();
+const countryWins = new Map();
+const countryFlags = new Map();
 
-          const country = cleanCountryName(match.country || "");
-          const continent = normalizeContinentName(match.continent, country);
-          const flagUrl = match.flag_url || "";
+sourceMatches.forEach(match => {
+  if (!match || match.api_status === "cancelled" || match.status === "cancelled") return;
 
-          const popularity = Number(match.popularity || 0);
+  const country = cleanCountryName(match.country || "");
+  const continent = normalizeContinentName(match.continent, country);
+  const flagUrl = match.flag_url || "";
+  const popularity = Number(match.popularity || 0);
 
-if (continent && continentCounts[continent] !== undefined) {
-  continentCounts[continent] += popularity;
-}
-          if (country) {
-            countryVolume.set(country, (countryVolume.get(country) || 0) + 1);
-            if (pick.result === "win" || match.status === "win") {
-              countryWins.set(country, (countryWins.get(country) || 0) + 1);
-            }
-            if (flagUrl && !countryFlags.has(country)) countryFlags.set(country, flagUrl);
-          }
-        });
-      });
+  if (popularity <= 0) return;
+
+  if (continent && continentCounts[continent] !== undefined) {
+    continentCounts[continent] += popularity;
+  }
+
+  if (country) {
+    countryVolume.set(country, (countryVolume.get(country) || 0) + popularity);
+
+    if (match.api_status === "win" || match.status === "win") {
+      countryWins.set(country, (countryWins.get(country) || 0) + popularity);
+    }
+
+    if (flagUrl && !countryFlags.has(country)) {
+      countryFlags.set(country, flagUrl);
+    }
+  }
+});
 
       const totalContinent = Object.values(continentCounts).reduce((a, b) => a + b, 0) || 1;
       const continentRows = FIXED_CONTINENTS.map(name => ({
