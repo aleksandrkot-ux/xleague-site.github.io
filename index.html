@@ -4192,19 +4192,14 @@ return `
         return;
       }
 
-    el.innerHTML = rows.map((row) => `
+     el.innerHTML = rows.map((row) => `
   <div class="achievement-item">
     <span>${achievementIconHtml(row.icon)}</span>
-
-    <div class="achievement-text">
-      <strong>${escapeHtml(row.title || row.achievement_title || row.code || "")}</strong>
-
-      <small>
-        ${escapeHtml(row.player || "")} · Тур ${escapeHtml(row.tour)}
-      </small>
-    </div>
+    <strong>${escapeHtml(row.title || row.achievement_title || row.code || "")}</strong>
+    <small>Тур ${escapeHtml(row.tour)}</small>
   </div>
 `).join("");
+    }
 
     function formatRuNumber(value, digits = 2) {
       const n = Number(value);
