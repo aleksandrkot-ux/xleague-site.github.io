@@ -4173,7 +4173,10 @@ return `
           order: toNum(achievementField(row, ["order", "Order", "Порядок_в_туре", "Порядок", "F", "K"], 999), 999),
           desc: achievementField(row, ["description", "Description", "Описание", "I", "O"], "")
         }))
-        .filter((row) => row.player && row.title);
+      .filter((row) =>
+  row.player &&
+  (row.achievement_title || row.title || row.achievement_code || row.code)
+);
 
       if (selected !== "overall") {
         rows = rows.filter((row) => String(toNum(row.tour, row.tour)) === String(toNum(selected, selected)));
@@ -4192,11 +4195,19 @@ return `
         return;
       }
 
-     el.innerHTML = rows.map((row) => `
+    el.innerHTML = rows.map((row) => `
   <div class="achievement-item">
-    <span>${achievementIconHtml(row.icon)}</span>
-    <strong>${escapeHtml(row.title || row.achievement_title || row.code || "")}</strong>
-    <small>Тур ${escapeHtml(row.tour)}</small>
+    <span>${achievementIconHtml(row.achievement_icon || row.icon)}</span>
+
+    <div class="achievement-text">
+      <strong>
+        ${escapeHtml(row.achievement_title || row.title || row.achievement_code || row.code || "")}
+      </strong>
+
+      <small>
+        ${escapeHtml(row.player || "")} · Тур ${escapeHtml(row.tour || "")}
+      </small>
+    </div>
   </div>
 `).join("");
     }
