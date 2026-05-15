@@ -4204,8 +4204,16 @@ return `
         ${escapeHtml(row.achievement_title || row.title || row.achievement_code || row.code || "")}
       </strong>
 
-      <small>
-        ${escapeHtml(row.player || "")} · Тур ${escapeHtml(row.tour || "")}
+      <small class="achievement-player">
+        ${escapeHtml(row.player || "")}
+      </small>
+
+      <small class="achievement-desc">
+        ${escapeHtml(row.achievement_descr || row.description || "")}
+      </small>
+
+      <small class="achievement-tour">
+        Тур ${escapeHtml(row.tour || "")}
       </small>
     </div>
   </div>
