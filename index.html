@@ -4045,8 +4045,11 @@ return `
           const continent = normalizeContinentName(match.continent, country);
           const flagUrl = match.flag_url || "";
 
-          if (continent && continentCounts[continent] !== undefined) continentCounts[continent] += 1;
+          const popularity = Number(match.popularity || 0);
 
+if (continent && continentCounts[continent] !== undefined) {
+  continentCounts[continent] += popularity;
+}
           if (country) {
             countryVolume.set(country, (countryVolume.get(country) || 0) + 1);
             if (pick.result === "win" || match.status === "win") {
