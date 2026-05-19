@@ -3196,6 +3196,10 @@ html, body {
     let siteAchievements = [];
     let siteTours = [];
     let rankHistory = [];
+    let seasonPlayers = [];
+let seasonSummary = [];
+let seasonGeo = [];
+let seasonAchievements = [];
     let siteConfig = {};
     let selectedTour = null;
     let selectedPlayerName = null;
@@ -3242,7 +3246,21 @@ html, body {
     }
 
     function applySheetsPayload(payload) {
-     const { m = [], p = [], t = [], o = [], pl = [], a = [], rh = [], toursRows = [], cfgRows = [] } = payload || {};
+    const {
+  m = [],
+  p = [],
+  t = [],
+  o = [],
+  pl = [],
+  a = [],
+  rh = [],
+  toursRows = [],
+  cfgRows = [],
+  seasonPlayersRows = [],
+  seasonSummaryRows = [],
+  seasonGeoRows = [],
+  seasonAchievementsRows = []
+} = payload || {};
       matches = m.map(mapMatchRow).filter(x => x.id && x.teams);
       predictions = p.map(mapPredictionRow).filter(x => x.name && x.picks.length);
       siteTable = t;
@@ -3252,6 +3270,10 @@ html, body {
       rankHistory = rh;
       siteTours = toursRows;
       siteConfig = rowsToConfig(cfgRows);
+      seasonPlayers = seasonPlayersRows;
+seasonSummary = seasonSummaryRows;
+seasonGeo = seasonGeoRows;
+seasonAchievements = seasonAchievementsRows;
       matchById = new Map(matches.map(x => [x.id, x]));
 
       const currentTour = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
@@ -3480,7 +3502,21 @@ function mapPredictionRow(row) {
   loadTab(TABS.seasonAchievements).catch(() => [])
 ]);
 
-        const payload = { m, p, t, o, pl, a, rh, toursRows, cfgRows };
+      const payload = {
+  m,
+  p,
+  t,
+  o,
+  pl,
+  a,
+  rh,
+  toursRows,
+  cfgRows,
+  seasonPlayersRows,
+  seasonSummaryRows,
+  seasonGeoRows,
+  seasonAchievementsRows
+};
         applySheetsPayload(payload);
         saveCachedSheetsData(payload);
         hideDataNotice();
@@ -3497,7 +3533,67 @@ function mapPredictionRow(row) {
         return false;
       }
     }
+function renderSeasonPage() {
+  const heroEl = document.getElementById("seasonHeroCards");
+  const summaryEl = document.getElementById("seasonSummaryBlock");
 
+  if (!heroEl || !summaryEl) return;
+
+  const summary = Array.isArray(seasonSummary) ? seasonSummary : [];
+  const players = Array.isArray(seasonPlayers) ? seasonPlayers : [];
+
+  if (!summary.length) {
+    heroEl.innerHTML = `<div class="empty-state">Нет данных season_summary</div>`;
+    summaryEl.innerHTML = "";
+    return;
+  }
+
+  const totalPredictions = summary.reduce((sum, r) => sum + toNum(get(r, ["predictions_count"]), 0), 0);
+  const totalPicks = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_total"]), 0), 0);
+  const totalWins = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_win"]), 0), 0);
+  const totalLosses = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_lose"]), 0), 0);
+
+  const hitRate = totalWins + totalLosses
+    ? Math.round((totalWins / (totalWins + totalLosses)) * 1000) / 10
+    : 0;
+
+  const bestTour = [...summary].sort((a, b) =>
+    toNum(get(b, ["best_player_points"]), 0) - toNum(get(a, ["best_player_points"]), 0)
+  )[0];
+
+  const bestOddRow = [...summary].sort((a, b) =>
+    toNum(get(b, ["max_scoring_odd", "max_win_odd"]), 0) - toNum(get(a, ["max_scoring_odd", "max_win_odd"]), 0)
+  )[0];
+
+  const finalTour = Math.max(...players.map(r => toNum(get(r, ["tour"]), 0)));
+  const champion = players
+    .filter(r => toNum(get(r, ["tour"]), 0) === finalTour)
+    .sort((a, b) => toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) - toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999))[0];
+
+  const card = (label, value, note = "") => `
+    <div class="stat-card">
+      <div class="stat-label">${escapeHtml(label)}</div>
+      <div class="stat-value accent">${escapeHtml(value)}</div>
+      ${note ? `<div class="stat-label">${escapeHtml(note)}</div>` : ""}
+    </div>
+  `;
+
+  heroEl.innerHTML = [
+    card("Чемпион", get(champion, ["player"], "—"), `${toNum(get(champion, ["final_points", "overall_points_after_tour"]), 0)} pts`),
+    card("Прогнозов", totalPredictions, `${totalPicks} пиков`),
+    card("Hit rate", `${hitRate}%`, `${totalWins}/${totalWins + totalLosses}`),
+    card("Лучший тур", get(bestTour, ["best_player"], "—"), `T${get(bestTour, ["tour"], "—")} · ${get(bestTour, ["best_player_points"], "—")} pts`),
+    card("Max scoring odd", formatOdd3(get(bestOddRow, ["max_scoring_odd", "max_win_odd"], 0)), `Тур ${get(bestOddRow, ["tour"], "—")}`)
+  ].join("");
+
+  summaryEl.innerHTML = `
+    <div class="metric-row"><span>Всего прогнозов</span><strong>${totalPredictions}</strong></div>
+    <div class="metric-row"><span>Всего пиков</span><strong>${totalPicks}</strong></div>
+    <div class="metric-row"><span>Выигравшие пики</span><strong class="positive">${totalWins}</strong></div>
+    <div class="metric-row"><span>Проигравшие пики</span><strong class="negative">${totalLosses}</strong></div>
+    <div class="metric-row"><span>Средняя проходимость</span><strong>${hitRate}%</strong></div>
+  `;
+}
     function renderAll() {
       populateTourControls();
       renderMatches();
@@ -3506,6 +3602,7 @@ function mapPredictionRow(row) {
       updateStats(String(getCurrentTour() || siteConfig.current_tour || "5"));
       renderPlayerSelect();
       renderPlayerProfile();
+      renderSeasonPage();
       renderFilter("matches");
     }
 
