@@ -3252,7 +3252,11 @@ html, body {
   achievements: "site_player_achievements",
   rankHistory: "site_rank_history",
   tours: "site_tours",
-  config: "site_config"
+  config: "site_config",
+      seasonPlayers: "season_players",
+seasonSummary: "season_summary",
+seasonGeo: "season_geo",
+seasonAchievements: "season_achievements"
 };
 
     function normalizeKeyName(value) {
@@ -3410,17 +3414,36 @@ function mapPredictionRow(row) {
       }
 
       try {
-        const [m, p, t, o, pl, a, rh, toursRows, cfgRows] = await Promise.all([
-          loadTab(TABS.matches),
-          loadTab(TABS.predictions),
-          loadTab(TABS.table).catch(() => []),
-          loadTab(TABS.overall).catch(() => []),
-          loadTab(TABS.players).catch(() => []),
-          loadTab(TABS.achievements).catch(() => []),
-          loadTab(TABS.rankHistory).catch(() => []),
-          loadTab(TABS.tours).catch(() => []),
-          loadTab(TABS.config).catch(() => [])
-        ]);
+      const [
+  m,
+  p,
+  t,
+  o,
+  pl,
+  a,
+  rh,
+  toursRows,
+  cfgRows,
+  seasonPlayersRows,
+  seasonSummaryRows,
+  seasonGeoRows,
+  seasonAchievementsRows
+] = await Promise.all([
+  loadTab(TABS.matches),
+  loadTab(TABS.predictions),
+  loadTab(TABS.table).catch(() => []),
+  loadTab(TABS.overall).catch(() => []),
+  loadTab(TABS.players).catch(() => []),
+  loadTab(TABS.achievements).catch(() => []),
+  loadTab(TABS.rankHistory).catch(() => []),
+  loadTab(TABS.tours).catch(() => []),
+  loadTab(TABS.config).catch(() => []),
+
+  loadTab(TABS.seasonPlayers).catch(() => []),
+  loadTab(TABS.seasonSummary).catch(() => []),
+  loadTab(TABS.seasonGeo).catch(() => []),
+  loadTab(TABS.seasonAchievements).catch(() => [])
+]);
 
         const payload = { m, p, t, o, pl, a, rh, toursRows, cfgRows };
         applySheetsPayload(payload);
