@@ -3593,6 +3593,86 @@ function renderSeasonPage() {
     <div class="metric-row"><span>Проигравшие пики</span><strong class="negative">${totalLosses}</strong></div>
     <div class="metric-row"><span>Средняя проходимость</span><strong>${hitRate}%</strong></div>
   `;
+    const playersEl = document.getElementById("seasonPlayersGrid");
+  const geoEl = document.getElementById("seasonGeoBlock");
+  const achEl = document.getElementById("seasonAchievementsBlock");
+
+  if (playersEl) {
+    const finalRows = players
+      .filter(r => toNum(get(r, ["tour"]), 0) === finalTour)
+      .sort((a, b) => toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) - toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999))
+      .slice(0, 20);
+
+    playersEl.innerHTML = finalRows.length ? `
+      <table class="tour-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Игрок</th>
+            <th>Очки</th>
+            <th>Движ.</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${finalRows.map(r => `
+            <tr>
+              <td>${escapeHtml(get(r, ["final_rank", "overall_rank_after_tour"], "—"))}</td>
+              <td>${escapeHtml(get(r, ["player"], "—"))}</td>
+              <td>${escapeHtml(get(r, ["final_points", "overall_points_after_tour"], "0"))}</td>
+              <td class="${escapeHtml(get(r, ["rank_change_color"], "neutral"))}">
+                ${escapeHtml(get(r, ["rank_change_text"], "—"))}
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    ` : `<div class="empty-state">Нет данных season_players</div>`;
+  }
+
+  if (geoEl) {
+    const geo = Array.isArray(seasonGeo) ? seasonGeo : [];
+
+    const topGeo = [...geo]
+      .sort((a, b) => toNum(get(b, ["picks_total"]), 0) - toNum(get(a, ["picks_total"]), 0))
+      .slice(0, 12);
+
+    geoEl.innerHTML = topGeo.length ? `
+      <div class="chart-list">
+        ${topGeo.map(r => {
+          const total = toNum(get(r, ["picks_total"]), 0);
+          const wins = toNum(get(r, ["picks_win"]), 0);
+          const rate = get(r, ["hit_rate"], "0");
+          const width = Math.min(100, Math.max(4, total));
+          return `
+            <div class="chart-row">
+              <div class="chart-row-top">
+                <div class="chart-name">${escapeHtml(get(r, ["country"], "—"))}</div>
+                <div class="chart-value">${total} / ${wins} · ${rate}%</div>
+              </div>
+              <div class="chart-track">
+                <div class="chart-fill" style="width:${width}%"></div>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    ` : `<div class="empty-state">Нет данных season_geo</div>`;
+  }
+
+  if (achEl) {
+    const ach = Array.isArray(seasonAchievements) ? seasonAchievements : [];
+
+    achEl.innerHTML = ach.length ? ach.map(row => `
+      <div class="achievement-item">
+        <span>${escapeHtml(get(row, ["icon"], "🏅"))}</span>
+        <div class="achievement-text">
+          <strong>${escapeHtml(get(row, ["title"], get(row, ["code"], "Ачивка")))}</strong>
+          <small class="achievement-player">${escapeHtml(get(row, ["player"], ""))}</small>
+          <small class="achievement-desc">${escapeHtml(get(row, ["description"], ""))}</small>
+        </div>
+      </div>
+    `).join("") : `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
+  }
 }
     function renderAll() {
       populateTourControls();
