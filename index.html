@@ -4061,9 +4061,9 @@ return `
   const flag = get(r, ["flag"], "");
 
   const flagHtml = flag
-    ? `<img src="${escapeHtml(normalizeFlagUrl(flag))}" alt="">`
-    : "🏳️";
-
+  ? `<img src="${escapeHtml(flag)}" alt="">`
+  : "🏳️";
+              
   return `
     <div class="season-geo-tour-row">
 
