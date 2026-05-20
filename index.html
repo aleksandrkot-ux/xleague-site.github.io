@@ -3036,12 +3036,18 @@ html, body {
   display: grid;
   place-items: center;
 }
+.season-geo-flag span {
+  font-size: 18px;
+  line-height: 1;
+  display: block;
+}
 
 .season-geo-flag img {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
   border-radius: 50%;
+  display: block;
 }
 
 .season-geo-stats {
@@ -4060,9 +4066,11 @@ return `
 
   const flag = get(r, ["flag"], "");
 
-  const flagHtml = flag
-  ? `<img src="${escapeHtml(flag)}" alt="">`
-  : "🏳️";
+  const flag = String(get(r, ["flag"], "") || "").trim();
+
+const flagHtml = flag.startsWith("http")
+  ? `<img src="${escapeHtml(normalizeFlagUrl(flag))}" alt="">`
+  : `<span>${escapeHtml(flag || "🏳️")}</span>`;
               
   return `
     <div class="season-geo-tour-row">
