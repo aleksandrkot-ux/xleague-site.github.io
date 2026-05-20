@@ -3022,10 +3022,10 @@ html, body {
 
 .season-geo-tour-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 52px;
+  grid-template-columns: 24px minmax(0,1fr);
   gap: 8px;
   align-items: center;
-  padding: 6px 0;
+  padding: 5px 0;
   border-top: 1px solid rgba(255,255,255,.045);
 }
 
@@ -3033,6 +3033,56 @@ html, body {
   border-top: 0;
 }
 
+.season-geo-flag {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.season-geo-flag img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.season-geo-stats {
+  min-width: 0;
+}
+
+.season-geo-main {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  line-height: 1;
+}
+
+.season-geo-main strong {
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.geo-win {
+  color: #34d399;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.geo-lose {
+  color: #fb7185;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.season-geo-stats small {
+  display: block;
+  margin-top: 2px;
+  color: #a1a1aa;
+  font-size: 9px;
+  font-weight: 800;
+}
 .season-geo-country {
   min-width: 0;
   display: flex;
