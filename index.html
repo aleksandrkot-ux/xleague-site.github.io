@@ -2993,7 +2993,57 @@ html, body {
   font-size: 9px;
   font-weight: 800;
 }
+.season-achievement-player {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,.055);
+}
 
+.season-achievement-player:first-child {
+  border-top: 0;
+}
+
+.season-achievement-name {
+  width: 190px;
+  flex: 0 0 190px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 1000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.season-achievement-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+}
+
+.season-achievement-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.season-achievement-badge img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
+.season-achievement-badge em {
+  margin-left: 2px;
+  color: #fbbf24;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 1000;
+}
 @media (max-width: 979px) {
   #screen-season .stats-grid {
     grid-template-columns: 1fr;
@@ -3988,19 +4038,78 @@ function mapPredictionRow(row) {
         ` : `<div class="empty-state">Нет данных season_geo</div>`;
       }
 
-      if (achEl) {
-        achEl.innerHTML = achievements.length ? achievements.map(row => `
-          <div class="achievement-item">
-            <span>${achievementIconHtml(get(row, ["icon"], "🏅"))}</span>
-            <div class="achievement-text">
-              <strong>${escapeHtml(get(row, ["title"], get(row, ["code"], "Ачивка")))}</strong>
-              <small class="achievement-player">${escapeHtml(get(row, ["player"], ""))}</small>
-              <small class="achievement-desc">${escapeHtml(get(row, ["description"], ""))}</small>
-            </div>
-          </div>
-        `).join("") : `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
-      }
+    if (achEl) {
+  const ach = Array.isArray(seasonAchievements) ? seasonAchievements : [];
+
+  const orderWeight = {
+    GOLD: 1,
+    SILVER: 2,
+    BRONZE: 3,
+    DREAMER: 4,
+    DOEXALI: 5,
+    NEXTT: 6,
+    SAPA: 7,
+    INSIDER: 8
+  };
+
+  const grouped = new Map();
+
+  ach.forEach(row => {
+    const player = get(row, ["player"], "");
+    if (!player) return;
+
+    if (!grouped.has(player)) {
+      grouped.set(player, {
+        name: player,
+        achievements: []
+      });
     }
+
+    grouped.get(player).achievements.push({
+      code: get(row, ["code"], ""),
+      title: get(row, ["title"], ""),
+      icon: get(row, ["icon"], ""),
+      order: toNum(get(row, ["order"], orderWeight[get(row, ["code"], "")] || 999), 999)
+    });
+  });
+
+  const groupedPlayers = [...grouped.values()]
+    .map(player => {
+      const byCode = new Map();
+
+      player.achievements.forEach(a => {
+        const key = a.code || a.title || a.icon;
+        const current = byCode.get(key) || { ...a, count: 0 };
+        current.count += 1;
+        byCode.set(key, current);
+      });
+
+      player.achievements = [...byCode.values()]
+        .sort((a, b) => a.order - b.order);
+
+      player.totalCount = [...byCode.values()].reduce((sum, a) => sum + a.count, 0);
+
+      return player;
+    })
+    .sort((a, b) => b.totalCount - a.totalCount);
+
+  achEl.innerHTML = groupedPlayers.length ? groupedPlayers.map(player => `
+    <div class="season-achievement-player">
+      <div class="season-achievement-name">
+        ${escapeHtml(player.name)}
+      </div>
+
+      <div class="season-achievement-icons">
+        ${player.achievements.map(a => `
+          <span class="season-achievement-badge" title="${escapeHtml(a.title)}">
+            ${achievementIconHtml(a.icon)}
+            ${a.count > 1 ? `<em>×${a.count}</em>` : ""}
+          </span>
+        `).join("")}
+      </div>
+    </div>
+  `).join("") : `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
+}
 
 
     function renderAll() {
