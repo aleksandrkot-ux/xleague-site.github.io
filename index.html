@@ -2882,13 +2882,11 @@ html, body {
 }
 
 .season-cell-bottom {
-  display: flex;
-  justify-content: space-between;
-  gap: 5px;
   margin-top: 6px;
   color: #a1a1aa;
   font-size: 10px;
   font-weight: 900;
+  line-height: 1.2;
 }
 
 .season-cell.absent {
@@ -3808,10 +3806,14 @@ if (playersEl) {
                         <strong>${escapeHtml(pts || "0")} pts</strong>
                         <span>${escapeHtml(icons)}</span>
                       </div>
-                      <div class="season-cell-bottom">
-                        <span>#${escapeHtml(rank || "—")}</span>
-                        <span class="${escapeHtml(color)}">${escapeHtml(move)}</span>
-                      </div>
+                     <div class="season-cell-bottom">
+  <span>
+    #${escapeHtml(rank || "—")}
+    <span class="${escapeHtml(color)}">
+      ${escapeHtml(move)}
+    </span>
+  </span>
+</div>
                     </td>
                   `;
                 }).join("")}
