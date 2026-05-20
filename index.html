@@ -2947,6 +2947,12 @@ html, body {
   min-height: 34px;
   color: #52525b;
 }
+    .season-achievement-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: block;
+}
   </style>
 </head>
 <body>
@@ -3856,9 +3862,9 @@ if (playersEl) {
       </div>
 
       <div class="season-cell-achievements">
-       ${icons
+     ${icons
   ? icons.split("|||").slice(0, 2).map(icon => `
-      <span>${achievementIconHtml(icon)}</span>
+      <img src="${escapeHtml(icon)}" class="season-achievement-icon">
     `).join("")
   : ""}
       </div>
