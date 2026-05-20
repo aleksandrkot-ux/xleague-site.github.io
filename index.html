@@ -4054,21 +4054,22 @@ return `
 
           <div class="season-geo-tour-list">
             ${block.rows.map((r, index) => {
-              const flag = get(r, ["flag"], "");
+               const total = toNum(get(r, ["picks_total"]), 0);
+  const wins = toNum(get(r, ["picks_win"]), 0);
+  const rate = get(r, ["hit_rate"], "0");
 
-const flagHtml = flag
-  ? `<img src="${escapeHtml(normalizeFlagUrl(flag))}" alt="">`
-  : "🏳️";
-              const total = toNum(get(r, ["picks_total"]), 0);
-              const wins = toNum(get(r, ["picks_win"]), 0);
-              const rate = get(r, ["hit_rate"], "0");
+  const flag = get(r, ["flag"], "");
 
-return `
-  <div class="season-geo-tour-row">
-    
-   <div class="season-geo-flag">
-  ${flagHtml}
-</div>
+  const flagHtml = flag
+    ? `<img src="${escapeHtml(normalizeFlagUrl(flag))}" alt="">`
+    : "🏳️";
+
+  return `
+    <div class="season-geo-tour-row">
+
+      <div class="season-geo-flag">
+        ${flagHtml}
+      </div>
 
     <div class="season-geo-stats">
       <div class="season-geo-main">
