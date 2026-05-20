@@ -2994,6 +2994,94 @@ html, body {
 .season-matrix tbody tr:hover {
   background: rgba(182,255,59,.07);
 }
+    .season-geo-tours {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.season-geo-tour-card {
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.055);
+}
+
+.season-geo-tour-title {
+  margin-bottom: 8px;
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+
+.season-geo-tour-list {
+  display: grid;
+  gap: 6px;
+}
+
+.season-geo-tour-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52px;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid rgba(255,255,255,.045);
+}
+
+.season-geo-tour-row:first-child {
+  border-top: 0;
+}
+
+.season-geo-country {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.season-geo-rank {
+  color: #71717a;
+  font-size: 10px;
+  font-weight: 1000;
+  width: 14px;
+  flex: 0 0 14px;
+}
+
+.season-geo-name {
+  min-width: 0;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.season-geo-stats {
+  text-align: right;
+}
+
+.season-geo-stats strong {
+  display: block;
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.season-geo-stats span,
+.season-geo-stats small {
+  display: block;
+  color: #a1a1aa;
+  font-size: 9px;
+  font-weight: 850;
+}
+
+@media (max-width: 979px) {
+  .season-geo-tours {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
 </head>
 <body>
@@ -3921,36 +4009,54 @@ return `
   ` : `<div class="empty-state">Нет данных season_players</div>`;
 }
 
-  if (geoEl) {
-    const geo = Array.isArray(seasonGeo) ? seasonGeo : [];
+ if (geoEl) {
+  const geo = Array.isArray(seasonGeo) ? seasonGeo : [];
 
-    const topGeo = [...geo]
+  const tours = [...new Set(geo.map(r => toNum(get(r, ["tour"]), 0)).filter(Boolean))]
+    .sort((a, b) => a - b);
+
+  const topByTour = tours.map(t => {
+    const rows = geo
+      .filter(r => toNum(get(r, ["tour"]), 0) === t)
       .sort((a, b) => toNum(get(b, ["picks_total"]), 0) - toNum(get(a, ["picks_total"]), 0))
-      .slice(0, 12);
+      .slice(0, 10);
 
-    geoEl.innerHTML = topGeo.length ? `
-      <div class="chart-list">
-        ${topGeo.map(r => {
-          const total = toNum(get(r, ["picks_total"]), 0);
-          const wins = toNum(get(r, ["picks_win"]), 0);
-          const rate = get(r, ["hit_rate"], "0");
-          const width = Math.min(100, Math.max(4, total));
-          return `
-            <div class="chart-row">
-              <div class="chart-row-top">
-                <div class="chart-name">${escapeHtml(get(r, ["country"], "—"))}</div>
-                <div class="chart-value">${total} / ${wins} · ${rate}%</div>
-              </div>
-              <div class="chart-track">
-                <div class="chart-fill" style="width:${width}%"></div>
-              </div>
-            </div>
-          `;
-        }).join("")}
-      </div>
-    ` : `<div class="empty-state">Нет данных season_geo</div>`;
-  }
+    return { tour: t, rows };
+  });
 
+  geoEl.innerHTML = topByTour.length ? `
+    <div class="season-geo-tours">
+      ${topByTour.map(block => `
+        <div class="season-geo-tour-card">
+          <div class="season-geo-tour-title">Тур ${block.tour}</div>
+
+          <div class="season-geo-tour-list">
+            ${block.rows.map((r, index) => {
+              const country = get(r, ["country"], "—");
+              const total = toNum(get(r, ["picks_total"]), 0);
+              const wins = toNum(get(r, ["picks_win"]), 0);
+              const rate = get(r, ["hit_rate"], "0");
+
+              return `
+                <div class="season-geo-tour-row">
+                  <div class="season-geo-country">
+                    <span class="season-geo-rank">${index + 1}</span>
+                    <span class="season-geo-name">${escapeHtml(country)}</span>
+                  </div>
+                  <div class="season-geo-stats">
+                    <strong>${total}</strong>
+                    <span>${wins} win</span>
+                    <small>${rate}%</small>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  ` : `<div class="empty-state">Нет данных season_geo</div>`;
+}
   if (achEl) {
     const ach = Array.isArray(seasonAchievements) ? seasonAchievements : [];
 
