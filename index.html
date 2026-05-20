@@ -4037,19 +4037,31 @@ return `
               const wins = toNum(get(r, ["picks_win"]), 0);
               const rate = get(r, ["hit_rate"], "0");
 
-              return `
-                <div class="season-geo-tour-row">
-                  <div class="season-geo-country">
-                    <span class="season-geo-rank">${index + 1}</span>
-                    <span class="season-geo-name">${escapeHtml(country)}</span>
-                  </div>
-                  <div class="season-geo-stats">
-                    <strong>${total}</strong>
-                    <span>${wins} win</span>
-                    <small>${rate}%</small>
-                  </div>
-                </div>
-              `;
+return `
+  <div class="season-geo-tour-row">
+    
+    <div class="season-geo-flag">
+      <img src="${escapeHtml(get(r, ["flag"], ""))}" alt="">
+    </div>
+
+    <div class="season-geo-stats">
+      <div class="season-geo-main">
+        <strong>${total}</strong>
+
+        <span class="geo-win">
+          +${wins}
+        </span>
+
+        <span class="geo-lose">
+          -${Math.max(total - wins, 0)}
+        </span>
+      </div>
+
+      <small>${rate}%</small>
+    </div>
+
+  </div>
+`;
             }).join("")}
           </div>
         </div>
