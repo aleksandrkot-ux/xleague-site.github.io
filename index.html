@@ -2993,6 +2993,27 @@ html, body {
   font-size: 9px;
   font-weight: 800;
 }
+
+@media (max-width: 979px) {
+  #screen-season .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #seasonGeoBlock .season-geo-tours {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* FINAL OVERRIDE: season achievements board */
+#seasonAchievementsBlock {
+  display: block !important;
+}
+
+#seasonAchievementsBlock .achievement-item {
+  display: none !important;
+}
+
 .season-achievement-player {
   display: flex;
   align-items: center;
@@ -3021,6 +3042,7 @@ html, body {
   flex-wrap: wrap;
   gap: 7px;
   align-items: center;
+  min-width: 0;
 }
 
 .season-achievement-badge {
@@ -3028,13 +3050,27 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 22px;
+  min-height: 22px;
 }
 
 .season-achievement-badge img {
-  width: 22px;
-  height: 22px;
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
   object-fit: contain;
   display: block;
+}
+
+.season-achievement-badge .badge-fallback {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(255,255,255,.07);
+  font-size: 13px;
 }
 
 .season-achievement-badge em {
@@ -3043,15 +3079,6 @@ html, body {
   font-size: 10px;
   font-style: normal;
   font-weight: 1000;
-}
-@media (max-width: 979px) {
-  #screen-season .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  #seasonGeoBlock .season-geo-tours {
-    grid-template-columns: 1fr !important;
-  }
 }
 
 </style>
@@ -4038,78 +4065,74 @@ function mapPredictionRow(row) {
         ` : `<div class="empty-state">Нет данных season_geo</div>`;
       }
 
-    if (achEl) {
-  const ach = Array.isArray(seasonAchievements) ? seasonAchievements : [];
+      if (achEl) {
+        const orderWeight = {
+          GOLD: 1,
+          SILVER: 2,
+          BRONZE: 3,
+          DREAMER: 4,
+          DOEXALI: 5,
+          NEXTT: 6,
+          SAPA: 7,
+          INSIDER: 8
+        };
 
-  const orderWeight = {
-    GOLD: 1,
-    SILVER: 2,
-    BRONZE: 3,
-    DREAMER: 4,
-    DOEXALI: 5,
-    NEXTT: 6,
-    SAPA: 7,
-    INSIDER: 8
-  };
+        const grouped = new Map();
 
-  const grouped = new Map();
+        achievements.forEach(row => {
+          const player = get(row, ["player"], "");
+          if (!player) return;
 
-  ach.forEach(row => {
-    const player = get(row, ["player"], "");
-    if (!player) return;
+          if (!grouped.has(player)) {
+            grouped.set(player, {
+              name: player,
+              achievements: []
+            });
+          }
 
-    if (!grouped.has(player)) {
-      grouped.set(player, {
-        name: player,
-        achievements: []
-      });
+          const code = String(get(row, ["code"], "") || "").trim().toUpperCase();
+
+          grouped.get(player).achievements.push({
+            code,
+            title: get(row, ["title"], get(row, ["code"], "Ачивка")),
+            icon: get(row, ["icon"], ""),
+            order: toNum(get(row, ["order"], orderWeight[code] || 999), orderWeight[code] || 999)
+          });
+        });
+
+        const groupedPlayers = [...grouped.values()]
+          .map(player => {
+            player.achievements = player.achievements
+              .sort((a, b) => a.order - b.order);
+
+            player.totalCount = player.achievements.length;
+            player.bestOrder = player.achievements.length ? player.achievements[0].order : 999;
+
+            return player;
+          })
+          .sort((a, b) =>
+            b.totalCount - a.totalCount ||
+            a.bestOrder - b.bestOrder ||
+            a.name.localeCompare(b.name, "ru")
+          );
+
+        achEl.innerHTML = groupedPlayers.length ? groupedPlayers.map(player => `
+          <div class="season-achievement-player">
+            <div class="season-achievement-name" title="${escapeHtml(player.name)}">
+              ${escapeHtml(player.name)}
+            </div>
+
+            <div class="season-achievement-icons">
+              ${player.achievements.map(item => `
+                <span class="season-achievement-badge" title="${escapeHtml(item.title)}">
+                  ${achievementIconHtml(item.icon)}
+                </span>
+              `).join("")}
+            </div>
+          </div>
+        `).join("") : `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
+      }
     }
-
-    grouped.get(player).achievements.push({
-      code: get(row, ["code"], ""),
-      title: get(row, ["title"], ""),
-      icon: get(row, ["icon"], ""),
-      order: toNum(get(row, ["order"], orderWeight[get(row, ["code"], "")] || 999), 999)
-    });
-  });
-
-  const groupedPlayers = [...grouped.values()]
-    .map(player => {
-      const byCode = new Map();
-
-      player.achievements.forEach(a => {
-        const key = a.code || a.title || a.icon;
-        const current = byCode.get(key) || { ...a, count: 0 };
-        current.count += 1;
-        byCode.set(key, current);
-      });
-
-      player.achievements = [...byCode.values()]
-        .sort((a, b) => a.order - b.order);
-
-      player.totalCount = [...byCode.values()].reduce((sum, a) => sum + a.count, 0);
-
-      return player;
-    })
-    .sort((a, b) => b.totalCount - a.totalCount);
-
-  achEl.innerHTML = groupedPlayers.length ? groupedPlayers.map(player => `
-    <div class="season-achievement-player">
-      <div class="season-achievement-name">
-        ${escapeHtml(player.name)}
-      </div>
-
-      <div class="season-achievement-icons">
-        ${player.achievements.map(a => `
-          <span class="season-achievement-badge" title="${escapeHtml(a.title)}">
-            ${achievementIconHtml(a.icon)}
-            ${a.count > 1 ? `<em>×${a.count}</em>` : ""}
-          </span>
-        `).join("")}
-      </div>
-    </div>
-  `).join("") : `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
-}
 
 
     function renderAll() {
