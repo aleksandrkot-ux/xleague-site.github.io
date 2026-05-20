@@ -2941,6 +2941,12 @@ html, body {
   font-size: 11px;
   line-height: 1;
 }
+    .season-cell-dash {
+  display: grid;
+  place-items: center;
+  min-height: 34px;
+  color: #52525b;
+}
   </style>
 </head>
 <body>
@@ -3824,8 +3830,15 @@ if (playersEl) {
                     .join(" ");
 
                   if (!played) {
-                    return `<td class="season-cell absent">—</td>`;
-                  }
+  return `
+    <td class="season-cell absent">
+      <div class="season-cell-inner">
+        <div class="season-cell-main season-cell-dash">—</div>
+        <div class="season-cell-achievements"></div>
+      </div>
+    </td>
+  `;
+}
 
                 return `
   <td class="season-cell">
