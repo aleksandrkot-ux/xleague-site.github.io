@@ -2835,6 +2835,87 @@ html, body {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
+    /* Season matrix fix */
+.season-matrix-wrap {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.season-matrix {
+  min-width: 980px;
+  table-layout: fixed !important;
+}
+
+.season-matrix th,
+.season-matrix td {
+  width: 110px !important;
+  padding: 9px 8px !important;
+  vertical-align: top;
+  font-size: 11px !important;
+}
+
+.season-matrix th:first-child,
+.season-matrix td:first-child {
+  width: 190px !important;
+  min-width: 190px !important;
+  color: #fff !important;
+  font-weight: 1000;
+}
+
+.season-matrix th:last-child,
+.season-matrix td:last-child {
+  width: 90px !important;
+}
+
+.season-cell {
+  min-height: 54px;
+}
+
+.season-cell-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 1000;
+}
+
+.season-cell-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  margin-top: 6px;
+  color: #a1a1aa;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.season-cell.absent {
+  color: #52525b !important;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.season-total strong,
+.season-total span {
+  display: block;
+}
+
+.season-total strong {
+  color: #fbbf24;
+}
+
+.season-total span {
+  margin-top: 4px;
+  color: #fff;
+  font-size: 11px;
+}
+
+.season-matrix .green { color: #34d399 !important; }
+.season-matrix .red { color: #fb7185 !important; }
+.season-matrix .blue { color: #60a5fa !important; }
+.season-matrix .neutral { color: #a1a1aa !important; }
   </style>
 </head>
 <body>
