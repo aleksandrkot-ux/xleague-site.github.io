@@ -3884,28 +3884,26 @@ if (playersEl) {
   `;
 }
 
-                return `
+return `
   <td class="season-cell">
     <div class="season-cell-inner">
-      <div class="season-cell-main">
-        <div class="season-cell-top">
-          <strong>${escapeHtml(pts || "0")} pts</strong>
-        </div>
-        <div class="season-cell-bottom">
-          <span>
-            #${escapeHtml(rank || "—")}
-            <span class="${escapeHtml(color)}">${escapeHtml(move)}</span>
-          </span>
-        </div>
+      <div class="season-cell-top">
+        <strong>${escapeHtml(pts || "0")} pts</strong>
+        <span class="season-cell-achievements">
+          ${icons
+            ? icons.split("|||").slice(0, 2).map(icon =>
+                achievementIconHtml(icon.trim())
+              ).join("")
+            : ""}
+        </span>
       </div>
 
-<div class="season-cell-achievements">
-  ${icons
-    ? icons.split("|||").slice(0, 2).map(icon =>
-        achievementIconHtml(icon.trim())
-      ).join("")
-    : ""}
-</div>
+      <div class="season-cell-bottom">
+        <span>
+          #${escapeHtml(rank || "—")}
+          <span class="${escapeHtml(color)}">${escapeHtml(move)}</span>
+        </span>
+      </div>
     </div>
   </td>
 `;
