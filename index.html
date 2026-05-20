@@ -410,79 +410,7 @@ html, body {
       white-space: nowrap;
       gap: 0;
     }
-.season-matrix-wrap {
-  width: 100%;
-  overflow-x: auto;
-}
 
-.season-matrix {
-  min-width: 920px;
-}
-
-.season-matrix th,
-.season-matrix td {
-  vertical-align: top;
-}
-
-.season-cell {
-  min-width: 104px;
-  padding: 8px !important;
-}
-
-.season-cell.absent {
-  color: #71717a !important;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.season-cell-top,
-.season-cell-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-
-.season-cell-top strong {
-  color: #fbbf24;
-  font-size: 12px;
-}
-
-.season-cell-bottom {
-  margin-top: 5px;
-  color: #a1a1aa;
-  font-size: 11px;
-}
-
-.season-total strong,
-.season-total span {
-  display: block;
-}
-
-.season-total strong {
-  color: #fbbf24;
-}
-
-.season-total span {
-  margin-top: 4px;
-  color: #fff;
-}
-
-.season-matrix .green {
-  color: #34d399 !important;
-}
-
-.season-matrix .red {
-  color: #fb7185 !important;
-}
-
-.season-matrix .blue {
-  color: #60a5fa !important;
-}
-
-.season-matrix .neutral {
-  color: #a1a1aa !important;
-}
 .stars .star {
   position: relative;
   display: inline-block;
@@ -2835,7 +2763,13 @@ html, body {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
-    /* Season matrix fix */
+  
+/* === Season page final compact styles === */
+#screen-season .stats-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 10px;
+}
+
 .season-matrix-wrap {
   width: 100%;
   overflow-x: auto;
@@ -2868,16 +2802,36 @@ html, body {
   width: 90px !important;
 }
 
-.season-cell {
-  min-height: 54px;
+.season-matrix tbody tr:nth-child(odd) {
+  background: rgba(255,255,255,.018);
+}
+
+.season-matrix tbody tr:nth-child(even) {
+  background: rgba(255,255,255,.045);
+}
+
+.season-matrix tbody tr:hover {
+  background: rgba(182,255,59,.07);
+}
+
+.season-cell-inner {
+  display: block;
+  min-height: 40px;
 }
 
 .season-cell-top {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
   gap: 5px;
   color: #fbbf24;
   font-size: 11px;
+  font-weight: 1000;
+}
+
+.season-cell-top strong {
+  color: #fbbf24;
+  font-size: 12px;
   font-weight: 1000;
 }
 
@@ -2889,10 +2843,33 @@ html, body {
   line-height: 1.2;
 }
 
+.season-cell-dash {
+  display: grid;
+  place-items: center;
+  min-height: 34px;
+  color: #52525b;
+}
+
 .season-cell.absent {
   color: #52525b !important;
   text-align: center;
   vertical-align: middle;
+}
+
+.season-cell-achievements {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.season-cell-achievements img {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+  object-fit: contain;
+  display: block;
+  opacity: .92;
 }
 
 .season-total strong,
@@ -2910,101 +2887,26 @@ html, body {
   font-size: 11px;
 }
 
-.season-matrix .green { color: #34d399 !important; }
-.season-matrix .red { color: #fb7185 !important; }
-.season-matrix .blue { color: #60a5fa !important; }
-.season-matrix .neutral { color: #a1a1aa !important; }
-.season-cell-inner {
-  display: block;
+.season-matrix .green { color: #34d399 !important; -webkit-text-fill-color: #34d399 !important; }
+.season-matrix .red { color: #fb7185 !important; -webkit-text-fill-color: #fb7185 !important; }
+.season-matrix .blue { color: #60a5fa !important; -webkit-text-fill-color: #60a5fa !important; }
+.season-matrix .neutral { color: #a1a1aa !important; -webkit-text-fill-color: #a1a1aa !important; }
+
+#seasonGeoBlock .season-geo-tours {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 6px !important;
 }
 
-.season-cell-top {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 5px;
+#seasonGeoBlock .season-geo-tour-card {
+  min-width: 0 !important;
+  padding: 8px !important;
+  border-radius: 14px !important;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.055);
 }
 
-.season-cell-achievements {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.season-cell-achievements img {
-  width: 15px !important;
-  height: 15px !important;
-  max-width: 15px !important;
-  max-height: 15px !important;
-  object-fit: contain;
-}
-.season-cell-achievements span {
-  width: 16px;
-  height: 16px;
-  display: grid;
-  place-items: center;
-  border-radius: 6px;
-  background: rgba(255,255,255,.07);
-  font-size: 11px;
-  line-height: 1;
-}
-    .season-cell-dash {
-  display: grid;
-  place-items: center;
-  min-height: 34px;
-  color: #52525b;
-}
-    .season-achievement-icon {
-  width: 13px;
-  height: 13px;
-  object-fit: contain;
-  display: block;
-}
-    .season-cell-achievements img {
-  opacity: .92;
-}
-    .season-cell-achievements {
-  padding-top: 1px;
-}
-    .season-cell-achievements {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  align-items: flex-end;
-  padding-top: 0;
-}
-
-.season-cell-achievements img,
-.season-achievement-icon {
-  width: 18px !important;
-  height: 18px !important;
-  max-width: 18px !important;
-  max-height: 18px !important;
-  object-fit: contain;
-  opacity: .9;
-}
-   .season-matrix tbody tr:nth-child(odd) {
-  background: #151515;
-}
-
-.season-matrix tbody tr:nth-child(even) {
-  background: #1b1b1b;
-}
-
-.season-matrix tbody tr:hover {
-  background: rgba(182,255,59,.07);
-}
-.season-geo-tours {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 6px;
-}
-
-.season-geo-tour-card {
-  padding: 8px;
-  border-radius: 14px;
-}
-.season-geo-tour-title {
+#seasonGeoBlock .season-geo-tour-title {
   margin-bottom: 8px;
   color: #fbbf24;
   font-size: 12px;
@@ -3012,68 +2914,79 @@ html, body {
   text-transform: uppercase;
 }
 
-.season-geo-tour-list {
+#seasonGeoBlock .season-geo-tour-list {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
-.season-geo-tour-row {
-  display: grid;
-  grid-template-columns: 24px minmax(0,1fr);
-  gap: 8px;
+#seasonGeoBlock .season-geo-tour-row {
+  display: grid !important;
+  grid-template-columns: 22px minmax(0, 1fr) !important;
+  gap: 5px !important;
   align-items: center;
   padding: 5px 0;
   border-top: 1px solid rgba(255,255,255,.045);
 }
 
-.season-geo-tour-row:first-child {
+#seasonGeoBlock .season-geo-tour-row:first-child {
   border-top: 0;
 }
 
-.season-geo-flag {
-  width: 24px;
-  height: 24px;
+#seasonGeoBlock .season-geo-flag {
+  width: 22px;
+  height: 22px;
   display: grid;
   place-items: center;
 }
 
-.season-geo-flag img {
+#seasonGeoBlock .season-geo-flag img {
   width: 18px;
   height: 18px;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 50%;
+  display: block;
 }
 
-.season-geo-stats {
+#seasonGeoBlock .season-geo-flag span {
+  font-size: 18px;
+  line-height: 1;
+  display: block;
+}
+
+#seasonGeoBlock .season-geo-stats {
   min-width: 0;
+  text-align: left !important;
 }
 
-.season-geo-main {
+#seasonGeoBlock .season-geo-main {
   display: flex;
   align-items: baseline;
+  justify-content: flex-start;
   gap: 4px;
   line-height: 1;
 }
 
-.season-geo-main strong {
+#seasonGeoBlock .season-geo-main strong {
   color: #fbbf24;
   font-size: 12px;
   font-weight: 1000;
 }
 
-.geo-win {
-  color: #34d399;
+#seasonGeoBlock .season-geo-main .geo-win {
+  color: #34d399 !important;
+  -webkit-text-fill-color: #34d399 !important;
   font-size: 10px;
   font-weight: 900;
 }
 
-.geo-lose {
-  color: #fb7185;
+#seasonGeoBlock .season-geo-main .geo-lose {
+  color: #fb7185 !important;
+  -webkit-text-fill-color: #fb7185 !important;
   font-size: 10px;
   font-weight: 900;
 }
 
-.season-geo-stats small {
+#seasonGeoBlock .season-geo-stats small {
   display: block;
   margin-top: 2px;
   color: #a1a1aa;
@@ -3081,30 +2994,17 @@ html, body {
   font-weight: 800;
 }
 
-
 @media (max-width: 979px) {
-  .season-geo-tours {
+  #screen-season .stats-grid {
     grid-template-columns: 1fr;
   }
-  .season-geo-main .geo-win {
-  color: #34d399 !important;
-  -webkit-text-fill-color: #34d399 !important;
+
+  #seasonGeoBlock .season-geo-tours {
+    grid-template-columns: 1fr !important;
+  }
 }
 
-.season-geo-main .geo-lose {
-  color: #fb7185 !important;
-  -webkit-text-fill-color: #fb7185 !important;
-}
-
-.season-geo-main {
-  justify-content: flex-start;
-}
-
-.season-geo-stats {
-  text-align: left !important;
-}
-}
-  </style>
+</style>
 </head>
 <body>
   <div class="app">
@@ -3538,9 +3438,9 @@ html, body {
     let siteTours = [];
     let rankHistory = [];
     let seasonPlayers = [];
-let seasonSummary = [];
-let seasonGeo = [];
-let seasonAchievements = [];
+    let seasonSummary = [];
+    let seasonGeo = [];
+    let seasonAchievements = [];
     let siteConfig = {};
     let selectedTour = null;
     let selectedPlayerName = null;
@@ -3587,21 +3487,22 @@ let seasonAchievements = [];
     }
 
     function applySheetsPayload(payload) {
-    const {
-  m = [],
-  p = [],
-  t = [],
-  o = [],
-  pl = [],
-  a = [],
-  rh = [],
-  toursRows = [],
-  cfgRows = [],
-  seasonPlayersRows = [],
-  seasonSummaryRows = [],
-  seasonGeoRows = [],
-  seasonAchievementsRows = []
-} = payload || {};
+      const {
+        m = [],
+        p = [],
+        t = [],
+        o = [],
+        pl = [],
+        a = [],
+        rh = [],
+        toursRows = [],
+        cfgRows = [],
+        seasonPlayersRows = [],
+        seasonSummaryRows = [],
+        seasonGeoRows = [],
+        seasonAchievementsRows = []
+      } = payload || {};
+
       matches = m.map(mapMatchRow).filter(x => x.id && x.teams);
       predictions = p.map(mapPredictionRow).filter(x => x.name && x.picks.length);
       siteTable = t;
@@ -3610,11 +3511,11 @@ let seasonAchievements = [];
       siteAchievements = a;
       rankHistory = rh;
       siteTours = toursRows;
-      siteConfig = rowsToConfig(cfgRows);
       seasonPlayers = seasonPlayersRows;
-seasonSummary = seasonSummaryRows;
-seasonGeo = seasonGeoRows;
-seasonAchievements = seasonAchievementsRows;
+      seasonSummary = seasonSummaryRows;
+      seasonGeo = seasonGeoRows;
+      seasonAchievements = seasonAchievementsRows;
+      siteConfig = rowsToConfig(cfgRows);
       matchById = new Map(matches.map(x => [x.id, x]));
 
       const currentTour = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
@@ -3641,21 +3542,21 @@ seasonAchievements = seasonAchievementsRows;
     }
 
     const TABS = {
-  matches: "site_matches",
-  predictions: "site_predictions",
-  table: "site_table",
-  overall: "site_overall",
-  players: "site_players",
-  stats: "site_stats",
-  achievements: "site_player_achievements",
-  rankHistory: "site_rank_history",
-  tours: "site_tours",
-  config: "site_config",
+      matches: "site_matches",
+      predictions: "site_predictions",
+      table: "site_table",
+      overall: "site_overall",
+      players: "site_players",
+      stats: "site_stats",
+      achievements: "site_player_achievements",
+      rankHistory: "site_rank_history",
+      tours: "site_tours",
+      config: "site_config",
       seasonPlayers: "season_players",
-seasonSummary: "season_summary",
-seasonGeo: "season_geo",
-seasonAchievements: "season_achievements"
-};
+      seasonSummary: "season_summary",
+      seasonGeo: "season_geo",
+      seasonAchievements: "season_achievements"
+    };
 
     function normalizeKeyName(value) {
       return String(value ?? "")
@@ -3843,21 +3744,21 @@ function mapPredictionRow(row) {
   loadTab(TABS.seasonAchievements).catch(() => [])
 ]);
 
-      const payload = {
-  m,
-  p,
-  t,
-  o,
-  pl,
-  a,
-  rh,
-  toursRows,
-  cfgRows,
-  seasonPlayersRows,
-  seasonSummaryRows,
-  seasonGeoRows,
-  seasonAchievementsRows
-};
+        const payload = {
+          m,
+          p,
+          t,
+          o,
+          pl,
+          a,
+          rh,
+          toursRows,
+          cfgRows,
+          seasonPlayersRows,
+          seasonSummaryRows,
+          seasonGeoRows,
+          seasonAchievementsRows
+        };
         applySheetsPayload(payload);
         saveCachedSheetsData(payload);
         hideDataNotice();
@@ -3874,238 +3775,239 @@ function mapPredictionRow(row) {
         return false;
       }
     }
-function renderSeasonPage() {
-  const heroEl = document.getElementById("seasonHeroCards");
-  const summaryEl = document.getElementById("seasonSummaryBlock");
 
-  if (!heroEl || !summaryEl) return;
 
-  const summary = Array.isArray(seasonSummary) ? seasonSummary : [];
-  const players = Array.isArray(seasonPlayers) ? seasonPlayers : [];
+    function renderSeasonPage() {
+      const heroEl = document.getElementById("seasonHeroCards");
+      const summaryEl = document.getElementById("seasonSummaryBlock");
+      const playersEl = document.getElementById("seasonPlayersGrid");
+      const geoEl = document.getElementById("seasonGeoBlock");
+      const achEl = document.getElementById("seasonAchievementsBlock");
 
-  if (!summary.length) {
-    heroEl.innerHTML = `<div class="empty-state">Нет данных season_summary</div>`;
-    summaryEl.innerHTML = "";
-    return;
-  }
+      if (!heroEl || !summaryEl) return;
 
-  const totalPredictions = summary.reduce((sum, r) => sum + toNum(get(r, ["predictions_count"]), 0), 0);
-  const totalPicks = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_total"]), 0), 0);
-  const totalWins = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_win"]), 0), 0);
-  const totalLosses = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_lose"]), 0), 0);
+      const summary = Array.isArray(seasonSummary) ? seasonSummary : [];
+      const players = Array.isArray(seasonPlayers) ? seasonPlayers : [];
+      const geo = Array.isArray(seasonGeo) ? seasonGeo : [];
+      const achievements = Array.isArray(seasonAchievements) ? seasonAchievements : [];
 
-  const hitRate = totalWins + totalLosses
-    ? Math.round((totalWins / (totalWins + totalLosses)) * 1000) / 10
-    : 0;
+      if (!summary.length) {
+        heroEl.innerHTML = `<div class="empty-state">Нет данных season_summary</div>`;
+        summaryEl.innerHTML = "";
+        if (playersEl) playersEl.innerHTML = `<div class="empty-state">Нет данных season_players</div>`;
+        if (geoEl) geoEl.innerHTML = `<div class="empty-state">Нет данных season_geo</div>`;
+        if (achEl) achEl.innerHTML = `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
+        return;
+      }
 
-  const bestTour = [...summary].sort((a, b) =>
-    toNum(get(b, ["best_player_points"]), 0) - toNum(get(a, ["best_player_points"]), 0)
-  )[0];
+      const totalPredictions = summary.reduce((sum, r) => sum + toNum(get(r, ["predictions_count"]), 0), 0);
+      const totalPicks = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_total"]), 0), 0);
+      const totalWins = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_win"]), 0), 0);
+      const totalLosses = summary.reduce((sum, r) => sum + toNum(get(r, ["picks_lose"]), 0), 0);
+      const hitRate = totalWins + totalLosses
+        ? Math.round((totalWins / (totalWins + totalLosses)) * 1000) / 10
+        : 0;
 
-  const bestOddRow = [...summary].sort((a, b) =>
-    toNum(get(b, ["max_scoring_odd", "max_win_odd"]), 0) - toNum(get(a, ["max_scoring_odd", "max_win_odd"]), 0)
-  )[0];
+      const bestTour = [...summary].sort((a, b) =>
+        toNum(get(b, ["best_player_points"]), 0) - toNum(get(a, ["best_player_points"]), 0)
+      )[0];
 
-  const finalTour = Math.max(...players.map(r => toNum(get(r, ["tour"]), 0)));
-  const champion = players
-    .filter(r => toNum(get(r, ["tour"]), 0) === finalTour)
-    .sort((a, b) => toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) - toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999))[0];
+      const bestOddRow = [...summary].sort((a, b) =>
+        toNum(get(b, ["max_scoring_odd", "max_win_odd"]), 0) -
+        toNum(get(a, ["max_scoring_odd", "max_win_odd"]), 0)
+      )[0];
 
-  const card = (label, value, note = "") => `
-    <div class="stat-card">
-      <div class="stat-label">${escapeHtml(label)}</div>
-      <div class="stat-value accent">${escapeHtml(value)}</div>
-      ${note ? `<div class="stat-label">${escapeHtml(note)}</div>` : ""}
-    </div>
-  `;
+      const playerTours = players.map(r => toNum(get(r, ["tour"]), 0)).filter(Boolean);
+      const finalTour = playerTours.length ? Math.max(...playerTours) : 0;
+      const champion = players
+        .filter(r => toNum(get(r, ["tour"]), 0) === finalTour)
+        .sort((a, b) =>
+          toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) -
+          toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999)
+        )[0];
 
-  heroEl.innerHTML = [
-    card("Чемпион", get(champion, ["player"], "—"), `${toNum(get(champion, ["final_points", "overall_points_after_tour"]), 0)} pts`),
-    card("Прогнозов", totalPredictions, `${totalPicks} пиков`),
-    card("Hit rate", `${hitRate}%`, `${totalWins}/${totalWins + totalLosses}`),
-    card("Лучший тур", get(bestTour, ["best_player"], "—"), `T${get(bestTour, ["tour"], "—")} · ${get(bestTour, ["best_player_points"], "—")} pts`),
-    card("Max scoring odd", formatOdd3(get(bestOddRow, ["max_scoring_odd", "max_win_odd"], 0)), `Тур ${get(bestOddRow, ["tour"], "—")}`)
-  ].join("");
+      const card = (label, value, note = "") => `
+        <div class="stat-card">
+          <div class="stat-label">${escapeHtml(label)}</div>
+          <div class="stat-value accent">${escapeHtml(value)}</div>
+          ${note ? `<div class="stat-label">${escapeHtml(note)}</div>` : ""}
+        </div>
+      `;
 
-  summaryEl.innerHTML = `
-    <div class="metric-row"><span>Всего прогнозов</span><strong>${totalPredictions}</strong></div>
-    <div class="metric-row"><span>Всего пиков</span><strong>${totalPicks}</strong></div>
-    <div class="metric-row"><span>Выигравшие пики</span><strong class="positive">${totalWins}</strong></div>
-    <div class="metric-row"><span>Проигравшие пики</span><strong class="negative">${totalLosses}</strong></div>
-    <div class="metric-row"><span>Средняя проходимость</span><strong>${hitRate}%</strong></div>
-  `;
-    const playersEl = document.getElementById("seasonPlayersGrid");
-  const geoEl = document.getElementById("seasonGeoBlock");
-  const achEl = document.getElementById("seasonAchievementsBlock");
+      heroEl.innerHTML = [
+        card("Чемпион", get(champion, ["player"], "—"), `${get(champion, ["final_points", "overall_points_after_tour"], 0)} оч.`),
+        card("Прогнозов", totalPredictions, `${totalPicks} пиков`),
+        card("Hit rate", `${hitRate}%`, `${totalWins}/${totalWins + totalLosses}`),
+        card("Лучший тур", get(bestTour, ["best_player"], "—"), `T${get(bestTour, ["tour"], "—")} · ${get(bestTour, ["best_player_points"], "—")} оч.`),
+        card("Max scoring odd", formatOdd3(get(bestOddRow, ["max_scoring_odd", "max_win_odd"], 0)), `Тур ${get(bestOddRow, ["tour"], "—")}`)
+      ].join("");
 
-if (playersEl) {
-  const tours = [...new Set(players.map(r => toNum(get(r, ["tour"]), 0)).filter(Boolean))]
-    .sort((a, b) => a - b);
+      summaryEl.innerHTML = `
+        <div class="metric-row"><span>Всего прогнозов</span><strong>${totalPredictions}</strong></div>
+        <div class="metric-row"><span>Всего пиков</span><strong>${totalPicks}</strong></div>
+        <div class="metric-row"><span>Выигравшие пики</span><strong class="positive">${totalWins}</strong></div>
+        <div class="metric-row"><span>Проигравшие пики</span><strong class="negative">${totalLosses}</strong></div>
+        <div class="metric-row"><span>Средняя проходимость</span><strong>${hitRate}%</strong></div>
+      `;
 
-  const finalTourNum = Math.max(...tours);
+      if (playersEl) {
+        const tours = [...new Set(players.map(r => toNum(get(r, ["tour"]), 0)).filter(Boolean))]
+          .sort((a, b) => a - b);
+        const finalTourNum = tours.length ? Math.max(...tours) : 0;
 
-  const finalRows = players
-    .filter(r => toNum(get(r, ["tour"]), 0) === finalTourNum)
-    .sort((a, b) =>
-      toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) -
-      toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999)
-    );
+        const finalRows = players
+          .filter(r => toNum(get(r, ["tour"]), 0) === finalTourNum)
+          .sort((a, b) =>
+            toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) -
+            toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999)
+          );
 
-  const byPlayerTour = new Map(
-    players.map(r => [`${get(r, ["player"], "")}|${get(r, ["tour"], "")}`, r])
-  );
+        const byPlayerTour = new Map(
+          players.map(r => [`${get(r, ["player"], "")}|${get(r, ["tour"], "")}`, r])
+        );
 
-  playersEl.innerHTML = finalRows.length ? `
-    <div class="season-matrix-wrap">
-      <table class="tour-table season-matrix">
-        <thead>
-          <tr>
-            <th>Игрок</th>
-            ${tours.map(t => `<th>T${t}</th>`).join("")}
-            <th>Итого</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${finalRows.map(playerRow => {
-            const player = get(playerRow, ["player"], "—");
+        playersEl.innerHTML = finalRows.length ? `
+          <div class="season-matrix-wrap">
+            <table class="tour-table season-matrix">
+              <thead>
+                <tr>
+                  <th>Игрок</th>
+                  ${tours.map(t => `<th>T${t}</th>`).join("")}
+                  <th>Итого</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${finalRows.map(playerRow => {
+                  const player = get(playerRow, ["player"], "—");
 
-            return `
-              <tr>
-                <td>${escapeHtml(player)}</td>
+                  return `
+                    <tr>
+                      <td>${escapeHtml(player)}</td>
+                      ${tours.map(t => {
+                        const row = byPlayerTour.get(`${player}|${t}`);
+                        const played = String(get(row, ["played"], "")).toLowerCase() === "true";
+                        const pts = get(row, ["tour_points"], "");
+                        const rank = get(row, ["overall_rank_after_tour"], "");
+                        const move = get(row, ["rank_change_text"], "—");
+                        const color = get(row, ["rank_change_color"], "neutral");
+                        const icons = String(get(row, ["achievements_icons"], "") || "");
 
-                ${tours.map(t => {
-                  const row = byPlayerTour.get(`${player}|${t}`);
-                  const played = String(get(row, ["played"], "")).toLowerCase() === "true";
-                  const pts = get(row, ["tour_points"], "");
-                  const rank = get(row, ["overall_rank_after_tour"], "");
-                  const move = get(row, ["rank_change_text"], "—");
-                  const color = get(row, ["rank_change_color"], "neutral");
-                 const icons = String(get(row, ["achievements_icons"], "") || "");
+                        if (!played) {
+                          return `
+                            <td class="season-cell absent">
+                              <div class="season-cell-inner">
+                                <div class="season-cell-main season-cell-dash">—</div>
+                              </div>
+                            </td>
+                          `;
+                        }
 
-                  if (!played) {
-  return `
-    <td class="season-cell absent">
-      <div class="season-cell-inner">
-        <div class="season-cell-main season-cell-dash">—</div>
-        <div class="season-cell-achievements"></div>
-      </div>
-    </td>
-  `;
-}
+                        return `
+                          <td class="season-cell">
+                            <div class="season-cell-inner">
+                              <div class="season-cell-top">
+                                <strong>${escapeHtml(pts || "0")} pts</strong>
+                                <span class="season-cell-achievements">
+                                  ${icons
+                                    ? icons.split("|||").slice(0, 2).map(icon =>
+                                        achievementIconHtml(icon.trim())
+                                      ).join("")
+                                    : ""}
+                                </span>
+                              </div>
 
-return `
-  <td class="season-cell">
-    <div class="season-cell-inner">
-      <div class="season-cell-top">
-        <strong>${escapeHtml(pts || "0")} pts</strong>
-        <span class="season-cell-achievements">
-          ${icons
-            ? icons.split("|||").slice(0, 2).map(icon =>
-                achievementIconHtml(icon.trim())
-              ).join("")
-            : ""}
-        </span>
-      </div>
-
-      <div class="season-cell-bottom">
-        <span>
-          #${escapeHtml(rank || "—")}
-          <span class="${escapeHtml(color)}">${escapeHtml(move)}</span>
-        </span>
-      </div>
-    </div>
-  </td>
-`;
+                              <div class="season-cell-bottom">
+                                <span>
+                                  #${escapeHtml(rank || "—")}
+                                  <span class="${escapeHtml(color)}">${escapeHtml(move)}</span>
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+                        `;
+                      }).join("")}
+                      <td class="season-total">
+                        <strong>#${escapeHtml(get(playerRow, ["final_rank", "overall_rank_after_tour"], "—"))}</strong>
+                        <span>${escapeHtml(get(playerRow, ["final_points", "overall_points_after_tour"], "0"))} оч.</span>
+                      </td>
+                    </tr>
+                  `;
                 }).join("")}
-
-                <td class="season-total">
-                  <strong>#${escapeHtml(get(playerRow, ["final_rank", "overall_rank_after_tour"], "—"))}</strong>
-                  <span>${escapeHtml(get(playerRow, ["final_points", "overall_points_after_tour"], "0"))} оч.</span>
-                </td>
-              </tr>
-            `;
-          }).join("")}
-        </tbody>
-      </table>
-    </div>
-  ` : `<div class="empty-state">Нет данных season_players</div>`;
-}
-
- if (geoEl) {
-  const geo = Array.isArray(seasonGeo) ? seasonGeo : [];
-
-  const tours = [...new Set(geo.map(r => toNum(get(r, ["tour"]), 0)).filter(Boolean))]
-    .sort((a, b) => a - b);
-
-  const topByTour = tours.map(t => {
-    const rows = geo
-      .filter(r => toNum(get(r, ["tour"]), 0) === t)
-      .sort((a, b) => toNum(get(b, ["picks_total"]), 0) - toNum(get(a, ["picks_total"]), 0))
-      .slice(0, 10);
-
-    return { tour: t, rows };
-  });
-
-  geoEl.innerHTML = topByTour.length ? `
-    <div class="season-geo-tours">
-      ${topByTour.map(block => `
-        <div class="season-geo-tour-card">
-          <div class="season-geo-tour-title">Тур ${block.tour}</div>
-
-          <div class="season-geo-tour-list">
-            ${block.rows.map((r, index) => {
-               const total = toNum(get(r, ["picks_total"]), 0);
-  const wins = toNum(get(r, ["picks_win"]), 0);
-  const rate = get(r, ["hit_rate"], "0");
-
-  const flag = get(r, ["flag"], "");
-
-  const flagHtml = flag
-  ? `<img src="${escapeHtml(flag)}" alt="">`
-  : "🏳️";
-              
-  return `
-    <div class="season-geo-tour-row">
-
-      <div class="season-geo-flag">
-        ${flagHtml}
-      </div>
-
-    <div class="season-geo-stats">
-      <div class="season-geo-main">
-        <strong>${total}</strong>
-
-     <span class="geo-win">+${wins}</span>
-<span class="geo-lose">-${Math.max(total - wins, 0)}</span>
-      </div>
-
-      <small>${rate}%</small>
-    </div>
-
-  </div>
-`;
-            }).join("")}
+              </tbody>
+            </table>
           </div>
-        </div>
-      `).join("")}
-    </div>
-  ` : `<div class="empty-state">Нет данных season_geo</div>`;
-}
-  if (achEl) {
-    const ach = Array.isArray(seasonAchievements) ? seasonAchievements : [];
+        ` : `<div class="empty-state">Нет данных season_players</div>`;
+      }
 
-    achEl.innerHTML = ach.length ? ach.map(row => `
-      <div class="achievement-item">
-        <span>${escapeHtml(get(row, ["icon"], "🏅"))}</span>
-        <div class="achievement-text">
-          <strong>${escapeHtml(get(row, ["title"], get(row, ["code"], "Ачивка")))}</strong>
-          <small class="achievement-player">${escapeHtml(get(row, ["player"], ""))}</small>
-          <small class="achievement-desc">${escapeHtml(get(row, ["description"], ""))}</small>
-        </div>
-      </div>
-    `).join("") : `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
-  }
-}
+      if (geoEl) {
+        const tours = [...new Set(geo.map(r => toNum(get(r, ["tour"]), 0)).filter(Boolean))]
+          .sort((a, b) => a - b);
+
+        const topByTour = tours.map(t => {
+          const rows = geo
+            .filter(r => toNum(get(r, ["tour"]), 0) === t)
+            .sort((a, b) => toNum(get(b, ["picks_total"]), 0) - toNum(get(a, ["picks_total"]), 0))
+            .slice(0, 10);
+
+          return { tour: t, rows };
+        });
+
+        geoEl.innerHTML = topByTour.length ? `
+          <div class="season-geo-tours">
+            ${topByTour.map(block => `
+              <div class="season-geo-tour-card">
+                <div class="season-geo-tour-title">Тур ${block.tour}</div>
+                <div class="season-geo-tour-list">
+                  ${block.rows.map((r) => {
+                    const country = get(r, ["country"], "—");
+                    const total = toNum(get(r, ["picks_total"]), 0);
+                    const wins = toNum(get(r, ["picks_win"]), 0);
+                    const loses = toNum(get(r, ["picks_lose"]), Math.max(total - wins, 0));
+                    const rate = get(r, ["hit_rate"], "0");
+                    const rawFlag = String(get(r, ["flag"], "") || "").trim();
+
+                    const flagHtml = rawFlag
+                      ? (rawFlag.startsWith("http")
+                        ? `<img src="${escapeHtml(normalizeFlagUrl(rawFlag))}" alt="${escapeHtml(country)}" title="${escapeHtml(country)}">`
+                        : `<span title="${escapeHtml(country)}">${escapeHtml(rawFlag)}</span>`)
+                      : `<span title="${escapeHtml(country)}">🏳️</span>`;
+
+                    return `
+                      <div class="season-geo-tour-row">
+                        <div class="season-geo-flag">${flagHtml}</div>
+                        <div class="season-geo-stats">
+                          <div class="season-geo-main">
+                            <strong>${total}</strong>
+                            <span class="geo-win">+${wins}</span>
+                            <span class="geo-lose">-${loses}</span>
+                          </div>
+                          <small>${rate}%</small>
+                        </div>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        ` : `<div class="empty-state">Нет данных season_geo</div>`;
+      }
+
+      if (achEl) {
+        achEl.innerHTML = achievements.length ? achievements.map(row => `
+          <div class="achievement-item">
+            <span>${achievementIconHtml(get(row, ["icon"], "🏅"))}</span>
+            <div class="achievement-text">
+              <strong>${escapeHtml(get(row, ["title"], get(row, ["code"], "Ачивка")))}</strong>
+              <small class="achievement-player">${escapeHtml(get(row, ["player"], ""))}</small>
+              <small class="achievement-desc">${escapeHtml(get(row, ["description"], ""))}</small>
+            </div>
+          </div>
+        `).join("") : `<div class="empty-state">Ачивки сезона пока не заполнены</div>`;
+      }
+    }
+
+
     function renderAll() {
       populateTourControls();
       renderMatches();
