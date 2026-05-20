@@ -3861,13 +3861,13 @@ if (playersEl) {
         </div>
       </div>
 
-      <div class="season-cell-achievements">
-     ${icons
-  ? icons.split("|||").slice(0, 2).map(icon => `
-      <img src="${escapeHtml(icon)}" class="season-achievement-icon">
-    `).join("")
-  : ""}
-      </div>
+ <div class="season-cell-achievements">
+  ${icons
+    ? icons.split("|||").slice(0, 2).map(icon =>
+        achievementIconHtml(icon)
+      ).join("")
+    : ""}
+</div>
     </div>
   </td>
 `;
