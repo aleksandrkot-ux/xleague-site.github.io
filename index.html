@@ -2914,23 +2914,31 @@ html, body {
 .season-matrix .red { color: #fb7185 !important; }
 .season-matrix .blue { color: #60a5fa !important; }
 .season-matrix .neutral { color: #a1a1aa !important; }
-    .season-cell-inner {
+  .season-cell-inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 18px;
-  gap: 5px;
+  grid-template-columns: minmax(0, 1fr) 14px;
+  gap: 2px;
   align-items: start;
 }
 
-.season-cell-main {
-  min-width: 0;
-}
-
 .season-cell-achievements {
-  display: grid;
-  gap: 3px;
-  justify-content: end;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: flex-start;
+  padding-top: 0;
+  transform: translateX(-3px);
 }
 
+.season-cell-achievements img,
+.season-achievement-icon {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+  object-fit: contain;
+  opacity: .92;
+}
 .season-cell-achievements span {
   width: 16px;
   height: 16px;
