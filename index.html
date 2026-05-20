@@ -3010,9 +3010,7 @@ html, body {
   align-items: stretch;
 }
 
-#seasonHeroCards .season-prize-card {
-  grid-row: span 2;
-}
+
 
 #seasonHeroCards .stat-card {
   min-height: 104px;
@@ -3024,8 +3022,22 @@ html, body {
   justify-content: center;
 }
 
-#seasonHeroCards .season-best-pick-card {
-  grid-column: 2 / 4;
+#seasonHeroCards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+
+#seasonHeroCards .season-prize-card {
+  grid-column: span 1;
+}
+
+#seasonHeroCards .stat-card {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* FINAL OVERRIDE: season achievements board */
