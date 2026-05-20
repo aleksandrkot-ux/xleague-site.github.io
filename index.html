@@ -3852,11 +3852,7 @@ if (playersEl) {
                   const rank = get(row, ["overall_rank_after_tour"], "");
                   const move = get(row, ["rank_change_text"], "—");
                   const color = get(row, ["rank_change_color"], "neutral");
-                  const icons = String(get(row, ["achievements_icons"], "") || "")
-                    .split("|")
-                    .filter(Boolean)
-                    .slice(0, 3)
-                    .join(" ");
+                 const icons = String(get(row, ["achievements_icons"], "") || "");
 
                   if (!played) {
   return `
@@ -3884,10 +3880,10 @@ if (playersEl) {
         </div>
       </div>
 
- <div class="season-cell-achievements">
+<div class="season-cell-achievements">
   ${icons
     ? icons.split("|||").slice(0, 2).map(icon =>
-        achievementIconHtml(icon)
+        achievementIconHtml(icon.trim())
       ).join("")
     : ""}
 </div>
