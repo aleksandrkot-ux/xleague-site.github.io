@@ -3843,9 +3843,11 @@ if (playersEl) {
       </div>
 
       <div class="season-cell-achievements">
-        ${icons
-          ? icons.split(" ").slice(0, 2).map(icon => `<span>${escapeHtml(icon)}</span>`).join("")
-          : ""}
+       ${icons
+  ? icons.split("-").slice(0, 2).map(icon => `
+      <span>${achievementIconHtml(icon)}</span>
+    `).join("")
+  : ""}
       </div>
     </div>
   </td>
