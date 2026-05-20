@@ -3974,7 +3974,9 @@ function mapPredictionRow(row) {
 
                     return `
                       <div class="season-geo-tour-row">
-                        <div class="season-geo-flag">${flagHtml}</div>
+                      <div class="season-geo-flag">
+  ${flagHtml(get(r, ["flag"], ""))}
+</div>
                         <div class="season-geo-stats">
                           <div class="season-geo-main">
                             <strong>${total}</strong>
