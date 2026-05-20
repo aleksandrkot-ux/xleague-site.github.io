@@ -2994,19 +2994,16 @@ html, body {
 .season-matrix tbody tr:hover {
   background: rgba(182,255,59,.07);
 }
-    .season-geo-tours {
+.season-geo-tours {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .season-geo-tour-card {
-  padding: 10px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.035);
-  border: 1px solid rgba(255,255,255,.055);
+  padding: 8px;
+  border-radius: 14px;
 }
-
 .season-geo-tour-title {
   margin-bottom: 8px;
   color: #fbbf24;
@@ -3089,6 +3086,23 @@ html, body {
   .season-geo-tours {
     grid-template-columns: 1fr;
   }
+  .season-geo-main .geo-win {
+  color: #34d399 !important;
+  -webkit-text-fill-color: #34d399 !important;
+}
+
+.season-geo-main .geo-lose {
+  color: #fb7185 !important;
+  -webkit-text-fill-color: #fb7185 !important;
+}
+
+.season-geo-main {
+  justify-content: flex-start;
+}
+
+.season-geo-stats {
+  text-align: left !important;
+}
 }
   </style>
 </head>
@@ -4056,13 +4070,8 @@ return `
       <div class="season-geo-main">
         <strong>${total}</strong>
 
-        <span class="geo-win">
-          +${wins}
-        </span>
-
-        <span class="geo-lose">
-          -${Math.max(total - wins, 0)}
-        </span>
+     <span class="geo-win">+${wins}</span>
+<span class="geo-lose">-${Math.max(total - wins, 0)}</span>
       </div>
 
       <small>${rate}%</small>
