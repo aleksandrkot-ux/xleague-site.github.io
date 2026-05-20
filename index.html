@@ -3965,18 +3965,11 @@ function mapPredictionRow(row) {
                     const loses = toNum(get(r, ["picks_lose"]), Math.max(total - wins, 0));
                     const rate = get(r, ["hit_rate"], "0");
                     const rawFlag = String(get(r, ["flag"], "") || "").trim();
-
-                    const flagHtml = rawFlag
-                      ? (rawFlag.startsWith("http")
-                        ? `<img src="${escapeHtml(normalizeFlagUrl(rawFlag))}" alt="${escapeHtml(country)}" title="${escapeHtml(country)}">`
-                        : `<span title="${escapeHtml(country)}">${escapeHtml(rawFlag)}</span>`)
-                      : `<span title="${escapeHtml(country)}">🏳️</span>`;
+                    const renderedFlag = flagHtml(rawFlag);
 
                     return `
                       <div class="season-geo-tour-row">
-                      <div class="season-geo-flag">
-  ${flagHtml(get(r, ["flag"], ""))}
-</div>
+                        <div class="season-geo-flag" title="${escapeHtml(country)}">${renderedFlag}</div>
                         <div class="season-geo-stats">
                           <div class="season-geo-main">
                             <strong>${total}</strong>
@@ -4124,7 +4117,8 @@ function mapPredictionRow(row) {
     function flagHtml(value) {
       const flag = extractFlag(value);
       if (/^https?:\/\//i.test(flag)) {
-        return `<img src="${escapeHtml(flag)}" alt="" loading="lazy">`;
+        const url = normalizeFlagUrl(flag) || flag;
+        return `<img src="${escapeHtml(url)}" alt="" loading="lazy">`;
       }
       return escapeHtml(flag || "🌍");
     }
