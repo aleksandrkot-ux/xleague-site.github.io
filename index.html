@@ -2905,17 +2905,15 @@ html, body {
 .season-matrix .neutral { color: #a1a1aa !important; -webkit-text-fill-color: #a1a1aa !important; }
 
 #seasonGeoBlock .season-geo-tours {
-  display: grid !important;
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-  gap: 6px !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
 }
 
 #seasonGeoBlock .season-geo-tour-card {
-  min-width: 0 !important;
-  padding: 8px !important;
-  border-radius: 14px !important;
-  background: rgba(255,255,255,.035);
-  border: 1px solid rgba(255,255,255,.055);
+  min-width: 100px !important;
+  flex-shrink: 0;
+  padding: 6px !important;
 }
 
 #seasonGeoBlock .season-geo-tour-title {
