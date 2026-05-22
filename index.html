@@ -2764,10 +2764,22 @@ html, body {
   -webkit-text-fill-color: #ffffff !important;
 }
   
-/* === Season page final compact styles === */
 #screen-season .stats-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  gap: 14px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin-bottom: 10px;
+  padding-bottom: 6px;
+}
+
+#screen-season .stats-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+#screen-season .stats-grid::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
 }
 
 .season-matrix-wrap {
@@ -3226,7 +3238,10 @@ html, body {
   flex-direction: column !important;
   justify-content: center !important;
 }
-
+#screen-season .stat-card {
+  min-width: 210px;
+  flex-shrink: 0;
+}
 #seasonHeroCards .season-best-pick-card {
   grid-column: 1 / 3 !important;
   grid-row: 3 !important;
