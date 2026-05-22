@@ -3003,17 +3003,18 @@ html, body {
 
 
 #seasonGeoBlock .season-geo-tours {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  gap: 6px !important;
-  overflow-x: auto;
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 4px !important;
+  overflow-x: hidden !important;
 }
 
 #seasonGeoBlock .season-geo-tour-card {
-  min-width: 210px !important;
-  flex-shrink: 0;
+  min-width: 0 !important;
+  width: auto !important;
+  padding: 5px !important;
 }
-}
+
 #seasonHeroCards {
   display: grid;
   grid-template-columns: 1.35fr 1fr 1fr;
