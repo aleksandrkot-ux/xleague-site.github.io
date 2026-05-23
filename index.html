@@ -4116,24 +4116,52 @@ function mapPredictionRow(row) {
 
       // География сезона — это количество матчей по странам, а не популярность/количество пиков.
       // Поэтому Китай в туре считается как 5, если в site_matches есть 5 китайских матчей.
-      (matches || []).forEach(match => {
-        const tour = toNum(match.tour, 0);
-        if (!tour) return;
-        if (match.api_status === "cancelled" || match.status === "cancelled") return;
+   // География сезона — популярность стран в прогнозах игроков
+(rows || []).forEach(row => {
+  const tour = toNum(row.tour, 0);
+  if (!tour) return;
 
-        const country = String(match.country || "—").trim() || "—";
-        const flag = String(match.flag_url || match.flag || "🌍").trim();
-        const status = normalizeStatus(match.api_status || match.status, match.api_status || match.status);
+  const picks = [
+    row.match1_id,
+    row.match2_id,
+    row.match3_id
+  ].filter(Boolean);
 
-        const key = `${tour}|${country}`;
-        if (!geoMap.has(key)) {
-          geoMap.set(key, { tour, country, flag, picks_total: 0, picks_win: 0, picks_lose: 0 });
-        }
-        const item = geoMap.get(key);
-        item.picks_total += 1;
-        if (status === "win") item.picks_win += 1;
-        if (status === "lose") item.picks_lose += 1;
+  picks.forEach(id => {
+    const match = matchesById.get(String(id));
+    if (!match) return;
+
+    if (match.api_status === "cancelled" || match.status === "cancelled") return;
+
+    const country = String(match.country || "—").trim() || "—";
+    const flag = String(match.flag_url || match.flag || "🌍").trim();
+
+    const status = normalizeStatus(
+      match.api_status || match.status,
+      match.api_status || match.status
+    );
+
+    const key = `${tour}|${country}`;
+
+    if (!geoMap.has(key)) {
+      geoMap.set(key, {
+        tour,
+        country,
+        flag,
+        picks_total: 0,
+        picks_win: 0,
+        picks_lose: 0
       });
+    }
+
+    const item = geoMap.get(key);
+
+    item.picks_total += 1;
+
+    if (status === "win") item.picks_win += 1;
+    if (status === "lose") item.picks_lose += 1;
+  });
+});
 
       const seasonGeoRows = [...geoMap.values()].map(r => {
         const settled = r.picks_win + r.picks_lose;
