@@ -5618,7 +5618,7 @@ sourceMatches.forEach(match => {
       const formPicks = formTourSource
         .flatMap(p => p.picks || [])
         .filter(pick => pick && pick.result)
-        .slice(0, 6);
+        .slice(0, 7);
       const formEl = document.getElementById("profileForm");
       if (formEl) formEl.innerHTML = formPicks.map(pick => profileDot(pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending")).join("");
 
