@@ -4230,7 +4230,9 @@ function mapPredictionRow(row) {
         ? mergeByKeys(sourcePlayers, derivedSeason.seasonPlayersRows, r => `${get(r, ["player"], "")}|${get(r, ["tour"], "")}`)
         : derivedSeason.seasonPlayersRows;
 
-     const geo = derivedSeason.seasonGeoRows;
+     const geo = sourceGeo.length
+  ? mergeByKeys(sourceGeo, derivedSeason.seasonGeoRows, r => `${get(r, ["tour"], "")}|${get(r, ["country"], "")}`)
+  : derivedSeason.seasonGeoRows;
       
       const achievements = Array.isArray(seasonAchievements) ? seasonAchievements : [];
 
