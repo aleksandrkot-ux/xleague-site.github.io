@@ -4230,10 +4230,8 @@ function mapPredictionRow(row) {
         ? mergeByKeys(sourcePlayers, derivedSeason.seasonPlayersRows, r => `${get(r, ["player"], "")}|${get(r, ["tour"], "")}`)
         : derivedSeason.seasonPlayersRows;
 
-      const geo = sourceGeo.length
-        ? mergeByKeys(sourceGeo, derivedSeason.seasonGeoRows, r => `${get(r, ["tour"], "")}|${get(r, ["country"], "")}`)
-        : derivedSeason.seasonGeoRows;
-
+     const geo = derivedSeason.seasonGeoRows;
+      
       const achievements = Array.isArray(seasonAchievements) ? seasonAchievements : [];
 
       // Микроачивки не трогаем: всё, что пришло из season_players, остается в своих ячейках.
