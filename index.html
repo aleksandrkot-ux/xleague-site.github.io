@@ -4313,16 +4313,16 @@ function mapPredictionRow(row) {
               `;
             }).join("")}
             <div class="season-prize-small">
-              ${finalStandings.slice(5, 10).map(row => {
-                const rank = toNum(get(row, ["final_rank", "overall_rank_after_tour"]), 0);
-                return `
-                  <div class="season-prize-row">
-                    <span>#${rank}</span>
-                    <strong>${escapeHtml(get(row, ["player"], "—"))}</strong>
-                    <em>1 000 ₽</em>
-                  </div>
-                `;
-              }).join("")}
+             ${finalStandings.slice(5, 10).map((row, index) => {
+  const place = index + 6;
+  return `
+    <div class="season-prize-row">
+      <span>#${place}</span>
+      <strong>${escapeHtml(get(row, ["player"], "—"))}</strong>
+      <em>1 000 ₽</em>
+    </div>
+  `;
+}).join("")}
             </div>
           </div>
         </div>
