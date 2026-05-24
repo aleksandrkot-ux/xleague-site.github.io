@@ -4313,8 +4313,18 @@ function mapPredictionRow(row) {
               `;
             }).join("")}
             <div class="season-prize-small">
-             ${finalStandings.slice(5, 10).map((row, index) => {
+           const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
+  const player = String(get(row, ["player"], "")).trim();
+
+  return player &&
+    arr.findIndex(r =>
+      String(get(r, ["player"], "")).trim() === player
+    ) === index;
+});
+
+${uniqueFinalStandings.slice(5, 10).map((row, index) => {
   const place = index + 6;
+
   return `
     <div class="season-prize-row">
       <span>#${place}</span>
