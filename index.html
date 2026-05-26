@@ -4323,13 +4323,16 @@ const finalStandings = players
     row.player &&
     arr.findIndex(x => x.player.toLowerCase() === row.player.toLowerCase()) === index
   )
-  .sort((a, b) =>
-    b.final_points - a.final_points ||
-    a.player.localeCompare(b.player, "ru")
-  );
+  .sort((a, b) => {
+    const aTie = tieStatsByPlayer.get(a.player.toLowerCase()) || { bestTourPoints: 0 };
+    const bTie = tieStatsByPlayer.get(b.player.toLowerCase()) || { bestTourPoints: 0 };
+
+    return b.final_points - a.final_points ||
+      bTie.bestTourPoints - aTie.bestTourPoints ||
+      a.player.localeCompare(b.player, "ru");
+  });
 
 const champion = finalStandings[0];
-      const champion = finalStandings[0];
 
       const prizeByRank = { 1: 5000, 2: 4500, 3: 4000, 4: 3500, 5: 3000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000 };
       const rankIcon = (rank) => rank === 1 ? "🏆" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
@@ -4352,7 +4355,7 @@ const champion = finalStandings[0];
             <small>${escapeHtml(get(champion, ["final_points", "overall_points_after_tour"], 0))} оч. · 5 000 ₽</small>
           </div>
           <div class="season-prize-list">
-          ${uniqueFinalStandings.slice(0, 5).map((row, index) => {
+          ${finalStandings.slice(0, 5).map((row, index) => {
   const rank = index + 1;
               return `
                 <div class="season-prize-row season-prize-row-main">
@@ -4365,7 +4368,7 @@ const champion = finalStandings[0];
             <div class="season-prize-small">
          
 ${(() => {
-  return uniqueFinalStandings.slice(5, 10).map((row, index) => {
+  return finalStandings.slice(5, 10).map((row, index) => {
     const place = index + 6;
 
     return `
@@ -4407,10 +4410,13 @@ ${(() => {
           .sort((a, b) => a - b);
         const finalTourNum = tours.length ? Math.max(...tours) : 0;
 
-     const finalRows = uniqueFinalStandings;
+     const finalRows = finalStandings;
 
         const byPlayerTour = new Map(
-          players.map(r => [`${get(r, ["player"], "")}|${get(r, ["tour"], "")}`, r])
+          players.map(r => {
+            const player = cleanPlayerName(get(r, ["player"], ""));
+            return [`${player}|${get(r, ["tour"], "")}`, r];
+          })
         );
 
         playersEl.innerHTML = finalRows.length ? `
@@ -4425,7 +4431,7 @@ ${(() => {
               </thead>
               <tbody>
                 ${finalRows.map(playerRow => {
-                  const player = get(playerRow, ["player"], "—");
+                  const player = cleanPlayerName(get(playerRow, ["player"], "—"));
 
                   return `
                     <tr>
