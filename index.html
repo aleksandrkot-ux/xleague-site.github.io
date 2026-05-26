@@ -3931,14 +3931,19 @@ function mapPredictionRow(row) {
   return { matchId: id, match: matchName, result, odd, score };
 };
 
+  const picks = [pick(1), pick(2), pick(3)].filter(p => p.matchId || p.match);
+  const hits = picks.filter(p => p.result === "win").length;
+
   return {
     name: player,
     tour: toNum(get(row, ["tour", "Tour", "Тур"])),
     pts: toNum(get(row, ["total", "Total", "R", "points", "Points", "P"])),
     bonus: toNum(get(row, ["bonus", "Bonus", "Q"])),
     odd: toNum(get(row, ["total_odd", "total odd", "S", "express_odd"])),
+    hits,
+    expressHit: hits >= 3,
     move: get(row, ["move", "movement", "status"], "—"),
-    picks: [pick(1), pick(2), pick(3)].filter(p => p.matchId || p.match)
+    picks
   };
 }
     function mapOverallRow(row) {
@@ -4296,11 +4301,35 @@ const rankByPlayer = new Map(standings.map((r, i) => [r.player, i + 1]));
 
 const tieStatsByPlayer = new Map();
 
+// Тай-брейк берём из site_predictions: там видно, был ли у игрока зашедший экспресс 3/3.
+// season_players оставляем источником итоговых очков, но для равенства очков он не всегда хранит нужный признак.
+predictions.forEach(p => {
+  const player = cleanPlayerName(p.name);
+  if (!player) return;
+
+  const key = player.toLowerCase();
+  const prev = tieStatsByPlayer.get(key) || {
+    expressHits: 0,
+    bestTourPoints: 0
+  };
+
+  const pts = toNum(p.pts, 0);
+  const hits = Array.isArray(p.picks) ? p.picks.filter(pick => pick.result === "win").length : toNum(p.hits, 0);
+
+  prev.bestTourPoints = Math.max(prev.bestTourPoints, pts);
+  if (hits >= 3) prev.expressHits += 1;
+
+  tieStatsByPlayer.set(key, prev);
+});
+
+// Фолбэк на season_players, если по игроку нет строк в site_predictions.
 players.forEach(r => {
   const player = cleanPlayerName(get(r, ["player"], ""));
   if (!player) return;
 
-  const prev = tieStatsByPlayer.get(player.toLowerCase()) || {
+  const key = player.toLowerCase();
+  const prev = tieStatsByPlayer.get(key) || {
+    expressHits: 0,
     bestTourPoints: 0
   };
 
@@ -4309,7 +4338,7 @@ players.forEach(r => {
     toNum(get(r, ["tour_points"]), 0)
   );
 
-  tieStatsByPlayer.set(player.toLowerCase(), prev);
+  tieStatsByPlayer.set(key, prev);
 });
 
 const finalStandings = players
@@ -4324,10 +4353,11 @@ const finalStandings = players
     arr.findIndex(x => x.player.toLowerCase() === row.player.toLowerCase()) === index
   )
   .sort((a, b) => {
-    const aTie = tieStatsByPlayer.get(a.player.toLowerCase()) || { bestTourPoints: 0 };
-    const bTie = tieStatsByPlayer.get(b.player.toLowerCase()) || { bestTourPoints: 0 };
+    const aTie = tieStatsByPlayer.get(a.player.toLowerCase()) || { expressHits: 0, bestTourPoints: 0 };
+    const bTie = tieStatsByPlayer.get(b.player.toLowerCase()) || { expressHits: 0, bestTourPoints: 0 };
 
     return b.final_points - a.final_points ||
+      bTie.expressHits - aTie.expressHits ||
       bTie.bestTourPoints - aTie.bestTourPoints ||
       a.player.localeCompare(b.player, "ru");
   });
