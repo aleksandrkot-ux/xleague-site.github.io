@@ -4317,36 +4317,20 @@ const finalStandings = players
   .map(r => ({
     ...r,
     player: cleanPlayerName(get(r, ["player"], "")),
-    _tie: tieStatsByPlayer.get(cleanPlayerName(get(r, ["player"], "")).toLowerCase()) || {
-      bestTourPoints: 0
-    }
+    final_points: toNum(get(r, ["final_points", "overall_points_after_tour"]), 0)
   }))
   .filter((row, index, arr) =>
     row.player &&
     arr.findIndex(x => x.player.toLowerCase() === row.player.toLowerCase()) === index
   )
   .sort((a, b) =>
-    toNum(get(b, ["final_points", "overall_points_after_tour"]), 0) -
-    toNum(get(a, ["final_points", "overall_points_after_tour"]), 0) ||
-    b._tie.bestTourPoints - a._tie.bestTourPoints ||
+    b.final_points - a.final_points ||
     a.player.localeCompare(b.player, "ru")
   );
-      const champion = finalStandings[0];
-const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
-  const player = String(get(row, ["player"], ""))
-    .replace(/\u00A0/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
 
-  return player && arr.findIndex(r =>
-    String(get(r, ["player"], ""))
-      .replace(/\u00A0/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase() === player
-  ) === index;
-});
+const champion = finalStandings[0];
+      const champion = finalStandings[0];
+
       const prizeByRank = { 1: 5000, 2: 4500, 3: 4000, 4: 3500, 5: 3000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000 };
       const rankIcon = (rank) => rank === 1 ? "🏆" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
       const prizeText = (rank) => prizeByRank[rank] ? `${prizeByRank[rank].toLocaleString("ru-RU")} ₽` : "";
