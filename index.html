@@ -5922,7 +5922,7 @@ function achievementDescription(row) {
       const mode = tableSelect?.value || String(getCurrentTour() || siteConfig.current_tour || "5");
       let rows;
 
-   if (mode === "overall") {
+if (mode === "overall") {
   rows = siteOverall.length
     ? siteOverall.slice().sort((a, b) =>
         toNum(b.total, 0) - toNum(a.total, 0) ||
@@ -5933,14 +5933,12 @@ function achievementDescription(row) {
         String(a.name || "").localeCompare(String(b.name || ""), "ru")
       )
     : [...predictions].sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
+} else {
+  rows = [...predictions]
+    .filter(p => !p.tour || String(p.tour) === String(mode))
+    .sort((a,b) => b.pts - a.pts)
+    .map(p => ({ name: p.name, total: p.pts, move: p.move }));
 }
-          : [...predictions].sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
-      } else {
-        rows = [...predictions]
-          .filter(p => !p.tour || String(p.tour) === String(mode))
-          .sort((a,b) => b.pts - a.pts)
-          .map(p => ({ name: p.name, total: p.pts, move: p.move }));
-      }
 
     const isOverall = document.getElementById("tableSelect")?.value === "overall";
 document.getElementById("tourTable").classList.toggle("hide-move", !isOverall);
