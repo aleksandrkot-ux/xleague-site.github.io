@@ -5917,43 +5917,96 @@ function achievementDescription(row) {
       });
     }
 
-    function renderTableByMode() {
-      const tableSelect = document.getElementById("tableSelect");
-      const mode = tableSelect?.value || String(getCurrentTour() || siteConfig.current_tour || "5");
-      let rows;
+function renderTableByMode() {
+  const tableSelect = document.getElementById("tableSelect");
+  const mode = tableSelect?.value || String(getCurrentTour() || siteConfig.current_tour || "5");
 
-if (mode === "overall") {
-  rows = siteOverall.length
-    ? siteOverall.slice().sort((a, b) =>
-        toNum(b.total, 0) - toNum(a.total, 0) ||
-        toNum(b.expressHits || b.express_hits || b.hits3 || b.three_hits, 0) -
-        toNum(a.expressHits || a.express_hits || a.hits3 || a.three_hits, 0) ||
-        toNum(b.bestTourPoints || b.best_tour_points || b.bestTour || b.best_tour, 0) -
-        toNum(a.bestTourPoints || a.best_tour_points || a.bestTour || a.best_tour, 0) ||
-        String(a.name || "").localeCompare(String(b.name || ""), "ru")
-      )
-    : [...predictions].sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
-} else {
-  rows = [...predictions]
-    .filter(p => !p.tour || String(p.tour) === String(mode))
-    .sort((a,b) => b.pts - a.pts)
-    .map(p => ({ name: p.name, total: p.pts, move: p.move }));
-}
+  const cleanName = (name) => String(name || "")
+    .replace(/\u00A0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
-    const isOverall = document.getElementById("tableSelect")?.value === "overall";
-document.getElementById("tourTable").classList.toggle("hide-move", !isOverall);
+  const playerStats = new Map();
 
-document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
-  const moveClass =
-  r.move?.startsWith("⬆") ? "win" :
-  r.move?.startsWith("⬇") ? "lose" :
-  r.move === "NEW" ? "gold" :
-  "";
-const rank = i + 1;
-  return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
-}).join("");
-      bindTablePlayerLinks();
+  predictions.forEach(p => {
+    const name = cleanName(p.name);
+    if (!name) return;
+
+    const prev = playerStats.get(name) || {
+      expressHits: 0,
+      bestTourPoints: 0
+    };
+
+    const pts = toNum(p.pts, 0);
+    prev.bestTourPoints = Math.max(prev.bestTourPoints, pts);
+
+    if (toNum(p.hits, 0) >= 3) {
+      prev.expressHits += 1;
     }
+
+    playerStats.set(name, prev);
+  });
+
+  let rows;
+
+  if (mode === "overall") {
+    rows = siteOverall.length
+      ? siteOverall
+          .map(r => ({
+            ...r,
+            name: cleanName(r.name),
+            total: toNum(r.total, 0),
+            _stats: playerStats.get(cleanName(r.name)) || { expressHits: 0, bestTourPoints: 0 }
+          }))
+          .filter((r, index, arr) =>
+            r.name &&
+            arr.findIndex(x => cleanName(x.name).toLowerCase() === cleanName(r.name).toLowerCase()) === index
+          )
+          .sort((a, b) =>
+            b.total - a.total ||
+            b._stats.expressHits - a._stats.expressHits ||
+            b._stats.bestTourPoints - a._stats.bestTourPoints ||
+            a.name.localeCompare(b.name, "ru")
+          )
+      : [...predictions]
+          .map(p => ({
+            name: cleanName(p.name),
+            total: toNum(p.pts, 0),
+            move: p.move
+          }))
+          .sort((a, b) => b.total - a.total);
+  } else {
+    rows = [...predictions]
+      .filter(p => !p.tour || String(p.tour) === String(mode))
+      .map(p => ({
+        name: cleanName(p.name),
+        total: toNum(p.pts, 0),
+        move: p.move
+      }))
+      .filter((r, index, arr) =>
+        r.name &&
+        arr.findIndex(x => cleanName(x.name).toLowerCase() === cleanName(r.name).toLowerCase()) === index
+      )
+      .sort((a, b) => b.total - a.total);
+  }
+
+  const isOverall = mode === "overall";
+  document.getElementById("tourTable").classList.toggle("hide-move", !isOverall);
+
+  document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
+    const moveClass =
+      r.move?.startsWith("⬆") ? "win" :
+      r.move?.startsWith("⬇") ? "lose" :
+      r.move === "NEW" ? "gold" :
+      "";
+
+    const rank = i + 1;
+
+    return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
+  }).join("");
+
+  bindTablePlayerLinks();
+}
 
     function renderTable() {
 const isOverall = true;
