@@ -4059,10 +4059,26 @@ function mapPredictionRow(row) {
           if (pred) pointsByPlayer.set(player, (pointsByPlayer.get(player) || 0) + toNum(pred.pts, 0));
         });
 
-        const standings = [...pointsByPlayer.entries()]
-          .map(([player, points]) => ({ player, points }))
-          .sort((a, b) => b.points - a.points || a.player.localeCompare(b.player, "ru"));
-        const rankByPlayer = new Map(standings.map((r, i) => [r.player, i + 1]));
+      const standings = [...pointsByPlayer.entries()]
+  .map(([player, points]) => {
+    const tourRows = tours
+      .filter(t => t <= tour)
+      .map(t => byPlayerTour.get(`${player}|${t}`))
+      .filter(Boolean);
+
+    const expressHits = tourRows.filter(r => toNum(r.hits, 0) >= 3).length;
+    const bestTourPoints = Math.max(...tourRows.map(r => toNum(r.pts, 0)), 0);
+
+    return { player, points, expressHits, bestTourPoints };
+  })
+  .sort((a, b) =>
+    b.points - a.points ||
+    b.expressHits - a.expressHits ||
+    b.bestTourPoints - a.bestTourPoints ||
+    a.player.localeCompare(b.player, "ru")
+  );
+
+const rankByPlayer = new Map(standings.map((r, i) => [r.player, i + 1]));
 
         playerNames.forEach(player => {
           const pred = byPlayerTour.get(`${player}|${tour}`);
