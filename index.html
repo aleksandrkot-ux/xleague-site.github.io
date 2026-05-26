@@ -4296,7 +4296,21 @@ const rankByPlayer = new Map(standings.map((r, i) => [r.player, i + 1]));
           toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999)
         );
       const champion = finalStandings[0];
+const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
+  const player = String(get(row, ["player"], ""))
+    .replace(/\u00A0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
 
+  return player && arr.findIndex(r =>
+    String(get(r, ["player"], ""))
+      .replace(/\u00A0/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase() === player
+  ) === index;
+});
       const prizeByRank = { 1: 5000, 2: 4500, 3: 4000, 4: 3500, 5: 3000, 6: 1000, 7: 1000, 8: 1000, 9: 1000, 10: 1000 };
       const rankIcon = (rank) => rank === 1 ? "🏆" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
       const prizeText = (rank) => prizeByRank[rank] ? `${prizeByRank[rank].toLocaleString("ru-RU")} ₽` : "";
@@ -4318,7 +4332,7 @@ const rankByPlayer = new Map(standings.map((r, i) => [r.player, i + 1]));
             <small>${escapeHtml(get(champion, ["final_points", "overall_points_after_tour"], 0))} оч. · 5 000 ₽</small>
           </div>
           <div class="season-prize-list">
-            ${finalStandings.slice(0, 5).map(row => {
+          ${uniqueFinalStandings.slice(0, 5).map(row => {
               const rank = toNum(get(row, ["final_rank", "overall_rank_after_tour"]), 0);
               return `
                 <div class="season-prize-row season-prize-row-main">
@@ -5908,9 +5922,18 @@ function achievementDescription(row) {
       const mode = tableSelect?.value || String(getCurrentTour() || siteConfig.current_tour || "5");
       let rows;
 
-      if (mode === "overall") {
-        rows = siteOverall.length
-          ? siteOverall.slice().sort((a, b) => b.total - a.total)
+   if (mode === "overall") {
+  rows = siteOverall.length
+    ? siteOverall.slice().sort((a, b) =>
+        toNum(b.total, 0) - toNum(a.total, 0) ||
+        toNum(b.expressHits || b.express_hits || b.hits3 || b.three_hits, 0) -
+        toNum(a.expressHits || a.express_hits || a.hits3 || a.three_hits, 0) ||
+        toNum(b.bestTourPoints || b.best_tour_points || b.bestTour || b.best_tour, 0) -
+        toNum(a.bestTourPoints || a.best_tour_points || a.bestTour || a.best_tour, 0) ||
+        String(a.name || "").localeCompare(String(b.name || ""), "ru")
+      )
+    : [...predictions].sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
+}
           : [...predictions].sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
       } else {
         rows = [...predictions]
@@ -5928,7 +5951,7 @@ document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
   r.move?.startsWith("⬇") ? "lose" :
   r.move === "NEW" ? "gold" :
   "";
-  const rank = r.rank || i + 1;
+const rank = i + 1;
   return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
 }).join("");
       bindTablePlayerLinks();
