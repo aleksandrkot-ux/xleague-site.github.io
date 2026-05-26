@@ -4289,12 +4289,48 @@ const rankByPlayer = new Map(standings.map((r, i) => [r.player, i + 1]));
 
       const playerTours = players.map(r => toNum(get(r, ["tour"]), 0)).filter(Boolean);
       const finalTour = playerTours.length ? Math.max(...playerTours) : 0;
-      const finalStandings = players
-        .filter(r => toNum(get(r, ["tour"]), 0) === finalTour)
-        .sort((a, b) =>
-          toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) -
-          toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999)
-        );
+     const cleanPlayerName = (name) => String(name || "")
+  .replace(/\u00A0/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
+
+const tieStatsByPlayer = new Map();
+
+players.forEach(r => {
+  const player = cleanPlayerName(get(r, ["player"], ""));
+  if (!player) return;
+
+  const prev = tieStatsByPlayer.get(player.toLowerCase()) || {
+    bestTourPoints: 0
+  };
+
+  prev.bestTourPoints = Math.max(
+    prev.bestTourPoints,
+    toNum(get(r, ["tour_points"]), 0)
+  );
+
+  tieStatsByPlayer.set(player.toLowerCase(), prev);
+});
+
+const finalStandings = players
+  .filter(r => toNum(get(r, ["tour"]), 0) === finalTour)
+  .map(r => ({
+    ...r,
+    player: cleanPlayerName(get(r, ["player"], "")),
+    _tie: tieStatsByPlayer.get(cleanPlayerName(get(r, ["player"], "")).toLowerCase()) || {
+      bestTourPoints: 0
+    }
+  }))
+  .filter((row, index, arr) =>
+    row.player &&
+    arr.findIndex(x => x.player.toLowerCase() === row.player.toLowerCase()) === index
+  )
+  .sort((a, b) =>
+    toNum(get(b, ["final_points", "overall_points_after_tour"]), 0) -
+    toNum(get(a, ["final_points", "overall_points_after_tour"]), 0) ||
+    b._tie.bestTourPoints - a._tie.bestTourPoints ||
+    a.player.localeCompare(b.player, "ru")
+  );
       const champion = finalStandings[0];
 const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
   const player = String(get(row, ["player"], ""))
@@ -4332,8 +4368,8 @@ const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
             <small>${escapeHtml(get(champion, ["final_points", "overall_points_after_tour"], 0))} оч. · 5 000 ₽</small>
           </div>
           <div class="season-prize-list">
-          ${uniqueFinalStandings.slice(0, 5).map(row => {
-              const rank = toNum(get(row, ["final_rank", "overall_rank_after_tour"]), 0);
+          ${uniqueFinalStandings.slice(0, 5).map((row, index) => {
+  const rank = index + 1;
               return `
                 <div class="season-prize-row season-prize-row-main">
                   <span>${escapeHtml(rankIcon(rank))}</span>
@@ -4343,16 +4379,8 @@ const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
               `;
             }).join("")}
             <div class="season-prize-small">
-            ${(() => {
-  const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
-    const player = String(get(row, ["player"], "")).trim();
-
-    return player &&
-      arr.findIndex(r =>
-        String(get(r, ["player"], "")).trim() === player
-      ) === index;
-  });
-
+         
+${(() => {
   return uniqueFinalStandings.slice(5, 10).map((row, index) => {
     const place = index + 6;
 
@@ -4395,12 +4423,7 @@ const uniqueFinalStandings = finalStandings.filter((row, index, arr) => {
           .sort((a, b) => a - b);
         const finalTourNum = tours.length ? Math.max(...tours) : 0;
 
-        const finalRows = players
-          .filter(r => toNum(get(r, ["tour"]), 0) === finalTourNum)
-          .sort((a, b) =>
-            toNum(get(a, ["final_rank", "overall_rank_after_tour"]), 999) -
-            toNum(get(b, ["final_rank", "overall_rank_after_tour"]), 999)
-          );
+     const finalRows = uniqueFinalStandings;
 
         const byPlayerTour = new Map(
           players.map(r => [`${get(r, ["player"], "")}|${get(r, ["tour"], "")}`, r])
