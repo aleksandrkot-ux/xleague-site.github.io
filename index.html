@@ -4460,8 +4460,8 @@ ${(() => {
                 </tr>
               </thead>
               <tbody>
-                ${finalRows.map(playerRow => {
-                  const player = cleanPlayerName(get(playerRow, ["player"], "—"));
+               ${finalRows.map((playerRow, index) => {
+  const finalRank = index + 1;
 
                   return `
                     <tr>
@@ -4510,7 +4510,7 @@ ${(() => {
                         `;
                       }).join("")}
                       <td class="season-total">
-                        <strong>#${escapeHtml(get(playerRow, ["final_rank", "overall_rank_after_tour"], "—"))}</strong>
+                      <strong>#${escapeHtml(finalRank)}</strong>
                         <span>${escapeHtml(get(playerRow, ["final_points", "overall_points_after_tour"], "0"))} оч.</span>
                       </td>
                     </tr>
