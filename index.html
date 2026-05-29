@@ -4462,7 +4462,7 @@ ${(() => {
               <tbody>
                ${finalRows.map((playerRow, index) => {
   const finalRank = index + 1;
-
+ const player = cleanPlayerName(get(playerRow, ["player"], "—"));
                   return `
                     <tr>
                       <td>${escapeHtml(player)}</td>
