@@ -4518,7 +4518,7 @@ sourceMatches.forEach(match => {
      
       setText("profileSub", `#${overall.rank || "-"} в общем зачёте`);
       renderRankHistory(playerName);
-      setText("profileAvatar", playerName[0] || "X");
+    
 
       const countryEl = document.getElementById("profileCountry");
       if (countryEl) countryEl.innerHTML = `<div class="prefer-flags">${playerPreferredCountriesHtml(playerName)}</div>`;
