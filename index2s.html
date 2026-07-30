@@ -956,6 +956,300 @@ html, body {
       border: 1px solid var(--line);
     }
 
+
+    /* ===== Player dashboard v2: structural prototype ===== */
+    .player-dashboard-v2 { display: grid; gap: 10px; }
+
+    .player-dashboard-v2 .dashboard-card {
+      min-width: 0;
+      padding: 14px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+
+    .player-hero-v2 {
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px !important;
+    }
+
+    .player-hero-v2 .profile-name {
+      font-size: clamp(28px, 8vw, 42px);
+      line-height: .98;
+    }
+
+
+    /* ===== Medal Hero: full muted metallic backgrounds for the current top 3 ===== */
+    .player-hero-v2 {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: border-color .22s ease, box-shadow .22s ease, background .22s ease;
+    }
+
+    .player-hero-v2::before,
+    .player-hero-v2::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      transition: opacity .22s ease;
+    }
+
+    /* 1st place — muted antique gold across the whole Hero. */
+    .player-hero-v2.hero-rank-1 {
+      border: 1px solid rgba(184, 146, 72, .62) !important;
+      background:
+        radial-gradient(circle at 88% 0%, rgba(224, 184, 94, .20), transparent 44%),
+        linear-gradient(135deg, #332a18 0%, #282114 48%, #1d1911 100%) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 226, 158, .10),
+        inset 0 0 38px rgba(205, 158, 66, .07),
+        0 12px 28px rgba(0,0,0,.30) !important;
+    }
+
+    /* 2nd place — graphite silver across the whole Hero. */
+    .player-hero-v2.hero-rank-2 {
+      border: 1px solid rgba(154, 166, 178, .58) !important;
+      background:
+        radial-gradient(circle at 88% 0%, rgba(207, 217, 226, .16), transparent 44%),
+        linear-gradient(135deg, #30353a 0%, #25292d 48%, #1a1d20 100%) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(239, 246, 252, .09),
+        inset 0 0 38px rgba(164, 178, 190, .06),
+        0 12px 28px rgba(0,0,0,.28) !important;
+    }
+
+    /* 3rd place — dark bronze across the whole Hero. */
+    .player-hero-v2.hero-rank-3 {
+      border: 1px solid rgba(154, 98, 68, .58) !important;
+      background:
+        radial-gradient(circle at 88% 0%, rgba(194, 122, 80, .17), transparent 44%),
+        linear-gradient(135deg, #32231c 0%, #281c17 48%, #1c1512 100%) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(236, 169, 126, .08),
+        inset 0 0 38px rgba(166, 91, 55, .06),
+        0 12px 28px rgba(0,0,0,.28) !important;
+    }
+
+    /* A very soft metallic sheen so the fill does not look flat. */
+    .player-hero-v2.hero-rank-1::after,
+    .player-hero-v2.hero-rank-2::after,
+    .player-hero-v2.hero-rank-3::after {
+      z-index: 0;
+      inset: 0;
+      background: linear-gradient(112deg, transparent 0 34%, rgba(255,255,255,.035) 47%, transparent 60%);
+      opacity: 1;
+    }
+
+    .player-hero-v2 > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .player-hero-bottom-v2 {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .player-rank-v2 {
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 1000;
+    }
+
+    .player-awards-v2 {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .player-awards-v2 .profile-inline-achievements { margin-left: 0; }
+
+    .player-metrics-v2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .player-metric-v2 {
+      min-height: 92px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
+
+    .player-metric-v2 span {
+      color: var(--muted2);
+      font-size: 10px;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .player-metric-v2 strong {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 1000;
+    }
+
+    .player-form-v2 {
+      grid-column: 1 / -1;
+      min-height: auto;
+    }
+
+    .player-form-v2 .profile-dots {
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: nowrap;
+      width: 100%;
+      gap: 0;
+    }
+
+    .player-form-v2 .profile-form-tour {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      gap: 8px;
+    }
+
+    .player-form-v2 .profile-form-separator {
+      flex: 0 0 auto;
+      width: 1px;
+      height: 18px;
+      margin: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+    }
+
+    .player-form-v2 .profile-dot {
+      flex: 0 0 auto;
+      width: 16px;
+      height: 16px;
+    }
+
+    .player-activity-v2 { display: grid; gap: 10px; }
+
+    .dashboard-title-v2 {
+      margin-bottom: 11px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 1000;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .player-current-v2 #profileCurrentPicks {
+      display: grid;
+      gap: 8px;
+    }
+
+    .player-rank-v2-card .rank-chart-panel {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent !important;
+      box-shadow: none;
+    }
+
+    .player-achievements-v2 .achievement-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .player-achievements-v2 .achievement-strip::-webkit-scrollbar { display: none; }
+    .player-achievements-v2 .achievement-item { flex: 0 0 210px; }
+
+    .country-table-v2 {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .country-table-v2 th,
+    .country-table-v2 td {
+      padding: 9px 5px;
+      border-top: 1px solid rgba(255,255,255,.05);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .country-table-v2 th {
+      color: var(--muted2);
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .country-table-v2 th:first-child,
+    .country-table-v2 td:first-child {
+      width: 30px;
+      text-align: left;
+    }
+
+    .country-table-v2 th:nth-child(2),
+    .country-table-v2 td:nth-child(2) {
+      width: auto;
+      text-align: left;
+    }
+
+    .country-table-placeholder-v2 {
+      padding: 18px 6px 6px;
+      color: var(--muted2);
+      font-size: 11px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    @media (min-width: 700px) {
+      .screen.active#screen-players {
+        display: block;
+        max-width: 1040px;
+      }
+
+      #screen-players > .section-title,
+      #screen-players > .player-toolbar,
+      #screen-players > .player-dashboard-v2 { width: 100%; }
+
+      .player-dashboard-v2 {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .player-hero-v2 {
+        grid-column: 1 / -1;
+        min-height: 190px;
+      }
+
+      .player-metrics-v2 {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .player-form-v2 { grid-column: auto; }
+
+      .player-activity-v2 {
+        grid-column: 1 / -1;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+
+      .player-achievements-v2,
+      .player-countries-v2,
+      .player-history-v2 { grid-column: 1 / -1; }
+    }
+
     .profile-head {
       display: flex;
       align-items: center;
@@ -2470,26 +2764,26 @@ html, body {
       }
 
      .screen.active#screen-matches {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
-  column-gap: 18px;
-  align-items: start;
+  display: block;
 }
 
-#upcomingSection {
-  grid-column: 1;
+#screen-matches #upcomingSection,
+#screen-matches #finishedSection {
+  width: 100%;
 }
 
-#finishedSection {
-  grid-column: 2;
+#screen-matches #finishedSection {
+  margin-top: 18px;
 }
 
-#screen-matches.no-upcoming {
-  grid-template-columns: minmax(0, .9fr);
+#screen-matches #upcomingList,
+#screen-matches #finishedList {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
 }
 
-#screen-matches.no-upcoming #finishedSection {
-  grid-column: 1;
+#screen-matches .match-card {
+  height: 100%;
 }
 
       .screen.active#screen-picks {
@@ -2756,7 +3050,930 @@ html, body {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
-  </style>
+  
+/* ===== Player dashboard v2: desktop toolbar correction ===== */
+@media (min-width: 700px) {
+  .screen.active#screen-players {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(230px, 300px) !important;
+    column-gap: 14px !important;
+    row-gap: 10px !important;
+    align-items: end !important;
+  }
+
+  #screen-players > .section-title {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    margin: 8px 2px 0 !important;
+  }
+
+  #screen-players > .player-toolbar {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  #screen-players > .player-toolbar > div {
+    padding: 8px 10px !important;
+    border-radius: 18px !important;
+  }
+
+  #screen-players > .player-toolbar label {
+    display: none !important;
+  }
+
+  #screen-players > .player-toolbar select {
+    width: 100% !important;
+    padding: 9px 12px !important;
+  }
+
+  #screen-players > .player-dashboard-v2 {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+  }
+}
+
+
+/* ===== Player dashboard v2: dedicated mobile layout ===== */
+@media (max-width: 699px) {
+  #screen-players {
+    width: 100%;
+  }
+
+  #screen-players > .section-title {
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
+
+  #screen-players > .player-toolbar {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+  }
+
+  #screen-players > .player-toolbar > div {
+    width: 100%;
+    padding: 10px;
+  }
+
+  #screen-players > .player-toolbar label {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  #screen-players > .player-toolbar select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .player-dashboard-v2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .player-dashboard-v2 > * {
+    min-width: 0;
+  }
+
+  .player-hero-v2 {
+    min-height: 0;
+    padding: 16px !important;
+    gap: 18px;
+  }
+
+  .player-hero-v2 .profile-name {
+    max-width: 100%;
+    font-size: clamp(25px, 8.5vw, 34px);
+    line-height: 1.02;
+    overflow-wrap: anywhere;
+  }
+
+  .player-hero-bottom-v2 {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .player-rank-v2 {
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  .player-awards-v2 {
+    flex: 0 0 auto;
+    min-height: 28px;
+  }
+
+  .player-awards-v2 .profile-inline-achievements img,
+  .player-awards-v2 .profile-inline-achievements .badge-fallback {
+    width: 28px;
+    height: 28px;
+  }
+
+  .player-metrics-v2 {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+  }
+
+  .player-metric-v2,
+  .player-form-v2 {
+    grid-column: 1 !important;
+    min-height: 78px;
+    padding: 13px 14px;
+  }
+
+  .player-metric-v2 strong {
+    font-size: 25px;
+  }
+
+  .player-form-v2 {
+    min-height: 88px;
+  }
+
+  .player-form-v2 .profile-dots {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+
+  .player-form-v2 .profile-form-tour {
+    gap: 7px;
+  }
+
+  .player-form-v2 .profile-form-separator {
+    height: 16px;
+    margin: 0 10px;
+  }
+
+  .player-form-v2 .profile-dot {
+    width: 15px;
+    height: 15px;
+  }
+
+  .player-activity-v2 {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .player-current-v2,
+  .player-rank-v2-card,
+  .player-achievements-v2,
+  .player-countries-v2,
+  .player-history-v2 {
+    width: 100%;
+  }
+
+  .player-current-v2 .profile-pick-card {
+    padding: 11px;
+  }
+
+  .player-current-v2 .profile-pick-match {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    line-height: 1.25;
+  }
+
+  .player-current-v2 .profile-pick-meta {
+    margin-top: 7px;
+    align-items: flex-start;
+    line-height: 1.3;
+  }
+
+  .player-rank-v2-card .rank-chart-svg {
+    min-width: 100%;
+    height: 185px;
+  }
+
+  .player-achievements-v2 .achievement-strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    overflow: visible;
+  }
+
+  .player-achievements-v2 .achievement-item {
+    width: 100%;
+    flex: none;
+  }
+
+  .player-countries-v2 {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .player-countries-v2 .dashboard-title-v2 {
+    position: sticky;
+    left: 0;
+  }
+
+  .country-table-v2 {
+    min-width: 410px;
+  }
+
+  .player-history-v2 .past-tour-summary {
+    align-items: flex-start;
+  }
+
+  .player-history-v2 .past-tour-pick {
+    align-items: flex-start;
+  }
+
+  .player-history-v2 .past-tour-pick-name {
+    white-space: normal;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 370px) {
+  main {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .player-dashboard-v2 .dashboard-card {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .player-hero-v2 {
+    padding: 14px !important;
+  }
+
+  .player-hero-v2 .profile-name {
+    font-size: 25px;
+  }
+
+  .player-rank-v2 {
+    font-size: 14px;
+  }
+
+  .player-form-v2 .profile-dots {
+    gap: 7px;
+  }
+
+  .player-form-v2 .profile-dot {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+
+/* ===== Player dashboard v2.6: layered dark surfaces ===== */
+:root {
+  --dashboard-page: #070809;
+  --dashboard-surface: #141619;
+  --dashboard-surface-soft: #17191d;
+  --dashboard-surface-raised: #1a1c20;
+  --dashboard-border: rgba(255,255,255,.065);
+  --dashboard-border-soft: rgba(255,255,255,.04);
+}
+
+html,
+body,
+.app,
+main,
+.screen {
+  background: var(--dashboard-page) !important;
+}
+
+/* Main sections now read as separate panels on the black page. */
+.player-dashboard-v2 .dashboard-card:not(.player-hero-v2) {
+  background:
+    radial-gradient(circle at 92% 0%, rgba(255,255,255,.018), transparent 42%),
+    linear-gradient(180deg, #16181b 0%, var(--dashboard-surface) 100%) !important;
+  border-color: var(--dashboard-border) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 0 0 1px rgba(255,255,255,.012),
+    0 10px 24px rgba(0,0,0,.30) !important;
+}
+
+/* Metric tiles form a quieter secondary layer inside the dashboard. */
+.player-metric-v2 {
+  background:
+    radial-gradient(circle at 85% 0%, rgba(255,255,255,.018), transparent 48%),
+    var(--dashboard-surface-soft) !important;
+  border-color: var(--dashboard-border-soft) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.02),
+    0 6px 16px rgba(0,0,0,.18);
+}
+
+/* Inner content cards sit a little higher than their parent section. */
+.player-current-v2 .profile-pick-card,
+.player-achievements-v2 .achievement-item,
+.player-history-v2 .past-tour-details,
+.player-history-v2 .past-tour-pick {
+  background: var(--dashboard-surface-raised) !important;
+  border-color: rgba(255,255,255,.055) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.018);
+}
+
+.player-rank-v2-card .rank-chart-panel {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.012), rgba(255,255,255,0)) !important;
+  border-radius: 16px;
+}
+
+/* Country rows remain flat, but separators become slightly clearer. */
+.country-table-v2 th,
+.country-table-v2 td {
+  border-top-color: rgba(255,255,255,.065) !important;
+}
+
+/* Player selector is also treated as a compact floating panel. */
+#screen-players > .player-toolbar > div {
+  background: var(--dashboard-surface) !important;
+  border-color: var(--dashboard-border) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.022),
+    0 8px 20px rgba(0,0,0,.24);
+}
+
+/* Keep medal heroes intact; add only a slightly stronger separation from page. */
+.player-hero-v2 {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 0 0 1px rgba(255,255,255,.012),
+    0 12px 30px rgba(0,0,0,.34);
+}
+
+.player-hero-v2.hero-rank-1 {
+  box-shadow:
+    inset 0 1px 0 rgba(255,226,158,.10),
+    inset 0 0 38px rgba(205,158,66,.07),
+    0 0 0 1px rgba(255,255,255,.012),
+    0 12px 30px rgba(0,0,0,.34) !important;
+}
+
+.player-hero-v2.hero-rank-2 {
+  box-shadow:
+    inset 0 1px 0 rgba(239,246,252,.09),
+    inset 0 0 38px rgba(164,178,190,.06),
+    0 0 0 1px rgba(255,255,255,.012),
+    0 12px 30px rgba(0,0,0,.33) !important;
+}
+
+.player-hero-v2.hero-rank-3 {
+  box-shadow:
+    inset 0 1px 0 rgba(236,169,126,.08),
+    inset 0 0 38px rgba(166,91,55,.06),
+    0 0 0 1px rgba(255,255,255,.012),
+    0 12px 30px rgba(0,0,0,.33) !important;
+}
+
+
+/* ===== Player dashboard v2.7: completed Hero treatment ===== */
+/* Every player gets a distinct Hero panel; top-3 materials still override it below. */
+.player-dashboard-v2 .player-hero-v2 {
+  background:
+    radial-gradient(circle at 90% 0%, rgba(255,255,255,.025), transparent 44%),
+    linear-gradient(180deg, #17191c 0%, #141619 100%) !important;
+  border-color: rgba(255,255,255,.072) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.032),
+    0 0 0 1px rgba(255,255,255,.012),
+    0 12px 30px rgba(0,0,0,.34) !important;
+}
+
+/* Preserve the richer metallic materials for the current top three. */
+.player-dashboard-v2 .player-hero-v2.hero-rank-1 {
+  border-color: rgba(184,146,72,.62) !important;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(224,184,94,.20), transparent 44%),
+    linear-gradient(135deg, #332a18 0%, #282114 48%, #1d1911 100%) !important;
+}
+
+.player-dashboard-v2 .player-hero-v2.hero-rank-2 {
+  border-color: rgba(154,166,178,.58) !important;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(207,217,226,.16), transparent 44%),
+    linear-gradient(135deg, #30353a 0%, #25292d 48%, #1a1d20 100%) !important;
+}
+
+.player-dashboard-v2 .player-hero-v2.hero-rank-3 {
+  border-color: rgba(154,98,68,.58) !important;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(194,122,80,.17), transparent 44%),
+    linear-gradient(135deg, #32231c 0%, #281c17 48%, #1c1512 100%) !important;
+}
+
+.player-hero-v2 .profile-name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.player-hero-v2 .profile-name-main {
+  display: block;
+  max-width: 100%;
+  color: #fff;
+  font: inherit;
+  line-height: inherit;
+  overflow-wrap: anywhere;
+}
+
+.player-hero-v2 .profile-name-handle {
+  display: block;
+  max-width: 100%;
+  margin-top: 5px;
+  color: rgba(255,255,255,.58);
+  font-size: .48em;
+  font-weight: 750;
+  line-height: 1.08;
+  letter-spacing: .005em;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 699px) {
+  .player-hero-v2 .profile-name-handle {
+    margin-top: 4px;
+    font-size: .52em;
+  }
+}
+
+
+
+/* ===== Player dashboard v2.8: scalable achievements ===== */
+/* Hero: show every achievement as a compact icon sequence. */
+.player-awards-v2 {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: flex-end;
+}
+.player-awards-v2 .profile-inline-achievements {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+  max-width: min(100%, 520px);
+}
+.player-awards-v2 .profile-inline-achievement {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+.player-awards-v2 .profile-inline-achievements img,
+.player-awards-v2 .profile-inline-achievements .badge-fallback {
+  width: 20px;
+  height: 20px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+
+/* Full achievement section: responsive wrapped grid instead of a clipped strip. */
+.player-achievements-v2 .achievement-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+  gap: 8px;
+  overflow: visible;
+  padding: 0;
+}
+.player-achievements-v2 .achievement-item {
+  min-width: 0;
+  width: auto;
+  flex: initial;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+}
+.player-achievements-v2 .achievement-item > span {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+}
+.player-achievements-v2 .achievement-item > span img,
+.player-achievements-v2 .achievement-item > span .badge-fallback {
+  width: 34px;
+  height: 34px;
+}
+.player-achievements-v2 .achievement-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.player-achievements-v2 .achievement-copy strong,
+.player-achievements-v2 .achievement-copy small {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .player-hero-bottom-v2 {
+    align-items: flex-start;
+  }
+  .player-awards-v2 .profile-inline-achievements {
+    max-width: 220px;
+    gap: 3px;
+  }
+  .player-awards-v2 .profile-inline-achievements img,
+  .player-awards-v2 .profile-inline-achievements .badge-fallback {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+  }
+  .player-achievements-v2 .achievement-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* v2.9 — sortable country statistics */
+.country-table-v2 th.sortable-country-v2 {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: color .18s ease, background-color .18s ease;
+}
+.country-table-v2 th.sortable-country-v2:hover,
+.country-table-v2 th.sortable-country-v2.is-active {
+  color: rgba(255,255,255,.92);
+}
+.country-sort-arrow-v2 {
+  display: inline-block;
+  width: 10px;
+  margin-left: 3px;
+  color: rgba(255,255,255,.72);
+  font-size: 9px;
+  text-align: center;
+}
+.country-name-v2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.country-name-v2 .country-flag-v2 {
+  flex: 0 0 auto;
+  font-size: 15px;
+  line-height: 1;
+}
+.country-name-v2 .country-label-v2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.country-flat-v2 { font-weight: 900; font-variant-numeric: tabular-nums; }
+.country-flat-v2.is-positive { color: #52d273; }
+.country-flat-v2.is-negative { color: #ff6464; }
+.country-flat-v2.is-zero { color: rgba(255,255,255,.62); }
+.country-table-v2 tbody tr {
+  will-change: transform;
+}
+.country-table-v2 tbody tr:hover td {
+  background: rgba(255,255,255,.018);
+}
+.country-table-v2 th:first-child,
+.country-table-v2 td:first-child {
+  width: auto;
+  text-align: left;
+}
+.country-table-v2 th:nth-child(2),
+.country-table-v2 td:nth-child(2),
+.country-table-v2 th:nth-child(3),
+.country-table-v2 td:nth-child(3),
+.country-table-v2 th:nth-child(4),
+.country-table-v2 td:nth-child(4) {
+  width: 58px;
+  text-align: right;
+}
+@media (max-width: 520px) {
+  .country-table-v2 th,
+  .country-table-v2 td { padding: 9px 4px; }
+  .country-table-v2 th:nth-child(2),
+  .country-table-v2 td:nth-child(2),
+  .country-table-v2 th:nth-child(3),
+  .country-table-v2 td:nth-child(3) { width: 40px; }
+  .country-table-v2 th:nth-child(4),
+  .country-table-v2 td:nth-child(4) { width: 64px; }
+}
+
+/* v2.10 — compact, genuinely tabular country statistics */
+.player-countries-v2 {
+  overflow: hidden;
+}
+
+.country-table-v2 {
+  width: min(100%, 620px);
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.country-table-v2 th,
+.country-table-v2 td {
+  border-top: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.045);
+  padding: 10px 12px;
+}
+
+.country-table-v2 thead th {
+  background: rgba(255,255,255,.022);
+  border-top: 1px solid rgba(255,255,255,.055) !important;
+  border-bottom-color: rgba(255,255,255,.08);
+}
+
+.country-table-v2 thead th:first-child { border-radius: 10px 0 0 0; }
+.country-table-v2 thead th:last-child { border-radius: 0 10px 0 0; }
+
+.country-table-v2 tbody tr:nth-child(odd) td {
+  background: rgba(255,255,255,.018);
+}
+
+.country-table-v2 tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,.006);
+}
+
+.country-table-v2 tbody tr:hover td {
+  background: rgba(255,255,255,.04);
+}
+
+.country-table-v2 tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+.country-table-v2 tbody tr:last-child td:last-child { border-radius: 0 0 10px 0; }
+
+.country-table-v2 th:first-child,
+.country-table-v2 td:first-child {
+  width: 330px;
+  padding-left: 12px;
+}
+
+.country-table-v2 th:nth-child(2),
+.country-table-v2 td:nth-child(2),
+.country-table-v2 th:nth-child(3),
+.country-table-v2 td:nth-child(3) {
+  width: 72px;
+}
+
+.country-table-v2 th:nth-child(4),
+.country-table-v2 td:nth-child(4) {
+  width: 78px;
+}
+
+@media (max-width: 700px) {
+  .player-countries-v2 {
+    overflow-x: hidden;
+  }
+
+  .player-countries-v2 .dashboard-title-v2 {
+    position: static;
+  }
+
+  .country-table-v2 {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .country-table-v2 th,
+  .country-table-v2 td {
+    padding: 9px 7px;
+  }
+
+  .country-table-v2 th:first-child,
+  .country-table-v2 td:first-child {
+    width: auto;
+    padding-left: 8px;
+  }
+
+  .country-table-v2 th:nth-child(2),
+  .country-table-v2 td:nth-child(2),
+  .country-table-v2 th:nth-child(3),
+  .country-table-v2 td:nth-child(3) {
+    width: 42px;
+  }
+
+  .country-table-v2 th:nth-child(4),
+  .country-table-v2 td:nth-child(4) {
+    width: 58px;
+  }
+
+  .country-name-v2 {
+    gap: 6px;
+    max-width: 100%;
+  }
+
+  .country-name-v2 .country-flag-v2 {
+    font-size: 14px;
+  }
+
+  .country-sort-arrow-v2 {
+    width: 8px;
+    margin-left: 1px;
+  }
+}
+
+@media (max-width: 370px) {
+  .country-table-v2 th,
+  .country-table-v2 td {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .country-table-v2 th:nth-child(2),
+  .country-table-v2 td:nth-child(2),
+  .country-table-v2 th:nth-child(3),
+  .country-table-v2 td:nth-child(3) {
+    width: 38px;
+  }
+
+  .country-table-v2 th:nth-child(4),
+  .country-table-v2 td:nth-child(4) {
+    width: 54px;
+  }
+}
+
+
+/* Current-tour live state */
+.player-current-v2 .dot.pending {
+  background: #f5f5f5 !important;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.10), 0 0 12px rgba(255,255,255,.38);
+}
+
+.player-current-v2 .profile-pick-card.pending {
+  border-color: rgba(255,255,255,.20);
+  background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
+}
+
+.player-current-v2 .profile-pick-card.win {
+  border-color: rgba(52,211,153,.24);
+}
+
+.player-current-v2 .profile-pick-card.lose {
+  border-color: rgba(239,68,68,.22);
+}
+
+.profile-no-prediction {
+  min-height: 94px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+  border: 1px dashed rgba(255,255,255,.16);
+  border-radius: 18px;
+  background: rgba(255,255,255,.025);
+}
+
+.profile-no-prediction-dot {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  border-radius: 50%;
+  background: #71717a;
+}
+
+.profile-no-prediction strong,
+.profile-no-prediction small {
+  display: block;
+}
+
+.profile-no-prediction strong {
+  color: #e5e5e5;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.profile-no-prediction small {
+  margin-top: 3px;
+  color: var(--muted2);
+  font-size: 11px;
+}
+
+.player-current-v2 .gold,
+.player-current-v2 .pick-odd,
+.player-current-v2 .tour-table td:nth-child(3),
+.player-current-v2 [class*="odd"]{
+ color:#fbbf24 !important;
+ -webkit-text-fill-color:#fbbf24 !important;
+}
+
+</style>
+
+<style>
+/* ===== Player dashboard v2.12: compact recent-form dots ===== */
+.player-form-v2 .profile-dots {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 0 !important;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.player-form-v2 .profile-form-tour {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 4px !important;
+}
+
+.player-form-v2 .profile-dot {
+  display: inline-block;
+  flex: 0 0 12px !important;
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px;
+  min-height: 12px;
+  border-radius: 50%;
+}
+
+.player-form-v2 .profile-form-separator {
+  display: inline-block;
+  flex: 0 0 1px;
+  width: 1px !important;
+  height: 14px !important;
+  margin: 0 8px !important;
+  border-radius: 999px;
+  background: rgba(255,255,255,.20) !important;
+}
+
+@media (max-width: 640px) {
+  .player-form-v2 .profile-form-tour { gap: 4px !important; }
+  .player-form-v2 .profile-form-separator { margin: 0 7px !important; }
+}
+</style>
+
+
+<style>
+/* ===== Player dashboard v2.13: mobile clearance + reconciled flat profit ===== */
+#profileProfitFlats.is-positive { color: #52d273; }
+#profileProfitFlats.is-negative { color: #ff6464; }
+#profileProfitFlats.is-zero { color: rgba(255,255,255,.68); }
+
+@media (max-width: 979px) {
+  /* Keep the final player card fully scrollable above the fixed bottom navigation. */
+  .app { padding-bottom: calc(132px + env(safe-area-inset-bottom)) !important; }
+  main { padding-bottom: calc(132px + env(safe-area-inset-bottom)) !important; }
+  #screen-players { padding-bottom: 24px !important; }
+}
+</style>
+
+
+<style>
+/* ===== v2.17: unified current-tour result colors ===== */
+.player-current-v2 .profile-pick-card.win,
+.player-current-v2 .profile-pick-card.win .profile-pick-match,
+.player-current-v2 .profile-pick-card.win .profile-pick-meta,
+.player-current-v2 .profile-pick-card.win .profile-pick-meta span:first-child {
+  color: #34d399 !important;
+  -webkit-text-fill-color: #34d399 !important;
+}
+
+.player-current-v2 .profile-pick-card.lose,
+.player-current-v2 .profile-pick-card.lose .profile-pick-match,
+.player-current-v2 .profile-pick-card.lose .profile-pick-meta,
+.player-current-v2 .profile-pick-card.lose .profile-pick-meta span:first-child {
+  color: #fb7185 !important;
+  -webkit-text-fill-color: #fb7185 !important;
+}
+
+.player-current-v2 .profile-pick-card.pending,
+.player-current-v2 .profile-pick-card.pending .profile-pick-match,
+.player-current-v2 .profile-pick-card.pending .profile-pick-meta,
+.player-current-v2 .profile-pick-card.pending .profile-pick-meta span:first-child {
+  color: #f4f4f5 !important;
+  -webkit-text-fill-color: #f4f4f5 !important;
+}
+
+/* The odd is always the same gold as in bet history. */
+.player-current-v2 .profile-pick-card .profile-pick-meta .current-tour-odd,
+.player-current-v2 .profile-pick-card.win .profile-pick-meta .current-tour-odd,
+.player-current-v2 .profile-pick-card.lose .profile-pick-meta .current-tour-odd,
+.player-current-v2 .profile-pick-card.pending .profile-pick-meta .current-tour-odd {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+  font-weight: 1000 !important;
+}
+
+/* Static unresolved-state halo: deliberately no pulse, so it does not read as LIVE. */
+.player-current-v2 .dot.pending {
+  animation: none !important;
+  background: #f5f5f5 !important;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.11), 0 0 10px rgba(255,255,255,.28) !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -2877,7 +4094,7 @@ html, body {
         <div class="stats-panel">
           <div class="stats-panel-title">🏆 Очки</div>
           <div class="metric-row"><span>🔥 Макс балл</span><strong id="statMaxPts">76</strong></div>
-          <div class="metric-row"><span>💀 Мин балл</span><strong id="statMinPts">0</strong></div>
+          <div class="metric-row"><span>🥉 Порог топ-3</span><strong id="statTop3Pts">0</strong></div>
           <div class="metric-row"><span>🎯 Средний балл</span><strong id="statAvgPts2">16,33</strong></div>
         </div>
 
@@ -2970,79 +4187,82 @@ html, body {
           </div>
 
         </div>
-<div class="player-profile-card">
-<div class="profile-head">
-  <div class="profile-title-block">
-    <div class="profile-name" id="profileName">Alex</div>
-    <div class="profile-sub" id="profileSub">#1 в общем зачёте</div>
-  </div>
+<div class="player-dashboard-v2">
 
-  <div class="profile-form profile-form-compact">
-    <div class="profile-label">Форма</div>
-    <div class="profile-dots" id="profileForm"></div>
-  </div>
+  <section class="dashboard-card player-hero-v2">
+    <div class="profile-name" id="profileName"><span class="profile-name-main">Alex</span></div>
+    <div class="player-hero-bottom-v2">
+      <div class="player-rank-v2" id="profileSub">#1 в общем зачёте</div>
+      <div class="player-awards-v2" id="profileHeroAwards"></div>
+    </div>
+  </section>
+
+  <section class="player-metrics-v2">
+    <div class="player-metric-v2">
+      <span>Очков всего</span>
+      <strong id="profileTotalPts">0</strong>
+    </div>
+    <div class="player-metric-v2">
+      <span>Участие</span>
+      <strong id="profileTours">0/0</strong>
+    </div>
+    <div class="player-metric-v2">
+      <span>Прибыль во флетах</span>
+      <strong id="profileProfitFlats">—</strong>
+    </div>
+    <div class="player-metric-v2 player-form-v2">
+      <span>Последние результаты</span>
+      <div class="profile-dots" id="profileForm"></div>
+    </div>
+  </section>
+
+  <section class="player-activity-v2">
+    <div class="dashboard-card player-current-v2">
+      <div class="dashboard-title-v2">🎯 Текущий тур</div>
+      <div id="profileCurrentPicks"></div>
+    </div>
+
+    <div class="dashboard-card player-rank-v2-card">
+      <div class="dashboard-title-v2">📈 Динамика места</div>
+      <div class="rank-chart-panel">
+        <div id="profileRankChart"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-card player-achievements-v2">
+    <div class="dashboard-title-v2">🏅 Ачивки игрока</div>
+    <div class="achievement-strip" id="profileAchievements"></div>
+  </section>
+
+  <section class="dashboard-card player-countries-v2">
+    <div class="dashboard-title-v2">🌍 Статистика по странам</div>
+    <table class="country-table-v2" aria-label="Статистика игрока по странам">
+      <thead>
+        <tr>
+          <th>Страна</th>
+          <th class="sortable-country-v2" data-country-sort="wins" tabindex="0" role="button" aria-label="Сортировать по победам">В<span class="country-sort-arrow-v2"></span></th>
+          <th class="sortable-country-v2" data-country-sort="losses" tabindex="0" role="button" aria-label="Сортировать по поражениям">П<span class="country-sort-arrow-v2"></span></th>
+          <th class="sortable-country-v2 is-active" data-country-sort="flats" tabindex="0" role="button" aria-label="Сортировать по профиту во флетах">±Ф<span class="country-sort-arrow-v2">▼</span></th>
+        </tr>
+      </thead>
+      <tbody id="profileCountryStats"></tbody>
+    </table>
+  </section>
+
+  <section class="dashboard-card player-history-v2">
+    <div class="dashboard-title-v2">🕘 Прошлые туры</div>
+    <div class="stack" id="profilePastTours"></div>
+  </section>
+
+  <div class="hidden" id="profileCountry"></div>
+  <div class="hidden" id="profileCountryNote"></div>
+  <div class="hidden" id="profileAvgPts"></div>
+  <div class="hidden" id="profileWinrate"></div>
 </div>
-
-          <div class="profile-prefer">
-            <div>
-              <div class="profile-label">Предпочитает ставить</div>
-              <div class="prefer-country" id="profileCountry">🇪🇬 Egypt</div>
-            </div>
-            <div class="prefer-note" id="profileCountryNote"></div>
-        
-        </div>
-</div>
-        <div class="stack" id="profileCurrentPicks"></div>
-
-        <div class="player-stat-grid">
-          <div class="player-stat-card"><span>Очков всего</span><strong id="profileTotalPts">0</strong></div>
-          <div class="player-stat-card"><span>Туров сыграно</span><strong id="profileTours">0</strong></div>
-          <div class="player-stat-card"><span>Средний балл</span><strong id="profileAvgPts">0</strong></div>
-          <div class="player-stat-card"><span>Винрейт</span><strong id="profileWinrate">0%</strong></div>
-        </div>
-<div class="stats-panel rank-chart-panel">
-  <div class="stats-panel-title">📈 ДИНАМИКА МЕСТА</div>
-  <div id="profileRankChart"></div>
-</div>
-        <div class="stats-panel">
-          <div class="stats-panel-title">🏅 Ачивки игрока</div>
-          <div class="achievement-strip" id="profileAchievements"></div>
-        </div>
-
-        <div class="stats-panel">
-          <div class="stats-panel-title">🕘 Прошлые туры</div>
-          <div class="stack" id="profilePastTours"></div>
-        </div>
       </section>
     
-<section class="screen" id="screen-season">
-  <div class="section-title">
-    <div class="section-title-left">🏆 Итоги S1</div>
-    <div class="section-title-right">Season report</div>
-  </div>
 
-  <div class="stats-grid" id="seasonHeroCards"></div>
-
-  <div class="stats-panel">
-    <div class="stats-panel-title">📊 Общая статистика сезона</div>
-    <div id="seasonSummaryBlock"></div>
-  </div>
-
-  <div class="stats-panel season-desktop-only">
-    <div class="stats-panel-title">👥 Путь игроков по сезону</div>
-    <div id="seasonPlayersGrid"></div>
-  </div>
-
-  <div class="stats-panel">
-    <div class="stats-panel-title">🌍 География сезона</div>
-    <div id="seasonGeoBlock"></div>
-  </div>
-
-  <div class="stats-panel">
-    <div class="stats-panel-title">🏅 Ачивки сезона</div>
-    <div class="achievement-strip" id="seasonAchievementsBlock"></div>
-  </div>
-</section>
 
 
 </main>
@@ -3062,55 +4282,67 @@ html, body {
 <div class="rule-list">
 
   <div class="rule-card">
-    <strong>🎯 Экспресс из трех матчей</strong>
-    <span>Каждый участник выбирает 3 матча на ничью в любой БК. Ставить не обязательно. Нужен только скрин.</span>
+    <strong>📅 Регулярный сезон</strong>
+    <span>Регулярный сезон состоит из 17 туров и проходит с 8 августа по 29 ноября. Правила плей-офф публикуются отдельно.</span>
+  </div>
+
+  <div class="rule-card">
+    <strong>🎯 Прогноз на тур</strong>
+    <span>В каждом туре участник выбирает 3 футбольных матча на ничью. Матчи могут быть выбраны в любой букмекерской конторе. Делать реальные ставки не обязательно — для подтверждения коэффициентов требуется скриншот.</span>
   </div>
 
   <div class="rule-card">
     <strong>🟢 Начисление очков</strong>
-    <span>За каждый угаданный матч игрок получает очки по формуле: (Кэф - 1) × 10.</span>
-  </div>
-
-  <div class="rule-card">
-    <strong>🎁 Дополнительные бонусы</strong>
     <span>
-      2 из 3 угадано → +5 очков<br>
-      3 из 3 угадано → +15 очков
+      Очки начисляются только за угаданные матчи по прогрессивной шкале:<br>
+      • коэффициент до 5,00 включительно → коэффициент × 10 − коэффициент;<br>
+      • коэффициент от 5,01 до 7,00 → коэффициент × 8 − коэффициент;<br>
+      • коэффициент от 7,01 и выше → коэффициент × 7 − коэффициент.<br>
+      За проигранный прогноз начисляется 0 очков.
     </span>
   </div>
 
   <div class="rule-card">
-    <strong>❌ Проигранные и отмененные матчи</strong>
-    <span>За проигранные и отмененные матчи игрок не получает очки.</span>
-  </div>
-
-  <div class="rule-card">
-    <strong>📈 Итог</strong>
+    <strong>🎁 Бонус за результат тройника</strong>
     <span>
-      Складываются:<br>
-      • очки за угаданные матчи<br>
-      • бонус за количество попаданий
+      2 угаданных матча из 3 → +10 очков.<br>
+      3 угаданных матча из 3 → +20 очков.<br>
+      Бонус начисляется один раз по итогам основной тройки тура.
     </span>
   </div>
 
   <div class="rule-card">
-    <strong>🔢 Округление</strong>
-    <span>Все результаты округляются до целого числа. Например: 22,5 → 23.</span>
+    <strong>🔢 Точность расчётов</strong>
+    <span>Очки не округляются до целого числа. В таблице сохраняется фактическое значение результата, поэтому близкие коэффициенты могут дать разные суммы очков.</span>
   </div>
 
   <div class="rule-card">
-    <strong>⭐ Популярность</strong>
-    <span>Звёзды у матча показывают популярность выбора среди пользователей.</span>
+    <strong>🏆 Места в туре</strong>
+    <span>Выше располагается участник, набравший больше очков. При равенстве очков преимущество получает участник с большим количеством угаданных матчей в основной тройке.</span>
   </div>
 
   <div class="rule-card">
-    <strong>🏆 Победа в туре</strong>
-    <span>Побеждает участник с наибольшим количеством очков по итогам тура или турнира.</span>
+    <strong>📊 Места по итогам регулярного сезона</strong>
+    <span>Положение определяется по общей сумме очков за все туры. При равенстве очков выше располагается участник, у которого больше туров с результатом 3 из 3.</span>
   </div>
 
   <div class="rule-card">
-    <strong>📊 Таблицы</strong>
-    <span>В разделе «Таблица» можно смотреть туры и общую таблицу.</span>
+    <strong>⛔ Отменённые и прерванные матчи</strong>
+    <span>
+      Если выбранный матч отменён, прерван либо возобновлён уже после завершения соответствующего тура X League, прогноз по нему рассчитывается с коэффициентом 1,00 и не приносит очков.<br><br>
+      Участник получает право в одном из последующих туров регулярного сезона предоставить один дополнительный прогноз в качестве компенсации. Такой прогноз оформляется отдельно от основной тройки и не участвует в расчёте бонусов 2 из 3 и 3 из 3.<br><br>
+      Результаты уже завершённых туров и определённые в них призовые места пересмотру не подлежат. Технический порядок учёта и отображения компенсационного прогноза определяется организатором до его использования.
+    </span>
+  </div>
+
+  <div class="rule-card">
+    <strong>⭐ Популярность выбора</strong>
+    <span>Звёзды рядом с матчем показывают, насколько часто этот матч выбирали участники текущего тура.</span>
+  </div>
+
+  <div class="rule-card">
+    <strong>📈 Итоговый результат</strong>
+    <span>В результат участника входят очки за угаданные матчи, бонус за основную тройку и, при наличии, очки за компенсационные прогнозы. Победителем становится участник с наибольшим итоговым результатом с учётом установленных правил разрешения ничьих.</span>
   </div>
 
 </div>
@@ -3125,9 +4357,6 @@ html, body {
     <button class="nav-btn" data-screen="stats"><span class="nav-icon">📊</span>Статистика</button>
     <button class="nav-btn" data-screen="players"><span class="nav-icon">👥</span>Игрок</button>
 
-    <button class="nav-btn" data-screen="season">
-      <span class="nav-icon">🏆</span>Итоги
-    </button>
   </div>
 </nav>
 
@@ -3278,11 +4507,7 @@ html, body {
   achievements: "site_player_achievements",
   rankHistory: "site_rank_history",
   tours: "site_tours",
-  config: "site_config",
-      seasonPlayers: "season_players",
-seasonSummary: "season_summary",
-seasonGeo: "season_geo",
-seasonAchievements: "season_achievements"
+  config: "site_config"
 };
 
     function normalizeKeyName(value) {
@@ -3449,11 +4674,7 @@ function mapPredictionRow(row) {
   a,
   rh,
   toursRows,
-  cfgRows,
-  seasonPlayersRows,
-  seasonSummaryRows,
-  seasonGeoRows,
-  seasonAchievementsRows
+  cfgRows
 ] = await Promise.all([
   loadTab(TABS.matches),
   loadTab(TABS.predictions),
@@ -3463,12 +4684,7 @@ function mapPredictionRow(row) {
   loadTab(TABS.achievements).catch(() => []),
   loadTab(TABS.rankHistory).catch(() => []),
   loadTab(TABS.tours).catch(() => []),
-  loadTab(TABS.config).catch(() => []),
-
-  loadTab(TABS.seasonPlayers).catch(() => []),
-  loadTab(TABS.seasonSummary).catch(() => []),
-  loadTab(TABS.seasonGeo).catch(() => []),
-  loadTab(TABS.seasonAchievements).catch(() => [])
+  loadTab(TABS.config).catch(() => [])
 ]);
 
         const payload = { m, p, t, o, pl, a, rh, toursRows, cfgRows };
@@ -4189,25 +5405,25 @@ sourceMatches.forEach(match => {
 
     const statsByTour = {
       overall: {
-        players: "43", avgPts: "16,33", maxPts: "76", minPts: "0",
+        players: "43", avgPts: "16,33", maxPts: "76", top3Pts: "69",
         avgOdd: "3,39", maxOdd: "6", minOdd: "2,59", winOdd: "3,210",
         winrate: "29,1%", wins: "30", losses: "73", profit: "-6,82", roi: "-6,62%",
         winWidth: "29.1%", loseWidth: "70.9%"
       },
       "5": {
-        players: "43", avgPts: "16,33", maxPts: "76", minPts: "0",
+        players: "43", avgPts: "16,33", maxPts: "76", top3Pts: "69",
         avgOdd: "3,39", maxOdd: "6", minOdd: "2,59", winOdd: "3,210",
         winrate: "29,1%", wins: "30", losses: "73", profit: "-6,82", roi: "-6,62%",
         winWidth: "29.1%", loseWidth: "70.9%"
       },
       "4": {
-        players: "38", avgPts: "21,08", maxPts: "84", minPts: "0",
+        players: "38", avgPts: "21,08", maxPts: "84", top3Pts: "76",
         avgOdd: "3,22", maxOdd: "5,4", minOdd: "2,61", winOdd: "3,140",
         winrate: "34,6%", wins: "36", losses: "68", profit: "12,40", roi: "11,92%",
         winWidth: "34.6%", loseWidth: "65.4%"
       },
       "3": {
-        players: "31", avgPts: "18,74", maxPts: "69", minPts: "0",
+        players: "31", avgPts: "18,74", maxPts: "69", top3Pts: "61",
         avgOdd: "3,31", maxOdd: "5,8", minOdd: "2,55", winOdd: "3,280",
         winrate: "27,4%", wins: "23", losses: "61", profit: "-3,10", roi: "-3,69%",
         winWidth: "27.4%", loseWidth: "72.6%"
@@ -4333,7 +5549,11 @@ sourceMatches.forEach(match => {
       const points = rows.map(p => Number(p.pts) || 0);
       const avgPts = players ? points.reduce((sum, v) => sum + v, 0) / players : 0;
       const maxPts = points.length ? Math.max(...points) : 0;
-      const minPts = points.length ? Math.min(...points) : 0;
+      // Minimum score is almost always zero and says little about the tour.
+      // The top-3 threshold is the score of the participant occupying third place
+      // after sorting all participants by points in descending order.
+      const sortedPoints = [...points].sort((a, b) => b - a);
+      const top3Pts = sortedPoints.length ? sortedPoints[Math.min(2, sortedPoints.length - 1)] : 0;
 
       const picks = rows.flatMap(p => Array.isArray(p.picks) ? p.picks : []);
       const odds = picks.map(p => toNum(p.odd, NaN)).filter(Number.isFinite);
@@ -4361,7 +5581,7 @@ sourceMatches.forEach(match => {
         players: String(players),
         avgPts: formatRuNumber(avgPts, 2),
         maxPts: formatRuNumber(maxPts, 0),
-        minPts: formatRuNumber(minPts, 0),
+        top3Pts: formatRuNumber(top3Pts, 0),
         avgOdd: odds.length ? formatRuNumber(odds.reduce((sum, v) => sum + v, 0) / odds.length, 2) : "0",
         maxOdd: odds.length ? formatRuNumber(Math.max(...odds), 2) : "0",
         minOdd: odds.length ? formatRuNumber(Math.min(...odds), 2) : "0",
@@ -4385,7 +5605,7 @@ sourceMatches.forEach(match => {
       setText("statAvgPts", s.avgPts);
       setText("statAvgPts2", s.avgPts);
       setText("statMaxPts", s.maxPts);
-      setText("statMinPts", s.minPts);
+      setText("statTop3Pts", s.top3Pts);
       setText("statAvgOdd", s.avgOdd);
       setText("statMaxOdd", s.maxOdd);
       setText("statMinOdd", s.minOdd);
@@ -4508,6 +5728,153 @@ sourceMatches.forEach(match => {
       };
     }
 
+
+    let countrySortKey = "flats";
+    let countrySortDirection = "desc";
+    let currentCountryRows = [];
+
+    function countryFlagHtml(match, fallback = "🌍") {
+      if (match?.flag_url) {
+        return `<img src="${escapeHtml(match.flag_url)}" alt="" style="width:18px;height:13px;object-fit:cover;border-radius:2px;display:block;">`;
+      }
+      return escapeHtml(match?.flag || fallback || "🌍");
+    }
+
+    function playerCountryStats(history) {
+      const map = new Map();
+      history.forEach(prediction => {
+        (prediction.picks || []).forEach(pick => {
+          const match = matchById.get(pick.matchId);
+          const country = cleanCountryName(match?.country || "") || "Не указана";
+          const key = country.toLocaleLowerCase("ru-RU");
+          if (!map.has(key)) {
+            map.set(key, {
+              key,
+              country,
+              flag: match?.flag || "🌍",
+              flag_url: match?.flag_url || "",
+              wins: 0,
+              losses: 0,
+              flats: 0
+            });
+          }
+          const row = map.get(key);
+          if (!row.flag_url && match?.flag_url) row.flag_url = match.flag_url;
+          if ((!row.flag || row.flag === "🌍") && match?.flag) row.flag = match.flag;
+          const result = pick.result || match?.status || "pending";
+          const odd = toNum(pick.odd, 0);
+          if (result === "win") {
+            row.wins += 1;
+            row.flats += Math.max(0, odd - 1);
+          } else if (result === "lose") {
+            row.losses += 1;
+            row.flats -= 1;
+          }
+        });
+      });
+      return [...map.values()].filter(row => row.wins || row.losses);
+    }
+
+    function formatFlatValue(value) {
+      const rounded = Math.abs(value) < 0.005 ? 0 : value;
+      const formatted = Math.abs(rounded).toLocaleString("ru-RU", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      if (rounded > 0) return `+${formatted}`;
+      if (rounded < 0) return `−${formatted}`;
+      return "0";
+    }
+
+    function sortedCountryRows() {
+      const dir = countrySortDirection === "asc" ? 1 : -1;
+      return currentCountryRows.slice().sort((a, b) => {
+        const primary = (a[countrySortKey] - b[countrySortKey]) * dir;
+        if (primary) return primary;
+        const settledA = a.wins + a.losses;
+        const settledB = b.wins + b.losses;
+        if (settledA !== settledB) return (settledB - settledA);
+        return a.country.localeCompare(b.country, "ru-RU");
+      });
+    }
+
+    function updateCountrySortHeaders() {
+      document.querySelectorAll("[data-country-sort]").forEach(th => {
+        const active = th.dataset.countrySort === countrySortKey;
+        th.classList.toggle("is-active", active);
+        const arrow = th.querySelector(".country-sort-arrow-v2");
+        if (arrow) arrow.textContent = active ? (countrySortDirection === "desc" ? "▼" : "▲") : "";
+        th.setAttribute("aria-sort", active ? (countrySortDirection === "desc" ? "descending" : "ascending") : "none");
+      });
+    }
+
+    function renderCountryStats(animate = false) {
+      const tbody = document.getElementById("profileCountryStats");
+      if (!tbody) return;
+      const before = new Map();
+      if (animate) {
+        tbody.querySelectorAll("tr[data-country-key]").forEach(row => {
+          before.set(row.dataset.countryKey, row.getBoundingClientRect());
+        });
+      }
+      const rows = sortedCountryRows();
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="4"><div class="country-table-placeholder-v2">Пока нет завершённых ставок с указанной страной.</div></td></tr>`;
+        updateCountrySortHeaders();
+        return;
+      }
+      tbody.innerHTML = rows.map(row => {
+        const flatClass = row.flats > 0.004 ? "is-positive" : row.flats < -0.004 ? "is-negative" : "is-zero";
+        const flag = row.flag_url
+          ? `<img src="${escapeHtml(row.flag_url)}" alt="" style="width:18px;height:13px;object-fit:cover;border-radius:2px;display:block;">`
+          : escapeHtml(row.flag || "🌍");
+        return `<tr data-country-key="${escapeHtml(row.key)}">
+          <td><span class="country-name-v2"><span class="country-flag-v2">${flag}</span><span class="country-label-v2">${escapeHtml(row.country)}</span></span></td>
+          <td>${row.wins}</td>
+          <td>${row.losses}</td>
+          <td><span class="country-flat-v2 ${flatClass}">${formatFlatValue(row.flats)}</span></td>
+        </tr>`;
+      }).join("");
+      updateCountrySortHeaders();
+      if (animate && before.size) {
+        tbody.querySelectorAll("tr[data-country-key]").forEach(row => {
+          const first = before.get(row.dataset.countryKey);
+          if (!first) return;
+          const last = row.getBoundingClientRect();
+          const dy = first.top - last.top;
+          if (!dy) return;
+          row.animate(
+            [{ transform: `translateY(${dy}px)` }, { transform: "translateY(0)" }],
+            { duration: 280, easing: "cubic-bezier(.22,.8,.24,1)" }
+          );
+        });
+      }
+    }
+
+    function bindCountrySorting() {
+      document.querySelectorAll("[data-country-sort]").forEach(th => {
+        if (th.dataset.sortBound === "1") return;
+        th.dataset.sortBound = "1";
+        const activate = () => {
+          const key = th.dataset.countrySort;
+          if (countrySortKey === key) {
+            countrySortDirection = countrySortDirection === "desc" ? "asc" : "desc";
+          } else {
+            countrySortKey = key;
+            countrySortDirection = "desc";
+          }
+          renderCountryStats(true);
+        };
+        th.addEventListener("click", activate);
+        th.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            activate();
+          }
+        });
+      });
+    }
+
     function renderPlayerProfile() {
       const currentTour = getCurrentTour() || 0;
       const select = document.getElementById("playerSelect");
@@ -4523,6 +5890,9 @@ sourceMatches.forEach(match => {
       if (!displayPrediction) return;
 
       const settledPicks = history.flatMap(p => p.picks).filter(p => p.result !== "pending");
+      currentCountryRows = playerCountryStats(history);
+      bindCountrySorting();
+      renderCountryStats(false);
       const wins = settledPicks.filter(p => p.result === "win").length;
       const totalPts = history.reduce((sum, p) => sum + toNum(p.pts, 0), 0);
       const toursPlayed = new Set(history.map(p => Number(p.tour)).filter(Boolean)).size;
@@ -4530,8 +5900,27 @@ sourceMatches.forEach(match => {
       const wr = settledPicks.length ? Math.round(wins / settledPicks.length * 100) : 0;
 
       const overall = siteOverall.find(p => String(p.name).trim() === String(playerName).trim()) || {};
+
+      const heroEl = document.querySelector(".player-hero-v2");
+      if (heroEl) {
+        heroEl.classList.remove("hero-rank-1", "hero-rank-2", "hero-rank-3");
+        const currentRank = Number(overall.rank);
+        if (currentRank >= 1 && currentRank <= 3) {
+          heroEl.classList.add(`hero-rank-${currentRank}`);
+        }
+      }
       const nameEl = document.getElementById("profileName");
-      if (nameEl) nameEl.innerHTML = `${escapeHtml(playerName)}${playerInlineAchievementsHtml(playerName)}`;
+      if (nameEl) {
+        const atIndex = playerName.indexOf("@");
+        const mainName = (atIndex > 0 ? playerName.slice(0, atIndex) : playerName).trim();
+        const handle = atIndex > 0 ? playerName.slice(atIndex).trim() : "";
+        nameEl.innerHTML = `
+          <span class="profile-name-main">${escapeHtml(mainName)}</span>
+          ${handle ? `<span class="profile-name-handle">${escapeHtml(handle)}</span>` : ""}
+        `;
+      }
+      const heroAwardsEl = document.getElementById("profileHeroAwards");
+      if (heroAwardsEl) heroAwardsEl.innerHTML = playerInlineAchievementsHtml(playerName);
      
       setText("profileSub", `#${overall.rank || "-"} в общем зачёте`);
       renderRankHistory(playerName);
@@ -4546,32 +5935,53 @@ sourceMatches.forEach(match => {
       const formTourSource = previousToursForForm.length
         ? previousToursForForm
         : history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
-      const formPicks = formTourSource
-        .flatMap(p => p.picks || [])
-        .filter(pick => pick && pick.result)
-        .slice(0, 6);
+      const formTours = formTourSource
+        .filter(tour => (tour.picks || []).some(pick => pick && pick.result))
+        .slice(0, 3)
+        .map(tour => (tour.picks || [])
+          .filter(pick => pick && pick.result)
+          .slice(0, 3));
       const formEl = document.getElementById("profileForm");
-      if (formEl) formEl.innerHTML = formPicks.map(pick => profileDot(pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending")).join("");
+      if (formEl) {
+        formEl.innerHTML = formTours.map((picks, tourIndex) => {
+          const dots = picks.map(pick => profileDot(
+            pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending"
+          )).join("");
+          const separator = tourIndex < formTours.length - 1
+            ? '<span class="profile-form-separator" aria-hidden="true"></span>'
+            : '';
+          return `<span class="profile-form-tour">${dots}</span>${separator}`;
+        }).join("");
+      }
 
       const picksEl = document.getElementById("profileCurrentPicks");
       if (picksEl) {
         if (!currentPrediction) {
-          picksEl.innerHTML = "";
+          picksEl.innerHTML = `
+            <div class="profile-no-prediction">
+              <span class="profile-no-prediction-dot" aria-hidden="true"></span>
+              <div>
+                <strong>Нет прогноза на текущий тур</strong>
+                ${currentTour ? `<small>Тур ${escapeHtml(currentTour)}</small>` : ""}
+              </div>
+            </div>
+          `;
         } else {
           picksEl.innerHTML = currentPrediction.picks.map((pick, index) => {
             const match = matchById.get(pick.matchId);
+            const resultClass = pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending";
             return `
-              <div class="profile-pick-card">
+              <div class="profile-pick-card ${resultClass}">
                 <div class="profile-pick-top">
                 <div class="profile-pick-match">
   ${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}
   ${(pick.score || match?.score) ? ` | ${escapeHtml(pick.score || match?.score)}` : ""}
 </div>
-                  ${dot(pick.result)}
+                  ${dot(resultClass)}
                 </div>
                 <div class="profile-pick-meta">
                   <span>${escapeHtml(match?.date || "")} · ${escapeHtml(match?.time || "")}</span>
-                  <span>x${escapeHtml(pick.odd)}</span>
+                  <span class="current-tour-odd gold">x${escapeHtml(pick.odd)}</span>
                 </div>
               </div>
             `;
@@ -4580,9 +5990,20 @@ sourceMatches.forEach(match => {
       }
 
       setText("profileTotalPts", totalPts);
-      setText("profileTours", toursPlayed);
+      const availableTours = currentTour || Math.max(0, ...history.map(p => Number(p.tour) || 0));
+      setText("profileTours", `${toursPlayed}/${availableTours || toursPlayed}`);
       setText("profileAvgPts", avgPts);
       setText("profileWinrate", `${wr}%`);
+      // The headline flat profit uses the same country rows as the table,
+      // so both totals are guaranteed to reconcile exactly.
+      const totalFlatProfit = currentCountryRows.reduce((sum, row) => sum + row.flats, 0);
+      const profitFlatsEl = document.getElementById("profileProfitFlats");
+      if (profitFlatsEl) {
+        profitFlatsEl.textContent = formatFlatValue(totalFlatProfit);
+        profitFlatsEl.classList.toggle("is-positive", totalFlatProfit > 0.004);
+        profitFlatsEl.classList.toggle("is-negative", totalFlatProfit < -0.004);
+        profitFlatsEl.classList.toggle("is-zero", Math.abs(totalFlatProfit) <= 0.004);
+      }
 
       const achEl = document.getElementById("profileAchievements");
       if (achEl) {
@@ -4592,10 +6013,12 @@ sourceMatches.forEach(match => {
           const desc = achievementDescription(row);
           const smallText = desc ? `${desc}${tour ? ` · Тур ${tour}` : ""}` : (tour ? `Тур ${tour}` : "");
           return `
-            <div class="achievement-item">
+            <div class="achievement-item" title="${escapeHtml(smallText ? `${achievementTitle(row)} — ${smallText}` : achievementTitle(row))}">
               <span>${achievementIconHtml(row)}</span>
-              <strong>${escapeHtml(achievementTitle(row))}</strong>
-              <small>${escapeHtml(smallText)}</small>
+              <div class="achievement-copy">
+                <strong>${escapeHtml(achievementTitle(row))}</strong>
+                <small>${escapeHtml(smallText)}</small>
+              </div>
             </div>
           `;
         }).join("") : `<div class="empty-state">Пока нет ачивок.</div>`;
@@ -4751,9 +6174,14 @@ function achievementDescription(row) {
     }
 
     function playerInlineAchievementsHtml(name) {
-      const rows = playerAchievements(name).slice(0, 5);
+      const rows = playerAchievements(name);
       if (!rows.length) return "";
-      return `<span class="profile-inline-achievements">${rows.map(r => achievementIconHtml(r)).join("")}</span>`;
+      return `<span class="profile-inline-achievements">${rows.map(r => {
+        const title = achievementTitle(r);
+        const desc = achievementDescription(r);
+        const tooltip = desc ? `${title} — ${desc}` : title;
+        return `<span class="profile-inline-achievement" title="${escapeHtml(tooltip)}">${achievementIconHtml(r)}</span>`;
+      }).join("")}</span>`;
     }
 
     function flagForCountry(country) {
