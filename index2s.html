@@ -4311,7 +4311,7 @@ button.achievement-item {
           </div>
         </div>
 
-        <div class="stats-panel">
+        <div class="stats-panel" id="tourAchievementsPanel">
           <div class="stats-panel-title">🏅 Ачивки тура</div>
           <div class="achievement-strip" id="tourAchievements"></div>
         </div>
@@ -5671,9 +5671,20 @@ sourceMatches.forEach(match => {
 
     function renderTourAchievements(tour) {
       const el = document.getElementById("tourAchievements");
-      if (!el) return;
+      const panel = document.getElementById("tourAchievementsPanel");
+      if (!el || !panel) return;
 
       const selected = String(tour || getCurrentTour() || "");
+
+      // In overall statistics, weekly achievements add noise rather than useful context.
+      // Hide the entire block and show it again only for a specific tour.
+      if (selected === "overall") {
+        panel.classList.add("hidden");
+        el.innerHTML = "";
+        return;
+      }
+
+      panel.classList.remove("hidden");
       let rows = Array.isArray(siteAchievements) ? [...siteAchievements] : [];
 
       rows = rows
@@ -5714,7 +5725,6 @@ sourceMatches.forEach(match => {
         return a.order - b.order;
       });
 
-      rows = rows.slice(0, selected === "overall" ? 12 : 10);
 
       if (!rows.length) {
         el.innerHTML = `<div class="achievement-item"><span>🏅</span><strong>Пока нет ачивок</strong><small>для выбранного тура</small></div>`;
