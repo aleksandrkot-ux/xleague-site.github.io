@@ -4995,7 +4995,7 @@ function mapPredictionRow(row) {
       // Convert normal Google Drive share/uc links to thumbnail links.
       // This format is much more reliable inside <img>.
       const driveMatch = raw.match(/drive\.google\.com\/file\/d\/([^/]+)/i) || raw.match(/[?&]id=([^&]+)/i);
-      if (driveMatch) return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w64`;
+      if (driveMatch) return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w256`;
 
       return /^https?:\/\//i.test(raw) ? raw : "";
     }
@@ -6447,7 +6447,8 @@ function achievementDescription(row) {
       const player = achievementPlayer(row);
       const tour = achievementTour(row);
       const code = achievementCode(row);
-      const iconUrl = normalizeFlagUrl(achievementIcon(row));
+      let iconUrl = normalizeFlagUrl(achievementIcon(row));
+      iconUrl = iconUrl.replace(/sz=w\d+/i, "sz=w1000");
 
       titleEl.textContent = title;
       descriptionEl.textContent = description || "Описание достижения пока не указано.";
