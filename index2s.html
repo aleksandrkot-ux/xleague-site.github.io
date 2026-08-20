@@ -4575,7 +4575,7 @@ button.achievement-item {
         <div class="stats-panel">
           <div class="stats-panel-title">🏆 Очки</div>
           <div class="metric-row"><span>🔥 Макс балл</span><strong id="statMaxPts">76</strong></div>
-          <div class="metric-row"><span>🥉 Порог топ-3</span><strong id="statTop3Pts">0</strong></div>
+          <div class="metric-row"><span id="statTop3Label">🥉 Порог топ-3</span><strong id="statTop3Pts">0</strong></div>
           <div class="metric-row"><span>🎯 Средний балл</span><strong id="statAvgPts2">16,33</strong></div>
         </div>
 
@@ -5212,7 +5212,7 @@ function mapPredictionRow(row) {
       renderMatches();
       renderPicks();
       renderTableByMode();
-      updateStats(String(getCurrentTour() || siteConfig.current_tour || "5"));
+      updateStats(isPlayoffTour(getCurrentTour()) ? "playoff" : String(getCurrentTour() || siteConfig.current_tour || "5"));
       renderPlayerSelect();
       renderPlayerProfile();
       renderFilter("matches");
@@ -5348,6 +5348,42 @@ function mapPredictionRow(row) {
       `;
     }
 
+
+    const PLAYOFF_TOUR_START = 100;
+
+    function isPlayoffTour(tour) {
+      return toNum(tour, 0) >= PLAYOFF_TOUR_START;
+    }
+
+    function isRegularTour(tour) {
+      const n = toNum(tour, 0);
+      return n > 0 && n < PLAYOFF_TOUR_START;
+    }
+
+    function regularPredictions() {
+      return predictions.filter(p => isRegularTour(p.tour));
+    }
+
+    function playoffPredictions() {
+      return predictions.filter(p => isPlayoffTour(p.tour));
+    }
+
+    function tourLabel(tour) {
+      const n = toNum(tour, 0);
+      if (!n) return "";
+
+      const row = siteTours.find(r => toNum(get(r, ["tour", "Tour", "Тур", "A"]), 0) === n);
+      const fromSheet = row ? String(get(row, ["label", "Label", "Название", "C"], "")).trim() : "";
+      if (fromSheet) return fromSheet;
+
+      if (isPlayoffTour(n)) {
+        const round = n - PLAYOFF_TOUR_START + 1;
+        return `Плей-офф · Раунд ${round}`;
+      }
+
+      return `Тур ${n}`;
+    }
+
     function getAvailableTours() {
       const set = new Set();
       matches.forEach(m => { if (toNum(m.tour, 0)) set.add(toNum(m.tour, 0)); });
@@ -5379,9 +5415,31 @@ function mapPredictionRow(row) {
       if (!next) return;
       selectedTour = next;
 
-      document.querySelectorAll("#globalTourSelect, #tableSelect, #tourSelect, #playerTourSelect").forEach(el => {
-        if (el && [...el.options].some(option => option.value === String(next))) el.value = String(next);
-      });
+      const globalSelect = document.getElementById("globalTourSelect");
+      if (globalSelect && [...globalSelect.options].some(option => option.value === String(next))) {
+        globalSelect.value = String(next);
+      }
+
+      const tableSelectSync = document.getElementById("tableSelect");
+      if (tableSelectSync) {
+        tableSelectSync.value = isPlayoffTour(next) &&
+          [...tableSelectSync.options].some(option => option.value === "playoff")
+            ? "playoff"
+            : String(next);
+      }
+
+      const statsSelectSync = document.getElementById("tourSelect");
+      if (statsSelectSync) {
+        statsSelectSync.value = isPlayoffTour(next) &&
+          [...statsSelectSync.options].some(option => option.value === "playoff")
+            ? "playoff"
+            : String(next);
+      }
+
+      const playerTourSelectSync = document.getElementById("playerTourSelect");
+      if (playerTourSelectSync) {
+        playerTourSelectSync.value = isRegularTour(next) ? String(next) : "overall";
+      }
 
       document.querySelectorAll(".tour-pill").forEach(el => {
         if (el.tagName !== "SELECT") el.textContent = `Tour ${next}`;
@@ -5391,7 +5449,7 @@ function mapPredictionRow(row) {
         renderMatches();
         renderPicks();
         renderTableByMode();
-        updateStats(String(next));
+        updateStats(isPlayoffTour(next) ? "playoff" : String(next));
         renderPlayerSelect();
         renderPlayerProfile();
       }
@@ -5399,56 +5457,91 @@ function mapPredictionRow(row) {
 
     function populateTourControls() {
       const tours = getAvailableTours();
-      const current = selectedTour || getDefaultTour() || tours[0] || 5;
+      const regularTours = tours.filter(isRegularTour);
+      const playoffTours = tours.filter(isPlayoffTour);
+      const current = selectedTour || getDefaultTour() || regularTours[0] || tours[0] || 5;
       selectedTour = current;
 
-      const tourOptions = tours.map(t => `<option value="${t}">Тур ${t}</option>`).join("");
-      const tourOptionsWithOverall = tourOptions + `<option value="overall">🏆 Общая таблица</option><option value="playoff">⚔️ Плей-офф</option>`;
+      const regularOptions = regularTours
+        .map(t => `<option value="${t}">${escapeHtml(tourLabel(t))}</option>`)
+        .join("");
+
+      // Header selector still needs technical playoff rounds because it controls
+      // the actual Matches / Predictions screens.
+      const globalOptions = tours
+        .map(t => `<option value="${t}">${escapeHtml(tourLabel(t))}</option>`)
+        .join("");
+
+      const hasPlayoff = playoffTours.length > 0 || sitePlayoff.length > 0;
+      const playoffOption = hasPlayoff ? `<option value="playoff">⚔️ Плей-офф</option>` : "";
 
       const globalTourSelect = document.getElementById("globalTourSelect");
       if (globalTourSelect) {
-        globalTourSelect.innerHTML = tourOptions;
+        globalTourSelect.innerHTML = globalOptions;
         globalTourSelect.value = String(current);
         globalTourSelect.onchange = () => setSelectedTour(globalTourSelect.value, true);
       }
 
       const tableSelect = document.getElementById("tableSelect");
       if (tableSelect) {
-        tableSelect.innerHTML = tourOptionsWithOverall;
-        tableSelect.value = String(current);
+        tableSelect.innerHTML =
+          regularOptions +
+          `<option value="overall">🏆 Общая таблица</option>` +
+          playoffOption;
+
+        tableSelect.value = isPlayoffTour(current) && hasPlayoff
+          ? "playoff"
+          : String(current);
+
+        if (![...tableSelect.options].some(o => o.value === tableSelect.value)) {
+          tableSelect.value = "overall";
+        }
       }
 
-  
-    const achievementModal = document.getElementById("achievementModal");
-    const achievementModalClose = document.getElementById("achievementModalClose");
-    const achievementModalBackdrop = document.getElementById("achievementModalBackdrop");
+      const achievementModal = document.getElementById("achievementModal");
+      const achievementModalClose = document.getElementById("achievementModalClose");
+      const achievementModalBackdrop = document.getElementById("achievementModalBackdrop");
 
-    document.addEventListener("click", (event) => {
-      const trigger = event.target.closest("[data-achievement-code], [data-achievement-player]");
-      if (!trigger) return;
-      const row = findAchievementForTrigger(trigger);
-      if (row) openAchievementModal(row);
-    });
+      if (!document.documentElement.dataset.achievementModalBound) {
+        document.documentElement.dataset.achievementModalBound = "1";
 
-    if (achievementModalClose) achievementModalClose.addEventListener("click", closeAchievementModal);
-    if (achievementModalBackdrop) achievementModalBackdrop.addEventListener("click", closeAchievementModal);
+        document.addEventListener("click", (event) => {
+          const trigger = event.target.closest("[data-achievement-code], [data-achievement-player]");
+          if (!trigger) return;
+          const row = findAchievementForTrigger(trigger);
+          if (row) openAchievementModal(row);
+        });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && achievementModal && !achievementModal.classList.contains("hidden")) {
-        closeAchievementModal();
+        if (achievementModalClose) achievementModalClose.addEventListener("click", closeAchievementModal);
+        if (achievementModalBackdrop) achievementModalBackdrop.addEventListener("click", closeAchievementModal);
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && achievementModal && !achievementModal.classList.contains("hidden")) {
+            closeAchievementModal();
+          }
+        });
       }
-    });
 
-    const tourSelect = document.getElementById("tourSelect");
+      const tourSelect = document.getElementById("tourSelect");
       if (tourSelect) {
-        tourSelect.innerHTML = `<option value="overall">Общая</option>` + tourOptions;
-        tourSelect.value = String(current);
+        tourSelect.innerHTML =
+          `<option value="overall">Общая</option>` +
+          regularOptions +
+          playoffOption;
+
+        tourSelect.value = isPlayoffTour(current) && hasPlayoff
+          ? "playoff"
+          : String(current);
+
+        if (![...tourSelect.options].some(o => o.value === tourSelect.value)) {
+          tourSelect.value = "overall";
+        }
       }
 
       const playerTourSelect = document.getElementById("playerTourSelect");
       if (playerTourSelect) {
-        playerTourSelect.innerHTML = tourOptions + `<option value="overall">Общая</option>`;
-        playerTourSelect.value = String(current);
+        playerTourSelect.innerHTML = regularOptions + `<option value="overall">Общая</option>`;
+        playerTourSelect.value = isRegularTour(current) ? String(current) : "overall";
       }
     }
 
@@ -5513,7 +5606,10 @@ if (screenMatches) {
   if (!el) return;
 
   const rows = rankHistory
-    .filter(r => String(r.player).trim() === String(playerName).trim())
+    .filter(r =>
+      String(r.player).trim() === String(playerName).trim() &&
+      isRegularTour(r.tour)
+    )
     .sort((a, b) => Number(a.tour) - Number(b.tour));
 
   if (!rows.length) {
@@ -5987,7 +6083,7 @@ sourceMatches.forEach(match => {
 
       // In overall statistics, weekly achievements add noise rather than useful context.
       // Hide the entire block and show it again only for a specific tour.
-      if (selected === "overall") {
+      if (selected === "overall" || selected === "playoff") {
         panel.classList.add("hidden");
         el.innerHTML = "";
         return;
@@ -6072,13 +6168,19 @@ sourceMatches.forEach(match => {
     }
 
     function getPredictionsForStats(tour) {
-      if (String(tour) === "overall") return predictions;
+      const mode = String(tour);
+      if (mode === "overall") return predictions;
+      if (mode === "playoff") return playoffPredictions();
       return predictions.filter(p => Number(p.tour) === Number(tour));
     }
 
     function calculateRealStats(tour) {
       const rows = getPredictionsForStats(tour);
-      const players = rows.length;
+      const playoffMode = String(tour) === "playoff";
+      const players = playoffMode
+        ? new Set(rows.map(p => String(p.name || "").trim()).filter(Boolean)).size
+        : rows.length;
+      const triples = rows.length;
       const points = rows.map(p => Number(p.pts) || 0);
       const avgPts = players ? points.reduce((sum, v) => sum + v, 0) / players : 0;
       const maxPts = points.length ? Math.max(...points) : 0;
@@ -6115,6 +6217,7 @@ sourceMatches.forEach(match => {
         avgPts: formatRuNumber(avgPts, 2),
         maxPts: formatRuNumber(maxPts, 0),
         top3Pts: formatRuNumber(top3Pts, 0),
+        triples: String(triples),
         avgOdd: odds.length ? formatRuNumber(odds.reduce((sum, v) => sum + v, 0) / odds.length, 2) : "0",
         maxOdd: odds.length ? formatRuNumber(Math.max(...odds), 2) : "0",
         minOdd: odds.length ? formatRuNumber(Math.min(...odds), 2) : "0",
@@ -6138,7 +6241,16 @@ sourceMatches.forEach(match => {
       setText("statAvgPts", s.avgPts);
       setText("statAvgPts2", s.avgPts);
       setText("statMaxPts", s.maxPts);
-      setText("statTop3Pts", s.top3Pts);
+
+      const top3Label = document.getElementById("statTop3Label");
+      if (String(tour) === "playoff") {
+        if (top3Label) top3Label.textContent = "🧩 Тройников сыграно";
+        setText("statTop3Pts", s.triples ?? "0");
+      } else {
+        if (top3Label) top3Label.textContent = "🥉 Порог топ-3";
+        setText("statTop3Pts", s.top3Pts);
+      }
+
       setText("statAvgOdd", s.avgOdd);
       setText("statMaxOdd", s.maxOdd);
       setText("statMinOdd", s.minOdd);
@@ -6418,7 +6530,16 @@ sourceMatches.forEach(match => {
       if (select && select.value !== playerName && [...select.options].some(o => o.value === playerName)) select.value = playerName;
 
       const history = predictionsForPlayer(playerName);
-      const currentPrediction = predictionForPlayerTour(playerName, currentTour);
+      const regularHistory = history.filter(p => isRegularTour(p.tour));
+      const playoffHistory = history.filter(p => isPlayoffTour(p.tour));
+
+      // During playoffs a player may have a different latest round than another player.
+      // Prefer the selected technical round; otherwise show this player's latest playoff round.
+      let currentPrediction = predictionForPlayerTour(playerName, currentTour);
+      if (isPlayoffTour(currentTour) && !currentPrediction && playoffHistory.length) {
+        currentPrediction = playoffHistory[playoffHistory.length - 1];
+      }
+
       const displayPrediction = currentPrediction || history[history.length - 1];
       if (!displayPrediction) return;
 
@@ -6427,8 +6548,8 @@ sourceMatches.forEach(match => {
       bindCountrySorting();
       renderCountryStats(false);
       const wins = settledPicks.filter(p => p.result === "win").length;
-      const totalPts = history.reduce((sum, p) => sum + toNum(p.pts, 0), 0);
-      const toursPlayed = new Set(history.map(p => Number(p.tour)).filter(Boolean)).size;
+      const totalPts = regularHistory.reduce((sum, p) => sum + toNum(p.pts, 0), 0);
+      const toursPlayed = new Set(regularHistory.map(p => Number(p.tour)).filter(Boolean)).size;
       const avgPts = toursPlayed ? (totalPts / toursPlayed).toFixed(1).replace(".", ",") : "0";
       const wr = settledPicks.length ? Math.round(wins / settledPicks.length * 100) : 0;
 
@@ -6462,8 +6583,9 @@ sourceMatches.forEach(match => {
       const countryEl = document.getElementById("profileCountry");
       if (countryEl) countryEl.innerHTML = `<div class="prefer-flags">${playerPreferredCountriesHtml(playerName)}</div>`;
 
+      const displayTour = Number(displayPrediction?.tour || currentTour || 0);
       const previousToursForForm = history
-        .filter(p => !currentTour || Number(p.tour) < Number(currentTour))
+        .filter(p => !displayTour || Number(p.tour) < displayTour)
         .sort((a, b) => Number(b.tour) - Number(a.tour));
       const formTourSource = previousToursForForm.length
         ? previousToursForForm
@@ -6487,6 +6609,13 @@ sourceMatches.forEach(match => {
         }).join("");
       }
 
+      const currentTitleEl = document.querySelector(".player-current-v2 .dashboard-title-v2");
+      if (currentTitleEl) {
+        currentTitleEl.textContent = isPlayoffTour(displayPrediction?.tour)
+          ? `⚔️ ${tourLabel(displayPrediction.tour)}`
+          : "🎯 Текущий тур";
+      }
+
       const picksEl = document.getElementById("profileCurrentPicks");
       if (picksEl) {
         if (!currentPrediction) {
@@ -6494,8 +6623,8 @@ sourceMatches.forEach(match => {
             <div class="profile-no-prediction">
               <span class="profile-no-prediction-dot" aria-hidden="true"></span>
               <div>
-                <strong>Нет прогноза на текущий тур</strong>
-                ${currentTour ? `<small>Тур ${escapeHtml(currentTour)}</small>` : ""}
+                <strong>${isPlayoffTour(currentTour) ? "Нет прогноза на текущий раунд плей-офф" : "Нет прогноза на текущий тур"}</strong>
+                ${currentTour ? `<small>${escapeHtml(tourLabel(currentTour))}</small>` : ""}
               </div>
             </div>
           `;
@@ -6523,8 +6652,11 @@ sourceMatches.forEach(match => {
       }
 
       setText("profileTotalPts", totalPts);
-      const availableTours = currentTour || Math.max(0, ...history.map(p => Number(p.tour) || 0));
-      setText("profileTours", `${toursPlayed}/${availableTours || toursPlayed}`);
+      const availableRegularTours = getAvailableTours().filter(isRegularTour);
+      const regularTourTarget = availableRegularTours.length
+        ? Math.max(...availableRegularTours)
+        : Math.max(0, ...regularHistory.map(p => Number(p.tour) || 0));
+      setText("profileTours", `${toursPlayed}/${regularTourTarget || toursPlayed}`);
       setText("profileAvgPts", avgPts);
       setText("profileWinrate", `${wr}%`);
       // The headline flat profit uses the same country rows as the table,
@@ -6544,7 +6676,7 @@ sourceMatches.forEach(match => {
         achEl.innerHTML = achievements.length ? achievements.map(row => {
           const tour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
           const desc = achievementDescription(row);
-          const smallText = desc ? `${desc}${tour ? ` · Тур ${tour}` : ""}` : (tour ? `Тур ${tour}` : "");
+          const smallText = desc ? `${desc}${tour ? ` · ${tourLabel(tour)}` : ""}` : (tour ? tourLabel(tour) : "");
           return `
             <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} title="${escapeHtml(smallText ? `${achievementTitle(row)} — ${smallText}` : achievementTitle(row))}" aria-label="Открыть ачивку ${escapeHtml(achievementTitle(row))}">
               <span>${achievementIconHtml(row)}</span>
@@ -6585,7 +6717,7 @@ const picksHtml = p.picks.map((pick, index) => {
           return `
             <details class="past-tour-details">
               <summary class="past-tour-summary">
-                <span>Тур ${escapeHtml(p.tour)} · ${form}</span>
+                <span>${escapeHtml(tourLabel(p.tour))} · ${form}</span>
                 <strong>${escapeHtml(p.pts)} очков</strong>
               </summary>
               <div class="past-tour-picks">${picksHtml}</div>
@@ -6664,8 +6796,9 @@ const picksHtml = p.picks.map((pick, index) => {
         .filter(row => {
           const player = achievementValue(row, ["player", "Player", "Игрок", "A", "I"], "");
           if (String(player).trim() !== String(name).trim()) return false;
-          if (tour === null || tour === "overall") return true;
           const rowTour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
+          if (isPlayoffTour(rowTour)) return false;
+          if (tour === null || tour === "overall") return true;
           return String(rowTour) === String(tour);
         })
         .sort((a, b) => {
@@ -6776,7 +6909,7 @@ function achievementDescription(row) {
 
       const meta = [];
       if (player) meta.push(`<span>👤 ${escapeHtml(player)}</span>`);
-      if (tour) meta.push(`<span>🏁 Тур ${escapeHtml(tour)}</span>`);
+      if (tour) meta.push(`<span>🏁 ${escapeHtml(tourLabel(tour))}</span>`);
       metaEl.innerHTML = meta.join("");
       metaEl.classList.toggle("hidden", !meta.length);
 
@@ -7066,7 +7199,7 @@ function renderTableByMode() {
       if (mode === "overall") {
         rows = siteOverall.length
           ? siteOverall.slice().sort((a, b) => b.total - a.total)
-          : [...predictions].sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
+          : regularPredictions().sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
       } else {
         rows = [...predictions]
           .filter(p => !p.tour || String(p.tour) === String(mode))
@@ -7210,7 +7343,9 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     const tourSelect = document.getElementById("tourSelect");
     if (tourSelect) {
       tourSelect.addEventListener("change", () => {
-        if (tourSelect.value !== "overall") setSelectedTour(tourSelect.value, false);
+        if (tourSelect.value !== "overall" && tourSelect.value !== "playoff") {
+          setSelectedTour(tourSelect.value, false);
+        }
         updateStats(tourSelect.value);
       });
     }
