@@ -4447,6 +4447,33 @@ button.achievement-item {
 .playoff-grand-final-hero .playoff-player-score {
   color: #f6d365;
 }
+
+    .tour-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      background-image: none !important;
+      padding-right: 14px;
+      white-space: nowrap;
+    }
+
+    .local-tour-toolbar {
+      margin-top: 2px;
+      margin-bottom: 12px;
+    }
+
+    .local-tour-toolbar select {
+      min-width: 170px;
+    }
+
+    @media (max-width: 520px) {
+      .local-tour-toolbar select {
+        min-width: 145px;
+        max-width: 190px;
+      }
+    }
+
 </style>
 
 </head>
@@ -4461,7 +4488,7 @@ button.achievement-item {
         </div>
         <div class="header-actions">
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
-          <select class="tour-select" id="globalTourSelect" aria-label="Tour selector"></select>
+          <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
       </div>
     </header>
@@ -4470,6 +4497,10 @@ button.achievement-item {
 
   <main>
   <section class="screen active" id="screen-matches">
+    <div class="stats-toolbar local-tour-toolbar">
+      <label for="matchesTourSelect">Этап</label>
+      <select id="matchesTourSelect"></select>
+    </div>
 
     <div id="upcomingSection">
       <div class="section-title">
@@ -4500,6 +4531,10 @@ button.achievement-item {
         <div class="section-title">
           <div class="section-title-left">🎯 Прогнозы</div>
           <div class="section-title-right"></div>
+        </div>
+        <div class="stats-toolbar local-tour-toolbar">
+          <label for="picksTourSelect">Этап</label>
+          <select id="picksTourSelect"></select>
         </div>
         <div class="stack" id="picksList"></div>
       </section>
@@ -5212,7 +5247,9 @@ function mapPredictionRow(row) {
       renderMatches();
       renderPicks();
       renderTableByMode();
-      updateStats(isPlayoffTour(getCurrentTour()) ? "playoff" : String(getCurrentTour() || siteConfig.current_tour || "5"));
+      const statsMode = document.getElementById("tourSelect")?.value ||
+        (isPlayoffTour(getDefaultTour()) ? "playoff" : String(getDefaultTour() || "5"));
+      updateStats(statsMode);
       renderPlayerSelect();
       renderPlayerProfile();
       renderFilter("matches");
@@ -5223,6 +5260,10 @@ function mapPredictionRow(row) {
     let picksMode = predictions.some(p => getPickStats(p).alive)
   ? "alive"
   : "all";
+
+    // Matches and Predictions keep their own local stage.
+    let matchesSelectedTour = 0;
+    let picksSelectedTour = 0;
 
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, (char) => ({
@@ -5396,15 +5437,15 @@ function mapPredictionRow(row) {
     }
 
     function getDefaultTour() {
-      const fromConfig = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
-      if (fromConfig) return fromConfig;
-
       const activeTourRow = siteTours.find(row => {
         const status = String(get(row, ["status", "Status", "B"])).toLowerCase();
         return status === "active";
       });
       const fromTours = activeTourRow ? toNum(get(activeTourRow, ["tour", "Tour", "Тур", "A"]), 0) : 0;
       if (fromTours) return fromTours;
+
+      const fromConfig = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
+      if (fromConfig) return fromConfig;
 
       const tours = getAvailableTours();
       return tours[0] || 0;
@@ -5413,45 +5454,23 @@ function mapPredictionRow(row) {
     function setSelectedTour(value, shouldRender = true) {
       const next = toNum(value, 0);
       if (!next) return;
-      selectedTour = next;
 
-      const globalSelect = document.getElementById("globalTourSelect");
-      if (globalSelect && [...globalSelect.options].some(option => option.value === String(next))) {
-        globalSelect.value = String(next);
+      matchesSelectedTour = next;
+      picksSelectedTour = next;
+
+      const matchesSelect = document.getElementById("matchesTourSelect");
+      if (matchesSelect && [...matchesSelect.options].some(o => o.value === String(next))) {
+        matchesSelect.value = String(next);
       }
 
-      const tableSelectSync = document.getElementById("tableSelect");
-      if (tableSelectSync) {
-        tableSelectSync.value = isPlayoffTour(next) &&
-          [...tableSelectSync.options].some(option => option.value === "playoff")
-            ? "playoff"
-            : String(next);
+      const picksSelect = document.getElementById("picksTourSelect");
+      if (picksSelect && [...picksSelect.options].some(o => o.value === String(next))) {
+        picksSelect.value = String(next);
       }
-
-      const statsSelectSync = document.getElementById("tourSelect");
-      if (statsSelectSync) {
-        statsSelectSync.value = isPlayoffTour(next) &&
-          [...statsSelectSync.options].some(option => option.value === "playoff")
-            ? "playoff"
-            : String(next);
-      }
-
-      const playerTourSelectSync = document.getElementById("playerTourSelect");
-      if (playerTourSelectSync) {
-        playerTourSelectSync.value = isRegularTour(next) ? String(next) : "overall";
-      }
-
-      document.querySelectorAll(".tour-pill").forEach(el => {
-        if (el.tagName !== "SELECT") el.textContent = `Tour ${next}`;
-      });
 
       if (shouldRender) {
         renderMatches();
         renderPicks();
-        renderTableByMode();
-        updateStats(isPlayoffTour(next) ? "playoff" : String(next));
-        renderPlayerSelect();
-        renderPlayerProfile();
       }
     }
 
@@ -5459,42 +5478,56 @@ function mapPredictionRow(row) {
       const tours = getAvailableTours();
       const regularTours = tours.filter(isRegularTour);
       const playoffTours = tours.filter(isPlayoffTour);
-      const current = selectedTour || getDefaultTour() || regularTours[0] || tours[0] || 5;
+      const current = getDefaultTour() || regularTours[0] || tours[0] || 5;
+
+      // Legacy selectedTour stays pinned to the actual current stage.
       selectedTour = current;
 
-      const regularOptions = regularTours
+      if (!matchesSelectedTour || !tours.includes(Number(matchesSelectedTour))) {
+        matchesSelectedTour = current;
+      }
+      if (!picksSelectedTour || !tours.includes(Number(picksSelectedTour))) {
+        picksSelectedTour = current;
+      }
+
+      const allOptions = tours
         .map(t => `<option value="${t}">${escapeHtml(tourLabel(t))}</option>`)
         .join("");
 
-      // Header selector still needs technical playoff rounds because it controls
-      // the actual Matches / Predictions screens.
-      const globalOptions = tours
+      const regularOptions = regularTours
         .map(t => `<option value="${t}">${escapeHtml(tourLabel(t))}</option>`)
         .join("");
 
       const hasPlayoff = playoffTours.length > 0 || sitePlayoff.length > 0;
       const playoffOption = hasPlayoff ? `<option value="playoff">⚔️ Плей-офф</option>` : "";
 
-      const globalTourSelect = document.getElementById("globalTourSelect");
-      if (globalTourSelect) {
-        globalTourSelect.innerHTML = globalOptions;
-        globalTourSelect.value = String(current);
-        globalTourSelect.onchange = () => setSelectedTour(globalTourSelect.value, true);
+      const indicator = document.getElementById("currentTourIndicator");
+      if (indicator) indicator.textContent = tourLabel(current) || `Тур ${current}`;
+
+      const matchesTourSelect = document.getElementById("matchesTourSelect");
+      if (matchesTourSelect) {
+        matchesTourSelect.innerHTML = allOptions;
+        matchesTourSelect.value = String(matchesSelectedTour);
       }
 
-      const tableSelect = document.getElementById("tableSelect");
+      const picksTourSelect = document.getElementById("picksTourSelect");
+      if (picksTourSelect) {
+        picksTourSelect.innerHTML = allOptions;
+        picksTourSelect.value = String(picksSelectedTour);
+      }
+
+    const tableSelect = document.getElementById("tableSelect");
       if (tableSelect) {
+        const previous = tableSelect.value;
         tableSelect.innerHTML =
           regularOptions +
           `<option value="overall">🏆 Общая таблица</option>` +
           playoffOption;
 
-        tableSelect.value = isPlayoffTour(current) && hasPlayoff
-          ? "playoff"
-          : String(current);
-
-        if (![...tableSelect.options].some(o => o.value === tableSelect.value)) {
-          tableSelect.value = "overall";
+        if (previous && [...tableSelect.options].some(o => o.value === previous)) {
+          tableSelect.value = previous;
+        } else {
+          tableSelect.value = isPlayoffTour(current) && hasPlayoff ? "playoff" : "overall";
         }
       }
 
@@ -5524,24 +5557,23 @@ function mapPredictionRow(row) {
 
       const tourSelect = document.getElementById("tourSelect");
       if (tourSelect) {
+        const previous = tourSelect.value;
         tourSelect.innerHTML =
           `<option value="overall">Общая</option>` +
           regularOptions +
           playoffOption;
 
-        tourSelect.value = isPlayoffTour(current) && hasPlayoff
-          ? "playoff"
-          : String(current);
-
-        if (![...tourSelect.options].some(o => o.value === tourSelect.value)) {
-          tourSelect.value = "overall";
+        if (previous && [...tourSelect.options].some(o => o.value === previous)) {
+          tourSelect.value = previous;
+        } else {
+          tourSelect.value = isPlayoffTour(current) && hasPlayoff ? "playoff" : String(current);
         }
       }
 
       const playerTourSelect = document.getElementById("playerTourSelect");
       if (playerTourSelect) {
         playerTourSelect.innerHTML = regularOptions + `<option value="overall">Общая</option>`;
-        playerTourSelect.value = isRegularTour(current) ? String(current) : "overall";
+        playerTourSelect.value = "overall";
       }
     }
 
@@ -5551,7 +5583,7 @@ function mapPredictionRow(row) {
     }
 
     function currentTourMatches() {
-      const currentTour = getCurrentTour();
+      const currentTour = matchesSelectedTour || getDefaultTour();
       const scoped = currentTour ? matches.filter(m => Number(m.tour) === Number(currentTour)) : matches;
       return scoped.filter(m => m.status !== "cancelled" && m.api_status !== "cancelled");
     }
@@ -5670,11 +5702,9 @@ if (screenMatches) {
     }
 
     function currentTourPredictions() {
-      const currentTour = getCurrentTour();
+      const currentTour = picksSelectedTour || getDefaultTour();
       if (!currentTour) return predictions;
 
-      // site_predictions is historical data for all tours.
-      // The Picks screen must show only the selected/current tour.
       return predictions.filter(p => Number(p.tour) === Number(currentTour));
     }
 
@@ -6176,8 +6206,8 @@ sourceMatches.forEach(match => {
 
     function calculateRealStats(tour) {
       const rows = getPredictionsForStats(tour);
-      const playoffMode = String(tour) === "playoff";
-      const players = playoffMode
+      const aggregateMode = String(tour) === "playoff" || String(tour) === "overall";
+      const players = aggregateMode
         ? new Set(rows.map(p => String(p.name || "").trim()).filter(Boolean)).size
         : rows.length;
       const triples = rows.length;
@@ -6521,7 +6551,7 @@ sourceMatches.forEach(match => {
     }
 
     function renderPlayerProfile() {
-      const currentTour = getCurrentTour() || 0;
+      const currentTour = getDefaultTour() || 0;
       const select = document.getElementById("playerSelect");
       const names = allPlayerNames();
       const playerName = selectedPlayerName || select?.value || names[0] || predictions[0]?.name || "";
@@ -7315,12 +7345,25 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       renderMatches();
     });
 
+    const matchesTourSelect = document.getElementById("matchesTourSelect");
+    if (matchesTourSelect) {
+      matchesTourSelect.addEventListener("change", () => {
+        matchesSelectedTour = toNum(matchesTourSelect.value, getDefaultTour());
+        renderMatches();
+      });
+    }
+
+    const picksTourSelect = document.getElementById("picksTourSelect");
+    if (picksTourSelect) {
+      picksTourSelect.addEventListener("change", () => {
+        picksSelectedTour = toNum(picksTourSelect.value, getDefaultTour());
+        renderPicks();
+      });
+    }
+
     const tableSelect = document.getElementById("tableSelect");
     if (tableSelect) {
       tableSelect.addEventListener("change", () => {
-        if (tableSelect.value !== "overall" && tableSelect.value !== "playoff") {
-          setSelectedTour(tableSelect.value, false);
-        }
         renderTableByMode();
       });
     }
@@ -7343,9 +7386,6 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     const tourSelect = document.getElementById("tourSelect");
     if (tourSelect) {
       tourSelect.addEventListener("change", () => {
-        if (tourSelect.value !== "overall" && tourSelect.value !== "playoff") {
-          setSelectedTour(tourSelect.value, false);
-        }
         updateStats(tourSelect.value);
       });
     }
