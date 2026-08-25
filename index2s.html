@@ -4474,6 +4474,248 @@ button.achievement-item {
       }
     }
 
+
+/* ===== Country match history modal ===== */
+.chart-row[data-country] {
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background .16s ease, transform .16s ease;
+}
+.chart-row[data-country]:hover {
+  background: rgba(255,255,255,.025);
+}
+.chart-row[data-country]:active {
+  transform: scale(.995);
+}
+
+.country-history-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+.country-history-modal.hidden { display: none; }
+
+.country-history-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.78);
+  backdrop-filter: blur(9px);
+}
+
+.country-history-card {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  max-height: min(780px, calc(100vh - 36px));
+  overflow-y: auto;
+  padding: 18px;
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(182,255,59,.07), transparent 30%),
+    linear-gradient(180deg, #1a1b1d 0%, #101113 100%);
+  box-shadow: 0 30px 90px rgba(0,0,0,.65);
+}
+
+.country-history-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.08);
+  color: #bdbdbd;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.country-history-head {
+  padding-right: 44px;
+  margin-bottom: 14px;
+}
+.country-history-kicker {
+  color: var(--muted2);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.country-history-title {
+  margin-top: 5px;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 1000;
+  line-height: 1.05;
+}
+.country-history-summary {
+  margin-top: 7px;
+  color: #9a9a9a;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.country-tour-group + .country-tour-group {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.country-tour-title {
+  margin-bottom: 9px;
+  color: #f4f4f5;
+  font-size: 12px;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: .025em;
+}
+
+.country-match-list {
+  display: grid;
+  gap: 8px;
+}
+.country-history-match {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 11px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.055);
+}
+.country-history-main { min-width: 0; }
+.country-history-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  color: #f4f4f5;
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1.25;
+}
+.country-history-name-text {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.country-history-flag {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  font-size: 12px;
+}
+.country-history-flag img {
+  width: 18px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 999px;
+}
+.country-history-sub {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.country-history-stars {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.country-history-stars .stars {
+  min-width: 0;
+  cursor: help;
+}
+.country-history-score {
+  min-width: 48px;
+  text-align: right;
+  font-size: 15px;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+.country-history-score.is-win { color: #34d399; }
+.country-history-score.is-lose { color: #fb7185; }
+.country-history-score.is-pending { color: #8a8a8a; }
+
+.country-pickers-popover {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 7px);
+  z-index: 5;
+  width: max-content;
+  min-width: 170px;
+  max-width: 260px;
+  padding: 9px 10px;
+  border-radius: 13px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: #24262a;
+  box-shadow: 0 12px 28px rgba(0,0,0,.48);
+  color: #d4d4d8;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.45;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity .13s ease, transform .13s ease;
+}
+.country-pickers-popover::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: -5px;
+  width: 9px;
+  height: 9px;
+  background: #24262a;
+  border-left: 1px solid rgba(255,255,255,.10);
+  border-top: 1px solid rgba(255,255,255,.10);
+  transform: rotate(45deg);
+}
+.country-pickers-popover strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #f4f4f5;
+  font-size: 10px;
+}
+.country-history-stars:hover .country-pickers-popover,
+.country-history-stars.is-open .country-pickers-popover {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.country-history-empty {
+  padding: 22px 10px;
+  color: var(--muted2);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+@media (max-width: 560px) {
+  .country-history-modal { padding: 10px; }
+  .country-history-card {
+    max-height: calc(100vh - 20px);
+    padding: 15px;
+    border-radius: 23px;
+  }
+  .country-history-title { font-size: 22px; }
+  .country-history-match { padding: 10px; }
+}
+
 </style>
 
 </head>
@@ -4892,6 +5134,20 @@ button.achievement-item {
         <div class="achievement-modal-title" id="achievementModalTitle">Ачивка</div>
         <div class="achievement-modal-description" id="achievementModalDescription"></div>
         <div class="achievement-modal-meta" id="achievementModalMeta"></div>
+      </div>
+    </div>
+
+
+    <div class="country-history-modal hidden" id="countryHistoryModal" role="dialog" aria-modal="true" aria-labelledby="countryHistoryTitle">
+      <div class="country-history-backdrop" id="countryHistoryBackdrop"></div>
+      <div class="country-history-card">
+        <button class="country-history-close" id="countryHistoryClose" aria-label="Закрыть">×</button>
+        <div class="country-history-head">
+          <div class="country-history-kicker">Матчи страны в X League</div>
+          <div class="country-history-title" id="countryHistoryTitle">Страна</div>
+          <div class="country-history-summary" id="countryHistorySummary"></div>
+        </div>
+        <div id="countryHistoryBody"></div>
       </div>
     </div>
 
@@ -5518,7 +5774,47 @@ function mapPredictionRow(row) {
       const indicator = document.getElementById("currentTourIndicator");
       if (indicator) indicator.textContent = tourLabel(current) || `Тур ${current}`;
 
-      const matchesTourSelect = document.getElementById("matchesTourSelect");
+  
+    const countryHistoryModal = document.getElementById("countryHistoryModal");
+    const countryHistoryClose = document.getElementById("countryHistoryClose");
+    const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
+
+    document.addEventListener("click", (event) => {
+      const countryRow = event.target.closest(".chart-row[data-country]");
+      if (countryRow) {
+        openCountryHistory(countryRow.dataset.country || "");
+        return;
+      }
+
+      const stars = event.target.closest(".country-history-stars");
+      if (stars) {
+        event.stopPropagation();
+        const wasOpen = stars.classList.contains("is-open");
+        document.querySelectorAll(".country-history-stars.is-open").forEach(el => el.classList.remove("is-open"));
+        if (!wasOpen) stars.classList.add("is-open");
+        return;
+      }
+
+      document.querySelectorAll(".country-history-stars.is-open").forEach(el => el.classList.remove("is-open"));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        const row = document.activeElement?.closest?.(".chart-row[data-country]");
+        if (row) {
+          event.preventDefault();
+          openCountryHistory(row.dataset.country || "");
+        }
+      }
+      if (event.key === "Escape" && countryHistoryModal && !countryHistoryModal.classList.contains("hidden")) {
+        closeCountryHistory();
+      }
+    });
+
+    if (countryHistoryClose) countryHistoryClose.addEventListener("click", closeCountryHistory);
+    if (countryHistoryBackdrop) countryHistoryBackdrop.addEventListener("click", closeCountryHistory);
+
+    const matchesTourSelect = document.getElementById("matchesTourSelect");
       if (matchesTourSelect) {
         matchesTourSelect.innerHTML = allOptions;
         matchesTourSelect.value = String(matchesSelectedTour);
@@ -6042,11 +6338,16 @@ sourceMatches.forEach(match => {
       const max = Math.max(...normalizedRows.map(row => Number(row.value) || 0), 1);
       const fillClass = mode === "gold" ? "gold" : mode === "red" ? "red" : "";
 
+      const isCountryChart = targetId === "countryVolumeChart" || targetId === "countryWinrateChart";
+
       el.innerHTML = normalizedRows.map(row => {
         const width = Math.max(4, Math.round((Number(row.value) || 0) / max * 100));
         const flag = row.flagUrl ? `<span class="chart-flag">${flagHtml(row.flagUrl)}</span>` : "";
+        const countryAttrs = isCountryChart
+          ? ` data-country="${escapeHtml(row.name)}" role="button" tabindex="0" aria-label="Открыть матчи страны ${escapeHtml(row.name)}"`
+          : "";
         return `
-          <div class="chart-row">
+          <div class="chart-row"${countryAttrs}>
             <div class="chart-row-top">
               <div class="chart-name-line">${flag}<div class="chart-name">${escapeHtml(row.name)}</div></div>
               <div class="chart-value">${escapeHtml(row.value)} · ${escapeHtml(row.pct)}</div>
@@ -6057,6 +6358,187 @@ sourceMatches.forEach(match => {
           </div>
         `;
       }).join("");
+    }
+
+
+    const RU_MONTHS_GENITIVE = [
+      "января", "февраля", "марта", "апреля", "мая", "июня",
+      "июля", "августа", "сентября", "октября", "ноября", "декабря"
+    ];
+
+    function parseMatchDate(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return null;
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+        const [y, m, d] = raw.split("-").map(Number);
+        return new Date(y, m - 1, d);
+      }
+
+      const normalized = normalizeDate(raw);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
+        const [y, m, d] = normalized.split("-").map(Number);
+        return new Date(y, m - 1, d);
+      }
+
+      return null;
+    }
+
+    function formatTourDateRange(startValue, endValue) {
+      const start = parseMatchDate(startValue);
+      const end = parseMatchDate(endValue || startValue);
+      if (!start) return "";
+
+      if (!end || start.getTime() === end.getTime()) {
+        return `${start.getDate()} ${RU_MONTHS_GENITIVE[start.getMonth()]}`;
+      }
+
+      if (start.getMonth() === end.getMonth()) {
+        return `${start.getDate()}–${end.getDate()} ${RU_MONTHS_GENITIVE[start.getMonth()]}`;
+      }
+
+      return `${start.getDate()} ${RU_MONTHS_GENITIVE[start.getMonth()]} – ${end.getDate()} ${RU_MONTHS_GENITIVE[end.getMonth()]}`;
+    }
+
+    function tourDatesForHistory(tour, tourMatches) {
+      const tourRow = siteTours.find(row =>
+        Number(get(row, ["tour", "Tour", "Тур", "A"], 0)) === Number(tour)
+      );
+
+      const rowStart = tourRow ? get(tourRow, ["start_date", "start", "Start", "Дата начала", "D"], "") : "";
+      const rowEnd = tourRow ? get(tourRow, ["end_date", "end", "End", "Дата окончания", "E"], "") : "";
+      const fromRow = formatTourDateRange(rowStart, rowEnd);
+      if (fromRow) return fromRow;
+
+      const dated = (tourMatches || [])
+        .map(m => parseMatchDate(m.sortDate || m.date))
+        .filter(Boolean)
+        .sort((a, b) => a - b);
+
+      if (!dated.length) return "";
+      return formatTourDateRange(
+        `${dated[0].getFullYear()}-${String(dated[0].getMonth()+1).padStart(2,"0")}-${String(dated[0].getDate()).padStart(2,"0")}`,
+        `${dated[dated.length-1].getFullYear()}-${String(dated[dated.length-1].getMonth()+1).padStart(2,"0")}-${String(dated[dated.length-1].getDate()).padStart(2,"0")}`
+      );
+    }
+
+    function pickersForMatch(matchId) {
+      const names = [];
+      predictions.forEach(prediction => {
+        const picked = (prediction.picks || []).some(p => Number(p.matchId) === Number(matchId));
+        if (picked && prediction.name && !names.includes(prediction.name)) names.push(prediction.name);
+      });
+      return names;
+    }
+
+    function matchHistoryResult(match) {
+      const status = match.api_status || match.status || "pending";
+      if (status === "win") return { cls: "is-win", score: match.score || "Ничья" };
+      if (status === "lose") return { cls: "is-lose", score: match.score || "Не ничья" };
+      return { cls: "is-pending", score: match.score || "—" };
+    }
+
+    function openCountryHistory(country) {
+      const modal = document.getElementById("countryHistoryModal");
+      const title = document.getElementById("countryHistoryTitle");
+      const summary = document.getElementById("countryHistorySummary");
+      const body = document.getElementById("countryHistoryBody");
+      if (!modal || !title || !summary || !body) return;
+
+      const statsMode = document.getElementById("tourSelect")?.value || "overall";
+
+      // Match the Statistics section exactly: only X League matches that have popularity > 0.
+      let countryMatches = matches.filter(match => {
+        if (!match || match.api_status === "cancelled" || match.status === "cancelled") return false;
+        if (Number(match.popularity || 0) <= 0) return false;
+        if (cleanCountryName(match.country || "") !== country) return false;
+
+        if (statsMode === "overall") return true;
+        if (statsMode === "playoff") return isPlayoffTour(match.tour);
+        return String(match.tour) === String(statsMode);
+      });
+
+      countryMatches.sort((a, b) =>
+        Number(a.tour) - Number(b.tour) ||
+        compareDateTimeAsc(a, b)
+      );
+
+      const first = countryMatches[0];
+      const flag = first ? (first.flag_url ? flagHtml(first.flag_url) : escapeHtml(first.flag || "🌍")) : "🌍";
+      title.innerHTML = `<span style="display:inline-flex;align-items:center;gap:9px;"><span class="country-history-flag">${flag}</span>${escapeHtml(country)}</span>`;
+
+      const total = countryMatches.length;
+      const wins = countryMatches.filter(m => (m.api_status || m.status) === "win").length;
+      const losses = countryMatches.filter(m => (m.api_status || m.status) === "lose").length;
+      const settled = wins + losses;
+      const drawPct = settled ? (wins / settled * 100).toFixed(1).replace(".", ",") : "0,0";
+      summary.textContent = `${total} матч${total === 1 ? "" : total >= 2 && total <= 4 ? "а" : "ей"} · ничьих ${wins} · ${drawPct}%`;
+
+      if (!countryMatches.length) {
+        body.innerHTML = `<div class="country-history-empty">Для выбранного периода матчей этой страны нет.</div>`;
+        modal.classList.remove("hidden");
+        return;
+      }
+
+      const groups = new Map();
+      countryMatches.forEach(match => {
+        const key = Number(match.tour) || 0;
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(match);
+      });
+
+      body.innerHTML = [...groups.entries()].map(([tour, tourMatches]) => {
+        const dateRange = tourDatesForHistory(tour, tourMatches);
+        const label = isPlayoffTour(tour) ? tourLabel(tour) : `Тур ${tour}`;
+
+        const matchRows = tourMatches.map(match => {
+          const result = matchHistoryResult(match);
+          const pickers = pickersForMatch(match.id);
+          const pickerText = pickers.length
+            ? pickers.map(name => `<div>${escapeHtml(name)}</div>`).join("")
+            : `<div>Никто не выбрал этот матч</div>`;
+
+          const flagHtmlValue = match.flag_url
+            ? flagHtml(match.flag_url)
+            : escapeHtml(match.flag || "🌍");
+
+          return `
+            <div class="country-history-match">
+              <div class="country-history-main">
+                <div class="country-history-name">
+                  <span class="country-history-flag">${flagHtmlValue}</span>
+                  <span class="country-history-name-text">${escapeHtml(match.teams)}</span>
+                </div>
+                <div class="country-history-sub">
+                  <span class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}">
+                    ${starsHtml(match.popularity)}
+                    <span class="country-pickers-popover">
+                      <strong>Выбрали матч (${pickers.length})</strong>
+                      ${pickerText}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div class="country-history-score ${result.cls}">${escapeHtml(result.score)}</div>
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <section class="country-tour-group">
+            <div class="country-tour-title">${escapeHtml(label)}${dateRange ? ` · ${escapeHtml(dateRange)}` : ""}</div>
+            <div class="country-match-list">${matchRows}</div>
+          </section>
+        `;
+      }).join("");
+
+      modal.classList.remove("hidden");
+    }
+
+    function closeCountryHistory() {
+      const modal = document.getElementById("countryHistoryModal");
+      if (modal) modal.classList.add("hidden");
+      document.querySelectorAll(".country-history-stars.is-open").forEach(el => el.classList.remove("is-open"));
     }
 
     function updateMetaCharts(tour) {
