@@ -5024,6 +5024,31 @@ button.achievement-item {
   cursor: pointer;
 }
 
+
+/* v3.6 mobile picker modal */
+@media (hover:none), (pointer:coarse) {
+  .global-pickers-popover {
+    position: fixed !important;
+    left: 50% !important; top: 50% !important;
+    transform: translate(-50%,-50%) !important;
+    width: min(300px, calc(100vw - 36px)) !important;
+    max-height: min(60vh, 420px) !important;
+    padding: 16px !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    z-index: 1001 !important;
+    box-shadow: 0 24px 80px rgba(0,0,0,.82) !important;
+  }
+  .global-pickers-popover strong { font-size: 13px !important; margin-bottom: 8px !important; }
+  .global-pickers-popover .picker-name { padding: 3px 0; }
+  .picker-mobile-backdrop {
+    position: fixed; inset: 0; z-index: 1000; display:none;
+    background: rgba(0,0,0,.62); backdrop-filter: blur(3px);
+  }
+  .picker-mobile-backdrop.is-visible { display:block; }
+  .country-history-stars { min-height: 34px; min-width: 92px; display:inline-flex; align-items:center; justify-content:flex-end; touch-action: manipulation; }
+}
 </style>
 
 </head>
@@ -5460,6 +5485,7 @@ button.achievement-item {
     </div>
 
 
+  <div class="picker-mobile-backdrop" id="pickerMobileBackdrop"></div>
   <div class="global-pickers-popover" id="globalPickersPopover" aria-hidden="true"></div>
 
   <nav class="bottom-nav">
@@ -6114,6 +6140,18 @@ function mapPredictionRow(row) {
     const countryHistoryClose = document.getElementById("countryHistoryClose");
     const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
 
+    document.addEventListener("pointerup", (event) => {
+      if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+      const stars = event.target.closest(".country-history-stars");
+      if (!stars) return;
+      event.preventDefault();
+      event.stopPropagation();
+      stars.dataset.touchHandledAt = String(Date.now());
+      const pop = document.getElementById("globalPickersPopover");
+      if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
+      showGlobalPickersPopover(stars, stars.dataset.matchPickers);
+    }, { passive: false });
+
     document.addEventListener("click", (event) => {
       const countryRow = event.target.closest(".chart-row[data-country]");
       if (countryRow) {
@@ -6140,6 +6178,11 @@ function mapPredictionRow(row) {
 
       const stars = event.target.closest(".country-history-stars");
       if (stars) {
+        const handledAt = Number(stars.dataset.touchHandledAt || 0);
+        if (handledAt && Date.now() - handledAt < 700) {
+          event.preventDefault();
+          return;
+        }
         event.stopPropagation();
         const pop = document.getElementById("globalPickersPopover");
         const sameMatch = pop?.dataset.matchId === String(stars.dataset.matchPickers || "");
@@ -6157,6 +6200,8 @@ function mapPredictionRow(row) {
       if (!event.target.closest("#globalPickersPopover")) hideGlobalPickersPopover();
     });
 
+
+    document.getElementById("pickerMobileBackdrop")?.addEventListener("click", hideGlobalPickersPopover);
 
     document.addEventListener("mouseover", (event) => {
       const stars = event.target.closest(".country-history-stars");
@@ -6871,6 +6916,7 @@ sourceMatches.forEach(match => {
       const pop = document.getElementById("globalPickersPopover");
       if (!pop) return;
       pop.classList.remove("is-visible");
+      document.getElementById("pickerMobileBackdrop")?.classList.remove("is-visible");
       pop.setAttribute("aria-hidden", "true");
       pop.innerHTML = "";
     }
@@ -6890,6 +6936,12 @@ sourceMatches.forEach(match => {
 
       pop.classList.add("is-visible");
       pop.setAttribute("aria-hidden", "false");
+
+      const isTouchUi = window.matchMedia("(hover:none), (pointer:coarse)").matches;
+      if (isTouchUi) {
+        document.getElementById("pickerMobileBackdrop")?.classList.add("is-visible");
+        return;
+      }
 
       // Must measure only after display:block.
       const rect = anchor.getBoundingClientRect();
