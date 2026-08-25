@@ -8,11 +8,11 @@
 
   <title>X League</title>
 
-  <meta name="description" content="X League — турнир прогнозов на ничьи">
+  <meta name="description" content="X League вЂ” С‚СѓСЂРЅРёСЂ РїСЂРѕРіРЅРѕР·РѕРІ РЅР° РЅРёС‡СЊРё">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="X League">
-  <meta property="og:description" content="Турнир прогнозов на ничьи">
+  <meta property="og:description" content="РўСѓСЂРЅРёСЂ РїСЂРѕРіРЅРѕР·РѕРІ РЅР° РЅРёС‡СЊРё">
  <meta property="og:url" content="https://aleksandrkot-ux.github.io/xleague-site.github.io/">
 <meta property="og:image" content="https://aleksandrkot-ux.github.io/xleague-site.github.io/preview.png">
 
@@ -68,7 +68,7 @@ main,
   forced-color-adjust: none;
 }
 
-/* активные кнопки меню/фильтров */
+/* Р°РєС‚РёРІРЅС‹Рµ РєРЅРѕРїРєРё РјРµРЅСЋ/С„РёР»СЊС‚СЂРѕРІ */
 .nav-btn.active,
 .filter-btn.active {
   background: #b6ff3b !important;
@@ -76,14 +76,14 @@ main,
   -webkit-text-fill-color: #050505 !important;
 }
 
-/* обычные кнопки меню */
+/* РѕР±С‹С‡РЅС‹Рµ РєРЅРѕРїРєРё РјРµРЅСЋ */
 .nav-btn,
 .filter-btn {
   color: #8a8a8a !important;
   -webkit-text-fill-color: #8a8a8a !important;
 }
 
-/* очки, коэффициенты, имена */
+/* РѕС‡РєРё, РєРѕСЌС„С„РёС†РёРµРЅС‚С‹, РёРјРµРЅР° */
 .player-name,
 .player-name-link,
 .pick-preview,
@@ -101,7 +101,7 @@ main,
   -webkit-text-fill-color: #050505 !important;
 }
 
-/* кружочки формы */
+/* РєСЂСѓР¶РѕС‡РєРё С„РѕСЂРјС‹ */
 .dot.win,
 .profile-dot.win {
   background: #34d399 !important;
@@ -435,7 +435,7 @@ html, body {
 }
 
 .stars .star-half::before {
-  content: "★";
+  content: "в…";
   position: absolute;
   left: 0;
   top: 0;
@@ -1000,7 +1000,7 @@ html, body {
       transition: opacity .22s ease;
     }
 
-    /* 1st place — muted antique gold across the whole Hero. */
+    /* 1st place вЂ” muted antique gold across the whole Hero. */
     .player-hero-v2.hero-rank-1 {
       border: 1px solid rgba(184, 146, 72, .62) !important;
       background:
@@ -1012,7 +1012,7 @@ html, body {
         0 12px 28px rgba(0,0,0,.30) !important;
     }
 
-    /* 2nd place — graphite silver across the whole Hero. */
+    /* 2nd place вЂ” graphite silver across the whole Hero. */
     .player-hero-v2.hero-rank-2 {
       border: 1px solid rgba(154, 166, 178, .58) !important;
       background:
@@ -1024,7 +1024,7 @@ html, body {
         0 12px 28px rgba(0,0,0,.28) !important;
     }
 
-    /* 3rd place — dark bronze across the whole Hero. */
+    /* 3rd place вЂ” dark bronze across the whole Hero. */
     .player-hero-v2.hero-rank-3 {
       border: 1px solid rgba(154, 98, 68, .58) !important;
       background:
@@ -3596,7 +3596,7 @@ main,
 }
 
 
-/* v2.9 — sortable country statistics */
+/* v2.9 вЂ” sortable country statistics */
 .country-table-v2 th.sortable-country-v2 {
   cursor: pointer;
   user-select: none;
@@ -3666,7 +3666,7 @@ main,
   .country-table-v2 td:nth-child(4) { width: 64px; }
 }
 
-/* v2.10 — compact, genuinely tabular country statistics */
+/* v2.10 вЂ” compact, genuinely tabular country statistics */
 .player-countries-v2 {
   overflow: hidden;
 }
@@ -4716,6 +4716,137 @@ button.achievement-item {
   .country-history-match { padding: 10px; }
 }
 
+
+/* v3.1 вЂ” compact country history for long seasonal lists */
+.country-history-card {
+  width: min(600px, 100%);
+}
+
+.country-tour-group + .country-tour-group {
+  margin-top: 13px;
+  padding-top: 12px;
+}
+
+.country-tour-title {
+  margin-bottom: 7px;
+  font-size: 11px;
+}
+
+.country-match-list {
+  gap: 5px;
+}
+
+.country-history-match {
+  gap: 8px;
+  padding: 8px 9px;
+  border-radius: 13px;
+}
+
+.country-history-name {
+  gap: 6px;
+  font-size: 11px;
+  line-height: 1.18;
+}
+
+.country-history-flag {
+  width: 18px;
+  height: 18px;
+}
+
+.country-history-flag img {
+  width: 16px;
+  height: 16px;
+}
+
+.country-history-sub {
+  margin-top: 4px;
+  gap: 7px;
+}
+
+.country-history-datetime {
+  color: #8f8f94;
+  font-size: 9px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.country-history-stars .stars {
+  transform: scale(.88);
+  transform-origin: left center;
+  margin-right: -8px;
+}
+
+.country-history-score {
+  min-width: 42px;
+  font-size: 14px;
+}
+
+.country-pickers-popover {
+  min-width: 160px;
+  max-width: 240px;
+  font-size: 9px;
+}
+
+@media (max-width: 560px) {
+  .country-history-card {
+    padding: 13px;
+  }
+
+  .country-history-title {
+    font-size: 21px;
+  }
+
+  .country-history-match {
+    padding: 7px 8px;
+  }
+
+  .country-history-name {
+    font-size: 10.5px;
+  }
+
+  .country-history-datetime {
+    font-size: 8.5px;
+  }
+}
+
+
+/* v3.2 вЂ” lightweight UI polish */
+.country-tour-group { position: relative; }
+.country-tour-title {
+  position: sticky; top: -1px; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 7px 8px; margin: 0 -4px 7px; border-radius: 10px;
+  background: rgba(18,19,21,.96); backdrop-filter: blur(8px);
+  cursor: pointer; user-select: none;
+}
+.country-tour-title:hover { background: rgba(255,255,255,.055); }
+.country-tour-title-main { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.country-tour-title-meta {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+  color: #8f8f94; font-size: 9px; font-weight: 900; text-transform: none;
+}
+.country-tour-chevron { display: inline-block; transition: transform .18s ease; color: #b6ff3b; font-size: 11px; }
+.country-tour-group.is-open .country-tour-chevron { transform: rotate(90deg); }
+.country-match-list {
+  overflow: hidden; max-height: 0; opacity: 0; transform: translateY(-3px);
+  transition: max-height .28s ease, opacity .18s ease, transform .18s ease;
+}
+.country-tour-group.is-open .country-match-list { max-height: 2400px; opacity: 1; transform: translateY(0); }
+
+.stat-value, .metric-row strong, .finance-card strong {
+  transition: transform .18s ease, opacity .18s ease, text-shadow .25s ease;
+}
+.stat-value.stat-updating, .metric-row strong.stat-updating, .finance-card strong.stat-updating {
+  transform: translateY(-1px) scale(1.035); opacity: .88;
+  text-shadow: 0 0 12px rgba(182,255,59,.16);
+}
+.bar-fill, .chart-fill { transition: width .42s cubic-bezier(.22,.61,.36,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .country-match-list, .country-tour-chevron, .stat-value, .metric-row strong,
+  .finance-card strong, .bar-fill, .chart-fill { transition: none !important; }
+}
+
 </style>
 
 </head>
@@ -4730,7 +4861,7 @@ button.achievement-item {
         </div>
         <div class="header-actions">
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
-          <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
+          <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="РўРµРєСѓС‰РёР№ СЌС‚Р°Рї">вЂ”</div>
         </div>
       </div>
     </header>
@@ -4740,42 +4871,42 @@ button.achievement-item {
   <main>
   <section class="screen active" id="screen-matches">
     <div class="stats-toolbar local-tour-toolbar">
-      <label for="matchesTourSelect">Этап</label>
+      <label for="matchesTourSelect">Р­С‚Р°Рї</label>
       <select id="matchesTourSelect"></select>
     </div>
 
     <div id="upcomingSection">
       <div class="section-title">
-        <div class="section-title-left">⏳ Предстоящие</div>
-        <div class="section-title-right">Ближайшие 7</div>
+        <div class="section-title-left">вЏі РџСЂРµРґСЃС‚РѕСЏС‰РёРµ</div>
+        <div class="section-title-right">Р‘Р»РёР¶Р°Р№С€РёРµ 7</div>
       </div>
 
       <div class="stack" id="upcomingList"></div>
 
       <button class="cta-card" id="allUpcomingBtn">
-        Все предстоящие матчи ›
+        Р’СЃРµ РїСЂРµРґСЃС‚РѕСЏС‰РёРµ РјР°С‚С‡Рё вЂє
       </button>
     </div>
     <div id="finishedSection">
   <div class="section-title">
-    <div class="section-title-left">🏁 Сыгравшие</div>
-    <div class="section-title-right">Последние 5</div>
+    <div class="section-title-left">рџЏЃ РЎС‹РіСЂР°РІС€РёРµ</div>
+    <div class="section-title-right">РџРѕСЃР»РµРґРЅРёРµ 5</div>
   </div>
 
   <div class="stack" id="finishedList"></div>
 
   <button class="cta-card" id="allFinishedBtn">
-    Все сыгранные матчи ›
+    Р’СЃРµ СЃС‹РіСЂР°РЅРЅС‹Рµ РјР°С‚С‡Рё вЂє
   </button>
 </div>
   </section>
       <section class="screen" id="screen-picks">
         <div class="section-title">
-          <div class="section-title-left">🎯 Прогнозы</div>
+          <div class="section-title-left">рџЋЇ РџСЂРѕРіРЅРѕР·С‹</div>
           <div class="section-title-right"></div>
         </div>
         <div class="stats-toolbar local-tour-toolbar">
-          <label for="picksTourSelect">Этап</label>
+          <label for="picksTourSelect">Р­С‚Р°Рї</label>
           <select id="picksTourSelect"></select>
         </div>
         <div class="stack" id="picksList"></div>
@@ -4783,17 +4914,17 @@ button.achievement-item {
 
       <section class="screen" id="screen-table">
         <div class="section-title">
-          <div class="section-title-left">🏆 Турнирная таблица</div>
-          <div class="section-title-right">Тур / Всего</div>
+          <div class="section-title-left">рџЏ† РўСѓСЂРЅРёСЂРЅР°СЏ С‚Р°Р±Р»РёС†Р°</div>
+          <div class="section-title-right">РўСѓСЂ / Р’СЃРµРіРѕ</div>
         </div>
 
         <div class="stats-toolbar table-toolbar">
-          <label for="tableSelect">Таблица</label>
+          <label for="tableSelect">РўР°Р±Р»РёС†Р°</label>
           <select id="tableSelect">
-            <option value="5" selected>Тур 5</option>
-            <option value="4">Тур 4</option>
-            <option value="3">Тур 3</option>
-            <option value="overall">🏆 Общая таблица</option>
+            <option value="5" selected>РўСѓСЂ 5</option>
+            <option value="4">РўСѓСЂ 4</option>
+            <option value="3">РўСѓСЂ 3</option>
+            <option value="overall">рџЏ† РћР±С‰Р°СЏ С‚Р°Р±Р»РёС†Р°</option>
           </select>
         </div>
 
@@ -4802,9 +4933,9 @@ button.achievement-item {
             <thead>
             <tr id="tourTableHeadRow">
   <th>#</th>
-  <th>Игрок</th>
-  <th>Всего</th>
-  <th id="tableMoveHead">Изм.</th>
+  <th>РРіСЂРѕРє</th>
+  <th>Р’СЃРµРіРѕ</th>
+  <th id="tableMoveHead">РР·Рј.</th>
 </tr>
             </thead>
             <tbody id="tourTableBody"></tbody>
@@ -4820,69 +4951,69 @@ button.achievement-item {
 
       <section class="screen" id="screen-stats">
         <div class="section-title">
-          <div class="section-title-left">📊 Статистика</div>
+          <div class="section-title-left">рџ“Љ РЎС‚Р°С‚РёСЃС‚РёРєР°</div>
           <div class="section-title-right"></div>
         </div>
 
         <div class="stats-toolbar">
-          <label for="tourSelect">Тур</label>
+          <label for="tourSelect">РўСѓСЂ</label>
           <select id="tourSelect">
-            <option value="overall">Общая</option>
-            <option value="5" selected>Тур 5</option>
-            <option value="4">Тур 4</option>
-            <option value="3">Тур 3</option>
+            <option value="overall">РћР±С‰Р°СЏ</option>
+            <option value="5" selected>РўСѓСЂ 5</option>
+            <option value="4">РўСѓСЂ 4</option>
+            <option value="3">РўСѓСЂ 3</option>
           </select>
         </div>
 
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-label">Участников</div>
+            <div class="stat-label">РЈС‡Р°СЃС‚РЅРёРєРѕРІ</div>
             <div class="stat-value" id="statPlayers">43</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Средний балл</div>
+            <div class="stat-label">РЎСЂРµРґРЅРёР№ Р±Р°Р»Р»</div>
             <div class="stat-value accent" id="statAvgPts">16,33</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Побед</div>
+            <div class="stat-label">РџРѕР±РµРґ</div>
             <div class="stat-value accent" id="statWinrate">29,1%</div>
           </div>
         </div>
 
         <div class="stats-panel">
-          <div class="stats-panel-title">🏆 Очки</div>
-          <div class="metric-row"><span>🔥 Макс балл</span><strong id="statMaxPts">76</strong></div>
-          <div class="metric-row"><span id="statTop3Label">🥉 Порог топ-3</span><strong id="statTop3Pts">0</strong></div>
-          <div class="metric-row"><span>🎯 Средний балл</span><strong id="statAvgPts2">16,33</strong></div>
+          <div class="stats-panel-title">рџЏ† РћС‡РєРё</div>
+          <div class="metric-row"><span>рџ”Ґ РњР°РєСЃ Р±Р°Р»Р»</span><strong id="statMaxPts">76</strong></div>
+          <div class="metric-row"><span id="statTop3Label">рџҐ‰ РџРѕСЂРѕРі С‚РѕРї-3</span><strong id="statTop3Pts">0</strong></div>
+          <div class="metric-row"><span>рџЋЇ РЎСЂРµРґРЅРёР№ Р±Р°Р»Р»</span><strong id="statAvgPts2">16,33</strong></div>
         </div>
 
         <div class="stats-panel">
-          <div class="stats-panel-title">📈 Коэффициенты</div>
-          <div class="metric-row"><span>⚖️ Средний коэффициент</span><strong id="statAvgOdd">3,39</strong></div>
-          <div class="metric-row"><span>📈 Макс коэффициент</span><strong id="statMaxOdd">6</strong></div>
-          <div class="metric-row"><span>📉 Мин коэффициент</span><strong id="statMinOdd">2,59</strong></div>
-          <div class="metric-row"><span>💵 Средний кэф выигранного флета</span><strong id="statWinOdd">3,210</strong></div>
+          <div class="stats-panel-title">рџ“€ РљРѕСЌС„С„РёС†РёРµРЅС‚С‹</div>
+          <div class="metric-row"><span>вљ–пёЏ РЎСЂРµРґРЅРёР№ РєРѕСЌС„С„РёС†РёРµРЅС‚</span><strong id="statAvgOdd">3,39</strong></div>
+          <div class="metric-row"><span>рџ“€ РњР°РєСЃ РєРѕСЌС„С„РёС†РёРµРЅС‚</span><strong id="statMaxOdd">6</strong></div>
+          <div class="metric-row"><span>рџ“‰ РњРёРЅ РєРѕСЌС„С„РёС†РёРµРЅС‚</span><strong id="statMinOdd">2,59</strong></div>
+          <div class="metric-row"><span>рџ’µ РЎСЂРµРґРЅРёР№ РєСЌС„ РІС‹РёРіСЂР°РЅРЅРѕРіРѕ С„Р»РµС‚Р°</span><strong id="statWinOdd">3,210</strong></div>
         </div>
 
         <div class="stats-panel">
-          <div class="stats-panel-title">🧊 Одиночные ставки</div>
+          <div class="stats-panel-title">рџ§Љ РћРґРёРЅРѕС‡РЅС‹Рµ СЃС‚Р°РІРєРё</div>
           <div class="mini-bars">
             <div>
-              <div class="bar-head"><span>🟢 Победы</span><strong id="statWins">30</strong></div>
+              <div class="bar-head"><span>рџџў РџРѕР±РµРґС‹</span><strong id="statWins">30</strong></div>
               <div class="bar"><div class="bar-fill green-fill" style="width:29.1%"></div></div>
             </div>
             <div>
-              <div class="bar-head"><span>🔴 Поражения</span><strong id="statLosses">73</strong></div>
+              <div class="bar-head"><span>рџ”ґ РџРѕСЂР°Р¶РµРЅРёСЏ</span><strong id="statLosses">73</strong></div>
               <div class="bar"><div class="bar-fill red-fill" style="width:70.9%"></div></div>
             </div>
           </div>
         </div>
 
         <div class="stats-panel">
-          <div class="stats-panel-title">💰 Финансы</div>
+          <div class="stats-panel-title">рџ’° Р¤РёРЅР°РЅСЃС‹</div>
           <div class="finance-grid">
             <div class="finance-card">
-              <span>Прибыль</span>
+              <span>РџСЂРёР±С‹Р»СЊ</span>
               <strong class="negative" id="statProfit">-6,82</strong>
             </div>
             <div class="finance-card">
@@ -4893,18 +5024,18 @@ button.achievement-item {
         </div>
 
         <div class="stats-panel" id="tourAchievementsPanel">
-          <div class="stats-panel-title">🏅 Ачивки тура</div>
+          <div class="stats-panel-title">рџЏ… РђС‡РёРІРєРё С‚СѓСЂР°</div>
           <div class="achievement-strip" id="tourAchievements"></div>
         </div>
 
         <div class="stats-panel">
-          <div class="stats-panel-title">🌍 Распределение прогнозов</div>
+          <div class="stats-panel-title">рџЊЌ Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїСЂРѕРіРЅРѕР·РѕРІ</div>
 
           <div class="chart-block">
             <div class="chart-head">
               <div>
-                <strong>Распределение прогнозов по континентам</strong>
-                <span>Количество прогнозов и доля</span>
+                <strong>Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїСЂРѕРіРЅРѕР·РѕРІ РїРѕ РєРѕРЅС‚РёРЅРµРЅС‚Р°Рј</strong>
+                <span>РљРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕРіРЅРѕР·РѕРІ Рё РґРѕР»СЏ</span>
               </div>
             </div>
             <div class="chart-list" id="continentChart"></div>
@@ -4913,8 +5044,8 @@ button.achievement-item {
           <div class="chart-block">
             <div class="chart-head">
               <div>
-                <strong>Топ стран для прогнозов</strong>
-                <span>Где чаще всего ставят</span>
+                <strong>РўРѕРї СЃС‚СЂР°РЅ РґР»СЏ РїСЂРѕРіРЅРѕР·РѕРІ</strong>
+                <span>Р“РґРµ С‡Р°С‰Рµ РІСЃРµРіРѕ СЃС‚Р°РІСЏС‚</span>
               </div>
             </div>
             <div class="chart-list" id="countryVolumeChart"></div>
@@ -4923,7 +5054,7 @@ button.achievement-item {
           <div class="chart-block">
             <div class="chart-head">
               <div>
-                <strong>Топ стран по выигранным ставкам</strong>
+                <strong>РўРѕРї СЃС‚СЂР°РЅ РїРѕ РІС‹РёРіСЂР°РЅРЅС‹Рј СЃС‚Р°РІРєР°Рј</strong>
                 
               </div>
             </div>
@@ -4934,13 +5065,13 @@ button.achievement-item {
 
       <section class="screen" id="screen-players">
         <div class="section-title">
-          <div class="section-title-left">👥 Карточка игрока</div>
+          <div class="section-title-left">рџ‘Ґ РљР°СЂС‚РѕС‡РєР° РёРіСЂРѕРєР°</div>
           <div class="section-title-right"></div>
         </div>
 
         <div class="player-toolbar">
           <div>
-            <label for="playerSelect">Игрок</label>
+            <label for="playerSelect">РРіСЂРѕРє</label>
             <select id="playerSelect"></select>
           </div>
 
@@ -4950,38 +5081,38 @@ button.achievement-item {
   <section class="dashboard-card player-hero-v2">
     <div class="profile-name" id="profileName"><span class="profile-name-main">Alex</span></div>
     <div class="player-hero-bottom-v2">
-      <div class="player-rank-v2" id="profileSub">#1 в общем зачёте</div>
+      <div class="player-rank-v2" id="profileSub">#1 РІ РѕР±С‰РµРј Р·Р°С‡С‘С‚Рµ</div>
       <div class="player-awards-v2" id="profileHeroAwards"></div>
     </div>
   </section>
 
   <section class="player-metrics-v2">
     <div class="player-metric-v2">
-      <span>Очков всего</span>
+      <span>РћС‡РєРѕРІ РІСЃРµРіРѕ</span>
       <strong id="profileTotalPts">0</strong>
     </div>
     <div class="player-metric-v2">
-      <span>Участие</span>
+      <span>РЈС‡Р°СЃС‚РёРµ</span>
       <strong id="profileTours">0/0</strong>
     </div>
     <div class="player-metric-v2">
-      <span>Прибыль во флетах</span>
-      <strong id="profileProfitFlats">—</strong>
+      <span>РџСЂРёР±С‹Р»СЊ РІРѕ С„Р»РµС‚Р°С…</span>
+      <strong id="profileProfitFlats">вЂ”</strong>
     </div>
     <div class="player-metric-v2 player-form-v2">
-      <span>Последние результаты</span>
+      <span>РџРѕСЃР»РµРґРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚С‹</span>
       <div class="profile-dots" id="profileForm"></div>
     </div>
   </section>
 
   <section class="player-activity-v2">
     <div class="dashboard-card player-current-v2">
-      <div class="dashboard-title-v2">🎯 Текущий тур</div>
+      <div class="dashboard-title-v2">рџЋЇ РўРµРєСѓС‰РёР№ С‚СѓСЂ</div>
       <div id="profileCurrentPicks"></div>
     </div>
 
     <div class="dashboard-card player-rank-v2-card">
-      <div class="dashboard-title-v2">📈 Динамика места</div>
+      <div class="dashboard-title-v2">рџ“€ Р”РёРЅР°РјРёРєР° РјРµСЃС‚Р°</div>
       <div class="rank-chart-panel">
         <div id="profileRankChart"></div>
       </div>
@@ -4989,19 +5120,19 @@ button.achievement-item {
   </section>
 
   <section class="dashboard-card player-achievements-v2">
-    <div class="dashboard-title-v2">🏅 Ачивки игрока</div>
+    <div class="dashboard-title-v2">рџЏ… РђС‡РёРІРєРё РёРіСЂРѕРєР°</div>
     <div class="achievement-strip" id="profileAchievements"></div>
   </section>
 
   <section class="dashboard-card player-countries-v2">
-    <div class="dashboard-title-v2">🌍 Статистика по странам</div>
-    <table class="country-table-v2" aria-label="Статистика игрока по странам">
+    <div class="dashboard-title-v2">рџЊЌ РЎС‚Р°С‚РёСЃС‚РёРєР° РїРѕ СЃС‚СЂР°РЅР°Рј</div>
+    <table class="country-table-v2" aria-label="РЎС‚Р°С‚РёСЃС‚РёРєР° РёРіСЂРѕРєР° РїРѕ СЃС‚СЂР°РЅР°Рј">
       <thead>
         <tr>
-          <th>Страна</th>
-          <th class="sortable-country-v2" data-country-sort="wins" tabindex="0" role="button" aria-label="Сортировать по победам">В<span class="country-sort-arrow-v2"></span></th>
-          <th class="sortable-country-v2" data-country-sort="losses" tabindex="0" role="button" aria-label="Сортировать по поражениям">П<span class="country-sort-arrow-v2"></span></th>
-          <th class="sortable-country-v2 is-active" data-country-sort="flats" tabindex="0" role="button" aria-label="Сортировать по профиту во флетах">±Ф<span class="country-sort-arrow-v2">▼</span></th>
+          <th>РЎС‚СЂР°РЅР°</th>
+          <th class="sortable-country-v2" data-country-sort="wins" tabindex="0" role="button" aria-label="РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ РїРѕ РїРѕР±РµРґР°Рј">Р’<span class="country-sort-arrow-v2"></span></th>
+          <th class="sortable-country-v2" data-country-sort="losses" tabindex="0" role="button" aria-label="РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ РїРѕ РїРѕСЂР°Р¶РµРЅРёСЏРј">Рџ<span class="country-sort-arrow-v2"></span></th>
+          <th class="sortable-country-v2 is-active" data-country-sort="flats" tabindex="0" role="button" aria-label="РЎРѕСЂС‚РёСЂРѕРІР°С‚СЊ РїРѕ РїСЂРѕС„РёС‚Сѓ РІРѕ С„Р»РµС‚Р°С…">В±Р¤<span class="country-sort-arrow-v2">в–ј</span></th>
         </tr>
       </thead>
       <tbody id="profileCountryStats"></tbody>
@@ -5009,7 +5140,7 @@ button.achievement-item {
   </section>
 
   <section class="dashboard-card player-history-v2">
-    <div class="dashboard-title-v2">🕘 Прошлые туры</div>
+    <div class="dashboard-title-v2">рџ• РџСЂРѕС€Р»С‹Рµ С‚СѓСЂС‹</div>
     <div class="stack" id="profilePastTours"></div>
   </section>
 
@@ -5031,9 +5162,9 @@ button.achievement-item {
         <div class="info-sheet-head">
           <div>
             <div class="info-title">X League Rules</div>
-            <div class="info-subtitle">Коротко о формате турнира</div>
+            <div class="info-subtitle">РљРѕСЂРѕС‚РєРѕ Рѕ С„РѕСЂРјР°С‚Рµ С‚СѓСЂРЅРёСЂР°</div>
           </div>
-          <button class="info-close" id="infoClose" aria-label="Close">×</button>
+          <button class="info-close" id="infoClose" aria-label="Close">Г—</button>
         </div>
 
         
@@ -5041,78 +5172,78 @@ button.achievement-item {
 
 
   <div class="rule-card">
-    <strong>🎯 Прогноз на тур</strong>
-    <span>В каждом туре участник выбирает 3 футбольных матча на ничью. Матчи могут быть выбраны в любой букмекерской конторе. Делать реальные ставки не обязательно — для подтверждения коэффициентов требуется скриншот. Матчи должны играться с 00.00 (МСК) субботы по 23.59 (МСК) воскресенья, соотвествующего тура.</span>
+    <strong>рџЋЇ РџСЂРѕРіРЅРѕР· РЅР° С‚СѓСЂ</strong>
+    <span>Р’ РєР°Р¶РґРѕРј С‚СѓСЂРµ СѓС‡Р°СЃС‚РЅРёРє РІС‹Р±РёСЂР°РµС‚ 3 С„СѓС‚Р±РѕР»СЊРЅС‹С… РјР°С‚С‡Р° РЅР° РЅРёС‡СЊСЋ. РњР°С‚С‡Рё РјРѕРіСѓС‚ Р±С‹С‚СЊ РІС‹Р±СЂР°РЅС‹ РІ Р»СЋР±РѕР№ Р±СѓРєРјРµРєРµСЂСЃРєРѕР№ РєРѕРЅС‚РѕСЂРµ. Р”РµР»Р°С‚СЊ СЂРµР°Р»СЊРЅС‹Рµ СЃС‚Р°РІРєРё РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ вЂ” РґР»СЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ С‚СЂРµР±СѓРµС‚СЃСЏ СЃРєСЂРёРЅС€РѕС‚. РњР°С‚С‡Рё РґРѕР»Р¶РЅС‹ РёРіСЂР°С‚СЊСЃСЏ СЃ 00.00 (РњРЎРљ) СЃСѓР±Р±РѕС‚С‹ РїРѕ 23.59 (РњРЎРљ) РІРѕСЃРєСЂРµСЃРµРЅСЊСЏ, СЃРѕРѕС‚РІРµСЃС‚РІСѓСЋС‰РµРіРѕ С‚СѓСЂР°.</span>
   </div>
 
   <div class="rule-card">
-    <strong>🟢 Начисление очков</strong>
+    <strong>рџџў РќР°С‡РёСЃР»РµРЅРёРµ РѕС‡РєРѕРІ</strong>
     <span>
-      Очки начисляются только за угаданные матчи по прогрессивной шкале:<br>
-      • коэффициент до 5,00 включительно → коэффициент × 10 − коэффициент;<br>
-      • коэффициент от 5,01 до 7,00 → коэффициент × 8 − коэффициент;<br>
-      • коэффициент от 7,01 и выше → коэффициент × 7 − коэффициент.<br>
-      За проигранный прогноз начисляется 0 очков.
+      РћС‡РєРё РЅР°С‡РёСЃР»СЏСЋС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·Р° СѓРіР°РґР°РЅРЅС‹Рµ РјР°С‚С‡Рё РїРѕ РїСЂРѕРіСЂРµСЃСЃРёРІРЅРѕР№ С€РєР°Р»Рµ:<br>
+      вЂў РєРѕСЌС„С„РёС†РёРµРЅС‚ РґРѕ 5,00 РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ в†’ РєРѕСЌС„С„РёС†РёРµРЅС‚ Г— 10 в€’ РєРѕСЌС„С„РёС†РёРµРЅС‚;<br>
+      вЂў РєРѕСЌС„С„РёС†РёРµРЅС‚ РѕС‚ 5,01 РґРѕ 7,00 в†’ РєРѕСЌС„С„РёС†РёРµРЅС‚ Г— 8 в€’ РєРѕСЌС„С„РёС†РёРµРЅС‚;<br>
+      вЂў РєРѕСЌС„С„РёС†РёРµРЅС‚ РѕС‚ 7,01 Рё РІС‹С€Рµ в†’ РєРѕСЌС„С„РёС†РёРµРЅС‚ Г— 7 в€’ РєРѕСЌС„С„РёС†РёРµРЅС‚.<br>
+      Р—Р° РїСЂРѕРёРіСЂР°РЅРЅС‹Р№ РїСЂРѕРіРЅРѕР· РЅР°С‡РёСЃР»СЏРµС‚СЃСЏ 0 РѕС‡РєРѕРІ.
     </span>
   </div>
 
   <div class="rule-card">
-    <strong>🎁 Бонус за результат тройника</strong>
+    <strong>рџЋЃ Р‘РѕРЅСѓСЃ Р·Р° СЂРµР·СѓР»СЊС‚Р°С‚ С‚СЂРѕР№РЅРёРєР°</strong>
     <span>
-      2 угаданных матча из 3 → +10 очков.<br>
-      3 угаданных матча из 3 → +20 очков.<br>
-      Бонус начисляется один раз по итогам основной тройки тура.
+      2 СѓРіР°РґР°РЅРЅС‹С… РјР°С‚С‡Р° РёР· 3 в†’ +10 РѕС‡РєРѕРІ.<br>
+      3 СѓРіР°РґР°РЅРЅС‹С… РјР°С‚С‡Р° РёР· 3 в†’ +20 РѕС‡РєРѕРІ.<br>
+      Р‘РѕРЅСѓСЃ РЅР°С‡РёСЃР»СЏРµС‚СЃСЏ РѕРґРёРЅ СЂР°Р· РїРѕ РёС‚РѕРіР°Рј РѕСЃРЅРѕРІРЅРѕР№ С‚СЂРѕР№РєРё С‚СѓСЂР°.
     </span>
   </div>
 
   <div class="rule-card">
-    <strong>🔢 Точность расчётов</strong>
-    <span>Очки не округляются до целого числа. В таблице сохраняется фактическое значение результата, поэтому близкие коэффициенты могут дать разные суммы очков.</span>
+    <strong>рџ”ў РўРѕС‡РЅРѕСЃС‚СЊ СЂР°СЃС‡С‘С‚РѕРІ</strong>
+    <span>РћС‡РєРё РЅРµ РѕРєСЂСѓРіР»СЏСЋС‚СЃСЏ РґРѕ С†РµР»РѕРіРѕ С‡РёСЃР»Р°. Р’ С‚Р°Р±Р»РёС†Рµ СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ С„Р°РєС‚РёС‡РµСЃРєРѕРµ Р·РЅР°С‡РµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р°, РїРѕСЌС‚РѕРјСѓ Р±Р»РёР·РєРёРµ РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РјРѕРіСѓС‚ РґР°С‚СЊ СЂР°Р·РЅС‹Рµ СЃСѓРјРјС‹ РѕС‡РєРѕРІ.</span>
   </div>
 
  <div class="rule-card">
-    <strong>📈 Итоговый результат</strong>
-    <span>В результат участника входят очки за угаданные матчи, бонус за основную тройку и, при наличии, очки за компенсационные прогнозы. Победителем становится участник с наибольшим итоговым результатом с учётом установленных правил разрешения ничьих.</span>
+    <strong>рџ“€ РС‚РѕРіРѕРІС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚</strong>
+    <span>Р’ СЂРµР·СѓР»СЊС‚Р°С‚ СѓС‡Р°СЃС‚РЅРёРєР° РІС…РѕРґСЏС‚ РѕС‡РєРё Р·Р° СѓРіР°РґР°РЅРЅС‹Рµ РјР°С‚С‡Рё, Р±РѕРЅСѓСЃ Р·Р° РѕСЃРЅРѕРІРЅСѓСЋ С‚СЂРѕР№РєСѓ Рё, РїСЂРё РЅР°Р»РёС‡РёРё, РѕС‡РєРё Р·Р° РєРѕРјРїРµРЅСЃР°С†РёРѕРЅРЅС‹Рµ РїСЂРѕРіРЅРѕР·С‹. РџРѕР±РµРґРёС‚РµР»РµРј СЃС‚Р°РЅРѕРІРёС‚СЃСЏ СѓС‡Р°СЃС‚РЅРёРє СЃ РЅР°РёР±РѕР»СЊС€РёРј РёС‚РѕРіРѕРІС‹Рј СЂРµР·СѓР»СЊС‚Р°С‚РѕРј СЃ СѓС‡С‘С‚РѕРј СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… РїСЂР°РІРёР» СЂР°Р·СЂРµС€РµРЅРёСЏ РЅРёС‡СЊРёС….</span>
   </div>
 
   <div class="rule-card">
-    <strong>🏆 Места в туре</strong>
-    <span>Выше располагается участник, набравший больше очков. При равенстве очков преимущество получает участник с большим количеством угаданных матчей в основной тройке.</span>
+    <strong>рџЏ† РњРµСЃС‚Р° РІ С‚СѓСЂРµ</strong>
+    <span>Р’С‹С€Рµ СЂР°СЃРїРѕР»Р°РіР°РµС‚СЃСЏ СѓС‡Р°СЃС‚РЅРёРє, РЅР°Р±СЂР°РІС€РёР№ Р±РѕР»СЊС€Рµ РѕС‡РєРѕРІ. РџСЂРё СЂР°РІРµРЅСЃС‚РІРµ РѕС‡РєРѕРІ РїСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РїРѕР»СѓС‡Р°РµС‚ СѓС‡Р°СЃС‚РЅРёРє СЃ Р±РѕР»СЊС€РёРј РєРѕР»РёС‡РµСЃС‚РІРѕРј СѓРіР°РґР°РЅРЅС‹С… РјР°С‚С‡РµР№ РІ РѕСЃРЅРѕРІРЅРѕР№ С‚СЂРѕР№РєРµ.</span>
   </div>
 
   <div class="rule-card">
-    <strong>📊 Места по итогам регулярного сезона</strong>
-    <span>Положение определяется по общей сумме очков за все туры. При равенстве очков выше располагается участник, у которого больше туров с результатом 3 из 3.</span>
+    <strong>рџ“Љ РњРµСЃС‚Р° РїРѕ РёС‚РѕРіР°Рј СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ СЃРµР·РѕРЅР°</strong>
+    <span>РџРѕР»РѕР¶РµРЅРёРµ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РїРѕ РѕР±С‰РµР№ СЃСѓРјРјРµ РѕС‡РєРѕРІ Р·Р° РІСЃРµ С‚СѓСЂС‹. РџСЂРё СЂР°РІРµРЅСЃС‚РІРµ РѕС‡РєРѕРІ РІС‹С€Рµ СЂР°СЃРїРѕР»Р°РіР°РµС‚СЃСЏ СѓС‡Р°СЃС‚РЅРёРє, Сѓ РєРѕС‚РѕСЂРѕРіРѕ Р±РѕР»СЊС€Рµ С‚СѓСЂРѕРІ СЃ СЂРµР·СѓР»СЊС‚Р°С‚РѕРј 3 РёР· 3.</span>
   </div>
    
   <div class="rule-card">
-    <strong>📅 Регулярный сезон</strong>
-    <span>Регулярный сезон состоит из 15 туров и проходит с 29 августа по 5 декабря.</span>
+    <strong>рџ“… Р РµРіСѓР»СЏСЂРЅС‹Р№ СЃРµР·РѕРЅ</strong>
+    <span>Р РµРіСѓР»СЏСЂРЅС‹Р№ СЃРµР·РѕРЅ СЃРѕСЃС‚РѕРёС‚ РёР· 15 С‚СѓСЂРѕРІ Рё РїСЂРѕС…РѕРґРёС‚ СЃ 29 Р°РІРіСѓСЃС‚Р° РїРѕ 5 РґРµРєР°Р±СЂСЏ.</span>
   </div>
   <div class="rule-card">
-    <strong>⚔️ Плей-офф</strong>
+    <strong>вљ”пёЏ РџР»РµР№-РѕС„С„</strong>
     <span>
-      По итогам регулярного сезона турнир продолжается в формате плей-офф. Финал 22 декабря. В Будапеште (шутка). Все раунды плей-офф, кроме гранд-финала, проводятся в формате BO1: победитель пары определяется по результату одного игрового раунда. Даты проведения раундов утверждаются и публикуются в Telegram-канале X League.
+      РџРѕ РёС‚РѕРіР°Рј СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ СЃРµР·РѕРЅР° С‚СѓСЂРЅРёСЂ РїСЂРѕРґРѕР»Р¶Р°РµС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ РїР»РµР№-РѕС„С„. Р¤РёРЅР°Р» 22 РґРµРєР°Р±СЂСЏ. Р’ Р‘СѓРґР°РїРµС€С‚Рµ (С€СѓС‚РєР°). Р’СЃРµ СЂР°СѓРЅРґС‹ РїР»РµР№-РѕС„С„, РєСЂРѕРјРµ РіСЂР°РЅРґ-С„РёРЅР°Р»Р°, РїСЂРѕРІРѕРґСЏС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ BO1: РїРѕР±РµРґРёС‚РµР»СЊ РїР°СЂС‹ РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РїРѕ СЂРµР·СѓР»СЊС‚Р°С‚Сѓ РѕРґРЅРѕРіРѕ РёРіСЂРѕРІРѕРіРѕ СЂР°СѓРЅРґР°. Р”Р°С‚С‹ РїСЂРѕРІРµРґРµРЅРёСЏ СЂР°СѓРЅРґРѕРІ СѓС‚РІРµСЂР¶РґР°СЋС‚СЃСЏ Рё РїСѓР±Р»РёРєСѓСЋС‚СЃСЏ РІ Telegram-РєР°РЅР°Р»Рµ X League.
       <br><br>
-      Гранд-финал проводится в формате BO3 с начальной форой 1:0 в пользу фаворита. Для победы в гранд-финале учитываются результаты отдельных игровых раундов серии.
+      Р“СЂР°РЅРґ-С„РёРЅР°Р» РїСЂРѕРІРѕРґРёС‚СЃСЏ РІ С„РѕСЂРјР°С‚Рµ BO3 СЃ РЅР°С‡Р°Р»СЊРЅРѕР№ С„РѕСЂРѕР№ 1:0 РІ РїРѕР»СЊР·Сѓ С„Р°РІРѕСЂРёС‚Р°. Р”Р»СЏ РїРѕР±РµРґС‹ РІ РіСЂР°РЅРґ-С„РёРЅР°Р»Рµ СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚С‹ РѕС‚РґРµР»СЊРЅС‹С… РёРіСЂРѕРІС‹С… СЂР°СѓРЅРґРѕРІ СЃРµСЂРёРё.
       <br><br>
-      Участник, не подавший прогнозы в установленный срок, получает техническое поражение в соответствующем раунде плей-офф.
+      РЈС‡Р°СЃС‚РЅРёРє, РЅРµ РїРѕРґР°РІС€РёР№ РїСЂРѕРіРЅРѕР·С‹ РІ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Р№ СЃСЂРѕРє, РїРѕР»СѓС‡Р°РµС‚ С‚РµС…РЅРёС‡РµСЃРєРѕРµ РїРѕСЂР°Р¶РµРЅРёРµ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРј СЂР°СѓРЅРґРµ РїР»РµР№-РѕС„С„.
       <br><br>
-      Если выбранный участником матч отменён, перенесён или не может быть рассчитан в рамках текущего раунда, он не переносится на следующую дату и рассчитывается с коэффициентом 1,00.
+      Р•СЃР»Рё РІС‹Р±СЂР°РЅРЅС‹Р№ СѓС‡Р°СЃС‚РЅРёРєРѕРј РјР°С‚С‡ РѕС‚РјРµРЅС‘РЅ, РїРµСЂРµРЅРµСЃС‘РЅ РёР»Рё РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°СЃСЃС‡РёС‚Р°РЅ РІ СЂР°РјРєР°С… С‚РµРєСѓС‰РµРіРѕ СЂР°СѓРЅРґР°, РѕРЅ РЅРµ РїРµСЂРµРЅРѕСЃРёС‚СЃСЏ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ РґР°С‚Сѓ Рё СЂР°СЃСЃС‡РёС‚С‹РІР°РµС‚СЃСЏ СЃ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРј 1,00.
     </span>
   </div>  
   <div class="rule-card">
-    <strong>⛔ Отменённые и прерванные матчи</strong>
+    <strong>в›” РћС‚РјРµРЅС‘РЅРЅС‹Рµ Рё РїСЂРµСЂРІР°РЅРЅС‹Рµ РјР°С‚С‡Рё</strong>
     <span>
-      Если выбранный матч отменён, прерван либо возобновлён уже после завершения соответствующего тура X League, прогноз по нему рассчитывается с коэффициентом 1,00 и не приносит очков.<br><br>
-      Участник получает право в одном из последующих туров регулярного сезона предоставить один дополнительный прогноз в качестве компенсации. Такой прогноз оформляется отдельно от основной тройки и не участвует в расчёте бонусов 2 из 3 и 3 из 3.<br><br>
-      Результаты уже завершённых туров и определённые в них призовые места пересмотру не подлежат. Технический порядок учёта и отображения компенсационного прогноза определяется организатором до его использования.
+      Р•СЃР»Рё РІС‹Р±СЂР°РЅРЅС‹Р№ РјР°С‚С‡ РѕС‚РјРµРЅС‘РЅ, РїСЂРµСЂРІР°РЅ Р»РёР±Рѕ РІРѕР·РѕР±РЅРѕРІР»С‘РЅ СѓР¶Рµ РїРѕСЃР»Рµ Р·Р°РІРµСЂС€РµРЅРёСЏ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ С‚СѓСЂР° X League, РїСЂРѕРіРЅРѕР· РїРѕ РЅРµРјСѓ СЂР°СЃСЃС‡РёС‚С‹РІР°РµС‚СЃСЏ СЃ РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРј 1,00 Рё РЅРµ РїСЂРёРЅРѕСЃРёС‚ РѕС‡РєРѕРІ.<br><br>
+      РЈС‡Р°СЃС‚РЅРёРє РїРѕР»СѓС‡Р°РµС‚ РїСЂР°РІРѕ РІ РѕРґРЅРѕРј РёР· РїРѕСЃР»РµРґСѓСЋС‰РёС… С‚СѓСЂРѕРІ СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ СЃРµР·РѕРЅР° РїСЂРµРґРѕСЃС‚Р°РІРёС‚СЊ РѕРґРёРЅ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Р№ РїСЂРѕРіРЅРѕР· РІ РєР°С‡РµСЃС‚РІРµ РєРѕРјРїРµРЅСЃР°С†РёРё. РўР°РєРѕР№ РїСЂРѕРіРЅРѕР· РѕС„РѕСЂРјР»СЏРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅРѕ РѕС‚ РѕСЃРЅРѕРІРЅРѕР№ С‚СЂРѕР№РєРё Рё РЅРµ СѓС‡Р°СЃС‚РІСѓРµС‚ РІ СЂР°СЃС‡С‘С‚Рµ Р±РѕРЅСѓСЃРѕРІ 2 РёР· 3 Рё 3 РёР· 3.<br><br>
+      Р РµР·СѓР»СЊС‚Р°С‚С‹ СѓР¶Рµ Р·Р°РІРµСЂС€С‘РЅРЅС‹С… С‚СѓСЂРѕРІ Рё РѕРїСЂРµРґРµР»С‘РЅРЅС‹Рµ РІ РЅРёС… РїСЂРёР·РѕРІС‹Рµ РјРµСЃС‚Р° РїРµСЂРµСЃРјРѕС‚СЂСѓ РЅРµ РїРѕРґР»РµР¶Р°С‚. РўРµС…РЅРёС‡РµСЃРєРёР№ РїРѕСЂСЏРґРѕРє СѓС‡С‘С‚Р° Рё РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєРѕРјРїРµРЅСЃР°С†РёРѕРЅРЅРѕРіРѕ РїСЂРѕРіРЅРѕР·Р° РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РѕСЂРіР°РЅРёР·Р°С‚РѕСЂРѕРј РґРѕ РµРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ.
     </span>
   </div>
 
   <div class="rule-card">
-    <strong>⭐ Популярность выбора</strong>
-    <span>Звёзды рядом с матчем показывают, насколько часто этот матч выбирали участники текущего тура.</span>
+    <strong>в­ђ РџРѕРїСѓР»СЏСЂРЅРѕСЃС‚СЊ РІС‹Р±РѕСЂР°</strong>
+    <span>Р—РІС‘Р·РґС‹ СЂСЏРґРѕРј СЃ РјР°С‚С‡РµРј РїРѕРєР°Р·С‹РІР°СЋС‚, РЅР°СЃРєРѕР»СЊРєРѕ С‡Р°СЃС‚Рѕ СЌС‚РѕС‚ РјР°С‚С‡ РІС‹Р±РёСЂР°Р»Рё СѓС‡Р°СЃС‚РЅРёРєРё С‚РµРєСѓС‰РµРіРѕ С‚СѓСЂР°.</span>
   </div>
 
 
@@ -5125,13 +5256,13 @@ button.achievement-item {
     <div class="achievement-modal hidden" id="achievementModal" role="dialog" aria-modal="true" aria-labelledby="achievementModalTitle">
       <div class="achievement-modal-backdrop" id="achievementModalBackdrop"></div>
       <div class="achievement-modal-card">
-        <button class="achievement-modal-close" id="achievementModalClose" aria-label="Закрыть">×</button>
+        <button class="achievement-modal-close" id="achievementModalClose" aria-label="Р—Р°РєСЂС‹С‚СЊ">Г—</button>
         <div class="achievement-modal-image-wrap" id="achievementModalImageWrap">
-          <span class="achievement-modal-fallback" id="achievementModalFallback">🏅</span>
+          <span class="achievement-modal-fallback" id="achievementModalFallback">рџЏ…</span>
           <img class="achievement-modal-image hidden" id="achievementModalImage" alt="">
         </div>
-        <div class="achievement-modal-kicker" id="achievementModalKicker">Достижение X League</div>
-        <div class="achievement-modal-title" id="achievementModalTitle">Ачивка</div>
+        <div class="achievement-modal-kicker" id="achievementModalKicker">Р”РѕСЃС‚РёР¶РµРЅРёРµ X League</div>
+        <div class="achievement-modal-title" id="achievementModalTitle">РђС‡РёРІРєР°</div>
         <div class="achievement-modal-description" id="achievementModalDescription"></div>
         <div class="achievement-modal-meta" id="achievementModalMeta"></div>
       </div>
@@ -5141,10 +5272,10 @@ button.achievement-item {
     <div class="country-history-modal hidden" id="countryHistoryModal" role="dialog" aria-modal="true" aria-labelledby="countryHistoryTitle">
       <div class="country-history-backdrop" id="countryHistoryBackdrop"></div>
       <div class="country-history-card">
-        <button class="country-history-close" id="countryHistoryClose" aria-label="Закрыть">×</button>
+        <button class="country-history-close" id="countryHistoryClose" aria-label="Р—Р°РєСЂС‹С‚СЊ">Г—</button>
         <div class="country-history-head">
-          <div class="country-history-kicker">Матчи страны в X League</div>
-          <div class="country-history-title" id="countryHistoryTitle">Страна</div>
+          <div class="country-history-kicker">РњР°С‚С‡Рё СЃС‚СЂР°РЅС‹ РІ X League</div>
+          <div class="country-history-title" id="countryHistoryTitle">РЎС‚СЂР°РЅР°</div>
           <div class="country-history-summary" id="countryHistorySummary"></div>
         </div>
         <div id="countryHistoryBody"></div>
@@ -5153,11 +5284,11 @@ button.achievement-item {
 
   <nav class="bottom-nav">
   <div class="bottom-nav-grid">
-    <button class="nav-btn active" data-screen="matches"><span class="nav-icon">⚽</span>Матчи</button>
-    <button class="nav-btn" data-screen="picks"><span class="nav-icon">🎯</span>Прогнозы</button>
-    <button class="nav-btn" data-screen="table"><span class="nav-icon">🏆</span>Таблица</button>
-    <button class="nav-btn" data-screen="stats"><span class="nav-icon">📊</span>Статистика</button>
-    <button class="nav-btn" data-screen="players"><span class="nav-icon">👥</span>Игрок</button>
+    <button class="nav-btn active" data-screen="matches"><span class="nav-icon">вљЅ</span>РњР°С‚С‡Рё</button>
+    <button class="nav-btn" data-screen="picks"><span class="nav-icon">рџЋЇ</span>РџСЂРѕРіРЅРѕР·С‹</button>
+    <button class="nav-btn" data-screen="table"><span class="nav-icon">рџЏ†</span>РўР°Р±Р»РёС†Р°</button>
+    <button class="nav-btn" data-screen="stats"><span class="nav-icon">рџ“Љ</span>РЎС‚Р°С‚РёСЃС‚РёРєР°</button>
+    <button class="nav-btn" data-screen="players"><span class="nav-icon">рџ‘Ґ</span>РРіСЂРѕРє</button>
 
   </div>
 </nav>
@@ -5166,24 +5297,24 @@ button.achievement-item {
   <script>
     // Demo data. Later these arrays will be filled from Google Sheets JSON.
     const DEMO_MATCHES = [
-      { id: 1, flag: "🇪🇬", date: "Today", sortDate: "2026-05-10", time: "19:00", teams: "Al Masry — Zamalek", score: "", status: "pending", popularity: 9 },
-      { id: 2, flag: "🇦🇷", date: "Today", sortDate: "2026-05-10", time: "21:30", teams: "Ind. Rivadavia — Tigre", score: "", status: "pending", popularity: 6 },
-      { id: 3, flag: "🇺🇾", date: "Today", sortDate: "2026-05-10", time: "23:45", teams: "Nacional — Danubio", score: "", status: "pending", popularity: 7 },
-      { id: 4, date: "Tomorrow", sortDate: "2026-05-11", time: "01:00", teams: "Palmeiras — Fluminense", score: "", status: "pending", popularity: 8 },
-      { id: 5, date: "Tomorrow", sortDate: "2026-05-11", time: "03:30", teams: "Boca Juniors — Estudiantes", score: "", status: "pending", popularity: 4 },
-      { id: 6, date: "Tomorrow", sortDate: "2026-05-11", time: "15:00", teams: "Pharco — Ismaily", score: "", status: "pending", popularity: 5 },
-      { id: 7, date: "Tomorrow", sortDate: "2026-05-11", time: "18:20", teams: "Gondar City — Fasil Kenema", score: "", status: "pending", popularity: 3 },
-      { id: 8, date: "Tomorrow", sortDate: "2026-05-11", time: "22:00", teams: "Lanús — Unión", score: "", status: "pending", popularity: 2 },
-      { id: 9, date: "Yesterday", sortDate: "2026-05-09", time: "22:10", teams: "Bahia — Ceará", score: "1:1", status: "win", popularity: 10 },
-      { id: 10, date: "Yesterday", sortDate: "2026-05-09", time: "18:45", teams: "Aduana Stars — Hearts", score: "2:1", status: "lose", popularity: 6 },
-      { id: 11, date: "Yesterday", sortDate: "2026-05-09", time: "16:30", teams: "Always Ready — Blooming", score: "0:0", status: "win", popularity: 4 },
-      { id: 12, date: "Yesterday", sortDate: "2026-05-09", time: "14:00", teams: "Tanta — Petrojet", score: "3:1", status: "lose", popularity: 2 },
-      { id: 13, date: "Yesterday", sortDate: "2026-05-09", time: "12:30", teams: "Sarmiento — Banfield", score: "1:1", status: "win", popularity: 8 },
-      { id: 14, date: "Yesterday", sortDate: "2026-05-09", time: "11:00", teams: "Lamia — Volos", score: "2:0", status: "lose", popularity: 1 }
+      { id: 1, flag: "рџ‡Єрџ‡¬", date: "Today", sortDate: "2026-05-10", time: "19:00", teams: "Al Masry вЂ” Zamalek", score: "", status: "pending", popularity: 9 },
+      { id: 2, flag: "рџ‡¦рџ‡·", date: "Today", sortDate: "2026-05-10", time: "21:30", teams: "Ind. Rivadavia вЂ” Tigre", score: "", status: "pending", popularity: 6 },
+      { id: 3, flag: "рџ‡єрџ‡ѕ", date: "Today", sortDate: "2026-05-10", time: "23:45", teams: "Nacional вЂ” Danubio", score: "", status: "pending", popularity: 7 },
+      { id: 4, date: "Tomorrow", sortDate: "2026-05-11", time: "01:00", teams: "Palmeiras вЂ” Fluminense", score: "", status: "pending", popularity: 8 },
+      { id: 5, date: "Tomorrow", sortDate: "2026-05-11", time: "03:30", teams: "Boca Juniors вЂ” Estudiantes", score: "", status: "pending", popularity: 4 },
+      { id: 6, date: "Tomorrow", sortDate: "2026-05-11", time: "15:00", teams: "Pharco вЂ” Ismaily", score: "", status: "pending", popularity: 5 },
+      { id: 7, date: "Tomorrow", sortDate: "2026-05-11", time: "18:20", teams: "Gondar City вЂ” Fasil Kenema", score: "", status: "pending", popularity: 3 },
+      { id: 8, date: "Tomorrow", sortDate: "2026-05-11", time: "22:00", teams: "LanГєs вЂ” UniГіn", score: "", status: "pending", popularity: 2 },
+      { id: 9, date: "Yesterday", sortDate: "2026-05-09", time: "22:10", teams: "Bahia вЂ” CearГЎ", score: "1:1", status: "win", popularity: 10 },
+      { id: 10, date: "Yesterday", sortDate: "2026-05-09", time: "18:45", teams: "Aduana Stars вЂ” Hearts", score: "2:1", status: "lose", popularity: 6 },
+      { id: 11, date: "Yesterday", sortDate: "2026-05-09", time: "16:30", teams: "Always Ready вЂ” Blooming", score: "0:0", status: "win", popularity: 4 },
+      { id: 12, date: "Yesterday", sortDate: "2026-05-09", time: "14:00", teams: "Tanta вЂ” Petrojet", score: "3:1", status: "lose", popularity: 2 },
+      { id: 13, date: "Yesterday", sortDate: "2026-05-09", time: "12:30", teams: "Sarmiento вЂ” Banfield", score: "1:1", status: "win", popularity: 8 },
+      { id: 14, date: "Yesterday", sortDate: "2026-05-09", time: "11:00", teams: "Lamia вЂ” Volos", score: "2:0", status: "lose", popularity: 1 }
     ];
 
     const DEMO_PREDICTIONS = [
-      { name: "Samurai", pts: 31, odd: 18.9, move: "▲", picks: [
+      { name: "Samurai", pts: 31, odd: 18.9, move: "в–І", picks: [
         { matchId: 9, result: "win", odd: "3.05" },
         { matchId: 1, result: "pending", odd: "3.12" },
         { matchId: 2, result: "pending", odd: "2.98" }
@@ -5193,17 +5324,17 @@ button.achievement-item {
         { matchId: 10, result: "lose", odd: "2.95" },
         { matchId: 1, result: "pending", odd: "3.10" }
       ]},
-      { name: "Niko", pts: 14, odd: 24.2, move: "▼", picks: [
+      { name: "Niko", pts: 14, odd: 24.2, move: "в–ј", picks: [
         { matchId: 10, result: "lose", odd: "3.40" },
         { matchId: 11, result: "win", odd: "3.00" },
         { matchId: 12, result: "lose", odd: "2.88" }
       ]},
-      { name: "Dima", pts: 11, odd: 17.6, move: "—", picks: [
+      { name: "Dima", pts: 11, odd: 17.6, move: "вЂ”", picks: [
         { matchId: 3, result: "pending", odd: "3.15" },
         { matchId: 4, result: "pending", odd: "2.80" },
         { matchId: 5, result: "pending", odd: "3.05" }
       ]},
-      { name: "Roma", pts: 0, odd: 19.1, move: "▼", picks: [
+      { name: "Roma", pts: 0, odd: 19.1, move: "в–ј", picks: [
         { matchId: 10, result: "lose", odd: "3.10" },
         { matchId: 12, result: "lose", odd: "3.02" },
         { matchId: 14, result: "lose", odd: "2.90" }
@@ -5370,10 +5501,10 @@ function scoreByMatchId(id) {
       if (["pending", "win", "lose", "cancelled"].includes(raw)) return raw;
 
       // Human-readable statuses from Sheets
-      if (raw.includes("cancel") || raw.includes("postpon") || raw.includes("отмен") || raw.includes("перен")) return "cancelled";
-      if (raw.includes("⏳") || raw.includes("pending") || raw.includes("active")) return "pending";
-      if (raw.includes("✅") || raw.includes("win") || raw.includes("draw") || res === "1") return "win";
-      if (raw.includes("❌") || raw.includes("lose") || raw.includes("loss") || res === "0") return "lose";
+      if (raw.includes("cancel") || raw.includes("postpon") || raw.includes("РѕС‚РјРµРЅ") || raw.includes("РїРµСЂРµРЅ")) return "cancelled";
+      if (raw.includes("вЏі") || raw.includes("pending") || raw.includes("active")) return "pending";
+      if (raw.includes("вњ…") || raw.includes("win") || raw.includes("draw") || res === "1") return "win";
+      if (raw.includes("вќЊ") || raw.includes("lose") || raw.includes("loss") || res === "0") return "lose";
 
       return "cancelled";
     }
@@ -5392,60 +5523,60 @@ function scoreByMatchId(id) {
     }
 
     function mapMatchRow(row) {
-      const id = toNum(get(row, ["id", "ID", "match_id", "match1_id", "матч_id"]));
+      const id = toNum(get(row, ["id", "ID", "match_id", "match1_id", "РјР°С‚С‡_id"]));
       const apiStatusRaw = get(row, ["api_status", "api status", "Api Status", "API_STATUS", "K"]);
-      const statusRaw = get(row, ["status", "Статус", "статус", "G"]);
-      const resultRaw = get(row, ["result", "Результат", "res", "J"]);
-      const dateRaw = get(row, ["date", "Date", "Дата", "дата"]);
+      const statusRaw = get(row, ["status", "РЎС‚Р°С‚СѓСЃ", "СЃС‚Р°С‚СѓСЃ", "G"]);
+      const resultRaw = get(row, ["result", "Р РµР·СѓР»СЊС‚Р°С‚", "res", "J"]);
+      const dateRaw = get(row, ["date", "Date", "Р”Р°С‚Р°", "РґР°С‚Р°"]);
       return {
         id,
-        tour: toNum(get(row, ["tour", "Tour", "Тур", "тур"])),
+        tour: toNum(get(row, ["tour", "Tour", "РўСѓСЂ", "С‚СѓСЂ"])),
         // flag_url is a real image URL for frontend. Country is text and must not be rendered as a flag.
-        flag_url: normalizeFlagUrl(get(row, ["flag_url", "flag url", "Flag URL", "FlagUrl", "flagUrl", "Флаг URL", "url_flag", "flag_link", "L"], "")),
-        flag: get(row, ["flag_emoji", "emoji_flag", "Флаг emoji", "emoji"], "🌍"),
-        country: get(row, ["country", "Country", "Страна", "страна", "I"], ""),
-        continent: get(row, ["continent", "Continent", "Континент", "континент"], ""),
-        date: get(row, ["date_label", "date", "Date", "Дата", "дата"], ""),
+        flag_url: normalizeFlagUrl(get(row, ["flag_url", "flag url", "Flag URL", "FlagUrl", "flagUrl", "Р¤Р»Р°Рі URL", "url_flag", "flag_link", "L"], "")),
+        flag: get(row, ["flag_emoji", "emoji_flag", "Р¤Р»Р°Рі emoji", "emoji"], "рџЊЌ"),
+        country: get(row, ["country", "Country", "РЎС‚СЂР°РЅР°", "СЃС‚СЂР°РЅР°", "I"], ""),
+        continent: get(row, ["continent", "Continent", "РљРѕРЅС‚РёРЅРµРЅС‚", "РєРѕРЅС‚РёРЅРµРЅС‚"], ""),
+        date: get(row, ["date_label", "date", "Date", "Р”Р°С‚Р°", "РґР°С‚Р°"], ""),
         sortDate: normalizeDate(dateRaw),
-        time: get(row, ["time", "Time", "Время", "время"], ""),
-        teams: get(row, ["match", "Match", "Матч", "Матчи", "match_name", "teams"], "Unknown match"),
-        score: get(row, ["score", "Score", "Счёт", "Счет", "счёт"], ""),
+        time: get(row, ["time", "Time", "Р’СЂРµРјСЏ", "РІСЂРµРјСЏ"], ""),
+        teams: get(row, ["match", "Match", "РњР°С‚С‡", "РњР°С‚С‡Рё", "match_name", "teams"], "Unknown match"),
+        score: get(row, ["score", "Score", "РЎС‡С‘С‚", "РЎС‡РµС‚", "СЃС‡С‘С‚"], ""),
         status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
         api_status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
-        popularity: toNum(get(row, ["popularity", "stars", "Популярность"], 0), 0)
+        popularity: toNum(get(row, ["popularity", "stars", "РџРѕРїСѓР»СЏСЂРЅРѕСЃС‚СЊ"], 0), 0)
       };
     }
 
 function mapPredictionRow(row) {
-  const player = get(row, ["player", "Player", "Игрок", "игрок", "B"], "Unknown");
+  const player = get(row, ["player", "Player", "РРіСЂРѕРє", "РёРіСЂРѕРє", "B"], "Unknown");
 
  const pick = (n) => {
   const id = toNum(get(row, [`match${n}_id`, `match_${n}_id`, `id${n}`, `match${n}id`]));
-  const matchName = get(row, [`match${n}`, `match_${n}`, `match${n}_name`, `match_${n}_name`, `Матч${n}`], "");
+  const matchName = get(row, [`match${n}`, `match_${n}`, `match${n}_name`, `match_${n}_name`, `РњР°С‚С‡${n}`], "");
   const resultRaw = get(row, [`res${n}`, `result${n}`, `result_${n}`], "pending");
   const result = normalizeStatus(resultRaw, resultRaw);
-  const odd = get(row, [`odd${n}`, `odds${n}`, `coef${n}`, `коэф${n}`], "");
-  const score = get(row, [`score${n}`, `score_${n}`, `счет${n}`, `счёт${n}`, `Счет${n}`, `Счёт${n}`], "");
+  const odd = get(row, [`odd${n}`, `odds${n}`, `coef${n}`, `РєРѕСЌС„${n}`], "");
+  const score = get(row, [`score${n}`, `score_${n}`, `СЃС‡РµС‚${n}`, `СЃС‡С‘С‚${n}`, `РЎС‡РµС‚${n}`, `РЎС‡С‘С‚${n}`], "");
 
   return { matchId: id, match: matchName, result, odd, score };
 };
 
   return {
     name: player,
-    tour: toNum(get(row, ["tour", "Tour", "Тур"])),
+    tour: toNum(get(row, ["tour", "Tour", "РўСѓСЂ"])),
     pts: toNum(get(row, ["total", "Total", "R", "points", "Points", "P"])),
     bonus: toNum(get(row, ["bonus", "Bonus", "Q"])),
     odd: toNum(get(row, ["total_odd", "total odd", "S", "express_odd"])),
-    move: get(row, ["move", "movement", "status"], "—"),
+    move: get(row, ["move", "movement", "status"], "вЂ”"),
     picks: [pick(1), pick(2), pick(3)].filter(p => p.matchId || p.match)
   };
 }
     function mapOverallRow(row) {
       return {
-        name: get(row, ["player", "Player", "Игрок"], "Unknown"),
+        name: get(row, ["player", "Player", "РРіСЂРѕРє"], "Unknown"),
         total: toNum(get(row, ["grand_total", "total", "Total"])),
         rank: toNum(get(row, ["rank", "Rank"])),
-        move: get(row, ["move", "movement"], "—")
+        move: get(row, ["move", "movement"], "вЂ”")
       };
     }
 
@@ -5504,10 +5635,10 @@ function mapPredictionRow(row) {
         const cached = readCachedSheetsData();
         if (cached) {
           applySheetsPayload(cached);
-          showDataNotice("Показаны последние сохранённые данные. Обновление Google Sheets не ответило вовремя.");
+          showDataNotice("РџРѕРєР°Р·Р°РЅС‹ РїРѕСЃР»РµРґРЅРёРµ СЃРѕС…СЂР°РЅС‘РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ. РћР±РЅРѕРІР»РµРЅРёРµ Google Sheets РЅРµ РѕС‚РІРµС‚РёР»Рѕ РІРѕРІСЂРµРјСЏ.");
           return true;
         }
-        showDataNotice("Данные Google Sheets не загрузились. Показан демо-режим, попробуйте обновить страницу позже.");
+        showDataNotice("Р”Р°РЅРЅС‹Рµ Google Sheets РЅРµ Р·Р°РіСЂСѓР·РёР»РёСЃСЊ. РџРѕРєР°Р·Р°РЅ РґРµРјРѕ-СЂРµР¶РёРј, РїРѕРїСЂРѕР±СѓР№С‚Рµ РѕР±РЅРѕРІРёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ РїРѕР·Р¶Рµ.");
         return false;
       }
     }
@@ -5592,12 +5723,12 @@ function mapPredictionRow(row) {
       const empty = 5 - full - (half ? 1 : 0);
       const stars = [];
 
-      for (let i = 0; i < full; i++) stars.push('<span class="star star-full">★</span>');
-      if (half) stars.push('<span class="star star-half">★</span>');
-      for (let i = 0; i < empty; i++) stars.push('<span class="star star-empty">★</span>');
+      for (let i = 0; i < full; i++) stars.push('<span class="star star-full">в…</span>');
+      if (half) stars.push('<span class="star star-half">в…</span>');
+      for (let i = 0; i < empty; i++) stars.push('<span class="star star-empty">в…</span>');
 
       return `
-        <span class="stars" title="Популярность матча среди пользователей" aria-label="Популярность матча среди пользователей: ${clamped} из 10">
+        <span class="stars" title="РџРѕРїСѓР»СЏСЂРЅРѕСЃС‚СЊ РјР°С‚С‡Р° СЃСЂРµРґРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№" aria-label="РџРѕРїСѓР»СЏСЂРЅРѕСЃС‚СЊ РјР°С‚С‡Р° СЃСЂРµРґРё РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№: ${clamped} РёР· 10">
           ${stars.join("")}
         </span>
       `;
@@ -5622,10 +5753,10 @@ function mapPredictionRow(row) {
 
     function extractFlag(value) {
       const raw = String(value ?? "").trim();
-      if (!raw) return "🌍";
+      if (!raw) return "рџЊЌ";
       if (/^https?:\/\//i.test(raw)) return raw;
       const emoji = raw.match(/[\u{1F1E6}-\u{1F1FF}]{2}|[\u{1F300}-\u{1FAFF}]/u);
-      return emoji ? emoji[0] : "🌍";
+      return emoji ? emoji[0] : "рџЊЌ";
     }
 
     function flagHtml(value) {
@@ -5633,13 +5764,13 @@ function mapPredictionRow(row) {
       if (/^https?:\/\//i.test(flag)) {
         return `<img src="${escapeHtml(flag)}" alt="" loading="lazy">`;
       }
-      return escapeHtml(flag || "🌍");
+      return escapeHtml(flag || "рџЊЌ");
     }
 
     function matchStatus(match) {
-      if (match.status === "pending") return `<span class="match-status pending">⏳</span>`;
-      if (match.status === "win") return `<span class="match-status win">${escapeHtml(match.score)} ✅</span>`;
-      return `<span class="match-status lose">${escapeHtml(match.score)} ❌</span>`;
+      if (match.status === "pending") return `<span class="match-status pending">вЏі</span>`;
+      if (match.status === "win") return `<span class="match-status win">${escapeHtml(match.score)} вњ…</span>`;
+      return `<span class="match-status lose">${escapeHtml(match.score)} вќЊ</span>`;
     }
 
     function matchCard(match) {
@@ -5648,7 +5779,7 @@ function mapPredictionRow(row) {
           <div class="match-row">
             <div style="min-width:0;">
               <div class="match-meta-line">
-                <div class="match-meta">${escapeHtml(match.date)} · ${escapeHtml(match.time)}</div>
+                <div class="match-meta">${escapeHtml(match.date)} В· ${escapeHtml(match.time)}</div>
                 ${starsHtml(match.popularity)}
               </div>
               <div class="match-title-row"><span class="match-flag">${flagHtml(match.flag_url || match.flag)}</span><div class="match-name">${escapeHtml(match.teams)}</div></div>
@@ -5683,16 +5814,16 @@ function mapPredictionRow(row) {
       const n = toNum(tour, 0);
       if (!n) return "";
 
-      const row = siteTours.find(r => toNum(get(r, ["tour", "Tour", "Тур", "A"]), 0) === n);
-      const fromSheet = row ? String(get(row, ["label", "Label", "Название", "C"], "")).trim() : "";
+      const row = siteTours.find(r => toNum(get(r, ["tour", "Tour", "РўСѓСЂ", "A"]), 0) === n);
+      const fromSheet = row ? String(get(row, ["label", "Label", "РќР°Р·РІР°РЅРёРµ", "C"], "")).trim() : "";
       if (fromSheet) return fromSheet;
 
       if (isPlayoffTour(n)) {
         const round = n - PLAYOFF_TOUR_START + 1;
-        return `Плей-офф · Раунд ${round}`;
+        return `РџР»РµР№-РѕС„С„ В· Р Р°СѓРЅРґ ${round}`;
       }
 
-      return `Тур ${n}`;
+      return `РўСѓСЂ ${n}`;
     }
 
     function getAvailableTours() {
@@ -5700,7 +5831,7 @@ function mapPredictionRow(row) {
       matches.forEach(m => { if (toNum(m.tour, 0)) set.add(toNum(m.tour, 0)); });
       predictions.forEach(p => { if (toNum(p.tour, 0)) set.add(toNum(p.tour, 0)); });
       siteTours.forEach(row => {
-        const t = toNum(get(row, ["tour", "Tour", "Тур", "A"]), 0);
+        const t = toNum(get(row, ["tour", "Tour", "РўСѓСЂ", "A"]), 0);
         if (t) set.add(t);
       });
       return [...set].sort((a, b) => b - a);
@@ -5711,7 +5842,7 @@ function mapPredictionRow(row) {
         const status = String(get(row, ["status", "Status", "B"])).toLowerCase();
         return status === "active";
       });
-      const fromTours = activeTourRow ? toNum(get(activeTourRow, ["tour", "Tour", "Тур", "A"]), 0) : 0;
+      const fromTours = activeTourRow ? toNum(get(activeTourRow, ["tour", "Tour", "РўСѓСЂ", "A"]), 0) : 0;
       if (fromTours) return fromTours;
 
       const fromConfig = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
@@ -5769,10 +5900,10 @@ function mapPredictionRow(row) {
         .join("");
 
       const hasPlayoff = playoffTours.length > 0 || sitePlayoff.length > 0;
-      const playoffOption = hasPlayoff ? `<option value="playoff">⚔️ Плей-офф</option>` : "";
+      const playoffOption = hasPlayoff ? `<option value="playoff">вљ”пёЏ РџР»РµР№-РѕС„С„</option>` : "";
 
       const indicator = document.getElementById("currentTourIndicator");
-      if (indicator) indicator.textContent = tourLabel(current) || `Тур ${current}`;
+      if (indicator) indicator.textContent = tourLabel(current) || `РўСѓСЂ ${current}`;
 
   
     const countryHistoryModal = document.getElementById("countryHistoryModal");
@@ -5783,6 +5914,17 @@ function mapPredictionRow(row) {
       const countryRow = event.target.closest(".chart-row[data-country]");
       if (countryRow) {
         openCountryHistory(countryRow.dataset.country || "");
+        return;
+      }
+
+      const tourHeader = event.target.closest(".country-tour-title");
+      if (tourHeader) {
+        const group = tourHeader.closest(".country-tour-group");
+        if (group) {
+          const willOpen = !group.classList.contains("is-open");
+          group.classList.toggle("is-open", willOpen);
+          tourHeader.setAttribute("aria-expanded", willOpen ? "true" : "false");
+        }
         return;
       }
 
@@ -5800,10 +5942,18 @@ function mapPredictionRow(row) {
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
-        const row = document.activeElement?.closest?.(".chart-row[data-country]");
+        const active = document.activeElement;
+        const row = active?.closest?.(".chart-row[data-country]");
         if (row) {
           event.preventDefault();
           openCountryHistory(row.dataset.country || "");
+          return;
+        }
+        const tourHeader = active?.closest?.(".country-tour-title");
+        if (tourHeader) {
+          event.preventDefault();
+          tourHeader.click();
+          return;
         }
       }
       if (event.key === "Escape" && countryHistoryModal && !countryHistoryModal.classList.contains("hidden")) {
@@ -5831,7 +5981,7 @@ function mapPredictionRow(row) {
         const previous = tableSelect.value;
         tableSelect.innerHTML =
           regularOptions +
-          `<option value="overall">🏆 Общая таблица</option>` +
+          `<option value="overall">рџЏ† РћР±С‰Р°СЏ С‚Р°Р±Р»РёС†Р°</option>` +
           playoffOption;
 
         if (previous && [...tableSelect.options].some(o => o.value === previous)) {
@@ -5869,7 +6019,7 @@ function mapPredictionRow(row) {
       if (tourSelect) {
         const previous = tourSelect.value;
         tourSelect.innerHTML =
-          `<option value="overall">Общая</option>` +
+          `<option value="overall">РћР±С‰Р°СЏ</option>` +
           regularOptions +
           playoffOption;
 
@@ -5882,7 +6032,7 @@ function mapPredictionRow(row) {
 
       const playerTourSelect = document.getElementById("playerTourSelect");
       if (playerTourSelect) {
-        playerTourSelect.innerHTML = regularOptions + `<option value="overall">Общая</option>`;
+        playerTourSelect.innerHTML = regularOptions + `<option value="overall">РћР±С‰Р°СЏ</option>`;
         playerTourSelect.value = "overall";
       }
     }
@@ -5931,7 +6081,7 @@ if (screenMatches) {
   ? (
       upcoming.length
         ? (homeLimit ? upcoming.slice(0, 7) : upcoming).map(matchCard).join("")
-        : `<div class="empty-state">Текущие матчи отсутствуют</div>`
+        : `<div class="empty-state">РўРµРєСѓС‰РёРµ РјР°С‚С‡Рё РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚</div>`
     )
   : "";
 
@@ -5955,7 +6105,7 @@ if (screenMatches) {
     .sort((a, b) => Number(a.tour) - Number(b.tour));
 
   if (!rows.length) {
-    el.innerHTML = `<div class="empty-state">Нет данных</div>`;
+    el.innerHTML = `<div class="empty-state">РќРµС‚ РґР°РЅРЅС‹С…</div>`;
     return;
   }
 
@@ -6031,7 +6181,7 @@ if (screenMatches) {
     function playerCard(player) {
       const stats = getPickStats(player);
       const form = player.picks.map(p => p.result);
-      const badge = stats.alive ? `<span class="live-badge">В ИГРЕ</span>` : `<span class="dead-badge">ОТЫГРАНО</span>`;
+      const badge = stats.alive ? `<span class="live-badge">Р’ РР“Р Р•</span>` : `<span class="dead-badge">РћРўР«Р“Р РђРќРћ</span>`;
       const preview = player.picks.map(p => p.match || matchById.get(p.matchId)?.teams || "Unknown match").join(" / ");
 
       return `
@@ -6046,9 +6196,9 @@ if (screenMatches) {
             </div>
 
             <div class="player-summary">
-              <span class="badge badge-accent">${escapeHtml(player.pts)} очков</span>
+              <span class="badge badge-accent">${escapeHtml(player.pts)} РѕС‡РєРѕРІ</span>
               <span class="badge badge-dark">x${escapeHtml(formatOdd3(player.odd))}</span>
-              <button class="expand-mark" data-expand aria-label="Раскрыть прогноз">+</button>
+              <button class="expand-mark" data-expand aria-label="Р Р°СЃРєСЂС‹С‚СЊ РїСЂРѕРіРЅРѕР·">+</button>
             </div>
 
             <div class="pick-preview">${escapeHtml(preview)}</div>
@@ -6115,7 +6265,7 @@ return `
           if (!card || !mark) return;
 
           card.classList.toggle("open");
-          mark.textContent = card.classList.contains("open") ? "−" : "+";
+          mark.textContent = card.classList.contains("open") ? "в€’" : "+";
         });
       });
     }
@@ -6125,107 +6275,107 @@ return `
     const metaChartsByTour = {
       overall: {
         continents: [
-          ["🇪🇺 Европа", 84, "65,1%"],
-          ["🌎 Южная Америка", 18, "14,0%"],
-          ["🌏 Азия", 10, "7,8%"],
-          ["🌍 Африка", 8, "6,2%"],
-          ["🌐 Остальные", 9, "6,9%"]
+          ["рџ‡Єрџ‡є Р•РІСЂРѕРїР°", 84, "65,1%"],
+          ["рџЊЋ Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", 18, "14,0%"],
+          ["рџЊЏ РђР·РёСЏ", 10, "7,8%"],
+          ["рџЊЌ РђС„СЂРёРєР°", 8, "6,2%"],
+          ["рџЊђ РћСЃС‚Р°Р»СЊРЅС‹Рµ", 9, "6,9%"]
         ],
         countriesVolume: [
-          ["🇪🇸 Испания", 22, "17,1%"],
-          ["🇮🇹 Италия", 14, "10,9%"],
-          ["🏴 Англия", 12, "9,3%"],
-          ["🇩🇪 Германия", 11, "8,5%"],
-          ["🇺🇦 Украина", 9, "7,0%"]
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 22, "17,1%"],
+          ["рџ‡®рџ‡№ РС‚Р°Р»РёСЏ", 14, "10,9%"],
+          ["рџЏґ РђРЅРіР»РёСЏ", 12, "9,3%"],
+          ["рџ‡©рџ‡Є Р“РµСЂРјР°РЅРёСЏ", 11, "8,5%"],
+          ["рџ‡єрџ‡¦ РЈРєСЂР°РёРЅР°", 9, "7,0%"]
         ],
         countriesWinrate: [
-          ["🇪🇸 Испания", 9, "40,9%"],
-          ["🇺🇦 Украина", 3, "33,3%"],
-          ["🇬🇷 Греция", 2, "28,6%"],
-          ["🏴 Англия", 1, "8,3%"],
-          ["🇧🇪 Бельгия", 1, "14,3%"]
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 9, "40,9%"],
+          ["рџ‡єрџ‡¦ РЈРєСЂР°РёРЅР°", 3, "33,3%"],
+          ["рџ‡¬рџ‡· Р“СЂРµС†РёСЏ", 2, "28,6%"],
+          ["рџЏґ РђРЅРіР»РёСЏ", 1, "8,3%"],
+          ["рџ‡§рџ‡Є Р‘РµР»СЊРіРёСЏ", 1, "14,3%"]
         ]
       },
       "5": {
         continents: [
-          ["🇪🇺 Европа", 84, "65,1%"],
-          ["🌎 Южная Америка", 18, "14,0%"],
-          ["🌏 Азия", 10, "7,8%"],
-          ["🌍 Африка", 8, "6,2%"],
-          ["🌐 Остальные", 9, "6,9%"]
+          ["рџ‡Єрџ‡є Р•РІСЂРѕРїР°", 84, "65,1%"],
+          ["рџЊЋ Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", 18, "14,0%"],
+          ["рџЊЏ РђР·РёСЏ", 10, "7,8%"],
+          ["рџЊЌ РђС„СЂРёРєР°", 8, "6,2%"],
+          ["рџЊђ РћСЃС‚Р°Р»СЊРЅС‹Рµ", 9, "6,9%"]
         ],
         countriesVolume: [
-          ["🇪🇸 Испания", 22, "17,1%"],
-          ["🇮🇹 Италия", 14, "10,9%"],
-          ["🏴 Англия", 12, "9,3%"],
-          ["🇩🇪 Германия", 11, "8,5%"],
-          ["🇺🇦 Украина", 9, "7,0%"]
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 22, "17,1%"],
+          ["рџ‡®рџ‡№ РС‚Р°Р»РёСЏ", 14, "10,9%"],
+          ["рџЏґ РђРЅРіР»РёСЏ", 12, "9,3%"],
+          ["рџ‡©рџ‡Є Р“РµСЂРјР°РЅРёСЏ", 11, "8,5%"],
+          ["рџ‡єрџ‡¦ РЈРєСЂР°РёРЅР°", 9, "7,0%"]
         ],
         countriesWinrate: [
-          ["🇪🇸 Испания", 9, "40,9%"],
-          ["🇺🇦 Украина", 3, "33,3%"],
-          ["🇬🇷 Греция", 2, "28,6%"],
-          ["🏴 Англия", 1, "8,3%"],
-          ["🇧🇪 Бельгия", 1, "14,3%"]
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 9, "40,9%"],
+          ["рџ‡єрџ‡¦ РЈРєСЂР°РёРЅР°", 3, "33,3%"],
+          ["рџ‡¬рџ‡· Р“СЂРµС†РёСЏ", 2, "28,6%"],
+          ["рџЏґ РђРЅРіР»РёСЏ", 1, "8,3%"],
+          ["рџ‡§рџ‡Є Р‘РµР»СЊРіРёСЏ", 1, "14,3%"]
         ]
       },
       "4": {
         continents: [
-          ["🇪🇺 Европа", 66, "58,4%"],
-          ["🌎 Южная Америка", 21, "18,6%"],
-          ["🌍 Африка", 12, "10,6%"],
-          ["🌏 Азия", 9, "8,0%"],
-          ["🌐 Остальные", 5, "4,4%"]
+          ["рџ‡Єрџ‡є Р•РІСЂРѕРїР°", 66, "58,4%"],
+          ["рџЊЋ Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", 21, "18,6%"],
+          ["рџЊЌ РђС„СЂРёРєР°", 12, "10,6%"],
+          ["рџЊЏ РђР·РёСЏ", 9, "8,0%"],
+          ["рџЊђ РћСЃС‚Р°Р»СЊРЅС‹Рµ", 5, "4,4%"]
         ],
         countriesVolume: [
-          ["🇪🇬 Египет", 18, "15,9%"],
-          ["🇦🇷 Аргентина", 16, "14,2%"],
-          ["🇪🇸 Испания", 13, "11,5%"],
-          ["🇧🇷 Бразилия", 10, "8,8%"],
-          ["🇪🇹 Эфиопия", 8, "7,1%"]
+          ["рџ‡Єрџ‡¬ Р•РіРёРїРµС‚", 18, "15,9%"],
+          ["рџ‡¦рџ‡· РђСЂРіРµРЅС‚РёРЅР°", 16, "14,2%"],
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 13, "11,5%"],
+          ["рџ‡§рџ‡· Р‘СЂР°Р·РёР»РёСЏ", 10, "8,8%"],
+          ["рџ‡Єрџ‡№ Р­С„РёРѕРїРёСЏ", 8, "7,1%"]
         ],
         countriesWinrate: [
-          ["🇪🇬 Египет", 7, "38,9%"],
-          ["🇦🇷 Аргентина", 6, "37,5%"],
-          ["🇪🇹 Эфиопия", 3, "37,5%"],
-          ["🇧🇷 Бразилия", 2, "20,0%"],
-          ["🇪🇸 Испания", 2, "15,4%"]
+          ["рџ‡Єрџ‡¬ Р•РіРёРїРµС‚", 7, "38,9%"],
+          ["рџ‡¦рџ‡· РђСЂРіРµРЅС‚РёРЅР°", 6, "37,5%"],
+          ["рџ‡Єрџ‡№ Р­С„РёРѕРїРёСЏ", 3, "37,5%"],
+          ["рџ‡§рџ‡· Р‘СЂР°Р·РёР»РёСЏ", 2, "20,0%"],
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 2, "15,4%"]
         ]
       },
       "3": {
         continents: [
-          ["🇪🇺 Европа", 51, "61,4%"],
-          ["🌎 Южная Америка", 15, "18,1%"],
-          ["🌍 Африка", 8, "9,6%"],
-          ["🌏 Азия", 6, "7,2%"],
-          ["🌐 Остальные", 3, "3,7%"]
+          ["рџ‡Єрџ‡є Р•РІСЂРѕРїР°", 51, "61,4%"],
+          ["рџЊЋ Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", 15, "18,1%"],
+          ["рџЊЌ РђС„СЂРёРєР°", 8, "9,6%"],
+          ["рџЊЏ РђР·РёСЏ", 6, "7,2%"],
+          ["рџЊђ РћСЃС‚Р°Р»СЊРЅС‹Рµ", 3, "3,7%"]
         ],
         countriesVolume: [
-          ["🇦🇷 Аргентина", 13, "15,7%"],
-          ["🇪🇬 Египет", 11, "13,3%"],
-          ["🇮🇹 Италия", 9, "10,8%"],
-          ["🇪🇸 Испания", 8, "9,6%"],
-          ["🇬🇷 Греция", 6, "7,2%"]
+          ["рџ‡¦рџ‡· РђСЂРіРµРЅС‚РёРЅР°", 13, "15,7%"],
+          ["рџ‡Єрџ‡¬ Р•РіРёРїРµС‚", 11, "13,3%"],
+          ["рџ‡®рџ‡№ РС‚Р°Р»РёСЏ", 9, "10,8%"],
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 8, "9,6%"],
+          ["рџ‡¬рџ‡· Р“СЂРµС†РёСЏ", 6, "7,2%"]
         ],
         countriesWinrate: [
-          ["🇦🇷 Аргентина", 5, "38,5%"],
-          ["🇪🇬 Египет", 4, "36,4%"],
-          ["🇬🇷 Греция", 2, "33,3%"],
-          ["🇮🇹 Италия", 2, "22,2%"],
-          ["🇪🇸 Испания", 1, "12,5%"]
+          ["рџ‡¦рџ‡· РђСЂРіРµРЅС‚РёРЅР°", 5, "38,5%"],
+          ["рџ‡Єрџ‡¬ Р•РіРёРїРµС‚", 4, "36,4%"],
+          ["рџ‡¬рџ‡· Р“СЂРµС†РёСЏ", 2, "33,3%"],
+          ["рџ‡®рџ‡№ РС‚Р°Р»РёСЏ", 2, "22,2%"],
+          ["рџ‡Єрџ‡ё РСЃРїР°РЅРёСЏ", 1, "12,5%"]
         ]
       }
     };
 
-    const FIXED_CONTINENTS = ["Европа", "Азия", "Африка", "Южная Америка", "Северная Америка", "Океания"];
+    const FIXED_CONTINENTS = ["Р•РІСЂРѕРїР°", "РђР·РёСЏ", "РђС„СЂРёРєР°", "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°", "РћРєРµР°РЅРёСЏ"];
 
     const COUNTRY_CONTINENT_MAP = {
-      "англия": "Европа", "испания": "Европа", "италия": "Европа", "германия": "Европа", "франция": "Европа", "португалия": "Европа", "нидерланды": "Европа", "бельгия": "Европа", "греция": "Европа", "украина": "Европа", "польша": "Европа", "норвегия": "Европа", "швеция": "Европа", "финляндия": "Европа", "дания": "Европа", "австрия": "Европа", "швейцария": "Европа", "чехия": "Европа", "сербия": "Европа", "хорватия": "Европа", "турция": "Европа",
-      "аргентина": "Южная Америка", "бразилия": "Южная Америка", "уругвай": "Южная Америка", "чили": "Южная Америка", "парагвай": "Южная Америка", "колумбия": "Южная Америка", "перу": "Южная Америка", "эквадор": "Южная Америка", "боливия": "Южная Америка", "венесуэла": "Южная Америка",
-      "египет": "Африка", "эфиопия": "Африка", "гана": "Африка", "намбия": "Африка", "намибия": "Африка", "марокко": "Африка", "тунис": "Африка", "алжир": "Африка", "нигерия": "Африка", "кения": "Африка", "юар": "Африка",
-      "япония": "Азия", "китай": "Азия", "корея": "Азия", "южная корея": "Азия", "саудовская аравия": "Азия", "оаэ": "Азия", "катар": "Азия", "индия": "Азия", "таиланд": "Азия", "индонезия": "Азия", "малайзия": "Азия", "вьетнам": "Азия",
-      "сша": "Северная Америка", "канада": "Северная Америка", "мексика": "Северная Америка", "коста-рика": "Северная Америка", "коста рика": "Северная Америка", "панама": "Северная Америка",
-      "австралия": "Океания", "новая зеландия": "Океания"
+      "Р°РЅРіР»РёСЏ": "Р•РІСЂРѕРїР°", "РёСЃРїР°РЅРёСЏ": "Р•РІСЂРѕРїР°", "РёС‚Р°Р»РёСЏ": "Р•РІСЂРѕРїР°", "РіРµСЂРјР°РЅРёСЏ": "Р•РІСЂРѕРїР°", "С„СЂР°РЅС†РёСЏ": "Р•РІСЂРѕРїР°", "РїРѕСЂС‚СѓРіР°Р»РёСЏ": "Р•РІСЂРѕРїР°", "РЅРёРґРµСЂР»Р°РЅРґС‹": "Р•РІСЂРѕРїР°", "Р±РµР»СЊРіРёСЏ": "Р•РІСЂРѕРїР°", "РіСЂРµС†РёСЏ": "Р•РІСЂРѕРїР°", "СѓРєСЂР°РёРЅР°": "Р•РІСЂРѕРїР°", "РїРѕР»СЊС€Р°": "Р•РІСЂРѕРїР°", "РЅРѕСЂРІРµРіРёСЏ": "Р•РІСЂРѕРїР°", "С€РІРµС†РёСЏ": "Р•РІСЂРѕРїР°", "С„РёРЅР»СЏРЅРґРёСЏ": "Р•РІСЂРѕРїР°", "РґР°РЅРёСЏ": "Р•РІСЂРѕРїР°", "Р°РІСЃС‚СЂРёСЏ": "Р•РІСЂРѕРїР°", "С€РІРµР№С†Р°СЂРёСЏ": "Р•РІСЂРѕРїР°", "С‡РµС…РёСЏ": "Р•РІСЂРѕРїР°", "СЃРµСЂР±РёСЏ": "Р•РІСЂРѕРїР°", "С…РѕСЂРІР°С‚РёСЏ": "Р•РІСЂРѕРїР°", "С‚СѓСЂС†РёСЏ": "Р•РІСЂРѕРїР°",
+      "Р°СЂРіРµРЅС‚РёРЅР°": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "Р±СЂР°Р·РёР»РёСЏ": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "СѓСЂСѓРіРІР°Р№": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "С‡РёР»Рё": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "РїР°СЂР°РіРІР°Р№": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "РєРѕР»СѓРјР±РёСЏ": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "РїРµСЂСѓ": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "СЌРєРІР°РґРѕСЂ": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "Р±РѕР»РёРІРёСЏ": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°", "РІРµРЅРµСЃСѓСЌР»Р°": "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°",
+      "РµРіРёРїРµС‚": "РђС„СЂРёРєР°", "СЌС„РёРѕРїРёСЏ": "РђС„СЂРёРєР°", "РіР°РЅР°": "РђС„СЂРёРєР°", "РЅР°РјР±РёСЏ": "РђС„СЂРёРєР°", "РЅР°РјРёР±РёСЏ": "РђС„СЂРёРєР°", "РјР°СЂРѕРєРєРѕ": "РђС„СЂРёРєР°", "С‚СѓРЅРёСЃ": "РђС„СЂРёРєР°", "Р°Р»Р¶РёСЂ": "РђС„СЂРёРєР°", "РЅРёРіРµСЂРёСЏ": "РђС„СЂРёРєР°", "РєРµРЅРёСЏ": "РђС„СЂРёРєР°", "СЋР°СЂ": "РђС„СЂРёРєР°",
+      "СЏРїРѕРЅРёСЏ": "РђР·РёСЏ", "РєРёС‚Р°Р№": "РђР·РёСЏ", "РєРѕСЂРµСЏ": "РђР·РёСЏ", "СЋР¶РЅР°СЏ РєРѕСЂРµСЏ": "РђР·РёСЏ", "СЃР°СѓРґРѕРІСЃРєР°СЏ Р°СЂР°РІРёСЏ": "РђР·РёСЏ", "РѕР°СЌ": "РђР·РёСЏ", "РєР°С‚Р°СЂ": "РђР·РёСЏ", "РёРЅРґРёСЏ": "РђР·РёСЏ", "С‚Р°РёР»Р°РЅРґ": "РђР·РёСЏ", "РёРЅРґРѕРЅРµР·РёСЏ": "РђР·РёСЏ", "РјР°Р»Р°Р№Р·РёСЏ": "РђР·РёСЏ", "РІСЊРµС‚РЅР°Рј": "РђР·РёСЏ",
+      "СЃС€Р°": "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°", "РєР°РЅР°РґР°": "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°", "РјРµРєСЃРёРєР°": "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°", "РєРѕСЃС‚Р°-СЂРёРєР°": "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°", "РєРѕСЃС‚Р° СЂРёРєР°": "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°", "РїР°РЅР°РјР°": "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°",
+      "Р°РІСЃС‚СЂР°Р»РёСЏ": "РћРєРµР°РЅРёСЏ", "РЅРѕРІР°СЏ Р·РµР»Р°РЅРґРёСЏ": "РћРєРµР°РЅРёСЏ"
     };
 
     function cleanCountryName(value) {
@@ -6239,18 +6389,18 @@ return `
   const raw = String(value ?? "").trim();
   const low = raw.toLowerCase();
 
-  if (low.includes("europe") || low.includes("европ")) return "Европа";
-  if (low.includes("asia") || low.includes("ази")) return "Азия";
-  if (low.includes("africa") || low.includes("африк")) return "Африка";
-  if (low.includes("south") || low.includes("юж")) return "Южная Америка";
-  if (low.includes("north") || low.includes("север")) return "Северная Америка";
+  if (low.includes("europe") || low.includes("РµРІСЂРѕРї")) return "Р•РІСЂРѕРїР°";
+  if (low.includes("asia") || low.includes("Р°Р·Рё")) return "РђР·РёСЏ";
+  if (low.includes("africa") || low.includes("Р°С„СЂРёРє")) return "РђС„СЂРёРєР°";
+  if (low.includes("south") || low.includes("СЋР¶")) return "Р®Р¶РЅР°СЏ РђРјРµСЂРёРєР°";
+  if (low.includes("north") || low.includes("СЃРµРІРµСЂ")) return "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°";
 
-  // ДОБАВИТЬ ЭТО
-  if (low.includes("concacaf") || low.includes("конкакаф")) {
-    return "Северная Америка";
+  // Р”РћР‘РђР’РРўР¬ Р­РўРћ
+  if (low.includes("concacaf") || low.includes("РєРѕРЅРєР°РєР°С„")) {
+    return "РЎРµРІРµСЂРЅР°СЏ РђРјРµСЂРёРєР°";
   }
 
-  if (low.includes("oceania") || low.includes("океан") || low.includes("australia") || low.includes("австрал")) return "Океания";
+  if (low.includes("oceania") || low.includes("РѕРєРµР°РЅ") || low.includes("australia") || low.includes("Р°РІСЃС‚СЂР°Р»")) return "РћРєРµР°РЅРёСЏ";
 
   const countryKey = cleanCountryName(country).toLowerCase();
   return COUNTRY_CONTINENT_MAP[countryKey] || "";
@@ -6344,26 +6494,32 @@ sourceMatches.forEach(match => {
         const width = Math.max(4, Math.round((Number(row.value) || 0) / max * 100));
         const flag = row.flagUrl ? `<span class="chart-flag">${flagHtml(row.flagUrl)}</span>` : "";
         const countryAttrs = isCountryChart
-          ? ` data-country="${escapeHtml(row.name)}" role="button" tabindex="0" aria-label="Открыть матчи страны ${escapeHtml(row.name)}"`
+          ? ` data-country="${escapeHtml(row.name)}" role="button" tabindex="0" aria-label="РћС‚РєСЂС‹С‚СЊ РјР°С‚С‡Рё СЃС‚СЂР°РЅС‹ ${escapeHtml(row.name)}"`
           : "";
         return `
           <div class="chart-row"${countryAttrs}>
             <div class="chart-row-top">
               <div class="chart-name-line">${flag}<div class="chart-name">${escapeHtml(row.name)}</div></div>
-              <div class="chart-value">${escapeHtml(row.value)} · ${escapeHtml(row.pct)}</div>
+              <div class="chart-value">${escapeHtml(row.value)} В· ${escapeHtml(row.pct)}</div>
             </div>
             <div class="chart-track">
-              <div class="chart-fill ${fillClass}" style="width:${width}%"></div>
+              <div class="chart-fill ${fillClass}" data-target-width="${width}" style="width:0%"></div>
             </div>
           </div>
         `;
       }).join("");
+
+      requestAnimationFrame(() => {
+        el.querySelectorAll(".chart-fill[data-target-width]").forEach(fill => {
+          fill.style.width = `${fill.dataset.targetWidth}%`;
+        });
+      });
     }
 
 
     const RU_MONTHS_GENITIVE = [
-      "января", "февраля", "марта", "апреля", "мая", "июня",
-      "июля", "августа", "сентября", "октября", "ноября", "декабря"
+      "СЏРЅРІР°СЂСЏ", "С„РµРІСЂР°Р»СЏ", "РјР°СЂС‚Р°", "Р°РїСЂРµР»СЏ", "РјР°СЏ", "РёСЋРЅСЏ",
+      "РёСЋР»СЏ", "Р°РІРіСѓСЃС‚Р°", "СЃРµРЅС‚СЏР±СЂСЏ", "РѕРєС‚СЏР±СЂСЏ", "РЅРѕСЏР±СЂСЏ", "РґРµРєР°Р±СЂСЏ"
     ];
 
     function parseMatchDate(value) {
@@ -6394,19 +6550,19 @@ sourceMatches.forEach(match => {
       }
 
       if (start.getMonth() === end.getMonth()) {
-        return `${start.getDate()}–${end.getDate()} ${RU_MONTHS_GENITIVE[start.getMonth()]}`;
+        return `${start.getDate()}вЂ“${end.getDate()} ${RU_MONTHS_GENITIVE[start.getMonth()]}`;
       }
 
-      return `${start.getDate()} ${RU_MONTHS_GENITIVE[start.getMonth()]} – ${end.getDate()} ${RU_MONTHS_GENITIVE[end.getMonth()]}`;
+      return `${start.getDate()} ${RU_MONTHS_GENITIVE[start.getMonth()]} вЂ“ ${end.getDate()} ${RU_MONTHS_GENITIVE[end.getMonth()]}`;
     }
 
     function tourDatesForHistory(tour, tourMatches) {
       const tourRow = siteTours.find(row =>
-        Number(get(row, ["tour", "Tour", "Тур", "A"], 0)) === Number(tour)
+        Number(get(row, ["tour", "Tour", "РўСѓСЂ", "A"], 0)) === Number(tour)
       );
 
-      const rowStart = tourRow ? get(tourRow, ["start_date", "start", "Start", "Дата начала", "D"], "") : "";
-      const rowEnd = tourRow ? get(tourRow, ["end_date", "end", "End", "Дата окончания", "E"], "") : "";
+      const rowStart = tourRow ? get(tourRow, ["start_date", "start", "Start", "Р”Р°С‚Р° РЅР°С‡Р°Р»Р°", "D"], "") : "";
+      const rowEnd = tourRow ? get(tourRow, ["end_date", "end", "End", "Р”Р°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ", "E"], "") : "";
       const fromRow = formatTourDateRange(rowStart, rowEnd);
       if (fromRow) return fromRow;
 
@@ -6422,6 +6578,25 @@ sourceMatches.forEach(match => {
       );
     }
 
+
+    function formatMatchDateTime(match) {
+      const date = parseMatchDate(match?.sortDate || match?.date);
+      const time = String(match?.time || "").trim();
+
+      let dateText = "";
+      if (date) {
+        dateText = `${String(date.getDate()).padStart(2, "0")}.${String(date.getMonth() + 1).padStart(2, "0")}`;
+      } else {
+        const raw = String(match?.date || "").trim();
+        if (/^\d{1,2}\.\d{1,2}/.test(raw)) {
+          dateText = raw.match(/^\d{1,2}\.\d{1,2}/)[0];
+        }
+      }
+
+      if (dateText && time) return `${dateText} В· ${time}`;
+      return dateText || time || "";
+    }
+
     function pickersForMatch(matchId) {
       const names = [];
       predictions.forEach(prediction => {
@@ -6433,9 +6608,9 @@ sourceMatches.forEach(match => {
 
     function matchHistoryResult(match) {
       const status = match.api_status || match.status || "pending";
-      if (status === "win") return { cls: "is-win", score: match.score || "Ничья" };
-      if (status === "lose") return { cls: "is-lose", score: match.score || "Не ничья" };
-      return { cls: "is-pending", score: match.score || "—" };
+      if (status === "win") return { cls: "is-win", score: match.score || "РќРёС‡СЊСЏ" };
+      if (status === "lose") return { cls: "is-lose", score: match.score || "РќРµ РЅРёС‡СЊСЏ" };
+      return { cls: "is-pending", score: match.score || "вЂ”" };
     }
 
     function openCountryHistory(country) {
@@ -6464,7 +6639,7 @@ sourceMatches.forEach(match => {
       );
 
       const first = countryMatches[0];
-      const flag = first ? (first.flag_url ? flagHtml(first.flag_url) : escapeHtml(first.flag || "🌍")) : "🌍";
+      const flag = first ? (first.flag_url ? flagHtml(first.flag_url) : escapeHtml(first.flag || "рџЊЌ")) : "рџЊЌ";
       title.innerHTML = `<span style="display:inline-flex;align-items:center;gap:9px;"><span class="country-history-flag">${flag}</span>${escapeHtml(country)}</span>`;
 
       const total = countryMatches.length;
@@ -6472,10 +6647,10 @@ sourceMatches.forEach(match => {
       const losses = countryMatches.filter(m => (m.api_status || m.status) === "lose").length;
       const settled = wins + losses;
       const drawPct = settled ? (wins / settled * 100).toFixed(1).replace(".", ",") : "0,0";
-      summary.textContent = `${total} матч${total === 1 ? "" : total >= 2 && total <= 4 ? "а" : "ей"} · ничьих ${wins} · ${drawPct}%`;
+      summary.textContent = `${total} РјР°С‚С‡${total === 1 ? "" : total >= 2 && total <= 4 ? "Р°" : "РµР№"} В· РЅРёС‡СЊРёС… ${wins} В· ${drawPct}%`;
 
       if (!countryMatches.length) {
-        body.innerHTML = `<div class="country-history-empty">Для выбранного периода матчей этой страны нет.</div>`;
+        body.innerHTML = `<div class="country-history-empty">Р”Р»СЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РїРµСЂРёРѕРґР° РјР°С‚С‡РµР№ СЌС‚РѕР№ СЃС‚СЂР°РЅС‹ РЅРµС‚.</div>`;
         modal.classList.remove("hidden");
         return;
       }
@@ -6489,18 +6664,18 @@ sourceMatches.forEach(match => {
 
       body.innerHTML = [...groups.entries()].map(([tour, tourMatches]) => {
         const dateRange = tourDatesForHistory(tour, tourMatches);
-        const label = isPlayoffTour(tour) ? tourLabel(tour) : `Тур ${tour}`;
+        const label = isPlayoffTour(tour) ? tourLabel(tour) : `РўСѓСЂ ${tour}`;
 
         const matchRows = tourMatches.map(match => {
           const result = matchHistoryResult(match);
           const pickers = pickersForMatch(match.id);
           const pickerText = pickers.length
             ? pickers.map(name => `<div>${escapeHtml(name)}</div>`).join("")
-            : `<div>Никто не выбрал этот матч</div>`;
+            : `<div>РќРёРєС‚Рѕ РЅРµ РІС‹Р±СЂР°Р» СЌС‚РѕС‚ РјР°С‚С‡</div>`;
 
           const flagHtmlValue = match.flag_url
             ? flagHtml(match.flag_url)
-            : escapeHtml(match.flag || "🌍");
+            : escapeHtml(match.flag || "рџЊЌ");
 
           return `
             <div class="country-history-match">
@@ -6510,10 +6685,11 @@ sourceMatches.forEach(match => {
                   <span class="country-history-name-text">${escapeHtml(match.teams)}</span>
                 </div>
                 <div class="country-history-sub">
+                  ${formatMatchDateTime(match) ? `<span class="country-history-datetime">${escapeHtml(formatMatchDateTime(match))}</span>` : ""}
                   <span class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}">
                     ${starsHtml(match.popularity)}
                     <span class="country-pickers-popover">
-                      <strong>Выбрали матч (${pickers.length})</strong>
+                      <strong>Р’С‹Р±СЂР°Р»Рё РјР°С‚С‡ (${pickers.length})</strong>
                       ${pickerText}
                     </span>
                   </span>
@@ -6525,14 +6701,30 @@ sourceMatches.forEach(match => {
         }).join("");
 
         return `
-          <section class="country-tour-group">
-            <div class="country-tour-title">${escapeHtml(label)}${dateRange ? ` · ${escapeHtml(dateRange)}` : ""}</div>
+          <section class="country-tour-group" data-country-tour="${escapeHtml(tour)}">
+            <div class="country-tour-title" role="button" tabindex="0" aria-expanded="false">
+              <span class="country-tour-title-main">${escapeHtml(label)}${dateRange ? ` В· ${escapeHtml(dateRange)}` : ""}</span>
+              <span class="country-tour-title-meta">
+                ${tourMatches.length} РјР°С‚С‡${tourMatches.length === 1 ? "" : tourMatches.length >= 2 && tourMatches.length <= 4 ? "Р°" : "РµР№"}
+                <span class="country-tour-chevron">вЂє</span>
+              </span>
+            </div>
             <div class="country-match-list">${matchRows}</div>
           </section>
         `;
       }).join("");
 
+      const renderedGroups = [...body.querySelectorAll(".country-tour-group")];
+      if (renderedGroups.length) {
+        const lastGroup = renderedGroups[renderedGroups.length - 1];
+        lastGroup.classList.add("is-open");
+        const lastTitle = lastGroup.querySelector(".country-tour-title");
+        if (lastTitle) lastTitle.setAttribute("aria-expanded", "true");
+      }
+
       modal.classList.remove("hidden");
+      const card = modal.querySelector(".country-history-card");
+      if (card) card.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function closeCountryHistory() {
@@ -6585,7 +6777,7 @@ sourceMatches.forEach(match => {
       return get(row, keys, fallback);
     }
 
-    function achievementIconHtml(rawIcon, fallback = "🏅") {
+    function achievementIconHtml(rawIcon, fallback = "рџЏ…") {
       if (rawIcon && typeof rawIcon === "object") {
         const title = achievementTitle(rawIcon);
         const iconUrl = normalizeFlagUrl(achievementIcon(rawIcon));
@@ -6620,12 +6812,12 @@ sourceMatches.forEach(match => {
 
       rows = rows
         .map((row) => ({
-          tour: achievementField(row, ["tour", "Tour", "Тур", "E", "H"], ""),
-          player: achievementField(row, ["player", "Player", "Игрок", "A", "I"], ""),
-          code: achievementField(row, ["achievement_code", "achievement code", "code", "Code", "Код", "B", "J"], ""),
-          title: achievementField(row, ["achievement_title", "achievement title", "title", "Title", "Название", "C", "M"], ""),
-          icon: achievementField(row, ["achievement_icon", "achievement icon", "icon", "Icon", "Ссылка", "D", "L"], ""),
-          order: toNum(achievementField(row, ["order", "Order", "Порядок_в_туре", "Порядок", "F", "K"], 999), 999),
+          tour: achievementField(row, ["tour", "Tour", "РўСѓСЂ", "E", "H"], ""),
+          player: achievementField(row, ["player", "Player", "РРіСЂРѕРє", "A", "I"], ""),
+          code: achievementField(row, ["achievement_code", "achievement code", "code", "Code", "РљРѕРґ", "B", "J"], ""),
+          title: achievementField(row, ["achievement_title", "achievement title", "title", "Title", "РќР°Р·РІР°РЅРёРµ", "C", "M"], ""),
+          icon: achievementField(row, ["achievement_icon", "achievement icon", "icon", "Icon", "РЎСЃС‹Р»РєР°", "D", "L"], ""),
+          order: toNum(achievementField(row, ["order", "Order", "РџРѕСЂСЏРґРѕРє_РІ_С‚СѓСЂРµ", "РџРѕСЂСЏРґРѕРє", "F", "K"], 999), 999),
          desc: achievementField(row, [
   "achievement_descr",
   "achievement_desc",
@@ -6633,7 +6825,7 @@ sourceMatches.forEach(match => {
   "achievement description",
   "description",
   "Description",
-  "Описание",
+  "РћРїРёСЃР°РЅРёРµ",
   "desc",
   "Desc",
   "G",
@@ -6658,12 +6850,12 @@ sourceMatches.forEach(match => {
 
 
       if (!rows.length) {
-        el.innerHTML = `<div class="achievement-item"><span>🏅</span><strong>Пока нет ачивок</strong><small>для выбранного тура</small></div>`;
+        el.innerHTML = `<div class="achievement-item"><span>рџЏ…</span><strong>РџРѕРєР° РЅРµС‚ Р°С‡РёРІРѕРє</strong><small>РґР»СЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ С‚СѓСЂР°</small></div>`;
         return;
       }
 
     el.innerHTML = rows.map((row) => `
- <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} aria-label="Открыть ачивку ${escapeHtml(row.title || row.code || "")}">
+ <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} aria-label="РћС‚РєСЂС‹С‚СЊ Р°С‡РёРІРєСѓ ${escapeHtml(row.title || row.code || "")}">
   <span>${achievementIconHtml(row.icon)}</span>
 
  <div class="achievement-text">
@@ -6758,38 +6950,88 @@ sourceMatches.forEach(match => {
       };
     }
 
+    function parseDisplayNumber(value) {
+      const raw = String(value ?? "").trim();
+      if (!raw) return null;
+      const normalized = raw.replace(/\s/g, "").replace("%", "").replace(",", ".");
+      const match = normalized.match(/[-+]?\d+(?:\.\d+)?/);
+      if (!match) return null;
+      const number = Number(match[0]);
+      if (!Number.isFinite(number)) return null;
+      return { number, decimals: (match[0].split(".")[1] || "").length, suffix: raw.includes("%") ? "%" : "" };
+    }
+
+    function animateStatText(id, nextValue, duration = 360) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const next = parseDisplayNumber(nextValue);
+      const prev = parseDisplayNumber(el.textContent);
+
+      if (!next || !prev || next.suffix !== prev.suffix) {
+        el.classList.add("stat-updating");
+        el.textContent = nextValue;
+        setTimeout(() => el.classList.remove("stat-updating"), 220);
+        return;
+      }
+
+      const start = performance.now();
+      const from = prev.number;
+      const to = next.number;
+      const decimals = next.decimals;
+      el.classList.add("stat-updating");
+
+      const tick = now => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const current = from + (to - from) * eased;
+        el.textContent = current.toFixed(decimals).replace(".", ",") + next.suffix;
+        if (t < 1) requestAnimationFrame(tick);
+        else {
+          el.textContent = String(nextValue);
+          el.classList.remove("stat-updating");
+        }
+      };
+      requestAnimationFrame(tick);
+    }
+
+    function animateBarElement(el, width) {
+      if (!el) return;
+      el.style.width = "0%";
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.width = width; }));
+    }
+
     function updateStats(tour) {
       const fallback = statsByTour[tour] || statsByTour["5"];
       const hasRealPredictions = Array.isArray(predictions) && predictions.length && predictions !== DEMO_PREDICTIONS;
       const s = hasRealPredictions ? calculateRealStats(tour) : fallback;
 
-      setText("statPlayers", s.players);
-      setText("statAvgPts", s.avgPts);
+      animateStatText("statPlayers", s.players);
+      animateStatText("statAvgPts", s.avgPts);
       setText("statAvgPts2", s.avgPts);
-      setText("statMaxPts", s.maxPts);
+      animateStatText("statMaxPts", s.maxPts);
 
       const top3Label = document.getElementById("statTop3Label");
       if (String(tour) === "playoff") {
-        if (top3Label) top3Label.textContent = "🧩 Тройников сыграно";
-        setText("statTop3Pts", s.triples ?? "0");
+        if (top3Label) top3Label.textContent = "рџ§© РўСЂРѕР№РЅРёРєРѕРІ СЃС‹РіСЂР°РЅРѕ";
+        animateStatText("statTop3Pts", s.triples ?? "0");
       } else {
-        if (top3Label) top3Label.textContent = "🥉 Порог топ-3";
-        setText("statTop3Pts", s.top3Pts);
+        if (top3Label) top3Label.textContent = "рџҐ‰ РџРѕСЂРѕРі С‚РѕРї-3";
+        animateStatText("statTop3Pts", s.top3Pts);
       }
 
-      setText("statAvgOdd", s.avgOdd);
-      setText("statMaxOdd", s.maxOdd);
-      setText("statMinOdd", s.minOdd);
-      setText("statWinOdd", s.winOdd);
-      setText("statWinrate", s.winrate);
-      setText("statWins", s.wins);
-      setText("statLosses", s.losses);
-      setText("statProfit", s.profit);
-      setText("statRoi", s.roi);
+      animateStatText("statAvgOdd", s.avgOdd);
+      animateStatText("statMaxOdd", s.maxOdd);
+      animateStatText("statMinOdd", s.minOdd);
+      animateStatText("statWinOdd", s.winOdd);
+      animateStatText("statWinrate", s.winrate);
+      animateStatText("statWins", s.wins);
+      animateStatText("statLosses", s.losses);
+      animateStatText("statProfit", s.profit);
+      animateStatText("statRoi", s.roi);
 
       const bars = document.querySelectorAll("#screen-stats .bar-fill");
-      if (bars[0]) bars[0].style.width = s.winWidth;
-      if (bars[1]) bars[1].style.width = s.loseWidth;
+      if (bars[0]) animateBarElement(bars[0], s.winWidth);
+      if (bars[1]) animateBarElement(bars[1], s.loseWidth);
 
       const profit = document.getElementById("statProfit");
       const roi = document.getElementById("statRoi");
@@ -6806,66 +7048,66 @@ sourceMatches.forEach(match => {
 
     const playerProfiles = {
       Samurai: {
-        country: "🇪🇬 Egypt",
+        country: "рџ‡Єрџ‡¬ Egypt",
         form: ["win", "win", "pending", "win", "lose", "win"],
         achievements: [
-          ["🏆", "Tour King", "лидер тура"],
-          ["🔥", "Hot Streak", "серия удачных пиков"],
-          ["💎", "Value Hunter", "лучший кэф"]
+          ["рџЏ†", "Tour King", "Р»РёРґРµСЂ С‚СѓСЂР°"],
+          ["рџ”Ґ", "Hot Streak", "СЃРµСЂРёСЏ СѓРґР°С‡РЅС‹С… РїРёРєРѕРІ"],
+          ["рџ’Ћ", "Value Hunter", "Р»СѓС‡С€РёР№ РєСЌС„"]
         ],
         pastTours: [
-          ["Тур 4", "31 очков", "🟢🟢🔴"],
-          ["Тур 3", "18 очков", "🟢🔴🟢"],
-          ["Тур 2", "7 очков", "🔴🔴🟢"]
+          ["РўСѓСЂ 4", "31 РѕС‡РєРѕРІ", "рџџўрџџўрџ”ґ"],
+          ["РўСѓСЂ 3", "18 РѕС‡РєРѕРІ", "рџџўрџ”ґрџџў"],
+          ["РўСѓСЂ 2", "7 РѕС‡РєРѕРІ", "рџ”ґрџ”ґрџџў"]
         ]
       },
       Alex: {
-        country: "🇦🇷 Argentina",
+        country: "рџ‡¦рџ‡· Argentina",
         form: ["win", "lose", "pending", "lose", "win", "lose"],
         achievements: [
-          ["🎯", "Sniper", "точный выбор"],
-          ["⭐", "Popular Pick", "частые совпадения"]
+          ["рџЋЇ", "Sniper", "С‚РѕС‡РЅС‹Р№ РІС‹Р±РѕСЂ"],
+          ["в­ђ", "Popular Pick", "С‡Р°СЃС‚С‹Рµ СЃРѕРІРїР°РґРµРЅРёСЏ"]
         ],
         pastTours: [
-          ["Тур 4", "22 очков", "🟢🔴⏳"],
-          ["Тур 3", "12 очков", "🔴🟢🔴"],
-          ["Тур 2", "25 очков", "🟢🟢🔴"]
+          ["РўСѓСЂ 4", "22 РѕС‡РєРѕРІ", "рџџўрџ”ґвЏі"],
+          ["РўСѓСЂ 3", "12 РѕС‡РєРѕРІ", "рџ”ґрџџўрџ”ґ"],
+          ["РўСѓСЂ 2", "25 РѕС‡РєРѕРІ", "рџџўрџџўрџ”ґ"]
         ]
       },
       Niko: {
-        country: "🇧🇷 Brazil",
+        country: "рџ‡§рџ‡· Brazil",
         form: ["lose", "win", "lose", "win", "lose", "win"],
         achievements: [
-          ["🧊", "Cold Blood", "зашёл редкий пик"]
+          ["рџ§Љ", "Cold Blood", "Р·Р°С€С‘Р» СЂРµРґРєРёР№ РїРёРє"]
         ],
         pastTours: [
-          ["Тур 4", "14 очков", "🔴🟢🔴"],
-          ["Тур 3", "28 очков", "🟢🟢🔴"],
-          ["Тур 2", "0 очков", "🔴🔴🔴"]
+          ["РўСѓСЂ 4", "14 РѕС‡РєРѕРІ", "рџ”ґрџџўрџ”ґ"],
+          ["РўСѓСЂ 3", "28 РѕС‡РєРѕРІ", "рџџўрџџўрџ”ґ"],
+          ["РўСѓСЂ 2", "0 РѕС‡РєРѕРІ", "рџ”ґрџ”ґрџ”ґ"]
         ]
       },
       Dima: {
-        country: "🇪🇹 Ethiopia",
+        country: "рџ‡Єрџ‡№ Ethiopia",
         form: ["pending", "pending", "pending", "win", "lose", "win"],
         achievements: [
-          ["🚀", "High Potential", "ещё в игре"]
+          ["рџљЂ", "High Potential", "РµС‰С‘ РІ РёРіСЂРµ"]
         ],
         pastTours: [
-          ["Тур 4", "11 очков", "⏳⏳⏳"],
-          ["Тур 3", "16 очков", "🟢🔴⏳"],
-          ["Тур 2", "19 очков", "🟢🔴🟢"]
+          ["РўСѓСЂ 4", "11 РѕС‡РєРѕРІ", "вЏівЏівЏі"],
+          ["РўСѓСЂ 3", "16 РѕС‡РєРѕРІ", "рџџўрџ”ґвЏі"],
+          ["РўСѓСЂ 2", "19 РѕС‡РєРѕРІ", "рџџўрџ”ґрџџў"]
         ]
       },
       Roma: {
-        country: "🇪🇬 Egypt",
+        country: "рџ‡Єрџ‡¬ Egypt",
         form: ["lose", "lose", "lose", "win", "lose", "lose"],
         achievements: [
-          ["💀", "Risk Mode", "сложные пики"]
+          ["рџ’Ђ", "Risk Mode", "СЃР»РѕР¶РЅС‹Рµ РїРёРєРё"]
         ],
         pastTours: [
-          ["Тур 4", "0 очков", "🔴🔴🔴"],
-          ["Тур 3", "21 очков", "🟢🔴🟢"],
-          ["Тур 2", "13 очков", "🔴🟢🔴"]
+          ["РўСѓСЂ 4", "0 РѕС‡РєРѕРІ", "рџ”ґрџ”ґрџ”ґ"],
+          ["РўСѓСЂ 3", "21 РѕС‡РєРѕРІ", "рџџўрџ”ґрџџў"],
+          ["РўСѓСЂ 2", "13 РѕС‡РєРѕРІ", "рџ”ґрџџўрџ”ґ"]
         ]
       }
     };
@@ -6904,11 +7146,11 @@ sourceMatches.forEach(match => {
     let countrySortDirection = "desc";
     let currentCountryRows = [];
 
-    function countryFlagHtml(match, fallback = "🌍") {
+    function countryFlagHtml(match, fallback = "рџЊЌ") {
       if (match?.flag_url) {
         return `<img src="${escapeHtml(match.flag_url)}" alt="" style="width:18px;height:13px;object-fit:cover;border-radius:2px;display:block;">`;
       }
-      return escapeHtml(match?.flag || fallback || "🌍");
+      return escapeHtml(match?.flag || fallback || "рџЊЌ");
     }
 
     function playerCountryStats(history) {
@@ -6916,13 +7158,13 @@ sourceMatches.forEach(match => {
       history.forEach(prediction => {
         (prediction.picks || []).forEach(pick => {
           const match = matchById.get(pick.matchId);
-          const country = cleanCountryName(match?.country || "") || "Не указана";
+          const country = cleanCountryName(match?.country || "") || "РќРµ СѓРєР°Р·Р°РЅР°";
           const key = country.toLocaleLowerCase("ru-RU");
           if (!map.has(key)) {
             map.set(key, {
               key,
               country,
-              flag: match?.flag || "🌍",
+              flag: match?.flag || "рџЊЌ",
               flag_url: match?.flag_url || "",
               wins: 0,
               losses: 0,
@@ -6931,7 +7173,7 @@ sourceMatches.forEach(match => {
           }
           const row = map.get(key);
           if (!row.flag_url && match?.flag_url) row.flag_url = match.flag_url;
-          if ((!row.flag || row.flag === "🌍") && match?.flag) row.flag = match.flag;
+          if ((!row.flag || row.flag === "рџЊЌ") && match?.flag) row.flag = match.flag;
           const result = pick.result || match?.status || "pending";
           const odd = toNum(pick.odd, 0);
           if (result === "win") {
@@ -6953,7 +7195,7 @@ sourceMatches.forEach(match => {
         maximumFractionDigits: 2
       });
       if (rounded > 0) return `+${formatted}`;
-      if (rounded < 0) return `−${formatted}`;
+      if (rounded < 0) return `в€’${formatted}`;
       return "0";
     }
 
@@ -6974,7 +7216,7 @@ sourceMatches.forEach(match => {
         const active = th.dataset.countrySort === countrySortKey;
         th.classList.toggle("is-active", active);
         const arrow = th.querySelector(".country-sort-arrow-v2");
-        if (arrow) arrow.textContent = active ? (countrySortDirection === "desc" ? "▼" : "▲") : "";
+        if (arrow) arrow.textContent = active ? (countrySortDirection === "desc" ? "в–ј" : "в–І") : "";
         th.setAttribute("aria-sort", active ? (countrySortDirection === "desc" ? "descending" : "ascending") : "none");
       });
     }
@@ -6990,7 +7232,7 @@ sourceMatches.forEach(match => {
       }
       const rows = sortedCountryRows();
       if (!rows.length) {
-        tbody.innerHTML = `<tr><td colspan="4"><div class="country-table-placeholder-v2">Пока нет завершённых ставок с указанной страной.</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4"><div class="country-table-placeholder-v2">РџРѕРєР° РЅРµС‚ Р·Р°РІРµСЂС€С‘РЅРЅС‹С… СЃС‚Р°РІРѕРє СЃ СѓРєР°Р·Р°РЅРЅРѕР№ СЃС‚СЂР°РЅРѕР№.</div></td></tr>`;
         updateCountrySortHeaders();
         return;
       }
@@ -6998,7 +7240,7 @@ sourceMatches.forEach(match => {
         const flatClass = row.flats > 0.004 ? "is-positive" : row.flats < -0.004 ? "is-negative" : "is-zero";
         const flag = row.flag_url
           ? `<img src="${escapeHtml(row.flag_url)}" alt="" style="width:18px;height:13px;object-fit:cover;border-radius:2px;display:block;">`
-          : escapeHtml(row.flag || "🌍");
+          : escapeHtml(row.flag || "рџЊЌ");
         return `<tr data-country-key="${escapeHtml(row.key)}">
           <td><span class="country-name-v2"><span class="country-flag-v2">${flag}</span><span class="country-label-v2">${escapeHtml(row.country)}</span></span></td>
           <td>${row.wins}</td>
@@ -7102,7 +7344,7 @@ sourceMatches.forEach(match => {
       const heroAwardsEl = document.getElementById("profileHeroAwards");
       if (heroAwardsEl) heroAwardsEl.innerHTML = playerInlineAchievementsHtml(playerName);
      
-      setText("profileSub", `#${overall.rank || "-"} в общем зачёте`);
+      setText("profileSub", `#${overall.rank || "-"} РІ РѕР±С‰РµРј Р·Р°С‡С‘С‚Рµ`);
       renderRankHistory(playerName);
     
 
@@ -7138,8 +7380,8 @@ sourceMatches.forEach(match => {
       const currentTitleEl = document.querySelector(".player-current-v2 .dashboard-title-v2");
       if (currentTitleEl) {
         currentTitleEl.textContent = isPlayoffTour(displayPrediction?.tour)
-          ? `⚔️ ${tourLabel(displayPrediction.tour)}`
-          : "🎯 Текущий тур";
+          ? `вљ”пёЏ ${tourLabel(displayPrediction.tour)}`
+          : "рџЋЇ РўРµРєСѓС‰РёР№ С‚СѓСЂ";
       }
 
       const picksEl = document.getElementById("profileCurrentPicks");
@@ -7149,7 +7391,7 @@ sourceMatches.forEach(match => {
             <div class="profile-no-prediction">
               <span class="profile-no-prediction-dot" aria-hidden="true"></span>
               <div>
-                <strong>${isPlayoffTour(currentTour) ? "Нет прогноза на текущий раунд плей-офф" : "Нет прогноза на текущий тур"}</strong>
+                <strong>${isPlayoffTour(currentTour) ? "РќРµС‚ РїСЂРѕРіРЅРѕР·Р° РЅР° С‚РµРєСѓС‰РёР№ СЂР°СѓРЅРґ РїР»РµР№-РѕС„С„" : "РќРµС‚ РїСЂРѕРіРЅРѕР·Р° РЅР° С‚РµРєСѓС‰РёР№ С‚СѓСЂ"}</strong>
                 ${currentTour ? `<small>${escapeHtml(tourLabel(currentTour))}</small>` : ""}
               </div>
             </div>
@@ -7168,7 +7410,7 @@ sourceMatches.forEach(match => {
                   ${dot(resultClass)}
                 </div>
                 <div class="profile-pick-meta">
-                  <span>${escapeHtml(match?.date || "")} · ${escapeHtml(match?.time || "")}</span>
+                  <span>${escapeHtml(match?.date || "")} В· ${escapeHtml(match?.time || "")}</span>
                   <span class="current-tour-odd gold">x${escapeHtml(pick.odd)}</span>
                 </div>
               </div>
@@ -7200,11 +7442,11 @@ sourceMatches.forEach(match => {
       if (achEl) {
         const achievements = playerAchievements(playerName);
         achEl.innerHTML = achievements.length ? achievements.map(row => {
-          const tour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
+          const tour = achievementValue(row, ["tour", "Tour", "РўСѓСЂ", "E", "H"], "");
           const desc = achievementDescription(row);
-          const smallText = desc ? `${desc}${tour ? ` · ${tourLabel(tour)}` : ""}` : (tour ? tourLabel(tour) : "");
+          const smallText = desc ? `${desc}${tour ? ` В· ${tourLabel(tour)}` : ""}` : (tour ? tourLabel(tour) : "");
           return `
-            <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} title="${escapeHtml(smallText ? `${achievementTitle(row)} — ${smallText}` : achievementTitle(row))}" aria-label="Открыть ачивку ${escapeHtml(achievementTitle(row))}">
+            <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} title="${escapeHtml(smallText ? `${achievementTitle(row)} вЂ” ${smallText}` : achievementTitle(row))}" aria-label="РћС‚РєСЂС‹С‚СЊ Р°С‡РёРІРєСѓ ${escapeHtml(achievementTitle(row))}">
               <span>${achievementIconHtml(row)}</span>
               <div class="achievement-copy">
                 <strong>${escapeHtml(achievementTitle(row))}</strong>
@@ -7212,14 +7454,14 @@ sourceMatches.forEach(match => {
               </div>
             </button>
           `;
-        }).join("") : `<div class="empty-state">Пока нет ачивок.</div>`;
+        }).join("") : `<div class="empty-state">РџРѕРєР° РЅРµС‚ Р°С‡РёРІРѕРє.</div>`;
       }
 
       const pastEl = document.getElementById("profilePastTours");
       if (pastEl) {
         const past = history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
         pastEl.innerHTML = past.length ? past.map(p => {
-          const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : "⏳").join("");
+          const form = p.picks.map(pick => pick.result === "win" ? "рџџў" : pick.result === "lose" ? "рџ”ґ" : "вЏі").join("");
 const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
   const pickResult = pick.result || match?.status || "pending";
@@ -7243,13 +7485,13 @@ const picksHtml = p.picks.map((pick, index) => {
           return `
             <details class="past-tour-details">
               <summary class="past-tour-summary">
-                <span>${escapeHtml(tourLabel(p.tour))} · ${form}</span>
-                <strong>${escapeHtml(p.pts)} очков</strong>
+                <span>${escapeHtml(tourLabel(p.tour))} В· ${form}</span>
+                <strong>${escapeHtml(p.pts)} РѕС‡РєРѕРІ</strong>
               </summary>
               <div class="past-tour-picks">${picksHtml}</div>
             </details>
           `;
-        }).join("") : `<div class="empty-state">Нет прошлых туров.</div>`;
+        }).join("") : `<div class="empty-state">РќРµС‚ РїСЂРѕС€Р»С‹С… С‚СѓСЂРѕРІ.</div>`;
       }
     }
 
@@ -7266,23 +7508,23 @@ const picksHtml = p.picks.map((pick, index) => {
 
       const row = siteAchievements.find((a) => {
         const current = achievementValue(a, [
-          "achievement_code", "achievement code", "code", "Code", "Код", "B", "J"
+          "achievement_code", "achievement code", "code", "Code", "РљРѕРґ", "B", "J"
         ], "");
         return String(current).trim().toUpperCase() === target;
       });
 
       if (!row) return "";
       return achievementValue(row, [
-        "achievement_icon", "achievement icon", "icon", "Icon", "Ссылка", "D", "L"
+        "achievement_icon", "achievement icon", "icon", "Icon", "РЎСЃС‹Р»РєР°", "D", "L"
       ], "");
     }
 
     function rankMedalHtml(rank) {
       const n = Number(rank);
       const map = {
-        1: { code: "GOLD", fallback: "🥇" },
-        2: { code: "SILVER", fallback: "🥈" },
-        3: { code: "BRONZE", fallback: "🥉" }
+        1: { code: "GOLD", fallback: "рџҐ‡" },
+        2: { code: "SILVER", fallback: "рџҐ€" },
+        3: { code: "BRONZE", fallback: "рџҐ‰" }
       };
       const item = map[n];
       if (!item) return escapeHtml(rank);
@@ -7301,7 +7543,7 @@ const picksHtml = p.picks.map((pick, index) => {
       const set = new Set();
       predictions.forEach(p => { if (p.name) set.add(p.name); });
       sitePlayers.forEach(row => {
-        const name = get(row, ["player", "Player", "Игрок", "A"], "");
+        const name = get(row, ["player", "Player", "РРіСЂРѕРє", "A"], "");
         if (name) set.add(name);
       });
       return [...set].sort((a, b) => a.localeCompare(b, "ru"));
@@ -7320,28 +7562,28 @@ const picksHtml = p.picks.map((pick, index) => {
     function playerAchievements(name, tour = null) {
       return siteAchievements
         .filter(row => {
-          const player = achievementValue(row, ["player", "Player", "Игрок", "A", "I"], "");
+          const player = achievementValue(row, ["player", "Player", "РРіСЂРѕРє", "A", "I"], "");
           if (String(player).trim() !== String(name).trim()) return false;
-          const rowTour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
+          const rowTour = achievementValue(row, ["tour", "Tour", "РўСѓСЂ", "E", "H"], "");
           if (isPlayoffTour(rowTour)) return false;
           if (tour === null || tour === "overall") return true;
           return String(rowTour) === String(tour);
         })
         .sort((a, b) => {
-          const ta = toNum(achievementValue(a, ["tour", "Tour", "Тур", "E", "H"], 0));
-          const tb = toNum(achievementValue(b, ["tour", "Tour", "Тур", "E", "H"], 0));
-          const oa = toNum(achievementValue(a, ["order", "Order", "Порядок", "F", "K"], 0));
-          const ob = toNum(achievementValue(b, ["order", "Order", "Порядок", "F", "K"], 0));
+          const ta = toNum(achievementValue(a, ["tour", "Tour", "РўСѓСЂ", "E", "H"], 0));
+          const tb = toNum(achievementValue(b, ["tour", "Tour", "РўСѓСЂ", "E", "H"], 0));
+          const oa = toNum(achievementValue(a, ["order", "Order", "РџРѕСЂСЏРґРѕРє", "F", "K"], 0));
+          const ob = toNum(achievementValue(b, ["order", "Order", "РџРѕСЂСЏРґРѕРє", "F", "K"], 0));
           return tb - ta || oa - ob;
         });
     }
 
     function achievementTitle(row) {
-      return achievementValue(row, ["achievement_title", "achievement title", "title", "Title", "Название", "C", "M"], "Ачивка");
+      return achievementValue(row, ["achievement_title", "achievement title", "title", "Title", "РќР°Р·РІР°РЅРёРµ", "C", "M"], "РђС‡РёРІРєР°");
     }
 
     function achievementCode(row) {
-      return achievementValue(row, ["achievement_code", "achievement code", "code", "Code", "Код", "B", "J"], "");
+      return achievementValue(row, ["achievement_code", "achievement code", "code", "Code", "РљРѕРґ", "B", "J"], "");
     }
 
 function achievementDescription(row) {
@@ -7352,7 +7594,7 @@ function achievementDescription(row) {
     "achievement description",
     "description",
     "Description",
-    "Описание",
+    "РћРїРёСЃР°РЅРёРµ",
     "desc",
     "Desc",
     "G",
@@ -7362,20 +7604,20 @@ function achievementDescription(row) {
 }
 
     function achievementIcon(row) {
-      return achievementValue(row, ["achievement_icon", "achievement icon", "icon", "Icon", "Ссылка", "D", "L"], "");
+      return achievementValue(row, ["achievement_icon", "achievement icon", "icon", "Icon", "РЎСЃС‹Р»РєР°", "D", "L"], "");
     }
 
 
     function achievementPlayer(row) {
-      return achievementValue(row, ["player", "Player", "Игрок", "A", "I"], "");
+      return achievementValue(row, ["player", "Player", "РРіСЂРѕРє", "A", "I"], "");
     }
 
     function achievementTour(row) {
-      return achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
+      return achievementValue(row, ["tour", "Tour", "РўСѓСЂ", "E", "H"], "");
     }
 
     function achievementOrder(row) {
-      return achievementValue(row, ["order", "Order", "Порядок_в_туре", "Порядок", "F", "K"], "");
+      return achievementValue(row, ["order", "Order", "РџРѕСЂСЏРґРѕРє_РІ_С‚СѓСЂРµ", "РџРѕСЂСЏРґРѕРє", "F", "K"], "");
     }
 
     function achievementTriggerAttributes(row) {
@@ -7420,7 +7662,7 @@ function achievementDescription(row) {
       const kickerEl = document.getElementById("achievementModalKicker");
       if (!modal || !image || !fallback || !titleEl || !descriptionEl || !metaEl) return;
 
-      const title = achievementTitle(row) || achievementCode(row) || "Ачивка";
+      const title = achievementTitle(row) || achievementCode(row) || "РђС‡РёРІРєР°";
       const description = achievementDescription(row);
       const player = achievementPlayer(row);
       const tour = achievementTour(row);
@@ -7429,13 +7671,13 @@ function achievementDescription(row) {
       iconUrl = iconUrl.replace(/sz=w\d+/i, "sz=w1000");
 
       titleEl.textContent = title;
-      descriptionEl.textContent = description || "Описание достижения пока не указано.";
+      descriptionEl.textContent = description || "РћРїРёСЃР°РЅРёРµ РґРѕСЃС‚РёР¶РµРЅРёСЏ РїРѕРєР° РЅРµ СѓРєР°Р·Р°РЅРѕ.";
       descriptionEl.classList.toggle("hidden", !description && false);
-      if (kickerEl) kickerEl.textContent = code ? `Достижение · ${code}` : "Достижение X League";
+      if (kickerEl) kickerEl.textContent = code ? `Р”РѕСЃС‚РёР¶РµРЅРёРµ В· ${code}` : "Р”РѕСЃС‚РёР¶РµРЅРёРµ X League";
 
       const meta = [];
-      if (player) meta.push(`<span>👤 ${escapeHtml(player)}</span>`);
-      if (tour) meta.push(`<span>🏁 ${escapeHtml(tourLabel(tour))}</span>`);
+      if (player) meta.push(`<span>рџ‘¤ ${escapeHtml(player)}</span>`);
+      if (tour) meta.push(`<span>рџЏЃ ${escapeHtml(tourLabel(tour))}</span>`);
       metaEl.innerHTML = meta.join("");
       metaEl.classList.toggle("hidden", !meta.length);
 
@@ -7460,16 +7702,16 @@ function achievementDescription(row) {
       return `<span class="profile-inline-achievements">${rows.map(r => {
         const title = achievementTitle(r);
         const desc = achievementDescription(r);
-        const tooltip = desc ? `${title} — ${desc}` : title;
-        return `<button type="button" class="profile-inline-achievement" ${achievementTriggerAttributes(r)} title="${escapeHtml(tooltip)}" aria-label="Открыть ачивку ${escapeHtml(title)}">${achievementIconHtml(r)}</button>`;
+        const tooltip = desc ? `${title} вЂ” ${desc}` : title;
+        return `<button type="button" class="profile-inline-achievement" ${achievementTriggerAttributes(r)} title="${escapeHtml(tooltip)}" aria-label="РћС‚РєСЂС‹С‚СЊ Р°С‡РёРІРєСѓ ${escapeHtml(title)}">${achievementIconHtml(r)}</button>`;
       }).join("")}</span>`;
     }
 
     function flagForCountry(country) {
       const match = matches.find(m => String(m.country).trim() === String(country).trim() && (m.flag_url || m.flag));
-      if (!match) return "🌍";
+      if (!match) return "рџЊЌ";
       if (match.flag_url) return `<img src="${escapeHtml(match.flag_url)}" alt="" loading="lazy">`;
-      return escapeHtml(match.flag || "🌍");
+      return escapeHtml(match.flag || "рџЊЌ");
     }
 
     function playerPreferredCountriesHtml(name) {
@@ -7481,7 +7723,7 @@ function achievementDescription(row) {
           if (country) counts.set(country, (counts.get(country) || 0) + 1);
         });
       });
-      if (!counts.size) return `<span class="prefer-flag" title="Нет данных">🌍</span>`;
+      if (!counts.size) return `<span class="prefer-flag" title="РќРµС‚ РґР°РЅРЅС‹С…">рџЊЌ</span>`;
       const max = Math.max(...counts.values());
       const topCountries = [...counts.entries()]
         .filter(([, count]) => count === max)
@@ -7545,7 +7787,7 @@ function achievementDescription(row) {
       const winner = clean && String(winnerName || "").trim() === clean;
       const hasWinner = String(winnerName || "").trim() !== "";
       return {
-        name: clean || "—",
+        name: clean || "вЂ”",
         score: String(score || "").trim(),
         winner,
         loser: hasWinner && clean && !winner,
@@ -7559,7 +7801,7 @@ function achievementDescription(row) {
 
       const playerHtml = (p, cls) => `
         <div class="playoff-player${cls}">
-          <div class="playoff-player-name ${p.source ? "playoff-source" : ""}">${escapeHtml(p.name || "—")}</div>
+          <div class="playoff-player-name ${p.source ? "playoff-source" : ""}">${escapeHtml(p.name || "вЂ”")}</div>
           <div class="playoff-player-score">${p.score ? escapeHtml(p.score) : ""}</div>
         </div>`;
 
@@ -7571,7 +7813,7 @@ function achievementDescription(row) {
         </div>`;
     }
 
-    function playoffStoredMatch(slot, rows, fallback1 = "—", fallback2 = "—") {
+    function playoffStoredMatch(slot, rows, fallback1 = "вЂ”", fallback2 = "вЂ”") {
       const row = rows.get(slot);
       if (!row) {
         return playoffMatchHtml(slot, playoffSource(fallback1), playoffSource(fallback2));
@@ -7609,72 +7851,72 @@ function achievementDescription(row) {
       ];
 
       const upper2 = [
-        playoffStoredMatch("U2-1", rows, "Победитель U1-1", "Победитель U1-2"),
-        playoffStoredMatch("U2-2", rows, "Победитель U1-3", "Победитель U1-4"),
-        playoffStoredMatch("U2-3", rows, "Победитель U1-5", "Победитель U1-6"),
-        playoffStoredMatch("U2-4", rows, "Победитель U1-7", "Победитель U1-8")
+        playoffStoredMatch("U2-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U1-1", "РџРѕР±РµРґРёС‚РµР»СЊ U1-2"),
+        playoffStoredMatch("U2-2", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U1-3", "РџРѕР±РµРґРёС‚РµР»СЊ U1-4"),
+        playoffStoredMatch("U2-3", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U1-5", "РџРѕР±РµРґРёС‚РµР»СЊ U1-6"),
+        playoffStoredMatch("U2-4", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U1-7", "РџРѕР±РµРґРёС‚РµР»СЊ U1-8")
       ];
 
       const upper3 = [
-        playoffStoredMatch("U3-1", rows, "Победитель U2-1", "Победитель U2-2"),
-        playoffStoredMatch("U3-2", rows, "Победитель U2-3", "Победитель U2-4")
+        playoffStoredMatch("U3-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U2-1", "РџРѕР±РµРґРёС‚РµР»СЊ U2-2"),
+        playoffStoredMatch("U3-2", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U2-3", "РџРѕР±РµРґРёС‚РµР»СЊ U2-4")
       ];
 
       const upper4 = [
-        playoffStoredMatch("U4-1", rows, "Победитель U3-1", "Победитель U3-2")
+        playoffStoredMatch("U4-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U3-1", "РџРѕР±РµРґРёС‚РµР»СЊ U3-2")
       ];
 
       const lower1 = [
-        playoffStoredMatch("L1-1", rows, "Проигравший U1-1", "Проигравший U1-2"),
-        playoffStoredMatch("L1-2", rows, "Проигравший U1-3", "Проигравший U1-4"),
-        playoffStoredMatch("L1-3", rows, "Проигравший U1-5", "Проигравший U1-6"),
-        playoffStoredMatch("L1-4", rows, "Проигравший U1-7", "Проигравший U1-8")
+        playoffStoredMatch("L1-1", rows, "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-1", "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-2"),
+        playoffStoredMatch("L1-2", rows, "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-3", "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-4"),
+        playoffStoredMatch("L1-3", rows, "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-5", "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-6"),
+        playoffStoredMatch("L1-4", rows, "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-7", "РџСЂРѕРёРіСЂР°РІС€РёР№ U1-8")
       ];
 
       // Crossed drops from the upper bracket reduce immediate rematches.
       const lower2 = [
-        playoffStoredMatch("L2-1", rows, "Победитель L1-1", "Проигравший U2-2"),
-        playoffStoredMatch("L2-2", rows, "Победитель L1-2", "Проигравший U2-1"),
-        playoffStoredMatch("L2-3", rows, "Победитель L1-3", "Проигравший U2-4"),
-        playoffStoredMatch("L2-4", rows, "Победитель L1-4", "Проигравший U2-3")
+        playoffStoredMatch("L2-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L1-1", "РџСЂРѕРёРіСЂР°РІС€РёР№ U2-2"),
+        playoffStoredMatch("L2-2", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L1-2", "РџСЂРѕРёРіСЂР°РІС€РёР№ U2-1"),
+        playoffStoredMatch("L2-3", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L1-3", "РџСЂРѕРёРіСЂР°РІС€РёР№ U2-4"),
+        playoffStoredMatch("L2-4", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L1-4", "РџСЂРѕРёРіСЂР°РІС€РёР№ U2-3")
       ];
 
       const lower3 = [
-        playoffStoredMatch("L3-1", rows, "Победитель L2-1", "Победитель L2-2"),
-        playoffStoredMatch("L3-2", rows, "Победитель L2-3", "Победитель L2-4")
+        playoffStoredMatch("L3-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L2-1", "РџРѕР±РµРґРёС‚РµР»СЊ L2-2"),
+        playoffStoredMatch("L3-2", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L2-3", "РџРѕР±РµРґРёС‚РµР»СЊ L2-4")
       ];
 
       const lower4 = [
-        playoffStoredMatch("L4-1", rows, "Победитель L3-1", "Проигравший U3-2"),
-        playoffStoredMatch("L4-2", rows, "Победитель L3-2", "Проигравший U3-1")
+        playoffStoredMatch("L4-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L3-1", "РџСЂРѕРёРіСЂР°РІС€РёР№ U3-2"),
+        playoffStoredMatch("L4-2", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L3-2", "РџСЂРѕРёРіСЂР°РІС€РёР№ U3-1")
       ];
 
       const lower5 = [
-        playoffStoredMatch("L5-1", rows, "Победитель L4-1", "Победитель L4-2")
+        playoffStoredMatch("L5-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L4-1", "РџРѕР±РµРґРёС‚РµР»СЊ L4-2")
       ];
 
       const lower6 = [
-        playoffStoredMatch("L6-1", rows, "Победитель L5-1", "Проигравший U4-1")
+        playoffStoredMatch("L6-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ L5-1", "РџСЂРѕРёРіСЂР°РІС€РёР№ U4-1")
       ];
 
-      const grandFinal = playoffStoredMatch("GF-1", rows, "Победитель U4-1", "Победитель L6-1");
+      const grandFinal = playoffStoredMatch("GF-1", rows, "РџРѕР±РµРґРёС‚РµР»СЊ U4-1", "РџРѕР±РµРґРёС‚РµР»СЊ L6-1");
 
       el.innerHTML = `
         <div class="playoff-bracket-title">
-          <strong>⚔️ Плей-офф · Double Elimination</strong>
-          <span>16 участников · два поражения для вылета</span>
+          <strong>вљ”пёЏ РџР»РµР№-РѕС„С„ В· Double Elimination</strong>
+          <span>16 СѓС‡Р°СЃС‚РЅРёРєРѕРІ В· РґРІР° РїРѕСЂР°Р¶РµРЅРёСЏ РґР»СЏ РІС‹Р»РµС‚Р°</span>
         </div>
 
         <section class="playoff-section upper">
-          <div class="playoff-section-label">Верхняя сетка</div>
+          <div class="playoff-section-label">Р’РµСЂС…РЅСЏСЏ СЃРµС‚РєР°</div>
           <div class="playoff-upper-with-final">
             <div class="playoff-rounds">
-            ${playoffRoundHtml("Раунд 1 · 1/8", upper1)}
-            ${playoffRoundHtml("Раунд 2 · 1/4", upper2)}
-            ${playoffRoundHtml("Раунд 3 · 1/2", upper3)}
-            ${playoffRoundHtml("Финал верхней", upper4)}
+            ${playoffRoundHtml("Р Р°СѓРЅРґ 1 В· 1/8", upper1)}
+            ${playoffRoundHtml("Р Р°СѓРЅРґ 2 В· 1/4", upper2)}
+            ${playoffRoundHtml("Р Р°СѓРЅРґ 3 В· 1/2", upper3)}
+            ${playoffRoundHtml("Р¤РёРЅР°Р» РІРµСЂС…РЅРµР№", upper4)}
             <div class="playoff-round playoff-grand-final-column">
-              <div class="playoff-round-title">🏆 Гранд-финал</div>
+              <div class="playoff-round-title">рџЏ† Р“СЂР°РЅРґ-С„РёРЅР°Р»</div>
               <div class="playoff-matches">
                 <div class="playoff-grand-final-hero">
                   ${grandFinal}
@@ -7686,20 +7928,20 @@ function achievementDescription(row) {
         </section>
 
         <section class="playoff-section lower">
-          <div class="playoff-section-label">Нижняя сетка</div>
+          <div class="playoff-section-label">РќРёР¶РЅСЏСЏ СЃРµС‚РєР°</div>
           <div class="playoff-rounds">
-            ${playoffRoundHtml("Нижний · Раунд 1", lower1)}
-            ${playoffRoundHtml("Нижний · Раунд 2", lower2)}
-            ${playoffRoundHtml("Нижний · Раунд 3", lower3)}
-            ${playoffRoundHtml("Нижний · Раунд 4", lower4)}
-            ${playoffRoundHtml("Нижний · Раунд 5", lower5)}
-            ${playoffRoundHtml("Финал нижней", lower6)}
+            ${playoffRoundHtml("РќРёР¶РЅРёР№ В· Р Р°СѓРЅРґ 1", lower1)}
+            ${playoffRoundHtml("РќРёР¶РЅРёР№ В· Р Р°СѓРЅРґ 2", lower2)}
+            ${playoffRoundHtml("РќРёР¶РЅРёР№ В· Р Р°СѓРЅРґ 3", lower3)}
+            ${playoffRoundHtml("РќРёР¶РЅРёР№ В· Р Р°СѓРЅРґ 4", lower4)}
+            ${playoffRoundHtml("РќРёР¶РЅРёР№ В· Р Р°СѓРЅРґ 5", lower5)}
+            ${playoffRoundHtml("Р¤РёРЅР°Р» РЅРёР¶РЅРµР№", lower6)}
           </div>
         </section>
 
 
         <div class="playoff-help">
-          Сейчас из Google Sheets читается лист <b>play_off</b>. Заполненные строки с соответствующим slot заменяют подписи-заглушки; остальные позиции показывают маршрут участника по сетке.
+          РЎРµР№С‡Р°СЃ РёР· Google Sheets С‡РёС‚Р°РµС‚СЃСЏ Р»РёСЃС‚ <b>play_off</b>. Р—Р°РїРѕР»РЅРµРЅРЅС‹Рµ СЃС‚СЂРѕРєРё СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРј slot Р·Р°РјРµРЅСЏСЋС‚ РїРѕРґРїРёСЃРё-Р·Р°РіР»СѓС€РєРё; РѕСЃС‚Р°Р»СЊРЅС‹Рµ РїРѕР·РёС†РёРё РїРѕРєР°Р·С‹РІР°СЋС‚ РјР°СЂС€СЂСѓС‚ СѓС‡Р°СЃС‚РЅРёРєР° РїРѕ СЃРµС‚РєРµ.
         </div>
       `;
     }
@@ -7738,12 +7980,12 @@ document.getElementById("tourTable").classList.toggle("hide-move", !isOverall);
 
 document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
   const moveClass =
-  r.move?.startsWith("⬆") ? "win" :
-  r.move?.startsWith("⬇") ? "lose" :
+  r.move?.startsWith("в¬†") ? "win" :
+  r.move?.startsWith("в¬‡") ? "lose" :
   r.move === "NEW" ? "gold" :
   "";
   const rank = r.rank || i + 1;
-  return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
+  return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "вЂ”")}</td></tr>`;
 }).join("");
       bindTablePlayerLinks();
     }
@@ -7754,8 +7996,8 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const rows = [...predictions].sort((a,b) => b.pts - a.pts);
       document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
         const moveClass =
-  r.move?.startsWith("⬆") ? "win" :
-  r.move?.startsWith("⬇") ? "lose" :
+  r.move?.startsWith("в¬†") ? "win" :
+  r.move?.startsWith("в¬‡") ? "lose" :
   r.move === "NEW" ? "gold" :
   "";
         const rank = i + 1;
@@ -7763,7 +8005,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   <td>${rankMedalHtml(rank)}</td>
   <td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td>
   <td>${escapeHtml(r.pts)}</td>
-  ${isOverall ? `<td class="${moveClass}">${escapeHtml(r.move || "—")}</td>` : ""}
+  ${isOverall ? `<td class="${moveClass}">${escapeHtml(r.move || "вЂ”")}</td>` : ""}
 </tr>`;
       }).join("");
       bindTablePlayerLinks();
@@ -7774,10 +8016,10 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
       if (screen === "matches") {
         row.innerHTML = `
-          <button class="filter-btn ${matchMode === "home" ? "active" : ""}" data-match-mode="home">Текущие</button>
-          <button class="filter-btn ${matchMode === "all" ? "active" : ""}" data-match-mode="all">Все игры</button>
-          <button class="filter-btn ${matchMode === "upcoming" ? "active" : ""}" data-match-mode="upcoming">Предстоящие</button>
-          <button class="filter-btn ${matchMode === "finished" ? "active" : ""}" data-match-mode="finished">Сыгравшие</button>
+          <button class="filter-btn ${matchMode === "home" ? "active" : ""}" data-match-mode="home">РўРµРєСѓС‰РёРµ</button>
+          <button class="filter-btn ${matchMode === "all" ? "active" : ""}" data-match-mode="all">Р’СЃРµ РёРіСЂС‹</button>
+          <button class="filter-btn ${matchMode === "upcoming" ? "active" : ""}" data-match-mode="upcoming">РџСЂРµРґСЃС‚РѕСЏС‰РёРµ</button>
+          <button class="filter-btn ${matchMode === "finished" ? "active" : ""}" data-match-mode="finished">РЎС‹РіСЂР°РІС€РёРµ</button>
         `;
 
         row.querySelectorAll("[data-match-mode]").forEach(btn => {
@@ -7796,9 +8038,9 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   }
 
   row.innerHTML = `
-    <button class="filter-btn ${picksMode === "alive" ? "active" : ""}" data-picks-mode="alive">В игре</button>
-    <button class="filter-btn ${picksMode === "all" ? "active" : ""}" data-picks-mode="all">Все прогнозы</button>
-    <button class="filter-btn ${picksMode === "finished" ? "active" : ""}" data-picks-mode="finished">Отыгранные</button>
+    <button class="filter-btn ${picksMode === "alive" ? "active" : ""}" data-picks-mode="alive">Р’ РёРіСЂРµ</button>
+    <button class="filter-btn ${picksMode === "all" ? "active" : ""}" data-picks-mode="all">Р’СЃРµ РїСЂРѕРіРЅРѕР·С‹</button>
+    <button class="filter-btn ${picksMode === "finished" ? "active" : ""}" data-picks-mode="finished">РћС‚С‹РіСЂР°РЅРЅС‹Рµ</button>
   `;
 
         row.querySelectorAll("[data-picks-mode]").forEach(btn => {
@@ -7892,14 +8134,14 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
 
     async function boot() {
-      // Сначала мгновенно рисуем интерфейс, чтобы пользователь не видел пустую/вечную загрузку.
+      // РЎРЅР°С‡Р°Р»Р° РјРіРЅРѕРІРµРЅРЅРѕ СЂРёСЃСѓРµРј РёРЅС‚РµСЂС„РµР№СЃ, С‡С‚РѕР±С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ РІРёРґРµР» РїСѓСЃС‚СѓСЋ/РІРµС‡РЅСѓСЋ Р·Р°РіСЂСѓР·РєСѓ.
       const cached = readCachedSheetsData();
       if (cached) {
         applySheetsPayload(cached);
       }
       renderAll();
 
-      // Потом пробуем подтянуть свежие данные из Google Sheets с таймаутом.
+      // РџРѕС‚РѕРј РїСЂРѕР±СѓРµРј РїРѕРґС‚СЏРЅСѓС‚СЊ СЃРІРµР¶РёРµ РґР°РЅРЅС‹Рµ РёР· Google Sheets СЃ С‚Р°Р№РјР°СѓС‚РѕРј.
       const loaded = await loadSheetsData();
       if (loaded) renderAll();
     }
