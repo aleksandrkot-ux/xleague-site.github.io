@@ -4986,6 +4986,44 @@ button.achievement-item {
   background: rgba(255,255,255,.025);
 }
 
+
+/* v3.5 — global picker popover, never clipped by modal/card overflow */
+.global-pickers-popover {
+  position: fixed;
+  z-index: 300;
+  display: none;
+  width: max-content;
+  min-width: 175px;
+  max-width: min(280px, calc(100vw - 20px));
+  max-height: min(320px, calc(100vh - 20px));
+  overflow-y: auto;
+  padding: 10px 11px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #24262a;
+  box-shadow: 0 16px 40px rgba(0,0,0,.62);
+  color: #d4d4d8;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+.global-pickers-popover.is-visible {
+  display: block;
+}
+.global-pickers-popover strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 1000;
+}
+.global-pickers-popover .picker-name + .picker-name {
+  margin-top: 2px;
+}
+.country-history-stars {
+  cursor: pointer;
+}
+
 </style>
 
 </head>
@@ -5420,6 +5458,9 @@ button.achievement-item {
         <div id="countryHistoryBody"></div>
       </div>
     </div>
+
+
+  <div class="global-pickers-popover" id="globalPickersPopover" aria-hidden="true"></div>
 
   <nav class="bottom-nav">
   <div class="bottom-nav-grid">
@@ -5878,7 +5919,7 @@ function mapPredictionRow(row) {
       return getMatchTimestamp(b) - getMatchTimestamp(a);
     }
 
-    function starsHtml(value) {
+    function starsHtml(value, nativeTitle = true) {
       const clamped = Math.max(0, Math.min(10, Number(value) || 0));
       const full = Math.floor(clamped / 2);
       const half = clamped % 2 === 1;
@@ -5889,8 +5930,9 @@ function mapPredictionRow(row) {
       if (half) stars.push('<span class="star star-half">★</span>');
       for (let i = 0; i < empty; i++) stars.push('<span class="star star-empty">★</span>');
 
+      const titleAttr = nativeTitle ? ` title="Популярность матча среди пользователей"` : "";
       return `
-        <span class="stars" title="Популярность матча среди пользователей" aria-label="Популярность матча среди пользователей: ${clamped} из 10">
+        <span class="stars"${titleAttr} aria-label="Популярность матча среди пользователей: ${clamped} из 10">
           ${stars.join("")}
         </span>
       `;
@@ -6099,78 +6141,51 @@ function mapPredictionRow(row) {
       const stars = event.target.closest(".country-history-stars");
       if (stars) {
         event.stopPropagation();
+        const pop = document.getElementById("globalPickersPopover");
+        const sameMatch = pop?.dataset.matchId === String(stars.dataset.matchPickers || "");
+        const visible = pop?.classList.contains("is-visible");
 
-        document.querySelectorAll(".country-pickers-popover.is-visible").forEach(pop => {
-          if (pop !== stars.querySelector(".country-pickers-popover")) pop.classList.remove("is-visible");
-        });
-
-        const pop = stars.querySelector(".country-pickers-popover");
-        if (pop) {
-          const willOpen = !pop.classList.contains("is-visible");
-          pop.classList.toggle("is-visible", willOpen);
-
-          if (willOpen) {
-            const rect = stars.getBoundingClientRect();
-            const popWidth = Math.min(260, Math.max(170, pop.offsetWidth || 190));
-            let left = rect.left;
-            let top = rect.bottom + 7;
-
-            if (left + popWidth > window.innerWidth - 10) {
-              left = Math.max(10, window.innerWidth - popWidth - 10);
-            }
-
-            // If there is not enough room below, show it above the stars.
-            const estimatedHeight = pop.offsetHeight || 120;
-            if (top + estimatedHeight > window.innerHeight - 10) {
-              top = Math.max(10, rect.top - estimatedHeight - 7);
-            }
-
-            pop.style.left = `${left}px`;
-            pop.style.top = `${top}px`;
-          }
+        if (visible && sameMatch) {
+          hideGlobalPickersPopover();
+        } else {
+          if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
+          showGlobalPickersPopover(stars, stars.dataset.matchPickers);
         }
         return;
       }
 
-      document.querySelectorAll(".country-pickers-popover.is-visible").forEach(el => el.classList.remove("is-visible"));
+      if (!event.target.closest("#globalPickersPopover")) hideGlobalPickersPopover();
     });
 
 
     document.addEventListener("mouseover", (event) => {
       const stars = event.target.closest(".country-history-stars");
       if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
-      const pop = stars.querySelector(".country-pickers-popover");
-      if (!pop) return;
-
-      const rect = stars.getBoundingClientRect();
-      pop.classList.add("is-visible");
-      requestAnimationFrame(() => {
-        const popWidth = Math.min(260, Math.max(170, pop.offsetWidth || 190));
-        let left = rect.left;
-        let top = rect.bottom + 7;
-
-        if (left + popWidth > window.innerWidth - 10) {
-          left = Math.max(10, window.innerWidth - popWidth - 10);
-        }
-
-        const h = pop.offsetHeight || 120;
-        if (top + h > window.innerHeight - 10) {
-          top = Math.max(10, rect.top - h - 7);
-        }
-
-        pop.style.left = `${left}px`;
-        pop.style.top = `${top}px`;
-      });
+      const pop = document.getElementById("globalPickersPopover");
+      if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
+      showGlobalPickersPopover(stars, stars.dataset.matchPickers);
     });
 
     document.addEventListener("mouseout", (event) => {
       const stars = event.target.closest(".country-history-stars");
       if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
-      const related = event.relatedTarget;
-      if (related && stars.contains(related)) return;
-      const pop = stars.querySelector(".country-pickers-popover");
-      if (pop) pop.classList.remove("is-visible");
+
+      // Give the cursor a moment to move into the global popover.
+      setTimeout(() => {
+        const pop = document.getElementById("globalPickersPopover");
+        if (!pop) return;
+        if (!pop.matches(":hover") && !stars.matches(":hover")) hideGlobalPickersPopover();
+      }, 70);
     });
+
+        const globalPickersPopover = document.getElementById("globalPickersPopover");
+    if (globalPickersPopover) {
+      globalPickersPopover.addEventListener("mouseleave", () => {
+        if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
+          hideGlobalPickersPopover();
+        }
+      });
+    }
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
@@ -6202,6 +6217,9 @@ function mapPredictionRow(row) {
 
     if (countryHistoryClose) countryHistoryClose.addEventListener("click", closeCountryHistory);
     if (countryHistoryBackdrop) countryHistoryBackdrop.addEventListener("click", closeCountryHistory);
+
+    window.addEventListener("resize", hideGlobalPickersPopover);
+    document.querySelector(".country-history-card")?.addEventListener("scroll", hideGlobalPickersPopover, { passive: true });
 
     const matchesTourSelect = document.getElementById("matchesTourSelect");
       if (matchesTourSelect) {
@@ -6848,6 +6866,50 @@ sourceMatches.forEach(match => {
       return names;
     }
 
+
+    function hideGlobalPickersPopover() {
+      const pop = document.getElementById("globalPickersPopover");
+      if (!pop) return;
+      pop.classList.remove("is-visible");
+      pop.setAttribute("aria-hidden", "true");
+      pop.innerHTML = "";
+    }
+
+    function showGlobalPickersPopover(anchor, matchId) {
+      const pop = document.getElementById("globalPickersPopover");
+      if (!pop || !anchor) return;
+
+      const names = pickersForMatch(matchId);
+      pop.innerHTML = `
+        <strong>Выбрали матч (${names.length})</strong>
+        ${names.length
+          ? names.map(name => `<div class="picker-name">${escapeHtml(name)}</div>`).join("")
+          : `<div class="picker-name">Пока никто не выбрал этот матч</div>`
+        }
+      `;
+
+      pop.classList.add("is-visible");
+      pop.setAttribute("aria-hidden", "false");
+
+      // Must measure only after display:block.
+      const rect = anchor.getBoundingClientRect();
+      const popRect = pop.getBoundingClientRect();
+
+      let left = rect.left;
+      let top = rect.bottom + 8;
+
+      if (left + popRect.width > window.innerWidth - 10) {
+        left = Math.max(10, window.innerWidth - popRect.width - 10);
+      }
+
+      if (top + popRect.height > window.innerHeight - 10) {
+        top = Math.max(10, rect.top - popRect.height - 8);
+      }
+
+      pop.style.left = `${Math.max(10, left)}px`;
+      pop.style.top = `${Math.max(10, top)}px`;
+    }
+
     function matchHistoryResult(match) {
       const status = match.api_status || match.status || "pending";
       if (status === "win") return { cls: "is-win", score: match.score || "Ничья" };
@@ -6942,12 +7004,8 @@ sourceMatches.forEach(match => {
                 </div>
                 <div class="country-history-sub">
                   ${formatMatchDateTime(match) ? `<span class="country-history-datetime">${escapeHtml(formatMatchDateTime(match))}</span>` : ""}
-                  <span class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}">
-                    ${starsHtml(match.popularity)}
-                    <span class="country-pickers-popover">
-                      <strong>Выбрали матч (${pickers.length})</strong>
-                      ${pickerText}
-                    </span>
+                  <span class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+                    ${starsHtml(match.popularity, false)}
                   </span>
                 </div>
               </div>
@@ -6994,7 +7052,7 @@ sourceMatches.forEach(match => {
     function closeCountryHistory() {
       const modal = document.getElementById("countryHistoryModal");
       if (modal) modal.classList.add("hidden");
-      document.querySelectorAll(".country-pickers-popover.is-visible").forEach(el => el.classList.remove("is-visible"));
+      hideGlobalPickersPopover();
     }
 
     function updateMetaCharts(tour) {
