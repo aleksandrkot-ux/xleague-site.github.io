@@ -4690,11 +4690,12 @@ button.achievement-item {
   color: #f4f4f5;
   font-size: 10px;
 }
-.country-history-stars:hover .country-pickers-popover,
-.country-history-stars.is-open .country-pickers-popover {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+@media (hover:hover) and (pointer:fine) {
+  .country-history-stars:hover .country-pickers-popover {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
 }
 
 .country-history-empty {
@@ -4954,6 +4955,35 @@ button.achievement-item {
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+
+/* v3.4 — continent history + picker popover fix */
+.country-pickers-popover {
+  position: fixed !important;
+  left: auto;
+  top: auto;
+  z-index: 200 !important;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-3px);
+}
+.country-pickers-popover.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.country-pickers-popover::before {
+  display: none;
+}
+
+/* Continents are clickable just like countries */
+.chart-row[data-continent] {
+  cursor: pointer;
+  border-radius: 12px;
+}
+.chart-row[data-continent]:hover {
+  background: rgba(255,255,255,.025);
 }
 
 </style>
@@ -6049,6 +6079,12 @@ function mapPredictionRow(row) {
         return;
       }
 
+      const continentRow = event.target.closest(".chart-row[data-continent]");
+      if (continentRow) {
+        openContinentHistory(continentRow.dataset.continent || "");
+        return;
+      }
+
       const tourHeader = event.target.closest(".country-tour-title");
       if (tourHeader) {
         const group = tourHeader.closest(".country-tour-group");
@@ -6063,13 +6099,77 @@ function mapPredictionRow(row) {
       const stars = event.target.closest(".country-history-stars");
       if (stars) {
         event.stopPropagation();
-        const wasOpen = stars.classList.contains("is-open");
-        document.querySelectorAll(".country-history-stars.is-open").forEach(el => el.classList.remove("is-open"));
-        if (!wasOpen) stars.classList.add("is-open");
+
+        document.querySelectorAll(".country-pickers-popover.is-visible").forEach(pop => {
+          if (pop !== stars.querySelector(".country-pickers-popover")) pop.classList.remove("is-visible");
+        });
+
+        const pop = stars.querySelector(".country-pickers-popover");
+        if (pop) {
+          const willOpen = !pop.classList.contains("is-visible");
+          pop.classList.toggle("is-visible", willOpen);
+
+          if (willOpen) {
+            const rect = stars.getBoundingClientRect();
+            const popWidth = Math.min(260, Math.max(170, pop.offsetWidth || 190));
+            let left = rect.left;
+            let top = rect.bottom + 7;
+
+            if (left + popWidth > window.innerWidth - 10) {
+              left = Math.max(10, window.innerWidth - popWidth - 10);
+            }
+
+            // If there is not enough room below, show it above the stars.
+            const estimatedHeight = pop.offsetHeight || 120;
+            if (top + estimatedHeight > window.innerHeight - 10) {
+              top = Math.max(10, rect.top - estimatedHeight - 7);
+            }
+
+            pop.style.left = `${left}px`;
+            pop.style.top = `${top}px`;
+          }
+        }
         return;
       }
 
-      document.querySelectorAll(".country-history-stars.is-open").forEach(el => el.classList.remove("is-open"));
+      document.querySelectorAll(".country-pickers-popover.is-visible").forEach(el => el.classList.remove("is-visible"));
+    });
+
+
+    document.addEventListener("mouseover", (event) => {
+      const stars = event.target.closest(".country-history-stars");
+      if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+      const pop = stars.querySelector(".country-pickers-popover");
+      if (!pop) return;
+
+      const rect = stars.getBoundingClientRect();
+      pop.classList.add("is-visible");
+      requestAnimationFrame(() => {
+        const popWidth = Math.min(260, Math.max(170, pop.offsetWidth || 190));
+        let left = rect.left;
+        let top = rect.bottom + 7;
+
+        if (left + popWidth > window.innerWidth - 10) {
+          left = Math.max(10, window.innerWidth - popWidth - 10);
+        }
+
+        const h = pop.offsetHeight || 120;
+        if (top + h > window.innerHeight - 10) {
+          top = Math.max(10, rect.top - h - 7);
+        }
+
+        pop.style.left = `${left}px`;
+        pop.style.top = `${top}px`;
+      });
+    });
+
+    document.addEventListener("mouseout", (event) => {
+      const stars = event.target.closest(".country-history-stars");
+      if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+      const related = event.relatedTarget;
+      if (related && stars.contains(related)) return;
+      const pop = stars.querySelector(".country-pickers-popover");
+      if (pop) pop.classList.remove("is-visible");
     });
 
     document.addEventListener("keydown", (event) => {
@@ -6079,6 +6179,13 @@ function mapPredictionRow(row) {
         if (row) {
           event.preventDefault();
           openCountryHistory(row.dataset.country || "");
+          return;
+        }
+
+        const continentRow = active?.closest?.(".chart-row[data-continent]");
+        if (continentRow) {
+          event.preventDefault();
+          openContinentHistory(continentRow.dataset.continent || "");
           return;
         }
         const tourHeader = active?.closest?.(".country-tour-title");
@@ -6621,15 +6728,18 @@ sourceMatches.forEach(match => {
       const fillClass = mode === "gold" ? "gold" : mode === "red" ? "red" : "";
 
       const isCountryChart = targetId === "countryVolumeChart" || targetId === "countryWinrateChart";
+      const isContinentChart = targetId === "continentChart";
 
       el.innerHTML = normalizedRows.map(row => {
         const width = Math.max(4, Math.round((Number(row.value) || 0) / max * 100));
         const flag = row.flagUrl ? `<span class="chart-flag">${flagHtml(row.flagUrl)}</span>` : "";
-        const countryAttrs = isCountryChart
+        const rowAttrs = isCountryChart
           ? ` data-country="${escapeHtml(row.name)}" role="button" tabindex="0" aria-label="Открыть матчи страны ${escapeHtml(row.name)}"`
-          : "";
+          : isContinentChart
+            ? ` data-continent="${escapeHtml(row.name)}" role="button" tabindex="0" aria-label="Открыть матчи континента ${escapeHtml(row.name)}"`
+            : "";
         return `
-          <div class="chart-row"${countryAttrs}>
+          <div class="chart-row"${rowAttrs}>
             <div class="chart-row-top">
               <div class="chart-name-line">${flag}<div class="chart-name">${escapeHtml(row.name)}</div></div>
               <div class="chart-value">${escapeHtml(row.value)} · ${escapeHtml(row.pct)}</div>
@@ -6745,50 +6855,64 @@ sourceMatches.forEach(match => {
       return { cls: "is-pending", score: match.score || "—" };
     }
 
-    function openCountryHistory(country) {
+    function openGeoHistory(name, mode = "country") {
       const modal = document.getElementById("countryHistoryModal");
       const title = document.getElementById("countryHistoryTitle");
       const summary = document.getElementById("countryHistorySummary");
       const body = document.getElementById("countryHistoryBody");
+      const kicker = modal?.querySelector(".country-history-kicker");
       if (!modal || !title || !summary || !body) return;
 
       const statsMode = document.getElementById("tourSelect")?.value || "overall";
+      const isContinent = mode === "continent";
+      if (kicker) kicker.textContent = isContinent ? "Матчи континента в X League" : "Матчи страны в X League";
 
-      // Match the Statistics section exactly: only X League matches that have popularity > 0.
-      let countryMatches = matches.filter(match => {
+      let geoMatches = matches.filter(match => {
         if (!match || match.api_status === "cancelled" || match.status === "cancelled") return false;
         if (Number(match.popularity || 0) <= 0) return false;
-        if (cleanCountryName(match.country || "") !== country) return false;
+
+        const country = cleanCountryName(match.country || "");
+        const continent = normalizeContinentName(match.continent, country);
+
+        if (isContinent) {
+          if (continent !== name) return false;
+        } else {
+          if (country !== name) return false;
+        }
 
         if (statsMode === "overall") return true;
         if (statsMode === "playoff") return isPlayoffTour(match.tour);
         return String(match.tour) === String(statsMode);
       });
 
-      countryMatches.sort((a, b) =>
+      geoMatches.sort((a, b) =>
         Number(a.tour) - Number(b.tour) ||
         compareDateTimeAsc(a, b)
       );
 
-      const first = countryMatches[0];
-      const flag = first ? (first.flag_url ? flagHtml(first.flag_url) : escapeHtml(first.flag || "🌍")) : "🌍";
-      title.innerHTML = `<span style="display:inline-flex;align-items:center;gap:9px;"><span class="country-history-flag">${flag}</span>${escapeHtml(country)}</span>`;
+      const first = geoMatches[0];
+      if (isContinent) {
+        title.textContent = name;
+      } else {
+        const flag = first ? (first.flag_url ? flagHtml(first.flag_url) : escapeHtml(first.flag || "🌍")) : "🌍";
+        title.innerHTML = `<span style="display:inline-flex;align-items:center;gap:9px;"><span class="country-history-flag">${flag}</span>${escapeHtml(name)}</span>`;
+      }
 
-      const total = countryMatches.length;
-      const wins = countryMatches.filter(m => (m.api_status || m.status) === "win").length;
-      const losses = countryMatches.filter(m => (m.api_status || m.status) === "lose").length;
+      const total = geoMatches.length;
+      const wins = geoMatches.filter(m => (m.api_status || m.status) === "win").length;
+      const losses = geoMatches.filter(m => (m.api_status || m.status) === "lose").length;
       const settled = wins + losses;
       const drawPct = settled ? (wins / settled * 100).toFixed(1).replace(".", ",") : "0,0";
       summary.textContent = `${total} матч${total === 1 ? "" : total >= 2 && total <= 4 ? "а" : "ей"} · ничьих ${wins} · ${drawPct}%`;
 
-      if (!countryMatches.length) {
-        body.innerHTML = `<div class="country-history-empty">Для выбранного периода матчей этой страны нет.</div>`;
+      if (!geoMatches.length) {
+        body.innerHTML = `<div class="country-history-empty">Для выбранного периода матчей нет.</div>`;
         modal.classList.remove("hidden");
         return;
       }
 
       const groups = new Map();
-      countryMatches.forEach(match => {
+      geoMatches.forEach(match => {
         const key = Number(match.tour) || 0;
         if (!groups.has(key)) groups.set(key, []);
         groups.get(key).push(match);
@@ -6859,10 +6983,18 @@ sourceMatches.forEach(match => {
       if (card) card.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function openCountryHistory(country) {
+      openGeoHistory(country, "country");
+    }
+
+    function openContinentHistory(continent) {
+      openGeoHistory(continent, "continent");
+    }
+
     function closeCountryHistory() {
       const modal = document.getElementById("countryHistoryModal");
       if (modal) modal.classList.add("hidden");
-      document.querySelectorAll(".country-history-stars.is-open").forEach(el => el.classList.remove("is-open"));
+      document.querySelectorAll(".country-pickers-popover.is-visible").forEach(el => el.classList.remove("is-visible"));
     }
 
     function updateMetaCharts(tour) {
@@ -8073,7 +8205,7 @@ function achievementDescription(row) {
 
 
         <div class="playoff-help">
-         
+          Сейчас из Google Sheets читается лист <b>play_off</b>. Заполненные строки с соответствующим slot заменяют подписи-заглушки; остальные позиции показывают маршрут участника по сетке.
         </div>
       `;
     }
