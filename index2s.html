@@ -4847,6 +4847,115 @@ button.achievement-item {
   .finance-card strong, .bar-fill, .chart-fill { transition: none !important; }
 }
 
+
+/* v3.3 — site-wide lightweight motion */
+
+/* Screen transitions */
+.screen {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.screen.active {
+  opacity: 1;
+  transform: translateY(0);
+  animation: screenEnter .24s ease-out both;
+}
+@keyframes screenEnter {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Staggered appearance for cards/rows */
+.motion-stagger-item {
+  opacity: 0;
+  transform: translateY(7px);
+  animation: itemEnter .28s ease-out forwards;
+}
+@keyframes itemEnter {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Small interaction response */
+.match-card,
+.player-card,
+.stat-card,
+.stats-panel,
+.dashboard-card,
+.table-box,
+.playoff-match {
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    box-shadow .18s ease,
+    background-color .18s ease;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .match-card:hover,
+  .player-card:hover,
+  .stat-card:hover,
+  .stats-panel:hover,
+  .dashboard-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(182,255,59,.16) !important;
+    box-shadow: 0 12px 28px rgba(0,0,0,.28);
+  }
+}
+
+.match-card:active,
+.player-card:active,
+.achievement-item:active,
+.table-player-link:active,
+.nav-btn:active,
+.filter-btn:active {
+  transform: scale(.985);
+}
+
+/* Achievement modal reveal */
+.achievement-modal-card {
+  animation: achievementReveal .24s cubic-bezier(.22,.75,.32,1.12) both;
+}
+@keyframes achievementReveal {
+  from { opacity: 0; transform: scale(.9) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.achievement-modal-icon img,
+.achievement-modal-icon .badge-fallback {
+  animation: achievementIconPop .34s cubic-bezier(.2,.8,.25,1.15) both;
+}
+@keyframes achievementIconPop {
+  from { opacity: 0; transform: scale(.72) rotate(-3deg); filter: drop-shadow(0 0 0 rgba(182,255,59,0)); }
+  to   { opacity: 1; transform: scale(1) rotate(0); filter: drop-shadow(0 0 18px rgba(182,255,59,.16)); }
+}
+
+/* Current nav button gets a softer active lift */
+.nav-btn.active {
+  transform: translateY(-1px);
+}
+
+/* Grand final subtle breathing glow */
+.playoff-grand-final-hero {
+  animation: grandFinalGlow 3.6s ease-in-out infinite;
+}
+@keyframes grandFinalGlow {
+  0%,100% { box-shadow: 0 0 0 1px rgba(255,225,120,.08) inset, 0 8px 22px rgba(0,0,0,.28); }
+  50% { box-shadow: 0 0 0 1px rgba(255,225,120,.12) inset, 0 8px 28px rgba(215,170,43,.14); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen.active,
+  .motion-stagger-item,
+  .achievement-modal-card,
+  .achievement-modal-icon img,
+  .achievement-modal-icon .badge-fallback,
+  .playoff-grand-final-hero {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 </style>
 
 </head>
@@ -5643,6 +5752,28 @@ function mapPredictionRow(row) {
       }
     }
 
+
+    function applyStagger(containerSelector, itemSelector, maxItems = 14) {
+      const container = document.querySelector(containerSelector);
+      if (!container) return;
+
+      const items = [...container.querySelectorAll(itemSelector)].slice(0, maxItems);
+      items.forEach((el, index) => {
+        el.classList.remove("motion-stagger-item");
+        el.style.animationDelay = "";
+        void el.offsetWidth;
+        el.classList.add("motion-stagger-item");
+        el.style.animationDelay = `${Math.min(index * 34, 260)}ms`;
+      });
+    }
+
+    function applyVisibleMotion() {
+      applyStagger("#screen-matches", ".match-card");
+      applyStagger("#picksList", ".player-card");
+      applyStagger("#screen-stats", ".stat-card, .stats-panel", 12);
+      applyStagger("#tourTableBody", "tr", 18);
+    }
+
     function renderAll() {
       populateTourControls();
       renderMatches();
@@ -5654,6 +5785,7 @@ function mapPredictionRow(row) {
       renderPlayerSelect();
       renderPlayerProfile();
       renderFilter("matches");
+      requestAnimationFrame(applyVisibleMotion);
     }
 
 
@@ -8088,6 +8220,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       matchesTourSelect.addEventListener("change", () => {
         matchesSelectedTour = toNum(matchesTourSelect.value, getDefaultTour());
         renderMatches();
+        requestAnimationFrame(() => applyStagger("#screen-matches", ".match-card"));
       });
     }
 
@@ -8096,6 +8229,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       picksTourSelect.addEventListener("change", () => {
         picksSelectedTour = toNum(picksTourSelect.value, getDefaultTour());
         renderPicks();
+        requestAnimationFrame(() => applyStagger("#picksList", ".player-card"));
       });
     }
 
@@ -8103,6 +8237,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     if (tableSelect) {
       tableSelect.addEventListener("change", () => {
         renderTableByMode();
+        requestAnimationFrame(() => applyStagger("#tourTableBody", "tr", 18));
       });
     }
 
@@ -8125,6 +8260,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     if (tourSelect) {
       tourSelect.addEventListener("change", () => {
         updateStats(tourSelect.value);
+        requestAnimationFrame(() => applyStagger("#screen-stats", ".stat-card, .stats-panel", 12));
       });
     }
 
