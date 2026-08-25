@@ -5043,12 +5043,51 @@ button.achievement-item {
   .global-pickers-popover strong { font-size: 13px !important; margin-bottom: 8px !important; }
   .global-pickers-popover .picker-name { padding: 3px 0; }
   .picker-mobile-backdrop {
-    position: fixed; inset: 0; z-index: 1000; display:none;
+    position: fixed; inset: 0; z-index: 1000;
+    display: none;
+    pointer-events: none;
     background: rgba(0,0,0,.62); backdrop-filter: blur(3px);
   }
-  .picker-mobile-backdrop.is-visible { display:block; }
+  .picker-mobile-backdrop.is-visible {
+    display: block;
+    pointer-events: auto;
+  }
   .country-history-stars { min-height: 34px; min-width: 92px; display:inline-flex; align-items:center; justify-content:flex-end; touch-action: manipulation; }
 }
+
+/* v3.7 — reliable picker controls on touch devices */
+.country-history-stars {
+  position: relative;
+  z-index: 4;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  padding: 3px 4px;
+  margin: -3px -4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.country-history-stars .stars {
+  pointer-events: none;
+}
+.country-history-score {
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover:none), (pointer:coarse) {
+  .country-history-stars {
+    min-width: 104px !important;
+    min-height: 40px !important;
+    padding: 6px 5px !important;
+    margin: -6px -5px !important;
+    justify-content: flex-start !important;
+    touch-action: manipulation;
+  }
+}
+
 </style>
 
 </head>
@@ -6140,18 +6179,6 @@ function mapPredictionRow(row) {
     const countryHistoryClose = document.getElementById("countryHistoryClose");
     const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
 
-    document.addEventListener("pointerup", (event) => {
-      if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
-      const stars = event.target.closest(".country-history-stars");
-      if (!stars) return;
-      event.preventDefault();
-      event.stopPropagation();
-      stars.dataset.touchHandledAt = String(Date.now());
-      const pop = document.getElementById("globalPickersPopover");
-      if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
-      showGlobalPickersPopover(stars, stars.dataset.matchPickers);
-    }, { passive: false });
-
     document.addEventListener("click", (event) => {
       const countryRow = event.target.closest(".chart-row[data-country]");
       if (countryRow) {
@@ -6178,21 +6205,19 @@ function mapPredictionRow(row) {
 
       const stars = event.target.closest(".country-history-stars");
       if (stars) {
-        const handledAt = Number(stars.dataset.touchHandledAt || 0);
-        if (handledAt && Date.now() - handledAt < 700) {
-          event.preventDefault();
-          return;
-        }
+        event.preventDefault();
         event.stopPropagation();
+
         const pop = document.getElementById("globalPickersPopover");
-        const sameMatch = pop?.dataset.matchId === String(stars.dataset.matchPickers || "");
+        const matchId = String(stars.dataset.matchPickers || "");
+        const sameMatch = pop?.dataset.matchId === matchId;
         const visible = pop?.classList.contains("is-visible");
 
         if (visible && sameMatch) {
           hideGlobalPickersPopover();
         } else {
-          if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
-          showGlobalPickersPopover(stars, stars.dataset.matchPickers);
+          if (pop) pop.dataset.matchId = matchId;
+          showGlobalPickersPopover(stars, matchId);
         }
         return;
       }
@@ -7056,9 +7081,9 @@ sourceMatches.forEach(match => {
                 </div>
                 <div class="country-history-sub">
                   ${formatMatchDateTime(match) ? `<span class="country-history-datetime">${escapeHtml(formatMatchDateTime(match))}</span>` : ""}
-                  <span class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+                  <button type="button" class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
                     ${starsHtml(match.popularity, false)}
-                  </span>
+                  </button>
                 </div>
               </div>
               <div class="country-history-score ${result.cls}">${escapeHtml(result.score)}</div>
