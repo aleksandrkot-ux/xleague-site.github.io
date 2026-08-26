@@ -2787,7 +2787,19 @@ html, body {
 }
 
       .screen.active#screen-picks {
-        max-width: 760px;
+        max-width: 920px;
+      }
+
+      #screen-picks #picksList {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        align-items: start;
+      }
+
+      #screen-picks #picksList .player-card {
+        width: 100%;
+        min-width: 0;
       }
 
       .screen.active#screen-table {
@@ -5143,6 +5155,14 @@ button.achievement-item {
   }
 }
 
+
+@media (max-width: 699px) {
+  #screen-picks #picksList {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}
 </style>
 
 </head>
