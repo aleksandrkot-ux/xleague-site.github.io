@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X League</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(122,255,0,.08), transparent 32%),
+    #050708;
+  color: #f4f4f4;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.page {
+  width: min(920px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 42px 0 55px;
+}
+
+/* LOGO */
+
+.hero {
+  text-align: center;
+  margin-bottom: 34px;
+}
+
+.logo {
+  display: block;
+  width: min(620px, 88vw);
+  height: auto;
+  margin: 0 auto;
+}
+
+.subtitle {
+  margin-top: 10px;
+  color: #92999f;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+/* SEASONS */
+
+.section-title {
+  margin: 0 0 13px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #a8afb4;
+  text-transform: uppercase;
+}
+
+.seasons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.season {
+  position: relative;
+  display: block;
+  min-height: 245px;
+  padding: 22px;
+  border: 1px solid #252b2f;
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012)),
+    #111416;
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.season:hover {
+  transform: translateY(-3px);
+  border-color: #4c565c;
+  box-shadow: 0 12px 35px rgba(0,0,0,.32);
+}
+
+.season.current {
+  border: 1px solid rgba(166,255,35,.55);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(157,255,25,.11), transparent 42%),
+    linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012)),
+    #111416;
+}
+
+.season.current:hover {
+  border-color: #a6ff23;
+  box-shadow:
+    0 12px 35px rgba(0,0,0,.35),
+    0 0 25px rgba(158,255,27,.08);
+}
+
+.season-number {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 1000;
+  letter-spacing: -.7px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #1a1e20;
+  color: #aab0b4;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .5px;
+}
+
+.status.live {
+  color: #b4ff42;
+  background: rgba(157,255,25,.09);
+  border: 1px solid rgba(157,255,25,.18);
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a6ff23;
+  box-shadow: 0 0 8px rgba(166,255,35,.7);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .45;
+    transform: scale(.82);
+  }
+}
+
+.season-description {
+  margin-top: 25px;
+  color: #858c91;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.open-season {
+  position: absolute;
+  left: 22px;
+  bottom: 20px;
+  color: #b3ff3c;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .4px;
+}
+
+/* PODIUM */
+
+.podium {
+  margin-top: 19px;
+  display: grid;
+  gap: 7px;
+}
+
+.podium-row {
+  display: grid;
+  grid-template-columns: 27px 1fr auto;
+  align-items: center;
+  min-height: 31px;
+  padding: 5px 8px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.035);
+  font-size: 11px;
+}
+
+.medal {
+  font-size: 17px;
+}
+
+.player {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.points {
+  margin-left: 8px;
+  color: #aab0b4;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* RULES */
+
+.rules {
+  margin-top: 15px;
+  border: 1px solid #252b2f;
+  border-radius: 18px;
+  background: #101315;
+  overflow: hidden;
+}
+
+.rules summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 13px;
+  font-weight: 900;
+  user-select: none;
+}
+
+.rules summary::-webkit-details-marker {
+  display: none;
+}
+
+.rules summary::after {
+  content: "+";
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #1b2022;
+  color: #a6ff23;
+  font-size: 18px;
+  transition: transform .2s ease;
+}
+
+.rules[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.rules-content {
+  padding: 0 20px 21px;
+  color: #b1b6ba;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.rule-block {
+  padding: 14px 0;
+  border-top: 1px solid #22272a;
+}
+
+.rule-block strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #f2f2f2;
+  font-size: 12px;
+}
+
+.rule-block p {
+  margin: 0;
+}
+
+/* FOOTER */
+
+.footer {
+  margin-top: 25px;
+  text-align: center;
+  color: #555d62;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  .page {
+    width: min(100% - 20px, 920px);
+    padding-top: 28px;
+  }
+
+  .hero {
+    margin-bottom: 27px;
+  }
+
+  .logo {
+    width: 94%;
+  }
+
+  .subtitle {
+    font-size: 9px;
+    letter-spacing: 1.8px;
+  }
+
+  .seasons {
+    grid-template-columns: 1fr;
+  }
+
+  .season {
+    min-height: 225px;
+  }
+
+  .season.current {
+    order: -1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="page">
+
+  <header class="hero">
+    <img
+      src="./preview_old.png"
+      alt="X League"
+      class="logo"
+    >
+    <div class="subtitle">Fantasy Betting Tournament</div>
+  </header>
+
+  <div class="section-title">Сезоны X League</div>
+
+  <section class="seasons">
+
+    <!-- CURRENT SEASON -->
+
+    <a class="season current" href="./index2s.html">
+
+      <div class="season-number">СЕЗОН 2</div>
+
+      <div class="status live">
+        <span class="live-dot"></span>
+        ИДЁТ СЕЙЧАС
+      </div>
+
+      <div class="season-description">
+        Второй сезон X League
+      </div>
+
+      <div class="open-season">
+        ОТКРЫТЬ СЕЗОН →
+      </div>
+
+    </a>
+
+
+    <!-- SEASON 1 -->
+
+    <a class="season" href="./season1.html">
+
+      <div class="season-number">СЕЗОН 1</div>
+
+      <div class="status">
+        ЗАВЕРШЁН
+      </div>
+
+      <div class="podium">
+
+        <div class="podium-row">
+          <span class="medal">🥇</span>
+          <span class="player">tony🐳Tott @tonyTott</span>
+          <span class="points">235</span>
+        </div>
+
+        <div class="podium-row">
+          <span class="medal">🥈</span>
+          <span class="player">AB @making_wiser</span>
+          <span class="points">229</span>
+        </div>
+
+        <div class="podium-row">
+          <span class="medal">🥉</span>
+          <span class="player">TM</span>
+          <span class="points">220</span>
+        </div>
+
+      </div>
+
+      <div class="open-season">
+        ОТКРЫТЬ СЕЗОН →
+      </div>
+
+    </a>
+
+  </section>
+
+
+  <!-- RULES -->
+
+  <details class="rules">
+
+    <summary>
+      📖 ПРАВИЛА X LEAGUE
+    </summary>
+
+    <div class="rules-content">
+
+      <div class="rule-block">
+        <strong>⚽ Основной турнир</strong>
+        <p>
+          Участники делают прогнозы на матчи тура.
+          Результаты прогнозов формируют турнирную таблицу
+          и общую статистику сезона.
+        </p>
+      </div>
+
+      <div class="rule-block">
+        <strong>⚔️ Плей-офф</strong>
+        <p>
+          Все раунды плей-офф проводятся в формате BO1,
+          за исключением гранд-финала.
+        </p>
+      </div>
+
+      <div class="rule-block">
+        <strong>🏆 Гранд-финал</strong>
+        <p>
+          Гранд-финал проводится в формате BO3.
+          Финалист, пришедший из верхней сетки,
+          начинает серию с преимуществом 1:0.
+        </p>
+      </div>
+
+      <div class="rule-block">
+        <strong>📅 Даты плей-офф</strong>
+        <p>
+          Даты проведения раундов утверждаются
+          и публикуются в Telegram-канале X League.
+        </p>
+      </div>
+
+      <div class="rule-block">
+        <strong>⏱ Пропуск прогноза</strong>
+        <p>
+          Участник, не подавший прогноз на плей-офф
+          в установленный срок, получает техническое поражение.
+        </p>
+      </div>
+
+      <div class="rule-block">
+        <strong>🚫 Отменённые матчи</strong>
+        <p>
+          Отменённые матчи не переносятся и рассчитываются
+          с коэффициентом 1.
+        </p>
+      </div>
+
+    </div>
+
+  </details>
+
+  <footer class="footer">
+    X LEAGUE
+  </footer>
+
+</main>
+
+</body>
+</html>
