@@ -4811,6 +4811,52 @@ button.achievement-item {
 }
 
 
+
+
+/* v3.3 — continent country accordions */
+.continent-country-group {
+  border-radius: 14px;
+  background: rgba(255,255,255,.018);
+}
+.continent-country-group + .continent-country-group { margin-top: 7px; }
+.continent-country-title {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 10px; border-radius: 12px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.055);
+  cursor: pointer; user-select: none;
+}
+.continent-country-title:hover { background: rgba(255,255,255,.06); }
+.continent-country-title-main {
+  min-width: 0; display: flex; align-items: center; gap: 8px;
+  color: #f4f4f5; font-size: 11px; font-weight: 1000;
+}
+.continent-country-title-meta {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
+  color: #8f8f94; font-size: 9px; font-weight: 900;
+}
+.continent-country-chevron {
+  display: inline-block; color: var(--accent); font-size: 12px;
+  transition: transform .2s ease;
+}
+.continent-country-content {
+  overflow: hidden; max-height: 0; opacity: 0; transform: translateY(-3px);
+  transition: max-height .24s ease, opacity .18s ease, transform .18s ease;
+}
+.continent-country-group.is-open .continent-country-content {
+  max-height: 5000px; opacity: 1; transform: translateY(0);
+}
+.continent-country-group.is-open .continent-country-chevron { transform: rotate(90deg); }
+.continent-country-content-inner { display: grid; gap: 6px; padding: 7px 0 2px; }
+.continent-country-tour-label {
+  padding: 6px 4px 2px; color: #8f8f94; font-size: 9px; font-weight: 1000;
+  letter-spacing: .025em; text-transform: uppercase;
+}
+.continent-country-direct + .continent-country-direct { margin-top: 5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .continent-country-content, .continent-country-chevron { transition: none !important; }
+}
 /* v3.2 — lightweight UI polish */
 .country-tour-group { position: relative; }
 .country-tour-title {
@@ -6193,6 +6239,25 @@ function mapPredictionRow(row) {
         return;
       }
 
+      const continentCountryHeader = event.target.closest(".continent-country-title");
+      if (continentCountryHeader) {
+        const group = continentCountryHeader.closest(".continent-country-group");
+        if (group) {
+          const willOpen = !group.classList.contains("is-open");
+          const body = group.parentElement;
+          if (willOpen && body) {
+            body.querySelectorAll(".continent-country-group.is-open").forEach(other => {
+              if (other === group) return;
+              other.classList.remove("is-open");
+              other.querySelector(".continent-country-title")?.setAttribute("aria-expanded", "false");
+            });
+          }
+          group.classList.toggle("is-open", willOpen);
+          continentCountryHeader.setAttribute("aria-expanded", willOpen ? "true" : "false");
+        }
+        return;
+      }
+
       const tourHeader = event.target.closest(".country-tour-title");
       if (tourHeader) {
         const group = tourHeader.closest(".country-tour-group");
@@ -7051,67 +7116,146 @@ sourceMatches.forEach(match => {
         return;
       }
 
-      const groups = new Map();
-      geoMatches.forEach(match => {
-        const key = Number(match.tour) || 0;
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(match);
-      });
+      const renderMatchRow = (match) => {
+        const result = matchHistoryResult(match);
+        const flagHtmlValue = match.flag_url
+          ? flagHtml(match.flag_url)
+          : escapeHtml(match.flag || "🌍");
 
-      body.innerHTML = [...groups.entries()].map(([tour, tourMatches]) => {
-        const dateRange = tourDatesForHistory(tour, tourMatches);
-        const label = isPlayoffTour(tour) ? tourLabel(tour) : `Тур ${tour}`;
-
-        const matchRows = tourMatches.map(match => {
-          const result = matchHistoryResult(match);
-          const pickers = pickersForMatch(match.id);
-          const pickerText = pickers.length
-            ? pickers.map(name => `<div>${escapeHtml(name)}</div>`).join("")
-            : `<div>Никто не выбрал этот матч</div>`;
-
-          const flagHtmlValue = match.flag_url
-            ? flagHtml(match.flag_url)
-            : escapeHtml(match.flag || "🌍");
-
-          return `
-            <div class="country-history-match">
-              <div class="country-history-main">
-                <div class="country-history-name">
-                  <span class="country-history-flag">${flagHtmlValue}</span>
-                  <span class="country-history-name-text">${escapeHtml(match.teams)}</span>
-                </div>
-                <div class="country-history-sub">
-                  ${formatMatchDateTime(match) ? `<span class="country-history-datetime">${escapeHtml(formatMatchDateTime(match))}</span>` : ""}
-                  <button type="button" class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
-                    ${starsHtml(match.popularity, false)}
-                  </button>
-                </div>
+        return `
+          <div class="country-history-match">
+            <div class="country-history-main">
+              <div class="country-history-name">
+                <span class="country-history-flag">${flagHtmlValue}</span>
+                <span class="country-history-name-text">${escapeHtml(match.teams)}</span>
               </div>
-              <div class="country-history-score ${result.cls}">${escapeHtml(result.score)}</div>
+              <div class="country-history-sub">
+                ${formatMatchDateTime(match) ? `<span class="country-history-datetime">${escapeHtml(formatMatchDateTime(match))}</span>` : ""}
+                <button type="button" class="country-history-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+                  ${starsHtml(match.popularity, false)}
+                </button>
+              </div>
             </div>
+            <div class="country-history-score ${result.cls}">${escapeHtml(result.score)}</div>
+          </div>
+        `;
+      };
+
+      // Континент: в общей статистике все страны свёрнуты в баян.
+      // В конкретном туре баян появляется только у страны с 4+ матчами.
+      if (isContinent) {
+        const countries = new Map();
+        geoMatches.forEach(match => {
+          const country = cleanCountryName(match.country || "") || "Без страны";
+          if (!countries.has(country)) countries.set(country, []);
+          countries.get(country).push(match);
+        });
+
+        const countryEntries = [...countries.entries()].sort((a, b) =>
+          b[1].length - a[1].length || a[0].localeCompare(b[0], "ru")
+        );
+
+        if (statsMode === "overall") {
+          body.innerHTML = countryEntries.map(([country, countryMatches]) => {
+            const firstCountryMatch = countryMatches[0];
+            const flag = firstCountryMatch?.flag_url
+              ? flagHtml(firstCountryMatch.flag_url)
+              : escapeHtml(firstCountryMatch?.flag || "🌍");
+            const countryWins = countryMatches.filter(m => (m.api_status || m.status) === "win").length;
+
+            const tours = new Map();
+            countryMatches.forEach(match => {
+              const key = Number(match.tour) || 0;
+              if (!tours.has(key)) tours.set(key, []);
+              tours.get(key).push(match);
+            });
+
+            const content = [...tours.entries()].map(([tour, tourMatches]) => {
+              const dateRange = tourDatesForHistory(tour, tourMatches);
+              const label = isPlayoffTour(tour) ? tourLabel(tour) : `Тур ${tour}`;
+              return `
+                <div class="continent-country-tour-label">${escapeHtml(label)}${dateRange ? ` · ${escapeHtml(dateRange)}` : ""}</div>
+                ${tourMatches.map(renderMatchRow).join("")}
+              `;
+            }).join("");
+
+            return `
+              <section class="continent-country-group" data-continent-country="${escapeHtml(country)}">
+                <div class="continent-country-title" role="button" tabindex="0" aria-expanded="false">
+                  <span class="continent-country-title-main">
+                    <span class="country-history-flag">${flag}</span>
+                    <span>${escapeHtml(country)}</span>
+                  </span>
+                  <span class="continent-country-title-meta">
+                    ${countryMatches.length} · ничьих ${countryWins}
+                    <span class="continent-country-chevron">›</span>
+                  </span>
+                </div>
+                <div class="continent-country-content"><div class="continent-country-content-inner">${content}</div></div>
+              </section>
+            `;
+          }).join("");
+        } else {
+          body.innerHTML = countryEntries.map(([country, countryMatches]) => {
+            if (countryMatches.length <= 3) {
+              return `<div class="continent-country-direct">${countryMatches.map(renderMatchRow).join("")}</div>`;
+            }
+
+            const firstCountryMatch = countryMatches[0];
+            const flag = firstCountryMatch?.flag_url
+              ? flagHtml(firstCountryMatch.flag_url)
+              : escapeHtml(firstCountryMatch?.flag || "🌍");
+
+            return `
+              <section class="continent-country-group" data-continent-country="${escapeHtml(country)}">
+                <div class="continent-country-title" role="button" tabindex="0" aria-expanded="false">
+                  <span class="continent-country-title-main">
+                    <span class="country-history-flag">${flag}</span>
+                    <span>${escapeHtml(country)}</span>
+                  </span>
+                  <span class="continent-country-title-meta">
+                    ${countryMatches.length} матчей
+                    <span class="continent-country-chevron">›</span>
+                  </span>
+                </div>
+                <div class="continent-country-content"><div class="continent-country-content-inner">${countryMatches.map(renderMatchRow).join("")}</div></div>
+              </section>
+            `;
+          }).join("");
+        }
+      } else {
+        // Страна: сохраняем прежнюю историю по турам.
+        const groups = new Map();
+        geoMatches.forEach(match => {
+          const key = Number(match.tour) || 0;
+          if (!groups.has(key)) groups.set(key, []);
+          groups.get(key).push(match);
+        });
+
+        body.innerHTML = [...groups.entries()].map(([tour, tourMatches]) => {
+          const dateRange = tourDatesForHistory(tour, tourMatches);
+          const label = isPlayoffTour(tour) ? tourLabel(tour) : `Тур ${tour}`;
+          return `
+            <section class="country-tour-group" data-country-tour="${escapeHtml(tour)}">
+              <div class="country-tour-title" role="button" tabindex="0" aria-expanded="false">
+                <span class="country-tour-title-main">${escapeHtml(label)}${dateRange ? ` · ${escapeHtml(dateRange)}` : ""}</span>
+                <span class="country-tour-title-meta">
+                  ${tourMatches.length} матч${tourMatches.length === 1 ? "" : tourMatches.length >= 2 && tourMatches.length <= 4 ? "а" : "ей"}
+                  <span class="country-tour-chevron">›</span>
+                </span>
+              </div>
+              <div class="country-match-list">${tourMatches.map(renderMatchRow).join("")}</div>
+            </section>
           `;
         }).join("");
 
-        return `
-          <section class="country-tour-group" data-country-tour="${escapeHtml(tour)}">
-            <div class="country-tour-title" role="button" tabindex="0" aria-expanded="false">
-              <span class="country-tour-title-main">${escapeHtml(label)}${dateRange ? ` · ${escapeHtml(dateRange)}` : ""}</span>
-              <span class="country-tour-title-meta">
-                ${tourMatches.length} матч${tourMatches.length === 1 ? "" : tourMatches.length >= 2 && tourMatches.length <= 4 ? "а" : "ей"}
-                <span class="country-tour-chevron">›</span>
-              </span>
-            </div>
-            <div class="country-match-list">${matchRows}</div>
-          </section>
-        `;
-      }).join("");
-
-      const renderedGroups = [...body.querySelectorAll(".country-tour-group")];
-      if (renderedGroups.length) {
-        const lastGroup = renderedGroups[renderedGroups.length - 1];
-        lastGroup.classList.add("is-open");
-        const lastTitle = lastGroup.querySelector(".country-tour-title");
-        if (lastTitle) lastTitle.setAttribute("aria-expanded", "true");
+        const renderedGroups = [...body.querySelectorAll(".country-tour-group")];
+        if (renderedGroups.length) {
+          const lastGroup = renderedGroups[renderedGroups.length - 1];
+          lastGroup.classList.add("is-open");
+          const lastTitle = lastGroup.querySelector(".country-tour-title");
+          if (lastTitle) lastTitle.setAttribute("aria-expanded", "true");
+        }
       }
 
       modal.classList.remove("hidden");
