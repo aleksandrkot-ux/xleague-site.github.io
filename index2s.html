@@ -5163,6 +5163,116 @@ button.achievement-item {
     gap: 8px;
   }
 }
+
+/* v3.8 — restrained table/dashboard borders */
+
+/* Main tournament tables: stronger outer shell, subtle internal grid */
+.table-box {
+  border: 1px solid rgba(255,255,255,.085) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.018);
+}
+
+.tour-table th,
+.tour-table td {
+  border-right: 1px solid rgba(255,255,255,.035);
+}
+
+.tour-table th:last-child,
+.tour-table td:last-child {
+  border-right: 0;
+}
+
+.tour-table td {
+  border-top-color: rgba(255,255,255,.055) !important;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .tour-table tbody tr {
+    transition: background-color .16s ease, box-shadow .16s ease;
+  }
+
+  .tour-table tbody tr:hover {
+    background: rgba(255,255,255,.027);
+    box-shadow: inset 2px 0 0 rgba(182,255,59,.18);
+  }
+}
+
+/* Player country statistics: a compact data-grid feel */
+.player-countries-v2 {
+  border-radius: 18px;
+}
+
+.country-table-v2 {
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.country-table-v2 th,
+.country-table-v2 td {
+  border-top-color: rgba(255,255,255,.05) !important;
+  border-right: 1px solid rgba(255,255,255,.032);
+}
+
+.country-table-v2 th:last-child,
+.country-table-v2 td:last-child {
+  border-right: 0;
+}
+
+.country-table-v2 thead th {
+  border-top: 0;
+  background: rgba(255,255,255,.025);
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .country-table-v2 tbody tr {
+    transition: background-color .16s ease;
+  }
+
+  .country-table-v2 tbody tr:hover {
+    background: rgba(255,255,255,.027);
+  }
+}
+
+/* Player history: make each tour read as a small contained table block */
+.past-tour-details {
+  border-color: rgba(255,255,255,.075) !important;
+}
+
+.past-tour-details[open] {
+  border-color: rgba(255,255,255,.095) !important;
+}
+
+.past-tour-pick {
+  border: 1px solid rgba(255,255,255,.04);
+}
+
+/* Statistic panels: slightly more defined shell, no extra grid noise */
+.stats-panel,
+.stats-toolbar {
+  border-color: rgba(255,255,255,.075) !important;
+}
+
+/* Keep forecast/match cards softer: only a faint edge */
+#picksList .player-card,
+.match-card {
+  border-color: rgba(255,255,255,.055) !important;
+}
+
+/* On small screens reduce the vertical grid feeling */
+@media (max-width: 699px) {
+  .tour-table th,
+  .tour-table td,
+  .country-table-v2 th,
+  .country-table-v2 td {
+    border-right-color: rgba(255,255,255,.022);
+  }
+}
+
 </style>
 
 </head>
