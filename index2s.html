@@ -4813,12 +4813,17 @@ button.achievement-item {
 
 
 
-/* v3.3 — continent country accordions */
+/* v3.3.1 — continent country accordions (native details) */
 .continent-country-group {
   border-radius: 14px;
   background: rgba(255,255,255,.018);
+  overflow: hidden;
 }
 .continent-country-group + .continent-country-group { margin-top: 7px; }
+.continent-country-group > summary {
+  list-style: none;
+}
+.continent-country-group > summary::-webkit-details-marker { display: none; }
 .continent-country-title {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: 9px 10px; border-radius: 12px;
@@ -4839,21 +4844,25 @@ button.achievement-item {
   display: inline-block; color: var(--accent); font-size: 12px;
   transition: transform .2s ease;
 }
+.continent-country-group[open] .continent-country-chevron { transform: rotate(90deg); }
 .continent-country-content {
-  overflow: hidden; max-height: 0; opacity: 0; transform: translateY(-3px);
-  transition: max-height .24s ease, opacity .18s ease, transform .18s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: grid-template-rows .24s ease, opacity .18s ease, transform .18s ease;
 }
-.continent-country-group.is-open .continent-country-content {
-  max-height: 5000px; opacity: 1; transform: translateY(0);
+.continent-country-group[open] .continent-country-content {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
 }
-.continent-country-group.is-open .continent-country-chevron { transform: rotate(90deg); }
-.continent-country-content-inner { display: grid; gap: 6px; padding: 7px 0 2px; }
+.continent-country-content-inner { min-height: 0; overflow: hidden; display: grid; gap: 6px; padding: 7px 0 2px; }
 .continent-country-tour-label {
   padding: 6px 4px 2px; color: #8f8f94; font-size: 9px; font-weight: 1000;
   letter-spacing: .025em; text-transform: uppercase;
 }
 .continent-country-direct + .continent-country-direct { margin-top: 5px; }
-
 @media (prefers-reduced-motion: reduce) {
   .continent-country-content, .continent-country-chevron { transition: none !important; }
 }
@@ -6239,25 +6248,6 @@ function mapPredictionRow(row) {
         return;
       }
 
-      const continentCountryHeader = event.target.closest(".continent-country-title");
-      if (continentCountryHeader) {
-        const group = continentCountryHeader.closest(".continent-country-group");
-        if (group) {
-          const willOpen = !group.classList.contains("is-open");
-          const body = group.parentElement;
-          if (willOpen && body) {
-            body.querySelectorAll(".continent-country-group.is-open").forEach(other => {
-              if (other === group) return;
-              other.classList.remove("is-open");
-              other.querySelector(".continent-country-title")?.setAttribute("aria-expanded", "false");
-            });
-          }
-          group.classList.toggle("is-open", willOpen);
-          continentCountryHeader.setAttribute("aria-expanded", willOpen ? "true" : "false");
-        }
-        return;
-      }
-
       const tourHeader = event.target.closest(".country-tour-title");
       if (tourHeader) {
         const group = tourHeader.closest(".country-tour-group");
@@ -7180,8 +7170,8 @@ sourceMatches.forEach(match => {
             }).join("");
 
             return `
-              <section class="continent-country-group" data-continent-country="${escapeHtml(country)}">
-                <div class="continent-country-title" role="button" tabindex="0" aria-expanded="false">
+              <details class="continent-country-group" name="continent-country-overall" data-continent-country="${escapeHtml(country)}">
+                <summary class="continent-country-title">
                   <span class="continent-country-title-main">
                     <span class="country-history-flag">${flag}</span>
                     <span>${escapeHtml(country)}</span>
@@ -7190,9 +7180,9 @@ sourceMatches.forEach(match => {
                     ${countryMatches.length} · ничьих ${countryWins}
                     <span class="continent-country-chevron">›</span>
                   </span>
-                </div>
+                </summary>
                 <div class="continent-country-content"><div class="continent-country-content-inner">${content}</div></div>
-              </section>
+              </details>
             `;
           }).join("");
         } else {
@@ -7207,8 +7197,8 @@ sourceMatches.forEach(match => {
               : escapeHtml(firstCountryMatch?.flag || "🌍");
 
             return `
-              <section class="continent-country-group" data-continent-country="${escapeHtml(country)}">
-                <div class="continent-country-title" role="button" tabindex="0" aria-expanded="false">
+              <details class="continent-country-group" name="continent-country-overall" data-continent-country="${escapeHtml(country)}">
+                <summary class="continent-country-title">
                   <span class="continent-country-title-main">
                     <span class="country-history-flag">${flag}</span>
                     <span>${escapeHtml(country)}</span>
@@ -7217,9 +7207,9 @@ sourceMatches.forEach(match => {
                     ${countryMatches.length} матчей
                     <span class="continent-country-chevron">›</span>
                   </span>
-                </div>
+                </summary>
                 <div class="continent-country-content"><div class="continent-country-content-inner">${countryMatches.map(renderMatchRow).join("")}</div></div>
-              </section>
+              </details>
             `;
           }).join("");
         }
