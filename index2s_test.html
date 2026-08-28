@@ -5795,6 +5795,63 @@ button.achievement-item {
     const SHEETS_TIMEOUT_MS = 9000;
     const CACHE_KEY = `xleague_cache_${SHEET_ID}`;
 
+    // === X LEAGUE LIVE API (test integration) ===
+    // For now the VPS endpoint is intentionally tied to one API-Football fixture.
+    // This lets us test the UI without changing the Google Sheet structure.
+    const LIVE_API_URL = "https://api.playxliga.ru/live";
+    const LIVE_TEST_FIXTURE_ID = 1570335;
+    const LIVE_POLL_MS = 30000;
+    let liveFixture = null;
+    let livePollTimer = null;
+
+    function liveAppliesToMatch(match) {
+      if (!liveFixture || !match) return false;
+
+      // Temporary test binding: Barcelona - Athletic on 27.08 at 22:00.
+      // Later this will be replaced by fixture_id stored/matched on the VPS side.
+      const teams = String(match.teams || "").toLowerCase();
+      const date = String(match.date || match.sortDate || "");
+      return (
+        (teams.includes("барсел") && teams.includes("атлет")) ||
+        (teams.includes("barcelona") && teams.includes("athletic"))
+      ) && (date.includes("27.08") || date.includes("2026-08-27"));
+    }
+
+    function liveScoreText(match) {
+      if (!liveAppliesToMatch(match)) return null;
+      const home = liveFixture?.score?.home;
+      const away = liveFixture?.score?.away;
+      if (home === null || home === undefined || away === null || away === undefined) return null;
+
+      const score = `${home}-${away}`;
+      if (liveFixture.is_finished) return score;
+
+      const status = String(liveFixture.status || "");
+      const minute = liveFixture.minute;
+      if (["1H", "2H", "ET"].includes(status) && minute) return `${score} · ${minute}'`;
+      if (status === "HT") return `${score} · перерыв`;
+      if (status === "P") return `${score} · пен.`;
+      return score;
+    }
+
+    async function refreshLiveFixture() {
+      try {
+        const data = await fetchJsonWithTimeout(LIVE_API_URL, 7000);
+        if (!data || data.ok !== true || Number(data.fixture_id) !== LIVE_TEST_FIXTURE_ID) return;
+        liveFixture = data;
+        renderMatches();
+      } catch (err) {
+        // Live is an enhancement only: Sheets remain the fallback/source of truth.
+        console.warn("X League live API unavailable", err);
+      }
+    }
+
+    function startLivePolling() {
+      if (livePollTimer) clearInterval(livePollTimer);
+      refreshLiveFixture();
+      livePollTimer = setInterval(refreshLiveFixture, LIVE_POLL_MS);
+    }
+
     function fetchJsonWithTimeout(url, timeout = SHEETS_TIMEOUT_MS) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeout);
@@ -6223,7 +6280,16 @@ function mapPredictionRow(row) {
     }
 
     function matchStatus(match) {
-      if (match.status === "pending") return `<span class="match-status pending">⏳</span>`;
+      const apiScore = liveScoreText(match);
+
+      // Live API only changes what the visitor sees.
+      // It does NOT turn a pending Google Sheets row into WIN/LOSE.
+      if (match.status === "pending") {
+        if (apiScore) return `<span class="match-status pending">${escapeHtml(apiScore)} ⏳</span>`;
+        return `<span class="match-status pending">⏳</span>`;
+      }
+
+      // Once Sheets has an official result, Sheets remains authoritative.
       if (match.status === "win") return `<span class="match-status win">${escapeHtml(match.score)} ✅</span>`;
       return `<span class="match-status lose">${escapeHtml(match.score)} ❌</span>`;
     }
@@ -8808,6 +8874,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         applySheetsPayload(cached);
       }
       renderAll();
+      startLivePolling();
 
       // Потом пробуем подтянуть свежие данные из Google Sheets с таймаутом.
       const loaded = await loadSheetsData();
