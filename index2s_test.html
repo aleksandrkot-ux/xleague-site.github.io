@@ -3815,6 +3815,55 @@ main,
 }
 
 
+
+/* Live score styling */
+.match-status.live-score-status {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 7px;
+  color: #fff !important;
+}
+
+.live-score-value {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.13);
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 1000;
+  letter-spacing: .02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-minute {
+  display: inline-block;
+  color: #fb7185 !important;
+  font-size: 12px;
+  font-weight: 1000;
+  line-height: 1;
+  transform-origin: center;
+  animation: xleague-live-pulse 1.35s ease-in-out infinite;
+}
+
+.live-minute.live-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+@keyframes xleague-live-pulse {
+  0%, 100% { opacity: .58; transform: scale(1); text-shadow: 0 0 0 rgba(251,113,133,0); }
+  50% { opacity: 1; transform: scale(1.10); text-shadow: 0 0 9px rgba(251,113,133,.62); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-minute { animation: none; opacity: 1; }
+}
+
 /* Current-tour live state */
 .player-current-v2 .dot.pending {
   background: #f5f5f5 !important;
@@ -5840,22 +5889,21 @@ button.achievement-item {
       });
     }
 
-    function liveScoreText(match) {
+    function liveScoreData(match) {
       const live = liveByMatchKey.get(liveMatchKey(match.teams, match.date, match.time));
       if (!live || !live.score) return null;
 
       if (live.phase === "LIVE") {
-        if (live.status === "HT") return `${live.score} · перерыв`;
-        if (live.status === "P") return `${live.score} · пен.`;
-        if (live.minute !== "" && live.minute !== null && live.minute !== undefined) {
-          return `${live.score} · ${live.minute}'`;
-        }
-        return live.score;
+        let clock = "LIVE";
+        if (live.status === "HT") clock = "ПЕРЕРЫВ";
+        else if (live.status === "P") clock = "ПЕН.";
+        else if (live.minute !== "" && live.minute !== null && live.minute !== undefined) clock = `${live.minute}'`;
+        return { score: live.score, clock, live: true };
       }
 
       // A FINISHED row may appear in tech_live before Sheets receives the official FT score.
       // It is still display-only: match.status remains pending until Sheets formulas change it.
-      if (live.phase === "FINISHED") return live.score;
+      if (live.phase === "FINISHED") return { score: live.score, clock: "FT", live: false };
       return null;
     }
 
@@ -6307,12 +6355,15 @@ function mapPredictionRow(row) {
     }
 
     function matchStatus(match) {
-      const apiScore = liveScoreText(match);
+      const liveData = liveScoreData(match);
 
-      // Live API only changes what the visitor sees.
+      // Live state only changes what the visitor sees.
       // It does NOT turn a pending Google Sheets row into WIN/LOSE.
       if (match.status === "pending") {
-        if (apiScore) return `<span class="match-status pending">${escapeHtml(apiScore)} ⏳</span>`;
+        if (liveData) {
+          const clockClass = liveData.live ? "live-minute" : "live-minute live-label";
+          return `<span class="match-status pending live-score-status"><span class="live-score-value">${escapeHtml(liveData.score)}</span><span class="${clockClass}">${escapeHtml(liveData.clock)}</span></span>`;
+        }
         return `<span class="match-status pending">⏳</span>`;
       }
 
