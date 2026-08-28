@@ -3936,6 +3936,28 @@ main,
  -webkit-text-fill-color:#fbbf24 !important;
 }
 
+
+@media (min-width: 700px) {
+  .match-status.live-score,
+  .live-score {
+    color: #c2c2c2 !important;
+    -webkit-text-fill-color: #c2c2c2 !important;
+    font-weight: 800 !important;
+  }
+}
+
+
+.match-live-label {
+  margin-left: 6px;
+  color: #ef4444 !important;
+  -webkit-text-fill-color: #ef4444 !important;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
 </style>
 
 <style>
@@ -8972,6 +8994,37 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
 
     boot();
-  </script>
+  
+function applyLiveLabels() {
+  document.querySelectorAll(".match-card").forEach(card => {
+    const live = card.querySelector(".live-score, .live-minute, .live-minute-wrap");
+    const meta = card.querySelector(".match-meta");
+    if (!meta) return;
+
+    let label = meta.querySelector(".match-live-label");
+
+    if (live) {
+      if (!label) {
+        label = document.createElement("span");
+        label.className = "match-live-label";
+        label.textContent = "LIVE";
+        meta.appendChild(label);
+      }
+    } else if (label) {
+      label.remove();
+    }
+  });
+}
+
+
+const liveLabelObserver = new MutationObserver(() => {
+  requestAnimationFrame(applyLiveLabels);
+});
+document.addEventListener("DOMContentLoaded", () => {
+  applyLiveLabels();
+  liveLabelObserver.observe(document.body, { childList: true, subtree: true });
+});
+
+</script>
 </body>
 </html>
