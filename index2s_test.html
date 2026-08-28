@@ -5795,61 +5795,86 @@ button.achievement-item {
     const SHEETS_TIMEOUT_MS = 9000;
     const CACHE_KEY = `xleague_cache_${SHEET_ID}`;
 
-    // === X LEAGUE LIVE API (test integration) ===
-    // For now the VPS endpoint is intentionally tied to one API-Football fixture.
-    // This lets us test the UI without changing the Google Sheet structure.
-    const LIVE_API_URL = "https://api.playxliga.ru/live";
-    const LIVE_TEST_FIXTURE_ID = 1570335;
-    const LIVE_POLL_MS = 30000;
-    let liveFixture = null;
-    let livePollTimer = null;
+    // === X LEAGUE LIVE DATA (TEST workbook) ===
+    // The browser reads tech_live/tech_fixtures from the TEST Google Sheet.
+    // API-Football is called only by the VPS worker, never by visitors.
+    let liveByMatchKey = new Map();
 
-    function liveAppliesToMatch(match) {
-      if (!liveFixture || !match) return false;
+    function liveMatchKey(teams, date, time) {
+      const normTeams = String(teams || "")
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/[^a-zа-я0-9]+/gi, " " )
+        .trim()
+        .replace(/\s+/g, " " );
+      return `${normTeams}|${String(date || "").trim()}|${String(time || "").trim()}`;
+    }
 
-      // Temporary test binding: Barcelona - Athletic on 27.08 at 22:00.
-      // Later this will be replaced by fixture_id stored/matched on the VPS side.
-      const teams = String(match.teams || "").toLowerCase();
-      const date = String(match.date || match.sortDate || "");
-      return (
-        (teams.includes("барсел") && teams.includes("атлет")) ||
-        (teams.includes("barcelona") && teams.includes("athletic"))
-      ) && (date.includes("27.08") || date.includes("2026-08-27"));
+    function buildLiveIndex(liveRows = [], fixtureRows = []) {
+      const fixtureByUid = new Map();
+      fixtureRows.forEach(row => {
+        const uid = get(row, ["match_uid", "uid", "A"]);
+        if (!uid) return;
+        fixtureByUid.set(String(uid), {
+          match: get(row, ["match", "E"]),
+          date: get(row, ["date", "C"]),
+          time: get(row, ["time", "D"])
+        });
+      });
+
+      liveByMatchKey = new Map();
+      liveRows.forEach(row => {
+        const uid = String(get(row, ["match_uid", "uid", "A"]));
+        const source = fixtureByUid.get(uid);
+        if (!source) return;
+        liveByMatchKey.set(liveMatchKey(source.match, source.date, source.time), {
+          uid,
+          phase: String(get(row, ["phase", "C"])).toUpperCase(),
+          status: String(get(row, ["status", "D"])).toUpperCase(),
+          minute: get(row, ["minute", "E"]),
+          home: get(row, ["home_score", "F"]),
+          away: get(row, ["away_score", "G"]),
+          score: get(row, ["score", "H"]),
+          updatedAt: get(row, ["updated_at", "K"])
+        });
+      });
     }
 
     function liveScoreText(match) {
-      if (!liveAppliesToMatch(match)) return null;
-      const home = liveFixture?.score?.home;
-      const away = liveFixture?.score?.away;
-      if (home === null || home === undefined || away === null || away === undefined) return null;
+      const live = liveByMatchKey.get(liveMatchKey(match.teams, match.date, match.time));
+      if (!live || !live.score) return null;
 
-      const score = `${home}-${away}`;
-      if (liveFixture.is_finished) return score;
+      if (live.phase === "LIVE") {
+        if (live.status === "HT") return `${live.score} · перерыв`;
+        if (live.status === "P") return `${live.score} · пен.`;
+        if (live.minute !== "" && live.minute !== null && live.minute !== undefined) {
+          return `${live.score} · ${live.minute}'`;
+        }
+        return live.score;
+      }
 
-      const status = String(liveFixture.status || "");
-      const minute = liveFixture.minute;
-      if (["1H", "2H", "ET"].includes(status) && minute) return `${score} · ${minute}'`;
-      if (status === "HT") return `${score} · перерыв`;
-      if (status === "P") return `${score} · пен.`;
-      return score;
+      // A FINISHED row may appear in tech_live before Sheets receives the official FT score.
+      // It is still display-only: match.status remains pending until Sheets formulas change it.
+      if (live.phase === "FINISHED") return live.score;
+      return null;
     }
 
-    async function refreshLiveFixture() {
+    async function refreshLiveFromSheets() {
       try {
-        const data = await fetchJsonWithTimeout(LIVE_API_URL, 7000);
-        if (!data || data.ok !== true || Number(data.fixture_id) !== LIVE_TEST_FIXTURE_ID) return;
-        liveFixture = data;
+        const [liveRows, fixtureRows] = await Promise.all([
+          loadTab(TABS.live).catch(() => []),
+          loadTab(TABS.fixtures).catch(() => [])
+        ]);
+        buildLiveIndex(liveRows, fixtureRows);
         renderMatches();
       } catch (err) {
-        // Live is an enhancement only: Sheets remain the fallback/source of truth.
-        console.warn("X League live API unavailable", err);
+        console.warn("X League tech_live unavailable", err);
       }
     }
 
     function startLivePolling() {
-      if (livePollTimer) clearInterval(livePollTimer);
-      refreshLiveFixture();
-      livePollTimer = setInterval(refreshLiveFixture, LIVE_POLL_MS);
+      refreshLiveFromSheets();
+      setInterval(refreshLiveFromSheets, 30000);
     }
 
     function fetchJsonWithTimeout(url, timeout = SHEETS_TIMEOUT_MS) {
@@ -5931,7 +5956,9 @@ button.achievement-item {
   rankHistory: "site_rank_history",
   tours: "site_tours",
   playoff: "play_off",
-  config: "site_config"
+  config: "site_config",
+  live: "tech_live",
+  fixtures: "tech_fixtures"
 };
 
     function normalizeKeyName(value) {
