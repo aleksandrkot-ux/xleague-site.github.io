@@ -3845,6 +3845,15 @@ main,
   font-size: 12px;
   font-weight: 1000;
   line-height: 1;
+}
+
+.live-minute-number {
+  display: inline-block;
+}
+
+.live-minute-apostrophe {
+  display: inline-block;
+  margin-left: 1px;
   transform-origin: center;
   animation: xleague-live-pulse 1.35s ease-in-out infinite;
 }
@@ -3861,7 +3870,7 @@ main,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .live-minute { animation: none; opacity: 1; }
+  .live-minute-apostrophe { animation: none; opacity: 1; }
 }
 
 /* Current-tour live state */
@@ -5897,8 +5906,8 @@ button.achievement-item {
         let clock = "LIVE";
         if (live.status === "HT") clock = "ПЕРЕРЫВ";
         else if (live.status === "P") clock = "ПЕН.";
-        else if (live.minute !== "" && live.minute !== null && live.minute !== undefined) clock = `${live.minute}'`;
-        return { score: live.score, clock, live: true };
+        else if (live.minute !== "" && live.minute !== null && live.minute !== undefined) clock = String(live.minute);
+        return { score: live.score, clock, live: true, minuteNumber: live.minute !== "" && live.minute !== null && live.minute !== undefined && live.status !== "HT" && live.status !== "P" };
       }
 
       // A FINISHED row may appear in tech_live before Sheets receives the official FT score.
@@ -6362,7 +6371,10 @@ function mapPredictionRow(row) {
       if (match.status === "pending") {
         if (liveData) {
           const clockClass = liveData.live ? "live-minute" : "live-minute live-label";
-          return `<span class="match-status pending live-score-status"><span class="live-score-value">${escapeHtml(liveData.score)}</span><span class="${clockClass}">${escapeHtml(liveData.clock)}</span></span>`;
+          const clockHtml = liveData.minuteNumber
+            ? `<span class="live-minute-number">${escapeHtml(liveData.clock)}</span><span class="live-minute-apostrophe">'</span>`
+            : escapeHtml(liveData.clock);
+          return `<span class="match-status pending live-score-status"><span class="live-score-value">${escapeHtml(liveData.score)}</span><span class="${clockClass}">${clockHtml}</span></span>`;
         }
         return `<span class="match-status pending">⏳</span>`;
       }
