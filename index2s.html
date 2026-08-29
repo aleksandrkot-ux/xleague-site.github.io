@@ -5799,7 +5799,7 @@ button.achievement-item {
     // 2) Paste only the spreadsheet ID below.
     // Example: https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit
     const SHEET_ID = "1aOaRL3yJMFQHJZLrMpUNI9BylVS3WeaLpVW8FDLLQnY";
-    const SHEET_API = (tab) => `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(tab)}`;
+    const SHEET_API = (tab) => `https://api.playxliga.ru/sheet/${encodeURIComponent(tab)}`;
     const SHEETS_TIMEOUT_MS = 12000;
     const CACHE_KEY = `xleague_cache_${SHEET_ID}`;
 
