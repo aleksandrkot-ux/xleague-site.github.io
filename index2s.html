@@ -5283,6 +5283,51 @@ button.achievement-item {
 
 </style>
 
+
+<style>
+/* ===== X League: cancelled/void match state ===== */
+.dot.cancelled,
+.profile-dot.cancelled {
+  background: #d8c36a !important;
+  box-shadow: 0 0 12px rgba(216,195,106,.30) !important;
+}
+
+.match-status.cancelled {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+
+.pick-name.pick-cancelled,
+.pick-name.pick-cancelled .pick-num,
+.past-tour-pick-name.pick-cancelled {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+
+.player-current-v2 .profile-pick-card.cancelled {
+  border-color: rgba(216,195,106,.28) !important;
+  background: linear-gradient(180deg, rgba(216,195,106,.075), rgba(216,195,106,.025)) !important;
+}
+
+.player-current-v2 .profile-pick-card.cancelled,
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-match,
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-meta,
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-meta span:first-child {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-meta .current-tour-odd {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+}
+
+.country-history-score.is-cancelled {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -5936,6 +5981,9 @@ function scoreByMatchId(id) {
       const raw = String(value ?? "").trim().toLowerCase();
       const res = String(resultValue ?? "").trim();
 
+      // A void result from Sheets is authoritative even if a stale machine status still says pending.
+      if (res.toLowerCase() === "x" || raw.includes("🚫")) return "cancelled";
+
       // Machine statuses from site_matches!K: pending / win / lose / cancelled
       if (["pending", "win", "lose", "cancelled"].includes(raw)) return raw;
 
@@ -6242,8 +6290,10 @@ function mapPredictionRow(row) {
     }
 
     function matchStatus(match) {
-      if (match.status === "pending") return `<span class="match-status pending">⏳</span>`;
-      if (match.status === "win") return `<span class="match-status win">${escapeHtml(match.score)} ✅</span>`;
+      const status = match.api_status || match.status || "pending";
+      if (status === "pending") return `<span class="match-status pending">⏳</span>`;
+      if (status === "cancelled") return `<span class="match-status cancelled">отм</span>`;
+      if (status === "win") return `<span class="match-status win">${escapeHtml(match.score)} ✅</span>`;
       return `<span class="match-status lose">${escapeHtml(match.score)} ❌</span>`;
     }
 
@@ -6576,8 +6626,7 @@ function mapPredictionRow(row) {
 
     function currentTourMatches() {
       const currentTour = matchesSelectedTour || getDefaultTour();
-      const scoped = currentTour ? matches.filter(m => Number(m.tour) === Number(currentTour)) : matches;
-      return scoped.filter(m => m.status !== "cancelled" && m.api_status !== "cancelled");
+      return currentTour ? matches.filter(m => Number(m.tour) === Number(currentTour)) : matches;
     }
 
    function renderMatches() {
@@ -6588,7 +6637,7 @@ function mapPredictionRow(row) {
     .sort(compareDateTimeAsc);
 
   const finished = scopedMatches
-    .filter(m => ["win", "lose"].includes(m.status) || ["win", "lose"].includes(m.api_status))
+    .filter(m => ["win", "lose", "cancelled"].includes(m.status) || ["win", "lose", "cancelled"].includes(m.api_status))
     .sort(compareDateTimeDesc);
 
 
@@ -6745,6 +6794,7 @@ if (screenMatches) {
   const resultClass =
     pickResult === "win" ? "pick-win" :
     pickResult === "lose" ? "pick-lose" :
+    pickResult === "cancelled" ? "pick-cancelled" :
     "pick-pending";
 
 
@@ -7196,6 +7246,7 @@ sourceMatches.forEach(match => {
       const status = match.api_status || match.status || "pending";
       if (status === "win") return { cls: "is-win", score: match.score || "Ничья" };
       if (status === "lose") return { cls: "is-lose", score: match.score || "Не ничья" };
+      if (status === "cancelled") return { cls: "is-cancelled", score: "отм" };
       return { cls: "is-pending", score: match.score || "—" };
     }
 
@@ -7212,7 +7263,7 @@ sourceMatches.forEach(match => {
       if (kicker) kicker.textContent = isContinent ? "Матчи континента в X League" : "Матчи страны в X League";
 
       let geoMatches = matches.filter(match => {
-        if (!match || match.api_status === "cancelled" || match.status === "cancelled") return false;
+        if (!match) return false;
         if (Number(match.popularity || 0) <= 0) return false;
 
         const country = cleanCountryName(match.country || "");
@@ -7592,7 +7643,8 @@ sourceMatches.forEach(match => {
       const top3Pts = sortedPoints.length ? sortedPoints[Math.min(2, sortedPoints.length - 1)] : 0;
 
       const picks = rows.flatMap(p => Array.isArray(p.picks) ? p.picks : []);
-      const odds = picks.map(p => toNum(p.odd, NaN)).filter(Number.isFinite);
+      const statsPicks = picks.filter(p => p.result !== "cancelled");
+      const odds = statsPicks.map(p => toNum(p.odd, NaN)).filter(Number.isFinite);
       const settled = picks.filter(p => p.result === "win" || p.result === "lose");
       const wins = settled.filter(p => p.result === "win");
       const losses = settled.filter(p => p.result === "lose");
@@ -7858,6 +7910,8 @@ sourceMatches.forEach(match => {
               flag_url: match?.flag_url || "",
               wins: 0,
               losses: 0,
+              cancelled: 0,
+              picks: 0,
               flats: 0
             });
           }
@@ -7867,15 +7921,20 @@ sourceMatches.forEach(match => {
           const result = pick.result || match?.status || "pending";
           const odd = toNum(pick.odd, 0);
           if (result === "win") {
+            row.picks += 1;
             row.wins += 1;
             row.flats += Math.max(0, odd - 1);
           } else if (result === "lose") {
+            row.picks += 1;
             row.losses += 1;
             row.flats -= 1;
+          } else if (result === "cancelled") {
+            row.picks += 1;
+            row.cancelled += 1;
           }
         });
       });
-      return [...map.values()].filter(row => row.wins || row.losses);
+      return [...map.values()].filter(row => row.picks > 0);
     }
 
     function formatFlatValue(value) {
@@ -8001,7 +8060,7 @@ sourceMatches.forEach(match => {
       const displayPrediction = currentPrediction || history[history.length - 1];
       if (!displayPrediction) return;
 
-      const settledPicks = history.flatMap(p => p.picks).filter(p => p.result !== "pending");
+      const settledPicks = history.flatMap(p => p.picks).filter(p => p.result === "win" || p.result === "lose");
       currentCountryRows = playerCountryStats(history);
       bindCountrySorting();
       renderCountryStats(false);
@@ -8058,7 +8117,7 @@ sourceMatches.forEach(match => {
       if (formEl) {
         formEl.innerHTML = formTours.map((picks, tourIndex) => {
           const dots = picks.map(pick => profileDot(
-            pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending"
+            pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : pick.result === "cancelled" ? "cancelled" : "pending"
           )).join("");
           const separator = tourIndex < formTours.length - 1
             ? '<span class="profile-form-separator" aria-hidden="true"></span>'
@@ -8089,7 +8148,7 @@ sourceMatches.forEach(match => {
         } else {
           picksEl.innerHTML = currentPrediction.picks.map((pick, index) => {
             const match = matchById.get(pick.matchId);
-            const resultClass = pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending";
+            const resultClass = pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : pick.result === "cancelled" ? "cancelled" : "pending";
             return `
               <div class="profile-pick-card ${resultClass}">
                 <div class="profile-pick-top">
@@ -8151,7 +8210,7 @@ sourceMatches.forEach(match => {
       if (pastEl) {
         const past = history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
         pastEl.innerHTML = past.length ? past.map(p => {
-          const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : "⏳").join("");
+          const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : pick.result === "cancelled" ? "🟡" : "⏳").join("");
 const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
   const pickResult = pick.result || match?.status || "pending";
@@ -8161,6 +8220,7 @@ const picksHtml = p.picks.map((pick, index) => {
   const resultClass =
     pickResult === "win" ? "pick-win" :
     pickResult === "lose" ? "pick-lose" :
+    pickResult === "cancelled" ? "pick-cancelled" :
     "pick-pending";
 
   return `
