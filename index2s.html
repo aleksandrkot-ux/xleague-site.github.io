@@ -5780,8 +5780,8 @@ button.achievement-item {
       ]}
     ];
 
-    let matches = [...DEMO_MATCHES];
-    let predictions = [...DEMO_PREDICTIONS];
+    let matches = [];
+    let predictions = [];
     let siteTable = [];
     let siteOverall = [];
     let sitePlayers = [];
@@ -5800,7 +5800,7 @@ button.achievement-item {
     // Example: https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit
     const SHEET_ID = "1aOaRL3yJMFQHJZLrMpUNI9BylVS3WeaLpVW8FDLLQnY";
     const SHEET_API = (tab) => `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(tab)}`;
-    const SHEETS_TIMEOUT_MS = 9000;
+    const SHEETS_TIMEOUT_MS = 12000;
     const CACHE_KEY = `xleague_cache_${SHEET_ID}`;
 
     function fetchJsonWithTimeout(url, timeout = SHEETS_TIMEOUT_MS) {
@@ -6035,7 +6035,7 @@ function mapPredictionRow(row) {
 
     async function loadSheetsData() {
       if (!SHEET_ID || SHEET_ID === "PASTE_YOUR_SPREADSHEET_ID_HERE") {
-        console.warn("SHEET_ID is not set. Demo data is used.");
+        console.warn("SHEET_ID is not set.");
         return false;
       }
 
@@ -6077,7 +6077,18 @@ function mapPredictionRow(row) {
           showDataNotice("Показаны последние сохранённые данные. Обновление Google Sheets не ответило вовремя.");
           return true;
         }
-        showDataNotice("Данные Google Sheets не загрузились. Показан демо-режим, попробуйте обновить страницу позже.");
+        matches = [];
+        predictions = [];
+        siteTable = [];
+        siteOverall = [];
+        sitePlayers = [];
+        siteAchievements = [];
+        siteTours = [];
+        sitePlayoff = [];
+        rankHistory = [];
+        siteConfig = {};
+        matchById = new Map();
+        showDataNotice("Не удалось загрузить данные. Попробуйте обновить страницу позже.");
         return false;
       }
     }
@@ -7673,9 +7684,7 @@ sourceMatches.forEach(match => {
     }
 
     function updateStats(tour) {
-      const fallback = statsByTour[tour] || statsByTour["5"];
-      const hasRealPredictions = Array.isArray(predictions) && predictions.length && predictions !== DEMO_PREDICTIONS;
-      const s = hasRealPredictions ? calculateRealStats(tour) : fallback;
+      const s = calculateRealStats(tour);
 
       animateStatText("statPlayers", s.players);
       animateStatText("statAvgPts", s.avgPts);
