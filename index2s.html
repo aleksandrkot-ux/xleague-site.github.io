@@ -7699,11 +7699,20 @@ sourceMatches.forEach(match => {
 
       const profit = document.getElementById("statProfit");
       const roi = document.getElementById("statRoi");
-      [profit, roi].forEach(el => {
+
+      const setFinanceColor = (el, value) => {
         if (!el) return;
-        el.classList.toggle("positive", !String(el.textContent).startsWith("-"));
-        el.classList.toggle("negative", String(el.textContent).startsWith("-"));
-      });
+        const numericValue = Number(String(value ?? "0")
+          .replace("%", "")
+          .replace(/\s/g, "")
+          .replace(",", "."));
+
+        el.classList.toggle("positive", numericValue > 0);
+        el.classList.toggle("negative", numericValue < 0);
+      };
+
+      setFinanceColor(profit, s.profit);
+      setFinanceColor(roi, s.roi);
 
       renderTourAchievements(tour);
       updateMetaCharts(tour);
