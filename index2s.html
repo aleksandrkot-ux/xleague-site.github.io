@@ -6456,8 +6456,8 @@ function scoreByMatchId(id) {
 
       const itemHtml = (m) => {
         const score = String(m.score || "").trim();
-        const nums = score.match(/(\d+)\s*[-:]\s*(\d+)/);
-        const isDraw = nums && nums[1] === nums[2];
+        const nums = score.match(/(\d+)\s*[-–—:]\s*(\d+)/);
+        const isDraw = m.status === "win" || !!(nums && nums[1] === nums[2]);
         const flag = m.flag_url
           ? `<img class="results-ticker-flag" src="${escapeHtml(m.flag_url)}" alt="">`
           : (m.flag ? `<span>${escapeHtml(m.flag)}</span>` : "");
