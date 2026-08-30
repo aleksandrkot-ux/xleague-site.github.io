@@ -5482,16 +5482,18 @@ button.achievement-item {
   .prize-btn {
     min-width: 32px;
     width: 32px;
+    height: 32px;
     padding: 0;
     gap: 0;
-    display: grid;
-    place-items: center;
-    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .prize-btn::before {
-    content: "₽";
+  .prize-btn-amount {
+    display: none;
+  }
+  .prize-ruble {
     display: block;
-    margin: 0;
     font-size: 15px;
     line-height: 1;
   }
@@ -5513,7 +5515,7 @@ button.achievement-item {
           </div></a>
         </div>
         <div class="header-actions">
-          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд">₽ 30K</button>
+          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
