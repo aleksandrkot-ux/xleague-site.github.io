@@ -5483,11 +5483,17 @@ button.achievement-item {
     min-width: 32px;
     width: 32px;
     padding: 0;
+    gap: 0;
+    display: grid;
+    place-items: center;
     font-size: 0;
   }
   .prize-btn::before {
     content: "₽";
+    display: block;
+    margin: 0;
     font-size: 15px;
+    line-height: 1;
   }
   .prize-grid { grid-template-columns: 1fr; }
   .prize-total { font-size: 30px; }
@@ -5507,7 +5513,7 @@ button.achievement-item {
           </div></a>
         </div>
         <div class="header-actions">
-          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд">₽ 30,3K</button>
+          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд">₽ 30K</button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
@@ -5818,19 +5824,19 @@ button.achievement-item {
 
         <div class="prize-hero">
           <div class="prize-kicker">Текущий фонд</div>
-          <div class="prize-total">30 300 ₽</div>
-          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+300 ₽</strong> добавили участники</div>
+          <div class="prize-total">30 000 ₽</div>
+          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+0 ₽</strong> добавили участники</div>
         </div>
 
         <div class="prize-grid">
           <div class="prize-card">
             <div class="prize-card-title">🏆 Регулярный сезон</div>
-            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 100 ₽</strong></div>
-            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 070 ₽</strong></div>
-            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 040 ₽</strong></div>
-            <div class="prize-place-row"><span>4 место</span><strong>3 030 ₽</strong></div>
-            <div class="prize-place-row"><span>5 место</span><strong>1 010 ₽</strong></div>
-            <div class="prize-place-row"><span>6–15 места</span><strong>505 ₽</strong></div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 000 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 000 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 000 ₽</strong></div>
+            <div class="prize-place-row"><span>4 место</span><strong>3 000 ₽</strong></div>
+            <div class="prize-place-row"><span>5 место</span><strong>1 000 ₽</strong></div>
+            <div class="prize-place-row"><span>6–15 места</span><strong>500 ₽</strong></div>
           </div>
 
           <div class="prize-card">
@@ -5848,9 +5854,8 @@ button.achievement-item {
 
         <div class="prize-card">
           <div class="prize-card-title">🦆 Меценаты X League</div>
-          <div class="patron-row"><span>Sol</span><strong>300 ₽</strong></div>
+          <div class="patron-row"><span>Пока никто</span><strong>0 ₽</strong></div>
           <div class="patron-note">Отдельное спасибо персонажам, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
-          <div class="scrooge-badge">🦆 1 000 ₽ в фонд → ачивка «Скрудж МакДак»</div>
         </div>
       </div>
     </div>
