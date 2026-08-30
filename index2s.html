@@ -5626,6 +5626,23 @@ button.achievement-item {
   }
 }
 
+
+
+/* Desktop ticker containment fix */
+@media (min-width: 980px) {
+  .results-ticker {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    justify-self: stretch;
+  }
+
+  .results-ticker-track {
+    max-width: none;
+  }
+}
+
 </style>
 
 </head>
