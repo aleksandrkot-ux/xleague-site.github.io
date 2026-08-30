@@ -5353,6 +5353,146 @@ button.achievement-item {
   }
 }
 
+
+/* ===== Prize fund prototype ===== */
+.prize-btn {
+  min-width: 88px;
+  height: 32px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 999px;
+  background: rgba(251,191,36,.08);
+  border: 1px solid rgba(251,191,36,.28);
+  color: #fbbf24;
+  -webkit-text-fill-color: #fbbf24;
+  font-size: 12px;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+.prize-btn:hover { background: rgba(251,191,36,.13); }
+
+.prize-sheet { max-width: 520px; }
+
+.prize-hero {
+  padding: 18px;
+  margin-bottom: 10px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(251,191,36,.16), transparent 45%),
+    #161616;
+  border: 1px solid rgba(251,191,36,.22);
+}
+.prize-kicker {
+  color: #9a9a9a;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.prize-total {
+  margin-top: 4px;
+  color: #fbbf24;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 1000;
+  letter-spacing: -.04em;
+}
+.prize-growth {
+  margin-top: 8px;
+  color: #9a9a9a;
+  font-size: 11px;
+  font-weight: 750;
+}
+.prize-growth strong { color: #fff; }
+
+.prize-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.prize-card {
+  padding: 13px;
+  border-radius: 20px;
+  background: #161616;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.prize-card-title {
+  margin-bottom: 9px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 1000;
+  text-transform: uppercase;
+}
+.prize-place-row,
+.patron-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid rgba(255,255,255,.05);
+  color: #a8a8a8;
+  font-size: 11px;
+  font-weight: 800;
+}
+.prize-place-row:first-of-type,
+.patron-row:first-of-type { border-top: 0; padding-top: 0; }
+.prize-place-row strong { color: #fff; font-size: 12px; }
+.prize-place-row.top strong { color: #fbbf24; }
+
+.prize-explain {
+  margin-bottom: 10px;
+  padding: 13px;
+  border-radius: 20px;
+  background: rgba(182,255,59,.055);
+  border: 1px solid rgba(182,255,59,.14);
+  color: #bdbdbd;
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 750;
+}
+.prize-explain strong { color: #fff; }
+
+.patron-row strong { color: #fbbf24; }
+.patron-note {
+  margin-top: 8px;
+  color: #777;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.scrooge-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 7px 9px;
+  border-radius: 14px;
+  background: rgba(251,191,36,.08);
+  border: 1px solid rgba(251,191,36,.18);
+  color: #fbbf24;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+@media (max-width: 430px) {
+  .prize-btn {
+    min-width: 32px;
+    width: 32px;
+    padding: 0;
+    font-size: 0;
+  }
+  .prize-btn::before {
+    content: "₽";
+    font-size: 15px;
+  }
+  .prize-grid { grid-template-columns: 1fr; }
+  .prize-total { font-size: 30px; }
+}
+
 </style>
 
 </head>
@@ -5367,6 +5507,7 @@ button.achievement-item {
           </div></a>
         </div>
         <div class="header-actions">
+          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд">₽ 30,3K</button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
@@ -5662,6 +5803,57 @@ button.achievement-item {
 
 
 </main>
+
+
+    <div class="info-modal hidden" id="prizeModal">
+      <div class="info-backdrop" id="prizeBackdrop"></div>
+      <div class="info-sheet prize-sheet">
+        <div class="info-sheet-head">
+          <div>
+            <div class="info-title">Призовой фонд</div>
+            <div class="info-subtitle">Регулярный сезон X League</div>
+          </div>
+          <button class="info-close" id="prizeClose" aria-label="Закрыть">×</button>
+        </div>
+
+        <div class="prize-hero">
+          <div class="prize-kicker">Текущий фонд</div>
+          <div class="prize-total">30 300 ₽</div>
+          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+300 ₽</strong> добавили участники</div>
+        </div>
+
+        <div class="prize-grid">
+          <div class="prize-card">
+            <div class="prize-card-title">🏆 Регулярный сезон</div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 100 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 070 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 040 ₽</strong></div>
+            <div class="prize-place-row"><span>4 место</span><strong>3 030 ₽</strong></div>
+            <div class="prize-place-row"><span>5 место</span><strong>1 010 ₽</strong></div>
+            <div class="prize-place-row"><span>6–15 места</span><strong>505 ₽</strong></div>
+          </div>
+
+          <div class="prize-card">
+            <div class="prize-card-title">⚡ Каждый тур</div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>500 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>300 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>200 ₽</strong></div>
+          </div>
+        </div>
+
+        <div class="prize-explain">
+          <strong>Выигрыш тура можно забрать или отправить в общий фонд.</strong><br>
+          Пожертвование увеличивает призовой регулярного сезона, а выплаты по местам растут пропорционально размеру фонда.
+        </div>
+
+        <div class="prize-card">
+          <div class="prize-card-title">🦆 Меценаты X League</div>
+          <div class="patron-row"><span>Sol</span><strong>300 ₽</strong></div>
+          <div class="patron-note">Отдельное спасибо персонажам, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
+          <div class="scrooge-badge">🦆 1 000 ₽ в фонд → ачивка «Скрудж МакДак»</div>
+        </div>
+      </div>
+    </div>
 
     <div class="info-modal hidden" id="infoModal">
       <div class="info-backdrop" id="infoBackdrop"></div>
@@ -8950,6 +9142,21 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         requestAnimationFrame(() => applyStagger("#tourTableBody", "tr", 18));
       });
     }
+
+    const prizeBtn = document.getElementById("prizeBtn");
+    const prizeModal = document.getElementById("prizeModal");
+    const prizeClose = document.getElementById("prizeClose");
+    const prizeBackdrop = document.getElementById("prizeBackdrop");
+
+    function closePrizeModal() {
+      if (prizeModal) prizeModal.classList.add("hidden");
+    }
+
+    if (prizeBtn && prizeModal) {
+      prizeBtn.addEventListener("click", () => prizeModal.classList.remove("hidden"));
+    }
+    if (prizeClose) prizeClose.addEventListener("click", closePrizeModal);
+    if (prizeBackdrop) prizeBackdrop.addEventListener("click", closePrizeModal);
 
     const infoBtn = document.getElementById("infoBtn");
     const infoModal = document.getElementById("infoModal");
