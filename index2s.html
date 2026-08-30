@@ -5491,6 +5491,102 @@ button.achievement-item {
   .prize-grid { grid-template-columns: 1fr; }
   .prize-total { font-size: 30px; }
 }
+
+
+/* ===== Recent results ticker ===== */
+.results-ticker {
+  width: 100%;
+  height: 30px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #0b0d0f;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  white-space: nowrap;
+}
+
+.results-ticker.hidden {
+  display: none;
+}
+
+.results-ticker-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  min-width: max-content;
+  will-change: transform;
+  animation: xleagueTicker 38s linear infinite;
+}
+
+.results-ticker:hover .results-ticker-track {
+  animation-play-state: paused;
+}
+
+.results-ticker-group {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.results-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 13px;
+  color: #a3a3a3;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 30px;
+}
+
+.results-ticker-sep {
+  color: rgba(182,255,59,.42);
+  font-size: 10px;
+}
+
+.results-ticker-score {
+  color: #fff;
+  font-weight: 1000;
+}
+
+.results-ticker-score.draw {
+  color: var(--accent);
+}
+
+.results-ticker-flag {
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  object-fit: cover;
+  flex: 0 0 auto;
+}
+
+@keyframes xleagueTicker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (max-width: 430px) {
+  .results-ticker-track {
+    animation-duration: 32s;
+  }
+
+  .results-ticker-item {
+    padding: 0 11px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results-ticker {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .results-ticker::-webkit-scrollbar { display: none; }
+  .results-ticker-track { animation: none; }
+  .results-ticker-group:nth-child(2) { display: none; }
+}
+
 </style>
 
 </head>
@@ -5511,6 +5607,10 @@ button.achievement-item {
         </div>
       </div>
     </header>
+
+    <div class="results-ticker hidden" id="resultsTicker" aria-label="Последние результаты">
+      <div class="results-ticker-track" id="resultsTickerTrack"></div>
+    </div>
 
     <div class="filter-row" id="filterRow"></div>
 
@@ -6107,6 +6207,7 @@ button.achievement-item {
       sitePlayoff = playoffRows;
       siteConfig = rowsToConfig(cfgRows);
       matchById = new Map(matches.map(x => [x.id, x]));
+      renderResultsTicker();
 
       const currentTour = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
       if (currentTour) selectedTour = currentTour;
@@ -6247,6 +6348,57 @@ function scoreByMatchId(id) {
         api_status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
         popularity: toNum(get(row, ["popularity", "stars", "Популярность"], 0), 0)
       };
+    }
+
+
+    function renderResultsTicker() {
+      const ticker = document.getElementById("resultsTicker");
+      const track = document.getElementById("resultsTickerTrack");
+      if (!ticker || !track) return;
+
+      const finished = matches
+        .filter(m => m.score && (m.status === "win" || m.status === "lose"))
+        .sort((a, b) => {
+          const ak = `${a.sortDate || ""} ${a.time || ""}`;
+          const bk = `${b.sortDate || ""} ${b.time || ""}`;
+          return bk.localeCompare(ak);
+        })
+        .slice(0, 10);
+
+      if (!finished.length) {
+        ticker.classList.add("hidden");
+        track.innerHTML = "";
+        return;
+      }
+
+      const escapeHtml = (value) => String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
+      const itemHtml = (m) => {
+        const score = String(m.score || "").trim();
+        const nums = score.match(/(\d+)\s*[-:]\s*(\d+)/);
+        const isDraw = nums && nums[1] === nums[2];
+        const flag = m.flag_url
+          ? `<img class="results-ticker-flag" src="${escapeHtml(m.flag_url)}" alt="">`
+          : (m.flag ? `<span>${escapeHtml(m.flag)}</span>` : "");
+
+        return `<span class="results-ticker-item">
+          ${flag}
+          <span>${escapeHtml(m.teams)}</span>
+          <span class="results-ticker-score${isDraw ? " draw" : ""}">${escapeHtml(score)}</span>
+          <span class="results-ticker-sep">◆</span>
+        </span>`;
+      };
+
+      const group = finished.map(itemHtml).join("");
+      track.innerHTML =
+        `<div class="results-ticker-group">${group}</div>` +
+        `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
+
+      ticker.classList.remove("hidden");
     }
 
 function mapPredictionRow(row) {
