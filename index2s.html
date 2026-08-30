@@ -5518,7 +5518,8 @@ button.achievement-item {
   animation: xleagueTicker 38s linear infinite;
 }
 
-.results-ticker:hover .results-ticker-track {
+
+.results-ticker.paused .results-ticker-track {
   animation-play-state: paused;
 }
 
@@ -5590,17 +5591,38 @@ button.achievement-item {
 
 
 
-@media (min-width: 900px) {
+
+
+
+@media (min-width: 980px) {
+  .app {
+    grid-template-rows: auto 30px 58px minmax(0, 1fr) !important;
+  }
+
   .results-ticker {
-    position: fixed;
-    top: 80px;
-    left: max(calc((100vw - 1620px) / 2 + 296px), 296px);
-    right: max(calc((100vw - 1620px) / 2), 0px);
-    z-index: 19;
+    grid-column: 2;
+    grid-row: 2;
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    z-index: 18;
   }
 
   .filter-row {
-    margin-top: 30px;
+    grid-column: 2;
+    grid-row: 3 !important;
+    margin-top: 0;
+  }
+
+  main {
+    grid-column: 2;
+    grid-row: 4 !important;
+  }
+
+  .bottom-nav {
+    grid-row: 1 / -1 !important;
   }
 }
 
@@ -6225,6 +6247,7 @@ button.achievement-item {
       siteConfig = rowsToConfig(cfgRows);
       matchById = new Map(matches.map(x => [x.id, x]));
       renderResultsTicker();
+      initResultsTickerToggle();
 
       const currentTour = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
       if (currentTour) selectedTour = currentTour;
@@ -6416,6 +6439,17 @@ function scoreByMatchId(id) {
         `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
 
       ticker.classList.remove("hidden");
+    }
+
+
+    function initResultsTickerToggle() {
+      const ticker = document.getElementById("resultsTicker");
+      if (!ticker || ticker.dataset.toggleReady === "1") return;
+
+      ticker.dataset.toggleReady = "1";
+      ticker.addEventListener("click", () => {
+        ticker.classList.toggle("paused");
+      });
     }
 
 function mapPredictionRow(row) {
