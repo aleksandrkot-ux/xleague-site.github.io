@@ -5549,7 +5549,8 @@ button.achievement-item {
   font-weight: 1000;
 }
 
-.results-ticker-score.draw {
+.results-ticker-item.draw,
+.results-ticker-item.draw .results-ticker-score {
   color: var(--accent);
 }
 
@@ -5585,6 +5586,22 @@ button.achievement-item {
   .results-ticker::-webkit-scrollbar { display: none; }
   .results-ticker-track { animation: none; }
   .results-ticker-group:nth-child(2) { display: none; }
+}
+
+
+
+@media (min-width: 900px) {
+  .results-ticker {
+    position: fixed;
+    top: 80px;
+    left: max(calc((100vw - 1620px) / 2 + 296px), 296px);
+    right: max(calc((100vw - 1620px) / 2), 0px);
+    z-index: 19;
+  }
+
+  .filter-row {
+    margin-top: 30px;
+  }
 }
 
 </style>
@@ -6385,7 +6402,7 @@ function scoreByMatchId(id) {
           ? `<img class="results-ticker-flag" src="${escapeHtml(m.flag_url)}" alt="">`
           : (m.flag ? `<span>${escapeHtml(m.flag)}</span>` : "");
 
-        return `<span class="results-ticker-item">
+        return `<span class="results-ticker-item${isDraw ? " draw" : ""}">
           ${flag}
           <span>${escapeHtml(m.teams)}</span>
           <span class="results-ticker-score${isDraw ? " draw" : ""}">${escapeHtml(score)}</span>
