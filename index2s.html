@@ -5654,8 +5654,8 @@ button.achievement-item {
 .results-ticker .results-ticker-item.draw span,
 .results-ticker .results-ticker-item.draw .results-ticker-score,
 .results-ticker .results-ticker-item.draw .results-ticker-sep {
-  color: #b6ff3b !important;
-  -webkit-text-fill-color: #b6ff3b !important;
+  color: #8fae62 !important;
+  -webkit-text-fill-color: #8fae62 !important;
 }
 
 .results-ticker .results-ticker-item:not(.draw) .results-ticker-sep {
@@ -5700,7 +5700,7 @@ button.achievement-item {
     <div id="upcomingSection">
       <div class="section-title">
         <div class="section-title-left">Предстоящие</div>
-        <div class="section-title-right">Ближайшие 7</div>
+        <div class="section-title-right">Ближайшие 6</div>
       </div>
 
       <div class="stack" id="upcomingList"></div>
@@ -7116,7 +7116,7 @@ if (screenMatches) {
       document.getElementById("upcomingList").innerHTML = showUpcoming
   ? (
       upcoming.length
-        ? (homeLimit ? upcoming.slice(0, 7) : upcoming).map(matchCard).join("")
+        ? (homeLimit ? upcoming.slice(0, 6) : upcoming).map(matchCard).join("")
         : `<div class="empty-state">Текущие матчи отсутствуют</div>`
     )
   : "";
@@ -7125,7 +7125,7 @@ if (screenMatches) {
         ? (homeLimit ? finished.slice(0, 5) : finished).map(matchCard).join("")
         : "";
 
-      document.getElementById("allUpcomingBtn").classList.toggle("hidden", !homeLimit || upcoming.length <= 7);
+      document.getElementById("allUpcomingBtn").classList.toggle("hidden", !homeLimit || upcoming.length <= 6);
       document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= 5);
     }
 
