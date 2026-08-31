@@ -6509,6 +6509,7 @@ function scoreByMatchId(id) {
         const item = (r,i) => `<span class="results-ticker-item standing">
           <span class="results-ticker-rank">${esc(r.rank || i + 1)}.</span>
           <span class="results-ticker-player">${esc(r.name)}</span>
+          <span class="results-ticker-points">${esc(r.total)} оч.</span>
           ${moveHtml(r.move)}
           <span class="results-ticker-sep">◆</span>
         </span>`;
