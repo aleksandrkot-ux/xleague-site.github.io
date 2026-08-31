@@ -5567,6 +5567,16 @@ button.achievement-item {
   flex: 0 0 auto;
 }
 
+
+/* ===== Overall standings mode for ticker ===== */
+.results-ticker-item.standing { gap: 5px; }
+.results-ticker-rank { color:#fff !important; -webkit-text-fill-color:#fff !important; font-weight:1000; }
+.results-ticker-player { color:#d4d4d8 !important; -webkit-text-fill-color:#d4d4d8 !important; font-weight:900; }
+.results-ticker-move.up { color:#34d399 !important; -webkit-text-fill-color:#34d399 !important; }
+.results-ticker-move.down { color:#fb7185 !important; -webkit-text-fill-color:#fb7185 !important; }
+.results-ticker-move.new { color:#fbbf24 !important; -webkit-text-fill-color:#fbbf24 !important; }
+.results-ticker-move.same { color:#8a8a8a !important; -webkit-text-fill-color:#8a8a8a !important; }
+
 @keyframes xleagueTicker {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -6433,48 +6443,96 @@ function scoreByMatchId(id) {
       const track = document.getElementById("resultsTickerTrack");
       if (!ticker || !track) return;
 
-      const finished = matches
-        .filter(m => m.score && (m.status === "win" || m.status === "lose"))
-        .sort((a, b) => {
+      const esc = (value) => String(value ?? "")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+      const currentTour = toNum(
+        siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0
+      );
+
+      const currentTourRow = siteTours.find(row =>
+        toNum(get(row, ["tour", "Tour", "Тур"]), 0) === currentTour
+      );
+
+      const tourStatus = String(get(currentTourRow, ["status", "Status", "Статус"], ""))
+        .trim().toLowerCase();
+      const completedRaw = String(get(currentTourRow, ["completed", "Completed"], ""))
+        .trim().toLowerCase();
+
+      const tourFinished =
+        tourStatus === "finished" || ["true", "1", "yes", "да"].includes(completedRaw);
+
+      const currentResults = matches
+        .filter(m =>
+          (!currentTour || Number(m.tour) === currentTour) &&
+          m.score && (m.status === "win" || m.status === "lose")
+        )
+        .sort((a,b) => {
           const ak = `${a.sortDate || ""} ${a.time || ""}`;
           const bk = `${b.sortDate || ""} ${b.time || ""}`;
           return bk.localeCompare(ak);
-        })
-        .slice(0, 10);
+        });
 
+      const showOverall = tourFinished || currentResults.length === 0;
+
+      if (showOverall && siteOverall.length) {
+        const rows = siteOverall.slice()
+          .sort((a,b) => (a.rank || 9999) - (b.rank || 9999) || b.total - a.total);
+
+        const moveHtml = (value) => {
+          const raw = String(value || "—").trim();
+          const upper = raw.toUpperCase();
+          if (raw.startsWith("⬆") || raw.startsWith("↑"))
+            return '<span class="results-ticker-move up">▲</span>';
+          if (raw.startsWith("⬇") || raw.startsWith("↓"))
+            return '<span class="results-ticker-move down">▼</span>';
+          if (upper.includes("NEW"))
+            return '<span class="results-ticker-move new">NEW</span>';
+          return '<span class="results-ticker-move same">—</span>';
+        };
+
+        const item = (r,i) => `<span class="results-ticker-item standing">
+          <span class="results-ticker-rank">${esc(r.rank || i + 1)}.</span>
+          <span class="results-ticker-player">${esc(r.name)}</span>
+          ${moveHtml(r.move)}
+          <span class="results-ticker-sep">◆</span>
+        </span>`;
+
+        const group = rows.map(item).join("");
+        track.innerHTML =
+          `<div class="results-ticker-group">${group}</div>` +
+          `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
+        ticker.classList.remove("hidden");
+        return;
+      }
+
+      const finished = currentResults.slice(0, 10);
       if (!finished.length) {
         ticker.classList.add("hidden");
         track.innerHTML = "";
         return;
       }
 
-      const escapeHtml = (value) => String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-
-      const itemHtml = (m) => {
+      const item = (m) => {
         const score = String(m.score || "").trim();
         const nums = score.match(/(\d+)\s*[-–—:]\s*(\d+)/);
         const isDraw = m.status === "win" || !!(nums && nums[1] === nums[2]);
         const flag = m.flag_url
-          ? `<img class="results-ticker-flag" src="${escapeHtml(m.flag_url)}" alt="">`
-          : (m.flag ? `<span>${escapeHtml(m.flag)}</span>` : "");
+          ? `<img class="results-ticker-flag" src="${esc(m.flag_url)}" alt="">`
+          : (m.flag ? `<span>${esc(m.flag)}</span>` : "");
 
         return `<span class="results-ticker-item${isDraw ? " draw" : ""}">
-          ${flag}
-          <span>${escapeHtml(m.teams)}</span>
-          <span class="results-ticker-score${isDraw ? " draw" : ""}">${escapeHtml(score)}</span>
+          ${flag}<span>${esc(m.teams)}</span>
+          <span class="results-ticker-score${isDraw ? " draw" : ""}">${esc(score)}</span>
           <span class="results-ticker-sep">◆</span>
         </span>`;
       };
 
-      const group = finished.map(itemHtml).join("");
+      const group = finished.map(item).join("");
       track.innerHTML =
         `<div class="results-ticker-group">${group}</div>` +
         `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
-
       ticker.classList.remove("hidden");
     }
 
