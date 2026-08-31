@@ -6462,34 +6462,33 @@ function scoreByMatchId(id) {
         .replace(/&/g, "&amp;").replace(/</g, "&lt;")
         .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-      const currentTour = toNum(
-        siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0
-      );
+      // Для тикера текущим считается только тур со статусом active.
+      // Если активного тура нет, мы между турами и показываем общую таблицу.
+      const activeTourRow = siteTours.find(row => {
+        const status = String(get(row, ["status", "Status", "Статус"], ""))
+          .trim().toLowerCase();
+        return status === "active";
+      });
 
-      const currentTourRow = siteTours.find(row =>
-        toNum(get(row, ["tour", "Tour", "Тур"]), 0) === currentTour
-      );
+      const activeTour = activeTourRow
+        ? toNum(get(activeTourRow, ["tour", "Tour", "Тур"]), 0)
+        : 0;
 
-      const tourStatus = String(get(currentTourRow, ["status", "Status", "Статус"], ""))
-        .trim().toLowerCase();
-      const completedRaw = String(get(currentTourRow, ["completed", "Completed"], ""))
-        .trim().toLowerCase();
+      const currentResults = activeTour
+        ? matches
+            .filter(m =>
+              Number(m.tour) === activeTour &&
+              m.score &&
+              (m.status === "win" || m.status === "lose")
+            )
+            .sort((a,b) => {
+              const ak = `${a.sortDate || ""} ${a.time || ""}`;
+              const bk = `${b.sortDate || ""} ${b.time || ""}`;
+              return bk.localeCompare(ak);
+            })
+        : [];
 
-      const tourFinished =
-        tourStatus === "finished" || ["true", "1", "yes", "да"].includes(completedRaw);
-
-      const currentResults = matches
-        .filter(m =>
-          (!currentTour || Number(m.tour) === currentTour) &&
-          m.score && (m.status === "win" || m.status === "lose")
-        )
-        .sort((a,b) => {
-          const ak = `${a.sortDate || ""} ${a.time || ""}`;
-          const bk = `${b.sortDate || ""} ${b.time || ""}`;
-          return bk.localeCompare(ak);
-        });
-
-      const showOverall = tourFinished || currentResults.length === 0;
+      const showOverall = !activeTour || currentResults.length === 0;
 
       if (showOverall && siteOverall.length) {
         const rows = siteOverall.slice()
