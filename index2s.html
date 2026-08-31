@@ -5562,9 +5562,15 @@ button.achievement-item {
 .results-ticker-flag {
   width: 15px;
   height: 15px;
+  min-width: 15px;
+  max-width: 15px;
   border-radius: 999px;
   object-fit: cover;
-  flex: 0 0 auto;
+  flex: 0 0 15px;
+  display: block;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 
@@ -5577,9 +5583,18 @@ button.achievement-item {
 .results-ticker-move.new { color:#fbbf24 !important; -webkit-text-fill-color:#fbbf24 !important; }
 .results-ticker-move.same { color:#8a8a8a !important; -webkit-text-fill-color:#8a8a8a !important; }
 
+/* Firefox ticker compositing fix */
+.results-ticker-item,
+.results-ticker-group {
+  flex-shrink: 0;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 @keyframes xleagueTicker {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
 @media (max-width: 430px) {
