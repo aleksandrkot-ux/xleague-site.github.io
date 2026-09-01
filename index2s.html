@@ -6583,7 +6583,7 @@ function mapPredictionRow(row) {
     bonus: toNum(get(row, ["bonus", "Bonus", "Q"])),
     odd: toNum(get(row, ["total_odd", "total odd", "S", "express_odd"])),
     move: get(row, ["move", "movement", "status"], "—"),
-    picks: [pick(1), pick(2), pick(3)].filter(p => p.matchId || p.match)
+    picks: [pick(1), pick(2), pick(3),pick(4)].filter(p => p.matchId || p.match)
   };
 }
     function mapOverallRow(row) {
