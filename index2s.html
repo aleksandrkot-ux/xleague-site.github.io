@@ -5598,10 +5598,6 @@ button.achievement-item {
 }
 
 @media (max-width: 430px) {
-  .results-ticker-track {
-    animation-duration: 32s;
-  }
-
   .results-ticker-item {
     padding: 0 11px;
     font-size: 10px;
@@ -6629,6 +6625,33 @@ function scoreByMatchId(id) {
     }
 
 
+    function updateResultsTickerSpeed() {
+      const track = document.getElementById("resultsTickerTrack");
+      if (!track) return;
+
+      const firstGroup = track.querySelector(".results-ticker-group");
+      if (!firstGroup) return;
+
+      // Keep one constant visual speed regardless of how long the ticker content is.
+      // Two identical groups are rendered, so -50% remains a seamless loop.
+      const pixelsPerSecond = 40;
+      const groupWidth = firstGroup.getBoundingClientRect().width;
+      if (!groupWidth) return;
+
+      const duration = Math.max(24, groupWidth / pixelsPerSecond);
+      track.style.animationDuration = `${duration}s`;
+
+      // Restart from the beginning after content changes so the duplicated groups
+      // stay perfectly aligned when the ticker switches between table/results.
+      track.style.animationName = "none";
+      void track.offsetWidth;
+      track.style.animationName = "xleagueTicker";
+    }
+
+    function scheduleResultsTickerSpeedUpdate() {
+      requestAnimationFrame(() => requestAnimationFrame(updateResultsTickerSpeed));
+    }
+
     function renderResultsTicker() {
       const ticker = document.getElementById("resultsTicker");
       const track = document.getElementById("resultsTickerTrack");
@@ -6695,6 +6718,7 @@ function scoreByMatchId(id) {
           `<div class="results-ticker-group">${group}</div>` +
           `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
         ticker.classList.remove("hidden");
+        scheduleResultsTickerSpeedUpdate();
         return;
       }
 
@@ -6725,6 +6749,7 @@ function scoreByMatchId(id) {
         `<div class="results-ticker-group">${group}</div>` +
         `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
       ticker.classList.remove("hidden");
+      scheduleResultsTickerSpeedUpdate();
     }
 
 
