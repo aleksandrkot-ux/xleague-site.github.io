@@ -5690,6 +5690,93 @@ button.achievement-item {
 
 </style>
 
+
+<style>
+/* ===== X League LIVE: tech_live frontend ===== */
+.match-status.live-score-status {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 7px;
+  color: #fff !important;
+}
+
+.live-score-value {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.13);
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 1000;
+  letter-spacing: .02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-minute {
+  display: inline-block;
+  color: #fb7185 !important;
+  font-size: 12px;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.live-minute-number { display: inline-block; }
+
+.live-minute-apostrophe {
+  display: inline-block;
+  margin-left: 1px;
+  transform-origin: center;
+  animation: xleague-live-minute-pulse 1.35s ease-in-out infinite;
+}
+
+.live-minute.live-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+@keyframes xleague-live-minute-pulse {
+  0%, 100% { opacity: .58; transform: scale(1); text-shadow: 0 0 0 rgba(251,113,133,0); }
+  50% { opacity: 1; transform: scale(1.10); text-shadow: 0 0 9px rgba(251,113,133,.62); }
+}
+
+.match-live-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  color: #ef4444 !important;
+  -webkit-text-fill-color: #ef4444 !important;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+.match-live-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: xleague-live-dot-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes xleague-live-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-minute-apostrophe,
+  .match-live-dot { animation: none; opacity: 1; }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6264,6 +6351,93 @@ button.achievement-item {
     const SHEETS_TIMEOUT_MS = 12000;
     const CACHE_KEY = `xleague_cache_${SHEET_ID}`;
 
+
+    // === X LEAGUE LIVE DATA ===
+    // Browser reads tech_live/tech_fixtures through the site proxy.
+    // API-Football is called only by the VPS worker, never by visitors.
+    let liveByMatchKey = new Map();
+
+    function liveMatchKey(teams, date, time) {
+      const normTeams = String(teams || "")
+        .toLowerCase()
+        .replace(/ё/g, "е")
+        .replace(/[^a-zа-я0-9]+/gi, " ")
+        .trim()
+        .replace(/\s+/g, " ");
+      return `${normTeams}|${String(date || "").trim()}|${String(time || "").trim()}`;
+    }
+
+    function buildLiveIndex(liveRows = [], fixtureRows = []) {
+      const fixtureByUid = new Map();
+      fixtureRows.forEach(row => {
+        const uid = get(row, ["match_uid", "uid", "A"]);
+        if (!uid) return;
+        fixtureByUid.set(String(uid), {
+          match: get(row, ["match", "E"]),
+          date: get(row, ["date", "C"]),
+          time: get(row, ["time", "D"])
+        });
+      });
+
+      liveByMatchKey = new Map();
+      liveRows.forEach(row => {
+        const uid = String(get(row, ["match_uid", "uid", "A"]));
+        const source = fixtureByUid.get(uid);
+        if (!source) return;
+        liveByMatchKey.set(liveMatchKey(source.match, source.date, source.time), {
+          uid,
+          phase: String(get(row, ["phase", "C"])).toUpperCase(),
+          status: String(get(row, ["status", "D"])).toUpperCase(),
+          minute: get(row, ["minute", "E"]),
+          home: get(row, ["home_score", "F"]),
+          away: get(row, ["away_score", "G"]),
+          score: get(row, ["score", "H"]),
+          updatedAt: get(row, ["updated_at", "K"])
+        });
+      });
+    }
+
+    function liveScoreData(match) {
+      const live = liveByMatchKey.get(liveMatchKey(match.teams, match.date, match.time));
+      if (!live || !live.score) return null;
+
+      if (live.phase === "LIVE") {
+        let clock = "LIVE";
+        if (live.status === "HT") clock = "ПЕРЕРЫВ";
+        else if (live.status === "P") clock = "ПЕН.";
+        else if (live.minute !== "" && live.minute !== null && live.minute !== undefined) clock = String(live.minute);
+        return {
+          score: live.score,
+          clock,
+          live: true,
+          minuteNumber: live.minute !== "" && live.minute !== null && live.minute !== undefined && live.status !== "HT" && live.status !== "P"
+        };
+      }
+
+      // A FINISHED row may appear in tech_live before Sheets receives the official FT score.
+      // Display it immediately; Sheets remains authoritative for win/lose state.
+      if (live.phase === "FINISHED") return { score: live.score, clock: "FT", live: false };
+      return null;
+    }
+
+    async function refreshLiveFromSheets() {
+      try {
+        const [liveRows, fixtureRows] = await Promise.all([
+          loadTab(TABS.live).catch(() => []),
+          loadTab(TABS.fixtures).catch(() => [])
+        ]);
+        buildLiveIndex(liveRows, fixtureRows);
+        renderMatches();
+      } catch (err) {
+        console.warn("X League tech_live unavailable", err);
+      }
+    }
+
+    function startLivePolling() {
+      refreshLiveFromSheets();
+      setInterval(refreshLiveFromSheets, 30000);
+    }
+
     function fetchJsonWithTimeout(url, timeout = SHEETS_TIMEOUT_MS) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeout);
@@ -6345,7 +6519,9 @@ button.achievement-item {
   rankHistory: "site_rank_history",
   tours: "site_tours",
   playoff: "play_off",
-  config: "site_config"
+  config: "site_config",
+  live: "tech_live",
+  fixtures: "tech_fixtures"
 };
 
     function normalizeKeyName(value) {
@@ -6819,7 +6995,19 @@ function mapPredictionRow(row) {
 
     function matchStatus(match) {
       const status = match.api_status || match.status || "pending";
-      if (status === "pending") return `<span class="match-status pending">⏳</span>`;
+
+      if (status === "pending") {
+        const liveData = liveScoreData(match);
+        if (liveData) {
+          const clockClass = liveData.live ? "live-minute" : "live-minute live-label";
+          const clockHtml = liveData.minuteNumber
+            ? `<span class="live-minute-number">${escapeHtml(liveData.clock)}</span><span class="live-minute-apostrophe">'</span>`
+            : escapeHtml(liveData.clock);
+          return `<span class="match-status pending live-score-status"><span class="live-score-value">${escapeHtml(liveData.score)}</span><span class="${clockClass}">${clockHtml}</span></span>`;
+        }
+        return `<span class="match-status pending">⏳</span>`;
+      }
+
       if (status === "cancelled") return `<span class="match-status cancelled">отм</span>`;
       if (status === "win") return `<span class="match-status win">${escapeHtml(match.score)} ✅</span>`;
       return `<span class="match-status lose">${escapeHtml(match.score)} ❌</span>`;
@@ -9437,6 +9625,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         applySheetsPayload(cached);
       }
       renderAll();
+      startLivePolling();
 
       // Потом пробуем подтянуть свежие данные из Google Sheets с таймаутом.
       const loaded = await loadSheetsData();
@@ -9444,6 +9633,36 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
 
     boot();
+
+    function applyLiveLabels() {
+      document.querySelectorAll(".match-card").forEach(card => {
+        const live = card.querySelector(".live-score-status .live-minute");
+        const meta = card.querySelector(".match-meta");
+        if (!meta) return;
+
+        let label = meta.querySelector(".match-live-label");
+
+        if (live) {
+          if (!label) {
+            label = document.createElement("span");
+            label.className = "match-live-label";
+            label.innerHTML = '<span class="match-live-dot" aria-hidden="true"></span>LIVE';
+            meta.appendChild(label);
+          }
+        } else if (label) {
+          label.remove();
+        }
+      });
+    }
+
+    const liveLabelObserver = new MutationObserver(() => {
+      requestAnimationFrame(applyLiveLabels);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      applyLiveLabels();
+      liveLabelObserver.observe(document.body, { childList: true, subtree: true });
+    });
   </script>
 </body>
 </html>
