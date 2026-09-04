@@ -7582,16 +7582,28 @@ function mapPredictionRow(row) {
     const tableSelect = document.getElementById("tableSelect");
       if (tableSelect) {
         const previous = tableSelect.value;
+        const alreadyInitialized = tableSelect.dataset.tourInitialized === "1";
+
         tableSelect.innerHTML =
           regularOptions +
           `<option value="overall">🏆 Общая таблица</option>` +
           playoffOption;
 
-        if (previous && [...tableSelect.options].some(o => o.value === previous)) {
+        // On the first real data load always open the actual current stage.
+        // After that, preserve a user's manual selection while the page is open.
+        if (
+          alreadyInitialized &&
+          previous &&
+          [...tableSelect.options].some(o => o.value === previous)
+        ) {
           tableSelect.value = previous;
         } else {
-          tableSelect.value = isPlayoffTour(current) && hasPlayoff ? "playoff" : "overall";
+          tableSelect.value = isPlayoffTour(current) && hasPlayoff
+            ? "playoff"
+            : String(current);
         }
+
+        tableSelect.dataset.tourInitialized = "1";
       }
 
       const achievementModal = document.getElementById("achievementModal");
@@ -7621,16 +7633,28 @@ function mapPredictionRow(row) {
       const tourSelect = document.getElementById("tourSelect");
       if (tourSelect) {
         const previous = tourSelect.value;
+        const alreadyInitialized = tourSelect.dataset.tourInitialized === "1";
+
         tourSelect.innerHTML =
           `<option value="overall">Общая</option>` +
           regularOptions +
           playoffOption;
 
-        if (previous && [...tourSelect.options].some(o => o.value === previous)) {
+        // First opening = actual current stage. Later refreshes keep
+        // whatever the user selected manually.
+        if (
+          alreadyInitialized &&
+          previous &&
+          [...tourSelect.options].some(o => o.value === previous)
+        ) {
           tourSelect.value = previous;
         } else {
-          tourSelect.value = isPlayoffTour(current) && hasPlayoff ? "playoff" : String(current);
+          tourSelect.value = isPlayoffTour(current) && hasPlayoff
+            ? "playoff"
+            : String(current);
         }
+
+        tourSelect.dataset.tourInitialized = "1";
       }
 
       const playerTourSelect = document.getElementById("playerTourSelect");
