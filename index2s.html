@@ -5773,6 +5773,97 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== X League: compact square player achievements ===== */
+.player-achievements-v2 .achievement-strip {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 108px)) !important;
+  gap: 10px !important;
+  overflow: visible !important;
+  justify-content: start !important;
+}
+
+.player-achievements-v2 .achievement-item {
+  width: 108px !important;
+  height: 108px !important;
+  min-width: 108px !important;
+  max-width: 108px !important;
+  flex: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 10px 8px !important;
+  border-radius: 18px !important;
+  text-align: center !important;
+}
+
+.player-achievements-v2 .achievement-item > span {
+  grid-row: auto !important;
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px !important;
+  border-radius: 11px !important;
+  font-size: 18px !important;
+}
+
+.player-achievements-v2 .achievement-item img {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 9px !important;
+}
+
+.player-achievements-v2 .achievement-text {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.player-achievements-v2 .achievement-text strong {
+  width: 100% !important;
+  font-size: 10.5px !important;
+  line-height: 1.15 !important;
+  font-weight: 1000 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+.player-achievements-v2 .achievement-text small {
+  width: 100% !important;
+  font-size: 8.5px !important;
+  line-height: 1.15 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+@media (max-width: 430px) {
+  .player-achievements-v2 .achievement-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .player-achievements-v2 .achievement-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
