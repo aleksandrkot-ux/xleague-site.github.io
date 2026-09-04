@@ -5864,6 +5864,107 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== X League: achievement tiles v2 — readable title + intact meta ===== */
+.player-achievements-v2 .achievement-strip {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, 124px) !important;
+  gap: 10px !important;
+  justify-content: start !important;
+  overflow: visible !important;
+}
+
+.player-achievements-v2 .achievement-item {
+  width: 124px !important;
+  height: 124px !important;
+  min-width: 124px !important;
+  max-width: 124px !important;
+  padding: 9px 8px 8px !important;
+  gap: 5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+  overflow: hidden !important;
+}
+
+.player-achievements-v2 .achievement-item > span {
+  width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  flex: 0 0 36px !important;
+  margin: 0 !important;
+}
+
+.player-achievements-v2 .achievement-item img {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.player-achievements-v2 .achievement-text {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  overflow: hidden !important;
+}
+
+.player-achievements-v2 .achievement-text strong {
+  width: 100% !important;
+  min-height: 27px !important;
+  font-size: 10.5px !important;
+  line-height: 1.25 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+.player-achievements-v2 .achievement-text small {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 23px !important;
+  padding: 4px 5px !important;
+  border-radius: 7px !important;
+  background: rgba(255,255,255,.055) !important;
+  font-size: 8.5px !important;
+  line-height: 1.15 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 430px) {
+  .player-achievements-v2 .achievement-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .player-achievements-v2 .achievement-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 118px !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .player-achievements-v2 .achievement-text small {
+    font-size: 8px !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
