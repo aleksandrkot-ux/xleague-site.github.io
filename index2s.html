@@ -5965,6 +5965,94 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== X League: standardized compact achievement tiles ===== */
+.player-achievements-v2 .achievement-tile-standard {
+  width: 118px !important;
+  height: 118px !important;
+  min-width: 118px !important;
+  max-width: 118px !important;
+  padding: 10px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  overflow: hidden !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard > span {
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  flex: 0 0 38px !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard img {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard .achievement-copy {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard .achievement-tile-tag {
+  display: block !important;
+  width: 100% !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  font-weight: 1000 !important;
+  letter-spacing: .04em !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard .achievement-tile-tour {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-height: 22px !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.06) !important;
+  color: #bdbdbd !important;
+  font-size: 9px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+@media (max-width: 430px) {
+  .player-achievements-v2 .achievement-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .player-achievements-v2 .achievement-tile-standard {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 112px !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -9125,14 +9213,27 @@ sourceMatches.forEach(match => {
         const achievements = playerAchievements(playerName);
         achEl.innerHTML = achievements.length ? achievements.map(row => {
           const tour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
+          const code = String(achievementCode(row) || "").trim().toUpperCase();
+          const title = achievementTitle(row);
           const desc = achievementDescription(row);
-          const smallText = desc ? `${desc}${tour ? ` · ${tourLabel(tour)}` : ""}` : (tour ? tourLabel(tour) : "");
+
+          // Compact profile tile standard:
+          // icon -> short achievement tag/code -> tour.
+          // Full human-readable title/description remain in tooltip and modal.
+          const tagText = code || title || "ACHIEVEMENT";
+          const tourText = tour ? tourLabel(tour) : "X League";
+          const tooltipParts = [title || tagText, desc, tourText].filter(Boolean);
+
           return `
-            <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} title="${escapeHtml(smallText ? `${achievementTitle(row)} — ${smallText}` : achievementTitle(row))}" aria-label="Открыть ачивку ${escapeHtml(achievementTitle(row))}">
+            <button type="button"
+              class="achievement-item achievement-clickable achievement-tile-standard"
+              ${achievementTriggerAttributes(row)}
+              title="${escapeHtml(tooltipParts.join(" — "))}"
+              aria-label="Открыть ачивку ${escapeHtml(title || tagText)}">
               <span>${achievementIconHtml(row)}</span>
               <div class="achievement-copy">
-                <strong>${escapeHtml(achievementTitle(row))}</strong>
-                <small>${escapeHtml(smallText)}</small>
+                <strong class="achievement-tile-tag">${escapeHtml(tagText)}</strong>
+                <small class="achievement-tile-tour">${escapeHtml(tourText)}</small>
               </div>
             </button>
           `;
