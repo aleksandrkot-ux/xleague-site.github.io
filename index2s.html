@@ -6632,6 +6632,7 @@ button.achievement-item {
     // Browser reads tech_live/tech_fixtures through the site proxy.
     // API-Football is called only by the VPS worker, never by visitors.
     let liveByMatchKey = new Map();
+    let liveByUid = new Map();
 
     function liveMatchKey(teams, date, time) {
       const normTeams = String(teams || "")
@@ -6656,11 +6657,13 @@ button.achievement-item {
       });
 
       liveByMatchKey = new Map();
+      liveByUid = new Map();
+
       liveRows.forEach(row => {
-        const uid = String(get(row, ["match_uid", "uid", "A"]));
-        const source = fixtureByUid.get(uid);
-        if (!source) return;
-        liveByMatchKey.set(liveMatchKey(source.match, source.date, source.time), {
+        const uid = String(get(row, ["match_uid", "uid", "A"])).trim();
+        if (!uid) return;
+
+        const liveData = {
           uid,
           phase: String(get(row, ["phase", "C"])).toUpperCase(),
           status: String(get(row, ["status", "D"])).toUpperCase(),
@@ -6669,12 +6672,29 @@ button.achievement-item {
           away: get(row, ["away_score", "G"]),
           score: get(row, ["score", "H"]),
           updatedAt: get(row, ["updated_at", "K"])
-        });
+        };
+
+        // Primary binding: stable match_uid shared by site_matches / tech_fixtures / tech_live.
+        liveByUid.set(uid, liveData);
+
+        // Backward-compatible fallback for old rows/pages without match_uid.
+        const source = fixtureByUid.get(uid);
+        if (source) {
+          liveByMatchKey.set(
+            liveMatchKey(source.match, source.date, source.time),
+            liveData
+          );
+        }
       });
     }
 
     function liveScoreData(match) {
-      const live = liveByMatchKey.get(liveMatchKey(match.teams, match.date, match.time));
+      // UID is authoritative. Name/date/time matching is only a fallback because
+      // display labels can differ from tech_fixtures (date_label, dashes, spelling, etc.).
+      const uid = String(match?.matchUid || "").trim();
+      const live = (uid ? liveByUid.get(uid) : null)
+        || liveByMatchKey.get(liveMatchKey(match.teams, match.date, match.time));
+
       if (!live || !live.score) return null;
 
       if (live.phase === "LIVE") {
@@ -6897,6 +6917,7 @@ function scoreByMatchId(id) {
         sortDate: normalizeDate(dateRaw),
         time: get(row, ["time", "Time", "Время", "время"], ""),
         teams: get(row, ["match", "Match", "Матч", "Матчи", "match_name", "teams"], "Unknown match"),
+        matchUid: String(get(row, ["match_uid", "match uid", "uid", "Match UID", "M"], "")).trim(),
         score: get(row, ["score", "Score", "Счёт", "Счет", "счёт"], ""),
         status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
         api_status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
