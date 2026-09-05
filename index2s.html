@@ -6929,6 +6929,7 @@ button.achievement-item {
     const notifiedLiveScoreByUid = new Map();
     let goalSoundEnabled = localStorage.getItem(GOAL_SOUND_STORAGE_KEY) === "1";
     let goalSoundUnlocked = false;
+    let goalSoundUnlockBound = false;
 
     function makeGoalAudio() {
       const audio = new Audio(GOAL_SOUND_URL);
@@ -6938,6 +6939,9 @@ button.achievement-item {
     }
 
     const goalSoundWarmup = makeGoalAudio();
+    goalSoundWarmup.addEventListener("error", () => {
+      console.warn("Goal sound file failed to load:", GOAL_SOUND_URL);
+    });
 
     function renderSoundToggle() {
       const buttons = document.querySelectorAll(".sound-toggle-btn");
@@ -6978,6 +6982,25 @@ button.achievement-item {
       }
     }
 
+    function bindDeferredGoalSoundUnlock() {
+      if (goalSoundUnlockBound) return;
+      goalSoundUnlockBound = true;
+
+      const unlockOnce = async () => {
+        if (goalSoundEnabled && !goalSoundUnlocked) {
+          await unlockGoalSound(false);
+        }
+
+        window.removeEventListener("pointerdown", unlockOnce, true);
+        window.removeEventListener("touchstart", unlockOnce, true);
+        window.removeEventListener("keydown", unlockOnce, true);
+      };
+
+      window.addEventListener("pointerdown", unlockOnce, true);
+      window.addEventListener("touchstart", unlockOnce, true);
+      window.addEventListener("keydown", unlockOnce, true);
+    }
+
     function playGoalSound(uid, home, away) {
       if (!goalSoundEnabled || !goalSoundUnlocked) return;
 
@@ -6998,6 +7021,7 @@ button.achievement-item {
       if (!buttons.length) return;
 
       renderSoundToggle();
+      bindDeferredGoalSoundUnlock();
 
       buttons.forEach(btn => {
         if (btn.dataset.bound === "1") return;
@@ -7012,6 +7036,8 @@ button.achievement-item {
             // A small confirmation chirp also counts as the user gesture needed
             // by Chrome/Safari to permit later automatic goal sounds.
             await unlockGoalSound(true);
+          } else {
+            goalSoundUnlocked = false;
           }
         });
       });
