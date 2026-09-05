@@ -6202,6 +6202,53 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== Live score: hard remove permanent glow/shadow ===== */
+.match-status.live-score-status,
+.live-score-value,
+.live-score-value.live-score-draw,
+.live-score-value.live-score-behind,
+.live-score-value .live-score-digit,
+.live-score-value .live-score-separator {
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+/* Make the score pill visually flatter on the dark card. */
+.live-score-value.live-score-draw {
+  background: rgba(52,211,153,.018) !important;
+  border-color: rgba(52,211,153,.20) !important;
+}
+
+.live-score-value.live-score-behind {
+  background: rgba(231,137,150,.016) !important;
+  border-color: rgba(231,137,150,.17) !important;
+}
+
+/* Goal animation is the only state allowed to glow. */
+.live-score-value .live-score-digit.live-score-digit-flash {
+  filter: brightness(1.38) !important;
+  animation: xleague-goal-digit-flash 1.15s ease-in-out infinite !important;
+}
+
+@keyframes xleague-goal-digit-flash {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1) !important;
+    text-shadow: none !important;
+  }
+  50% {
+    transform: scale(1.22);
+    filter: brightness(1.38) !important;
+    text-shadow:
+      0 0 5px rgba(255,255,255,.72),
+      0 0 12px currentColor !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
