@@ -6137,6 +6137,71 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== X League goal sound toggle ===== */
+.sound-toggle-btn {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.055);
+  color: #9a9a9a;
+  -webkit-text-fill-color: #9a9a9a;
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.sound-toggle-btn.is-on {
+  border-color: rgba(182,255,59,.24);
+  background: rgba(182,255,59,.08);
+  color: #b6ff3b;
+  -webkit-text-fill-color: #b6ff3b;
+}
+
+.sound-toggle-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+@media (max-width: 420px) {
+  .sound-toggle-btn {
+    width: 32px;
+    padding: 0;
+  }
+
+  .sound-toggle-text {
+    display: none;
+  }
+}
+
+/* ===== Live score field: no permanent outer shadow ===== */
+.live-score-value,
+.live-score-value.live-score-draw,
+.live-score-value.live-score-behind {
+  box-shadow: none !important;
+  filter: none;
+}
+
+/* Even quieter card fill; the score digits carry the state, not a glowing box. */
+.live-score-value.live-score-draw {
+  background: rgba(52,211,153,.035) !important;
+  border-color: rgba(52,211,153,.22) !important;
+}
+
+.live-score-value.live-score-behind {
+  background: rgba(231,137,150,.028) !important;
+  border-color: rgba(231,137,150,.18) !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6149,6 +6214,10 @@ button.achievement-item {
           </div></a>
         </div>
         <div class="header-actions">
+          <button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-pressed="false" aria-label="Включить звук голов">
+            <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
+            <span class="sound-toggle-text">Звук офф</span>
+          </button>
           <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30,3K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
@@ -6724,6 +6793,94 @@ button.achievement-item {
     const liveGoalFlashUntilByUid = new Map();
     const LIVE_GOAL_FLASH_MS = 60 * 1000;
 
+    // Goal sound: user-controlled and remembered on this device.
+    const GOAL_SOUND_URL = "./mixkit-software-interface-start-2574.wav";
+    const GOAL_SOUND_STORAGE_KEY = "xleague_goal_sound_enabled";
+    const notifiedLiveScoreByUid = new Map();
+    let goalSoundEnabled = localStorage.getItem(GOAL_SOUND_STORAGE_KEY) === "1";
+    let goalSoundUnlocked = false;
+
+    function makeGoalAudio() {
+      const audio = new Audio(GOAL_SOUND_URL);
+      audio.preload = "auto";
+      audio.volume = 0.72;
+      return audio;
+    }
+
+    const goalSoundWarmup = makeGoalAudio();
+
+    function renderSoundToggle() {
+      const btn = document.getElementById("soundToggleBtn");
+      if (!btn) return;
+
+      btn.classList.toggle("is-on", goalSoundEnabled);
+      btn.classList.toggle("is-off", !goalSoundEnabled);
+      btn.setAttribute("aria-pressed", goalSoundEnabled ? "true" : "false");
+      btn.setAttribute("aria-label", goalSoundEnabled ? "Выключить звук голов" : "Включить звук голов");
+
+      const icon = btn.querySelector(".sound-toggle-icon");
+      const text = btn.querySelector(".sound-toggle-text");
+      if (icon) icon.textContent = goalSoundEnabled ? "🔊" : "🔇";
+      if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук офф";
+    }
+
+    async function unlockGoalSound(playPreview = false) {
+      if (goalSoundUnlocked && !playPreview) return true;
+
+      try {
+        goalSoundWarmup.currentTime = 0;
+        goalSoundWarmup.volume = playPreview ? 0.48 : 0.001;
+        await goalSoundWarmup.play();
+
+        if (!playPreview) {
+          goalSoundWarmup.pause();
+          goalSoundWarmup.currentTime = 0;
+        }
+
+        goalSoundWarmup.volume = 0.72;
+        goalSoundUnlocked = true;
+        return true;
+      } catch (err) {
+        console.warn("Goal sound unlock failed", err);
+        return false;
+      }
+    }
+
+    function playGoalSound(uid, home, away) {
+      if (!goalSoundEnabled || !goalSoundUnlocked) return;
+
+      const scoreKey = `${home}-${away}`;
+      if (notifiedLiveScoreByUid.get(uid) === scoreKey) return;
+      notifiedLiveScoreByUid.set(uid, scoreKey);
+
+      try {
+        const audio = makeGoalAudio();
+        audio.play().catch(err => console.warn("Goal sound play failed", err));
+      } catch (err) {
+        console.warn("Goal sound create failed", err);
+      }
+    }
+
+    function bindSoundToggle() {
+      const btn = document.getElementById("soundToggleBtn");
+      if (!btn || btn.dataset.bound === "1") return;
+      btn.dataset.bound = "1";
+
+      renderSoundToggle();
+
+      btn.addEventListener("click", async () => {
+        goalSoundEnabled = !goalSoundEnabled;
+        localStorage.setItem(GOAL_SOUND_STORAGE_KEY, goalSoundEnabled ? "1" : "0");
+        renderSoundToggle();
+
+        if (goalSoundEnabled) {
+          // A small confirmation chirp also counts as the user gesture needed
+          // by Chrome/Safari to permit later automatic goal sounds.
+          await unlockGoalSound(true);
+        }
+      });
+    }
+
     function liveMatchKey(teams, date, time) {
       const normTeams = String(teams || "")
         .toLowerCase()
@@ -6785,6 +6942,8 @@ button.achievement-item {
               home: changedHome ? Date.now() + LIVE_GOAL_FLASH_MS : (previousFlash.home || 0),
               away: changedAway ? Date.now() + LIVE_GOAL_FLASH_MS : (previousFlash.away || 0)
             });
+
+            playGoalSound(uid, currentHome, currentAway);
           }
         }
 
@@ -10138,6 +10297,8 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
 
     async function boot() {
+      bindSoundToggle();
+
       // Сначала мгновенно рисуем интерфейс, чтобы пользователь не видел пустую/вечную загрузку.
       const cached = readCachedSheetsData();
       if (cached) {
