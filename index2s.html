@@ -6338,7 +6338,7 @@ button.achievement-item {
         <div class="header-actions">
           <button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-pressed="false" aria-label="Включить звук голов">
             <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
-            <span class="sound-toggle-text">Звук выкл</span>
+            <span class="sound-toggle-text">Звук офф</span>
           </button>
           <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30,3K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
@@ -6350,7 +6350,7 @@ button.achievement-item {
     <div class="mobile-sound-row" aria-label="Настройка звука">
       <button class="sound-toggle-btn is-off" id="soundToggleBtnMobile" type="button" aria-pressed="false" aria-label="Включить звук голов">
         <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
-        <span class="sound-toggle-text">Звук выкл</span>
+        <span class="sound-toggle-text">Звук офф</span>
       </button>
     </div>
 
@@ -6951,7 +6951,7 @@ button.achievement-item {
         const icon = btn.querySelector(".sound-toggle-icon");
         const text = btn.querySelector(".sound-toggle-text");
         if (icon) icon.textContent = goalSoundEnabled ? "🔊" : "🔇";
-        if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук выкл";
+        if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук офф";
       });
     }
 
@@ -7156,14 +7156,27 @@ button.achievement-item {
 
     async function refreshLiveFromSheets() {
       try {
-        const [liveRows, fixtureRows] = await Promise.all([
+        const [liveRows, fixtureRows, matchRows] = await Promise.all([
           loadTab(TABS.live).catch(() => []),
-          loadTab(TABS.fixtures).catch(() => [])
+          loadTab(TABS.fixtures).catch(() => []),
+          loadTab(TABS.matches).catch(() => null)
         ]);
+
         buildLiveIndex(liveRows, fixtureRows);
+
+        // site_matches is the authoritative settled state (win/lose/cancelled).
+        // Refresh it during live polling as well, so FT -> final result happens
+        // automatically without requiring F5. The VPS sheet cache limits the
+        // actual Google Sheets reads.
+        if (Array.isArray(matchRows) && matchRows.length) {
+          matches = matchRows.map(mapMatchRow).filter(x => x.id && x.teams);
+          matchById = new Map(matches.map(x => [x.id, x]));
+        }
+
         renderMatches();
+        renderResultsTicker();
       } catch (err) {
-        console.warn("X League tech_live unavailable", err);
+        console.warn("X League live refresh unavailable", err);
       }
     }
 
@@ -8145,15 +8158,33 @@ function mapPredictionRow(row) {
       return currentTour ? matches.filter(m => Number(m.tour) === Number(currentTour)) : matches;
     }
 
+    function rawLiveDataForMatch(match) {
+      const uid = String(match?.matchUid || "").trim();
+      return (uid ? liveByUid.get(uid) : null)
+        || liveByMatchKey.get(liveMatchKey(match?.teams, match?.date, match?.time));
+    }
+
+    function isMatchLiveFinished(match) {
+      const live = rawLiveDataForMatch(match);
+      return !!live && live.phase === "FINISHED";
+    }
+
    function renderMatches() {
   const scopedMatches = currentTourMatches();
 
   const upcoming = scopedMatches
-    .filter(m => m.status === "pending" || m.api_status === "pending")
+    .filter(m =>
+      !isMatchLiveFinished(m) &&
+      (m.status === "pending" || m.api_status === "pending")
+    )
     .sort(compareDateTimeAsc);
 
   const finished = scopedMatches
-    .filter(m => ["win", "lose", "cancelled"].includes(m.status) || ["win", "lose", "cancelled"].includes(m.api_status))
+    .filter(m =>
+      isMatchLiveFinished(m) ||
+      ["win", "lose", "cancelled"].includes(m.status) ||
+      ["win", "lose", "cancelled"].includes(m.api_status)
+    )
     .sort(compareDateTimeDesc);
 
 
