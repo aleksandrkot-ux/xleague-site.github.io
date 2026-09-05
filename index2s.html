@@ -6249,6 +6249,44 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== Mobile sound control: separate row, never overlaps the logo ===== */
+.mobile-sound-row {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  /* The header keeps its original compact one-row layout. */
+  #soundToggleBtn {
+    display: none !important;
+  }
+
+  .mobile-sound-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 5px 14px 4px;
+    background: #0b0d0f;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+
+  #soundToggleBtnMobile {
+    width: auto !important;
+    min-width: 92px;
+    height: 28px;
+    padding: 0 9px !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 5;
+  }
+
+  #soundToggleBtnMobile .sound-toggle-text {
+    display: inline !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6271,6 +6309,13 @@ button.achievement-item {
         </div>
       </div>
     </header>
+
+    <div class="mobile-sound-row" aria-label="Настройка звука">
+      <button class="sound-toggle-btn is-off" id="soundToggleBtnMobile" type="button" aria-pressed="false" aria-label="Включить звук голов">
+        <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
+        <span class="sound-toggle-text">Звук офф</span>
+      </button>
+    </div>
 
     <div class="results-ticker hidden" id="resultsTicker" aria-label="Последние результаты">
       <div class="results-ticker-track" id="resultsTickerTrack"></div>
@@ -6857,18 +6902,20 @@ button.achievement-item {
     const goalSoundWarmup = makeGoalAudio();
 
     function renderSoundToggle() {
-      const btn = document.getElementById("soundToggleBtn");
-      if (!btn) return;
+      const buttons = document.querySelectorAll(".sound-toggle-btn");
+      if (!buttons.length) return;
 
-      btn.classList.toggle("is-on", goalSoundEnabled);
-      btn.classList.toggle("is-off", !goalSoundEnabled);
-      btn.setAttribute("aria-pressed", goalSoundEnabled ? "true" : "false");
-      btn.setAttribute("aria-label", goalSoundEnabled ? "Выключить звук голов" : "Включить звук голов");
+      buttons.forEach(btn => {
+        btn.classList.toggle("is-on", goalSoundEnabled);
+        btn.classList.toggle("is-off", !goalSoundEnabled);
+        btn.setAttribute("aria-pressed", goalSoundEnabled ? "true" : "false");
+        btn.setAttribute("aria-label", goalSoundEnabled ? "Выключить звук голов" : "Включить звук голов");
 
-      const icon = btn.querySelector(".sound-toggle-icon");
-      const text = btn.querySelector(".sound-toggle-text");
-      if (icon) icon.textContent = goalSoundEnabled ? "🔊" : "🔇";
-      if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук офф";
+        const icon = btn.querySelector(".sound-toggle-icon");
+        const text = btn.querySelector(".sound-toggle-text");
+        if (icon) icon.textContent = goalSoundEnabled ? "🔊" : "🔇";
+        if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук офф";
+      });
     }
 
     async function unlockGoalSound(playPreview = false) {
@@ -6909,22 +6956,26 @@ button.achievement-item {
     }
 
     function bindSoundToggle() {
-      const btn = document.getElementById("soundToggleBtn");
-      if (!btn || btn.dataset.bound === "1") return;
-      btn.dataset.bound = "1";
+      const buttons = document.querySelectorAll(".sound-toggle-btn");
+      if (!buttons.length) return;
 
       renderSoundToggle();
 
-      btn.addEventListener("click", async () => {
-        goalSoundEnabled = !goalSoundEnabled;
-        localStorage.setItem(GOAL_SOUND_STORAGE_KEY, goalSoundEnabled ? "1" : "0");
-        renderSoundToggle();
+      buttons.forEach(btn => {
+        if (btn.dataset.bound === "1") return;
+        btn.dataset.bound = "1";
 
-        if (goalSoundEnabled) {
-          // A small confirmation chirp also counts as the user gesture needed
-          // by Chrome/Safari to permit later automatic goal sounds.
-          await unlockGoalSound(true);
-        }
+        btn.addEventListener("click", async () => {
+          goalSoundEnabled = !goalSoundEnabled;
+          localStorage.setItem(GOAL_SOUND_STORAGE_KEY, goalSoundEnabled ? "1" : "0");
+          renderSoundToggle();
+
+          if (goalSoundEnabled) {
+            // A small confirmation chirp also counts as the user gesture needed
+            // by Chrome/Safari to permit later automatic goal sounds.
+            await unlockGoalSound(true);
+          }
+        });
       });
     }
 
