@@ -6287,6 +6287,43 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== Live score cleanup: only the OUTER score pill has fill/border =====
+   Earlier grouped selectors also applied background/border to each digit and
+   the dash. That created the visible little dark/colored "boxes" around 0 - 0. */
+.live-score-value.live-score-draw .live-score-digit,
+.live-score-value.live-score-draw .live-score-separator,
+.live-score-value.live-score-behind .live-score-digit,
+.live-score-value.live-score-behind .live-score-separator {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  outline: 0 !important;
+}
+
+/* Keep only one subtle outer field. */
+.live-score-value.live-score-draw {
+  background: rgba(52,211,153,.018) !important;
+  border: 1px solid rgba(52,211,153,.20) !important;
+  box-shadow: none !important;
+}
+
+.live-score-value.live-score-behind {
+  background: rgba(231,137,150,.016) !important;
+  border: 1px solid rgba(231,137,150,.17) !important;
+  box-shadow: none !important;
+}
+
+/* Goal flash may glow, but still must not acquire its own box. */
+.live-score-value .live-score-digit.live-score-digit-flash {
+  background: transparent !important;
+  border: 0 !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6301,7 +6338,7 @@ button.achievement-item {
         <div class="header-actions">
           <button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-pressed="false" aria-label="Включить звук голов">
             <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
-            <span class="sound-toggle-text">Звук офф</span>
+            <span class="sound-toggle-text">Звук выкл</span>
           </button>
           <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30,3K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
@@ -6313,7 +6350,7 @@ button.achievement-item {
     <div class="mobile-sound-row" aria-label="Настройка звука">
       <button class="sound-toggle-btn is-off" id="soundToggleBtnMobile" type="button" aria-pressed="false" aria-label="Включить звук голов">
         <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
-        <span class="sound-toggle-text">Звук офф</span>
+        <span class="sound-toggle-text">Звук выкл</span>
       </button>
     </div>
 
@@ -6914,7 +6951,7 @@ button.achievement-item {
         const icon = btn.querySelector(".sound-toggle-icon");
         const text = btn.querySelector(".sound-toggle-text");
         if (icon) icon.textContent = goalSoundEnabled ? "🔊" : "🔇";
-        if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук офф";
+        if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук выкл";
       });
     }
 
