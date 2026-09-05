@@ -6053,6 +6053,90 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== X League LIVE score semantics + goal flash ===== */
+
+.live-score-value.live-score-draw,
+.live-score-value.live-score-draw .live-score-digit,
+.live-score-value.live-score-draw .live-score-separator {
+  color: #34d399 !important;
+  -webkit-text-fill-color: #34d399 !important;
+  border-color: rgba(52,211,153,.24) !important;
+  background: rgba(52,211,153,.075) !important;
+}
+
+.live-score-value.live-score-behind,
+.live-score-value.live-score-behind .live-score-digit,
+.live-score-value.live-score-behind .live-score-separator {
+  color: #e78996 !important;
+  -webkit-text-fill-color: #e78996 !important;
+  border-color: rgba(231,137,150,.20) !important;
+  background: rgba(231,137,150,.055) !important;
+}
+
+.live-score-digit {
+  position: relative;
+  display: inline-block;
+  min-width: .58em;
+  text-align: center;
+  transform-origin: center;
+}
+
+.live-score-separator {
+  display: inline-block;
+  margin: 0 1px;
+}
+
+.live-minute,
+.live-minute.live-label {
+  color: #f3bd5a !important;
+  -webkit-text-fill-color: #f3bd5a !important;
+  text-shadow: 0 0 8px rgba(243,189,90,.18);
+}
+
+@keyframes xleague-live-minute-pulse {
+  0%, 100% {
+    opacity: .62;
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(243,189,90,0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+    text-shadow: 0 0 8px rgba(243,189,90,.50);
+  }
+}
+
+.live-score-digit-flash {
+  z-index: 1;
+  animation: xleague-goal-digit-flash 1.15s ease-in-out infinite;
+}
+
+@keyframes xleague-goal-digit-flash {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+    text-shadow: 0 0 0 rgba(255,255,255,0);
+  }
+  50% {
+    transform: scale(1.22);
+    filter: brightness(1.38);
+    text-shadow:
+      0 0 5px rgba(255,255,255,.72),
+      0 0 13px currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-score-digit-flash {
+    animation: none;
+    transform: scale(1.10);
+    text-decoration: underline;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6634,6 +6718,12 @@ button.achievement-item {
     let liveByMatchKey = new Map();
     let liveByUid = new Map();
 
+    // Remember the previous live score across polling cycles.
+    // When one side changes, that digit flashes for 60 seconds.
+    const previousLiveScoreByUid = new Map();
+    const liveGoalFlashUntilByUid = new Map();
+    const LIVE_GOAL_FLASH_MS = 60 * 1000;
+
     function liveMatchKey(teams, date, time) {
       const normTeams = String(teams || "")
         .toLowerCase()
@@ -6674,6 +6764,37 @@ button.achievement-item {
           updatedAt: get(row, ["updated_at", "K"])
         };
 
+        const currentHome = String(liveData.home ?? "").trim();
+        const currentAway = String(liveData.away ?? "").trim();
+        const previousScore = previousLiveScoreByUid.get(uid);
+
+        // Do not flash on the very first page load. Flash only when a later poll
+        // reports a changed score while the match is actually live.
+        if (
+          previousScore &&
+          liveData.phase === "LIVE" &&
+          currentHome !== "" &&
+          currentAway !== ""
+        ) {
+          const changedHome = previousScore.home !== currentHome;
+          const changedAway = previousScore.away !== currentAway;
+
+          if (changedHome || changedAway) {
+            const previousFlash = liveGoalFlashUntilByUid.get(uid) || {};
+            liveGoalFlashUntilByUid.set(uid, {
+              home: changedHome ? Date.now() + LIVE_GOAL_FLASH_MS : (previousFlash.home || 0),
+              away: changedAway ? Date.now() + LIVE_GOAL_FLASH_MS : (previousFlash.away || 0)
+            });
+          }
+        }
+
+        if (currentHome !== "" && currentAway !== "") {
+          previousLiveScoreByUid.set(uid, {
+            home: currentHome,
+            away: currentAway
+          });
+        }
+
         // Primary binding: stable match_uid shared by site_matches / tech_fixtures / tech_live.
         liveByUid.set(uid, liveData);
 
@@ -6702,8 +6823,18 @@ button.achievement-item {
         if (live.status === "HT") clock = "ПЕРЕРЫВ";
         else if (live.status === "P") clock = "ПЕН.";
         else if (live.minute !== "" && live.minute !== null && live.minute !== undefined) clock = String(live.minute);
+        const home = String(live.home ?? "").trim();
+        const away = String(live.away ?? "").trim();
+        const flashUntil = liveGoalFlashUntilByUid.get(live.uid) || {};
+        const nowMs = Date.now();
+
         return {
           score: live.score,
+          home,
+          away,
+          isDraw: home !== "" && away !== "" && home === away,
+          flashHome: Number(flashUntil.home || 0) > nowMs,
+          flashAway: Number(flashUntil.away || 0) > nowMs,
           clock,
           live: true,
           minuteNumber: live.minute !== "" && live.minute !== null && live.minute !== undefined && live.status !== "HT" && live.status !== "P"
@@ -6712,7 +6843,20 @@ button.achievement-item {
 
       // A FINISHED row may appear in tech_live before Sheets receives the official FT score.
       // Display it immediately; Sheets remains authoritative for win/lose state.
-      if (live.phase === "FINISHED") return { score: live.score, clock: "FT", live: false };
+      if (live.phase === "FINISHED") {
+        const home = String(live.home ?? "").trim();
+        const away = String(live.away ?? "").trim();
+        return {
+          score: live.score,
+          home,
+          away,
+          isDraw: home !== "" && away !== "" && home === away,
+          flashHome: false,
+          flashAway: false,
+          clock: "FT",
+          live: false
+        };
+      }
       return null;
     }
 
@@ -7329,7 +7473,19 @@ function mapPredictionRow(row) {
           const clockHtml = liveData.minuteNumber
             ? `<span class="live-minute-number">${escapeHtml(liveData.clock)}</span><span class="live-minute-apostrophe">'</span>`
             : escapeHtml(liveData.clock);
-          return `<span class="match-status pending live-score-status"><span class="live-score-value">${escapeHtml(liveData.score)}</span><span class="${clockClass}">${clockHtml}</span></span>`;
+
+          const scoreToneClass = liveData.isDraw ? "live-score-draw" : "live-score-behind";
+          const hasSplitScore = liveData.home !== "" && liveData.away !== "";
+
+          const scoreHtml = hasSplitScore
+            ? `<span class="live-score-value ${scoreToneClass}">
+                 <span class="live-score-digit${liveData.flashHome ? " live-score-digit-flash" : ""}">${escapeHtml(liveData.home)}</span>
+                 <span class="live-score-separator">-</span>
+                 <span class="live-score-digit${liveData.flashAway ? " live-score-digit-flash" : ""}">${escapeHtml(liveData.away)}</span>
+               </span>`
+            : `<span class="live-score-value ${scoreToneClass}">${escapeHtml(liveData.score)}</span>`;
+
+          return `<span class="match-status pending live-score-status">${scoreHtml}<span class="${clockClass}">${clockHtml}</span></span>`;
         }
         return `<span class="match-status pending">⏳</span>`;
       }
