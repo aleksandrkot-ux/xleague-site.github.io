@@ -7500,10 +7500,14 @@ function scoreByMatchId(id) {
               m.score &&
               (m.status === "win" || m.status === "lose")
             )
-            .sort((a,b) => {
-              const ak = `${a.sortDate || ""} ${a.time || ""}`;
-              const bk = `${b.sortDate || ""} ${b.time || ""}`;
-              return bk.localeCompare(ak);
+            .sort((a, b) => {
+              // Stable newest-first order for the ticker.
+              // Use real timestamps instead of lexicographic date strings.
+              const diff = getMatchTimestamp(b) - getMatchTimestamp(a);
+              if (diff !== 0) return diff;
+
+              // Stable fallback for matches with the same kickoff time.
+              return Number(b.id || 0) - Number(a.id || 0);
             })
         : [];
 
