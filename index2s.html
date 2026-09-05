@@ -7182,28 +7182,55 @@ button.achievement-item {
     }
 
     async function refreshLiveFromSheets() {
-      try {
-        const [liveRows, fixtureRows, matchRows] = await Promise.all([
-          loadTab(TABS.live).catch(() => []),
-          loadTab(TABS.fixtures).catch(() => []),
-          loadTab(TABS.matches).catch(() => null)
-        ]);
+      // Live data must be "sticky": a temporary network/VPN/API failure must
+      // NOT erase the last good score and turn it back into an hourglass.
+      const [liveResult, fixtureResult, matchResult] = await Promise.allSettled([
+        loadTab(TABS.live),
+        loadTab(TABS.fixtures),
+        loadTab(TABS.matches)
+      ]);
 
-        buildLiveIndex(liveRows, fixtureRows);
+      let changed = false;
 
-        // site_matches is the authoritative settled state (win/lose/cancelled).
-        // Refresh it during live polling as well, so FT -> final result happens
-        // automatically without requiring F5. The VPS sheet cache limits the
-        // actual Google Sheets reads.
-        if (Array.isArray(matchRows) && matchRows.length) {
-          matches = matchRows.map(mapMatchRow).filter(x => x.id && x.teams);
-          matchById = new Map(matches.map(x => [x.id, x]));
-        }
+      if (
+        liveResult.status === "fulfilled" &&
+        Array.isArray(liveResult.value)
+      ) {
+        const fixtureRows =
+          fixtureResult.status === "fulfilled" &&
+          Array.isArray(fixtureResult.value)
+            ? fixtureResult.value
+            : [];
 
+        buildLiveIndex(liveResult.value, fixtureRows);
+        changed = true;
+      } else {
+        console.warn(
+          "X League live refresh failed; keeping last good live snapshot",
+          liveResult.status === "rejected" ? liveResult.reason : liveResult.value
+        );
+      }
+
+      // site_matches is the authoritative settled state (win/lose/cancelled).
+      // If this refresh fails, keep the previous in-memory matches as well.
+      if (
+        matchResult.status === "fulfilled" &&
+        Array.isArray(matchResult.value) &&
+        matchResult.value.length
+      ) {
+        matches = matchResult.value.map(mapMatchRow).filter(x => x.id && x.teams);
+        matchById = new Map(matches.map(x => [x.id, x]));
+        changed = true;
+      } else if (matchResult.status === "rejected") {
+        console.warn(
+          "X League site_matches refresh failed; keeping previous snapshot",
+          matchResult.reason
+        );
+      }
+
+      if (changed) {
         renderMatches();
         renderResultsTicker();
-      } catch (err) {
-        console.warn("X League live refresh unavailable", err);
       }
     }
 
