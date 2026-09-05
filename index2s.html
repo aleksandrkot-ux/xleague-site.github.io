@@ -7394,11 +7394,25 @@ function scoreByMatchId(id) {
     function normalizeDate(value) {
       const raw = String(value ?? "").trim();
       if (!raw) return "";
-      const m = raw.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})$/);
+
+      // X League sheet dates are day-first.
+      // Explicitly parse DD.MM[.YYYY] before Date(), because JS interprets
+      // ambiguous strings such as "05.09" as MM.DD in some browsers.
+      let m = raw.match(/^(\d{1,2})[.\/-](\d{1,2})$/);
+      if (m) {
+        const yyyy = String(new Date().getFullYear());
+        return `${yyyy}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+      }
+
+      m = raw.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})$/);
       if (m) {
         const yyyy = m[3].length === 2 ? `20${m[3]}` : m[3];
         return `${yyyy}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
       }
+
+      // ISO YYYY-MM-DD remains safe and unambiguous.
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+
       const d = new Date(raw);
       if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10);
       return raw;
