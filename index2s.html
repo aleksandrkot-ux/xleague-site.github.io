@@ -7887,6 +7887,7 @@ function scoreByMatchId(id) {
     function normalizeStatus(value, resultValue) {
       const raw = String(value ?? "").trim().toLowerCase();
       const res = String(resultValue ?? "").trim();
+      const resultNum = toNum(res, NaN);
 
       // A void result from Sheets is authoritative even if a stale machine status still says pending.
       if (res.toLowerCase() === "x" || raw.includes("🚫")) return "cancelled";
@@ -7897,10 +7898,14 @@ function scoreByMatchId(id) {
       // Human-readable statuses from Sheets
       if (raw.includes("cancel") || raw.includes("postpon") || raw.includes("отмен") || raw.includes("перен")) return "cancelled";
       if (raw.includes("⏳") || raw.includes("pending") || raw.includes("active")) return "pending";
-      if (raw.includes("✅") || raw.includes("win") || raw.includes("draw") || res === "1") return "win";
-      if (raw.includes("❌") || raw.includes("lose") || raw.includes("loss") || res === "0") return "lose";
 
-      return "cancelled";
+      // Sheets may serialize result cells as 0, 0.0, 0,0 / 1, 1.0, 1,0.
+      // Treat their numeric value as authoritative instead of comparing only exact strings.
+      if (raw.includes("✅") || raw.includes("win") || raw.includes("draw") || resultNum === 1) return "win";
+      if (raw.includes("❌") || raw.includes("lose") || raw.includes("loss") || resultNum === 0) return "lose";
+
+      // Unknown/blank state must never masquerade as a cancelled match.
+      return "pending";
     }
 
     function normalizeDate(value) {
