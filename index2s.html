@@ -6361,6 +6361,225 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== Unified match stars + desktop goal notifications ===== */
+.match-stars-picker,
+.goal-toast-stars {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  padding: 3px 4px;
+  margin: -3px -4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.match-stars-picker .stars,
+.goal-toast-stars .stars {
+  pointer-events: none;
+}
+
+/* Goal popup toggle sits next to the sound toggle on desktop. */
+.live-notify-toggle-btn {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.055);
+  color: #9a9a9a;
+  -webkit-text-fill-color: #9a9a9a;
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.live-notify-toggle-btn.is-on {
+  border-color: rgba(182,255,59,.24);
+  background: rgba(182,255,59,.08);
+  color: #b6ff3b;
+  -webkit-text-fill-color: #b6ff3b;
+}
+
+.live-notify-toggle-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* Desktop only for now. New cards stack upward from the lower-left corner. */
+.goal-toast-stack {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 240;
+  width: min(350px, calc(100vw - 36px));
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.goal-toast {
+  position: relative;
+  overflow: visible;
+  padding: 14px 15px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(251,113,133,.08), transparent 40%),
+    #18191c;
+  box-shadow: 0 18px 48px rgba(0,0,0,.48);
+  color: #fff;
+  pointer-events: auto;
+  animation: xleague-goal-toast-in .22s ease-out both;
+}
+
+@keyframes xleague-goal-toast-in {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.goal-toast-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-right: 28px;
+}
+
+.goal-toast-title {
+  color: #fb7185;
+  -webkit-text-fill-color: #fb7185;
+  font-size: 15px;
+  font-weight: 1000;
+  letter-spacing: .04em;
+}
+
+.goal-toast-minute {
+  color: #f3bd5a;
+  -webkit-text-fill-color: #f3bd5a;
+  font-size: 13px;
+  font-weight: 1000;
+  animation: xleague-live-minute-pulse 1.5s ease-in-out infinite;
+}
+
+.goal-toast-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.055);
+  color: #9a9a9a;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.goal-toast-stars {
+  margin-top: 8px;
+  margin-left: -4px;
+}
+
+.goal-toast-match {
+  margin-top: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.goal-toast-flag {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  font-size: 13px;
+}
+
+.goal-toast-flag img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+.goal-toast-teams {
+  min-width: 0;
+  color: #f4f4f5;
+  font-size: 13px;
+  font-weight: 950;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.goal-toast-score {
+  margin-top: 9px;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 1000;
+  letter-spacing: -.03em;
+}
+
+.goal-toast-score .goal-new {
+  color: #fb7185;
+  -webkit-text-fill-color: #fb7185;
+  font-size: 25px;
+}
+
+.goal-toast-score .goal-sep {
+  color: #8a8a8a;
+  font-size: 17px;
+}
+
+@media (max-width: 699px) {
+  .live-notify-toggle-btn,
+  .goal-toast-stack {
+    display: none !important;
+  }
+
+  /* Main match stars get the same tap affordance as the country-stat stars. */
+  .match-stars-picker {
+    min-width: 104px;
+    min-height: 40px;
+    padding: 6px 5px;
+    margin: -6px -5px;
+    justify-content: flex-end;
+    touch-action: manipulation;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goal-toast,
+  .goal-toast-minute {
+    animation: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6376,6 +6595,10 @@ button.achievement-item {
           <button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-pressed="false" aria-label="Включить звук голов">
             <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
             <span class="sound-toggle-text">Звук офф</span>
+          </button>
+          <button class="live-notify-toggle-btn is-on" id="liveNotifyToggleBtn" type="button" aria-pressed="true" aria-label="Выключить всплывающие уведомления о голах">
+            <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span>
+            <span class="live-notify-toggle-text">Увед. вкл</span>
           </button>
           <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30,3K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
@@ -6863,6 +7086,7 @@ button.achievement-item {
 
   <div class="picker-mobile-backdrop" id="pickerMobileBackdrop"></div>
   <div class="global-pickers-popover" id="globalPickersPopover" aria-hidden="true"></div>
+  <div class="goal-toast-stack" id="goalToastStack" aria-live="polite" aria-atomic="false"></div>
 
   <nav class="bottom-nav">
   <div class="bottom-nav-grid">
@@ -6967,6 +7191,113 @@ button.achievement-item {
     let goalSoundEnabled = localStorage.getItem(GOAL_SOUND_STORAGE_KEY) === "1";
     let goalSoundUnlocked = false;
     let goalSoundUnlockBound = false;
+
+    // Desktop goal popups: enabled by default, remembered on this device.
+    const GOAL_NOTIFY_STORAGE_KEY = "xleague_goal_notifications_enabled";
+    let goalNotificationsEnabled = localStorage.getItem(GOAL_NOTIFY_STORAGE_KEY) !== "0";
+
+    function renderGoalNotifyToggle() {
+      const btn = document.getElementById("liveNotifyToggleBtn");
+      if (!btn) return;
+
+      btn.classList.toggle("is-on", goalNotificationsEnabled);
+      btn.classList.toggle("is-off", !goalNotificationsEnabled);
+      btn.setAttribute("aria-pressed", goalNotificationsEnabled ? "true" : "false");
+      btn.setAttribute(
+        "aria-label",
+        goalNotificationsEnabled
+          ? "Выключить всплывающие уведомления о голах"
+          : "Включить всплывающие уведомления о голах"
+      );
+
+      const icon = btn.querySelector(".live-notify-toggle-icon");
+      const text = btn.querySelector(".live-notify-toggle-text");
+      if (icon) icon.textContent = goalNotificationsEnabled ? "🔔" : "🔕";
+      if (text) text.textContent = goalNotificationsEnabled ? "Увед. вкл" : "Увед. офф";
+    }
+
+    function clearGoalToasts() {
+      const stack = document.getElementById("goalToastStack");
+      if (stack) stack.innerHTML = "";
+    }
+
+    function bindGoalNotifyToggle() {
+      const btn = document.getElementById("liveNotifyToggleBtn");
+      if (!btn) return;
+
+      renderGoalNotifyToggle();
+      if (btn.dataset.bound === "1") return;
+      btn.dataset.bound = "1";
+
+      btn.addEventListener("click", () => {
+        goalNotificationsEnabled = !goalNotificationsEnabled;
+        localStorage.setItem(GOAL_NOTIFY_STORAGE_KEY, goalNotificationsEnabled ? "1" : "0");
+        renderGoalNotifyToggle();
+        if (!goalNotificationsEnabled) clearGoalToasts();
+      });
+    }
+
+    function findSiteMatchForLive(uid, fixtureSource = null) {
+      const byUid = matches.find(match => String(match.matchUid || "") === String(uid));
+      if (byUid) return byUid;
+
+      if (fixtureSource) {
+        const targetKey = liveMatchKey(fixtureSource.match, fixtureSource.date, fixtureSource.time);
+        const byFallback = matches.find(match =>
+          liveMatchKey(match.teams, match.date, match.time) === targetKey
+        );
+        if (byFallback) return byFallback;
+      }
+
+      return null;
+    }
+
+    function showGoalToast(liveData, changedHome, changedAway, fixtureSource = null) {
+      if (!goalNotificationsEnabled) return;
+      if (!window.matchMedia("(min-width: 700px)").matches) return;
+
+      const stack = document.getElementById("goalToastStack");
+      if (!stack) return;
+
+      const match = findSiteMatchForLive(liveData.uid, fixtureSource);
+      if (!match) return;
+
+      const minuteRaw = String(liveData.minute ?? "").trim();
+      const minuteText = minuteRaw ? `${minuteRaw}'` : "LIVE";
+
+      const home = String(liveData.home ?? "").trim();
+      const away = String(liveData.away ?? "").trim();
+
+      const card = document.createElement("article");
+      card.className = "goal-toast";
+      card.dataset.uid = liveData.uid;
+
+      card.innerHTML = `
+        <button type="button" class="goal-toast-close" aria-label="Закрыть уведомление">×</button>
+        <div class="goal-toast-head">
+          <div class="goal-toast-title">ГОЛ!</div>
+          <div class="goal-toast-minute">${escapeHtml(minuteText)}</div>
+        </div>
+
+        <button type="button" class="goal-toast-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+          ${starsHtml(match.popularity, false)}
+        </button>
+
+        <div class="goal-toast-match">
+          <span class="goal-toast-flag">${flagHtml(match.flag_url || match.flag)}</span>
+          <div class="goal-toast-teams">${escapeHtml(match.teams)}</div>
+        </div>
+
+        <div class="goal-toast-score" aria-label="Счёт ${escapeHtml(home)} — ${escapeHtml(away)}">
+          <span class="${changedHome ? "goal-new" : ""}">${escapeHtml(home)}</span>
+          <span class="goal-sep">—</span>
+          <span class="${changedAway ? "goal-new" : ""}">${escapeHtml(away)}</span>
+        </div>
+      `;
+
+      card.querySelector(".goal-toast-close")?.addEventListener("click", () => card.remove());
+      stack.appendChild(card);
+    }
 
     function makeGoalAudio() {
       const audio = new Audio(GOAL_SOUND_URL);
@@ -7143,6 +7474,28 @@ button.achievement-item {
             });
 
             playGoalSound(uid, currentHome, currentAway);
+
+            // A popup is a real goal only when the score increased.
+            // Score corrections/VAR rollbacks may still update the main score,
+            // but they do not create a false "ГОЛ!" notification.
+            const prevHomeNum = Number(previousScore.home);
+            const prevAwayNum = Number(previousScore.away);
+            const curHomeNum = Number(currentHome);
+            const curAwayNum = Number(currentAway);
+
+            const scoredHome =
+              Number.isFinite(prevHomeNum) &&
+              Number.isFinite(curHomeNum) &&
+              curHomeNum > prevHomeNum;
+
+            const scoredAway =
+              Number.isFinite(prevAwayNum) &&
+              Number.isFinite(curAwayNum) &&
+              curAwayNum > prevAwayNum;
+
+            if (scoredHome || scoredAway) {
+              showGoalToast(liveData, scoredHome, scoredAway, fixtureByUid.get(uid) || null);
+            }
           }
         }
 
@@ -7233,6 +7586,9 @@ button.achievement-item {
         liveResult.status === "fulfilled" &&
         Array.isArray(liveResult.value)
       ) {
+        // Notifications from the previous successful poll expire here (~30 s).
+        clearGoalToasts();
+
         const fixtureRows =
           fixtureResult.status === "fulfilled" &&
           Array.isArray(fixtureResult.value)
@@ -7907,7 +8263,9 @@ function mapPredictionRow(row) {
             <div style="min-width:0;">
               <div class="match-meta-line">
                 <div class="match-meta">${escapeHtml(match.date)} · ${escapeHtml(match.time)}</div>
-                ${starsHtml(match.popularity)}
+                <button type="button" class="match-stars-picker" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+                  ${starsHtml(match.popularity, false)}
+                </button>
               </div>
               <div class="match-title-row"><span class="match-flag">${flagHtml(match.flag_url || match.flag)}</span><div class="match-name">${escapeHtml(match.teams)}</div></div>
             </div>
@@ -8061,7 +8419,7 @@ function mapPredictionRow(row) {
         return;
       }
 
-      const stars = event.target.closest(".country-history-stars");
+      const stars = event.target.closest("[data-match-pickers]");
       if (stars) {
         event.preventDefault();
         event.stopPropagation();
@@ -8087,7 +8445,7 @@ function mapPredictionRow(row) {
     document.getElementById("pickerMobileBackdrop")?.addEventListener("click", hideGlobalPickersPopover);
 
     document.addEventListener("mouseover", (event) => {
-      const stars = event.target.closest(".country-history-stars");
+      const stars = event.target.closest("[data-match-pickers]");
       if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
       const pop = document.getElementById("globalPickersPopover");
       if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
@@ -8095,7 +8453,7 @@ function mapPredictionRow(row) {
     });
 
     document.addEventListener("mouseout", (event) => {
-      const stars = event.target.closest(".country-history-stars");
+      const stars = event.target.closest("[data-match-pickers]");
       if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
 
       // Give the cursor a moment to move into the global popover.
@@ -8118,6 +8476,17 @@ function mapPredictionRow(row) {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         const active = document.activeElement;
+
+        const pickerControl = active?.closest?.("[data-match-pickers]");
+        if (pickerControl) {
+          event.preventDefault();
+          const pop = document.getElementById("globalPickersPopover");
+          const matchId = String(pickerControl.dataset.matchPickers || "");
+          if (pop) pop.dataset.matchId = matchId;
+          showGlobalPickersPopover(pickerControl, matchId);
+          return;
+        }
+
         const row = active?.closest?.(".chart-row[data-country]");
         if (row) {
           event.preventDefault();
@@ -10608,6 +10977,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
     async function boot() {
       bindSoundToggle();
+      bindGoalNotifyToggle();
 
       // Paint immediately from the last good browser snapshot when available.
       const cached = readCachedSheetsData();
