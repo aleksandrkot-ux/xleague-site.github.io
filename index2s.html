@@ -6668,11 +6668,6 @@ button.achievement-item {
 
 <style>
 @media (hover:none), (pointer:coarse) {
-  button[data-match-pickers] {
-    -webkit-touch-callout: none !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
-  }
 }
 </style>
 
@@ -8584,54 +8579,7 @@ function mapPredictionRow(row) {
       // On touch devices use pointerup directly; relying only on synthetic click
       // proved unreliable in Android Chrome and could also be swallowed by parent rows.
       let lastPickerTouchAt = 0;
-      let pickerTouchStart = null;
-
-      // Android Chrome can emulate hover on a long press. That is why the old
-      // behaviour looked like "hold the star to open it". Handle the real
-      // touch gesture explicitly instead: short touchstart -> touchend = open.
-      document.addEventListener("touchstart", (event) => {
-        const picker = event.target.closest?.("[data-match-pickers]");
-        if (!picker || !event.touches?.length) {
-          pickerTouchStart = null;
-          return;
-        }
-
-        const touch = event.touches[0];
-        pickerTouchStart = {
-          picker,
-          x: touch.clientX,
-          y: touch.clientY
-        };
-      }, { passive: true, capture: true });
-
-      document.addEventListener("touchend", (event) => {
-        if (!pickerTouchStart) return;
-
-        const touch = event.changedTouches?.[0];
-        const start = pickerTouchStart;
-        pickerTouchStart = null;
-
-        if (!touch || !start.picker?.isConnected) return;
-
-        // Do not open the popup when the user was actually scrolling.
-        const moved = Math.hypot(
-          touch.clientX - start.x,
-          touch.clientY - start.y
-        );
-        if (moved > 12) return;
-
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-
-        lastPickerTouchAt = Date.now();
-        toggleMatchPickers(start.picker);
-      }, { passive: false, capture: true });
-
-      document.addEventListener("touchcancel", () => {
-        pickerTouchStart = null;
-      }, { passive: true, capture: true });
-
+      // Mobile: keep deliberate long-press behaviour to avoid accidental taps.
       function toggleMatchPickers(anchor) {
         if (!anchor) return;
 
@@ -8652,8 +8600,9 @@ function mapPredictionRow(row) {
         const picker = event.target.closest?.("[data-match-pickers]");
         if (!picker) return;
 
-        // Real finger taps are handled by touchend above. This branch remains
-        // for pens and unusual coarse-pointer devices without Touch Events.
+        // Finger taps intentionally do not toggle the picker.
+        // On Android a deliberate long press exposes the existing hover-style
+        // popover, which is less prone to accidental activation while scrolling.
         if (event.pointerType === "touch") return;
 
         const isCoarsePointer =
