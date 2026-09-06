@@ -6621,6 +6621,35 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== Reliable star picker taps on touch devices ===== */
+[data-match-pickers] {
+  position: relative;
+  z-index: 8;
+}
+
+[data-match-pickers] .stars {
+  pointer-events: none;
+}
+
+@media (hover:none), (pointer:coarse) {
+  [data-match-pickers] {
+    touch-action: manipulation !important;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .match-stars-picker,
+  .country-history-stars {
+    min-height: 42px !important;
+    min-width: 104px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -8519,7 +8548,58 @@ function mapPredictionRow(row) {
     const countryHistoryClose = document.getElementById("countryHistoryClose");
     const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
 
+    // Unified star-picker interaction.
+    // On touch devices use pointerup directly; relying only on synthetic click
+    // proved unreliable in Android Chrome and could also be swallowed by parent rows.
+    let lastPickerTouchAt = 0;
+
+    function toggleMatchPickers(anchor) {
+      if (!anchor) return;
+
+      const pop = document.getElementById("globalPickersPopover");
+      const matchId = String(anchor.dataset.matchPickers || "");
+      const sameMatch = pop?.dataset.matchId === matchId;
+      const visible = pop?.classList.contains("is-visible");
+
+      if (visible && sameMatch) {
+        hideGlobalPickersPopover();
+      } else {
+        if (pop) pop.dataset.matchId = matchId;
+        showGlobalPickersPopover(anchor, matchId);
+      }
+    }
+
+    document.addEventListener("pointerup", (event) => {
+      const picker = event.target.closest?.("[data-match-pickers]");
+      if (!picker) return;
+
+      const isTouchPointer =
+        event.pointerType === "touch" ||
+        event.pointerType === "pen" ||
+        window.matchMedia("(hover:none), (pointer:coarse)").matches;
+
+      if (!isTouchPointer) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      lastPickerTouchAt = Date.now();
+      toggleMatchPickers(picker);
+    }, { passive: false });
+
     document.addEventListener("click", (event) => {
+      // Star controls get first priority over clickable country/continent rows.
+      const stars = event.target.closest?.("[data-match-pickers]");
+      if (stars) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Android may emit a synthetic click after pointerup. Do not toggle twice.
+        if (Date.now() - lastPickerTouchAt < 700) return;
+
+        toggleMatchPickers(stars);
+        return;
+      }
+
       const countryRow = event.target.closest(".chart-row[data-country]");
       if (countryRow) {
         openCountryHistory(countryRow.dataset.country || "");
@@ -8543,28 +8623,8 @@ function mapPredictionRow(row) {
         return;
       }
 
-      const stars = event.target.closest("[data-match-pickers]");
-      if (stars) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const pop = document.getElementById("globalPickersPopover");
-        const matchId = String(stars.dataset.matchPickers || "");
-        const sameMatch = pop?.dataset.matchId === matchId;
-        const visible = pop?.classList.contains("is-visible");
-
-        if (visible && sameMatch) {
-          hideGlobalPickersPopover();
-        } else {
-          if (pop) pop.dataset.matchId = matchId;
-          showGlobalPickersPopover(stars, matchId);
-        }
-        return;
-      }
-
       if (!event.target.closest("#globalPickersPopover")) hideGlobalPickersPopover();
     });
-
 
     document.getElementById("pickerMobileBackdrop")?.addEventListener("click", hideGlobalPickersPopover);
 
@@ -8580,7 +8640,6 @@ function mapPredictionRow(row) {
       const stars = event.target.closest("[data-match-pickers]");
       if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
 
-      // Give the cursor a moment to move into the global popover.
       setTimeout(() => {
         const pop = document.getElementById("globalPickersPopover");
         if (!pop) return;
@@ -8588,7 +8647,7 @@ function mapPredictionRow(row) {
       }, 70);
     });
 
-        const globalPickersPopover = document.getElementById("globalPickersPopover");
+    const globalPickersPopover = document.getElementById("globalPickersPopover");
     if (globalPickersPopover) {
       globalPickersPopover.addEventListener("mouseleave", () => {
         if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
