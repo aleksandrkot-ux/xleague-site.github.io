@@ -6665,6 +6665,17 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+@media (hover:none), (pointer:coarse) {
+  button[data-match-pickers] {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -7037,7 +7048,7 @@ button.achievement-item {
         <div class="prize-card">
           <div class="prize-card-title">🦆 Меценаты X League</div>
           <div class="patron-row"><span>PaVeL</span><strong>300 ₽</strong></div>
-          <div class="patron-note">Отдельное спасибо участникам, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
+          <div class="patron-note">Отдельное спасибо участникам турнира, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
         </div>
       </div>
     </div>
@@ -8573,6 +8584,53 @@ function mapPredictionRow(row) {
       // On touch devices use pointerup directly; relying only on synthetic click
       // proved unreliable in Android Chrome and could also be swallowed by parent rows.
       let lastPickerTouchAt = 0;
+      let pickerTouchStart = null;
+
+      // Android Chrome can emulate hover on a long press. That is why the old
+      // behaviour looked like "hold the star to open it". Handle the real
+      // touch gesture explicitly instead: short touchstart -> touchend = open.
+      document.addEventListener("touchstart", (event) => {
+        const picker = event.target.closest?.("[data-match-pickers]");
+        if (!picker || !event.touches?.length) {
+          pickerTouchStart = null;
+          return;
+        }
+
+        const touch = event.touches[0];
+        pickerTouchStart = {
+          picker,
+          x: touch.clientX,
+          y: touch.clientY
+        };
+      }, { passive: true, capture: true });
+
+      document.addEventListener("touchend", (event) => {
+        if (!pickerTouchStart) return;
+
+        const touch = event.changedTouches?.[0];
+        const start = pickerTouchStart;
+        pickerTouchStart = null;
+
+        if (!touch || !start.picker?.isConnected) return;
+
+        // Do not open the popup when the user was actually scrolling.
+        const moved = Math.hypot(
+          touch.clientX - start.x,
+          touch.clientY - start.y
+        );
+        if (moved > 12) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        lastPickerTouchAt = Date.now();
+        toggleMatchPickers(start.picker);
+      }, { passive: false, capture: true });
+
+      document.addEventListener("touchcancel", () => {
+        pickerTouchStart = null;
+      }, { passive: true, capture: true });
 
       function toggleMatchPickers(anchor) {
         if (!anchor) return;
@@ -8594,12 +8652,15 @@ function mapPredictionRow(row) {
         const picker = event.target.closest?.("[data-match-pickers]");
         if (!picker) return;
 
-        const isTouchPointer =
-          event.pointerType === "touch" ||
-          event.pointerType === "pen" ||
-          window.matchMedia("(hover:none), (pointer:coarse)").matches;
+        // Real finger taps are handled by touchend above. This branch remains
+        // for pens and unusual coarse-pointer devices without Touch Events.
+        if (event.pointerType === "touch") return;
 
-        if (!isTouchPointer) return;
+        const isCoarsePointer =
+          event.pointerType === "pen" ||
+          window.matchMedia("(pointer:coarse)").matches;
+
+        if (!isCoarsePointer) return;
 
         event.preventDefault();
         event.stopPropagation();
