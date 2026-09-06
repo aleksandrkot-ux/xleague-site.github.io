@@ -8286,12 +8286,57 @@ if (screenMatches) {
   const el = document.getElementById("profileRankChart");
   if (!el) return;
 
-  const rows = rankHistory
+  // Completed regular tours come from the frozen historical table.
+  let rows = rankHistory
     .filter(r =>
       String(r.player).trim() === String(playerName).trim() &&
       isRegularTour(r.tour)
     )
-    .sort((a, b) => Number(a.tour) - Number(b.tour));
+    .map(r => ({
+      ...r,
+      tour: Number(r.tour),
+      rank: Number(r.rank),
+      liveCurrent: false
+    }))
+    .filter(r => Number.isFinite(r.tour) && Number.isFinite(r.rank) && r.rank > 0);
+
+  // The active tour is different: its point must show the player's ACTUAL
+  // overall position right now. If rank_history already contains a row for
+  // the active tour, replace that stale/intermediate value instead of using it.
+  const activeTourRow = siteTours.find(row => {
+    const status = String(get(row, ["status", "Status", "Статус", "B"], ""))
+      .trim()
+      .toLowerCase();
+    return status === "active";
+  });
+
+  const activeTour = activeTourRow
+    ? toNum(get(activeTourRow, ["tour", "Tour", "Тур", "A"], 0), 0)
+    : 0;
+
+  const overall = siteOverall.find(p =>
+    String(p.name).trim() === String(playerName).trim()
+  ) || {};
+
+  const currentRank = Number(overall.rank);
+
+  if (
+    activeTour &&
+    isRegularTour(activeTour) &&
+    Number.isFinite(currentRank) &&
+    currentRank > 0
+  ) {
+    // Preserve only completed tours; the active tour gets a live point.
+    rows = rows.filter(r => Number(r.tour) !== Number(activeTour));
+
+    rows.push({
+      tour: Number(activeTour),
+      rank: currentRank,
+      liveCurrent: true
+    });
+  }
+
+  rows.sort((a, b) => Number(a.tour) - Number(b.tour));
 
   if (!rows.length) {
     el.innerHTML = `<div class="empty-state">Нет данных</div>`;
@@ -8312,7 +8357,8 @@ if (screenMatches) {
       x,
       y,
       rank: r.rank,
-      tour: r.tour
+      tour: r.tour,
+      liveCurrent: !!r.liveCurrent
     };
   });
 
