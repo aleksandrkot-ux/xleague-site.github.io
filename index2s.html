@@ -1256,6 +1256,19 @@ html, body {
       .player-achievements-v2,
       .player-countries-v2,
       .player-history-v2 { grid-column: 1 / -1; }
+
+      /* Larger achievement icons in the player Hero on desktop only. */
+      .player-hero-v2 .profile-inline-achievements {
+        gap: 10px;
+      }
+
+      .player-hero-v2 .profile-inline-achievements img,
+      .player-hero-v2 .profile-inline-achievements .badge-fallback {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        font-size: 28px;
+      }
     }
 
     .profile-head {
