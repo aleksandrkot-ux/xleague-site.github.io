@@ -1256,19 +1256,6 @@ html, body {
       .player-achievements-v2,
       .player-countries-v2,
       .player-history-v2 { grid-column: 1 / -1; }
-
-      /* Larger achievement icons in the player Hero on desktop only. */
-      .player-hero-v2 .profile-inline-achievements {
-        gap: 10px;
-      }
-
-      .player-hero-v2 .profile-inline-achievements img,
-      .player-hero-v2 .profile-inline-achievements .badge-fallback {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
-        font-size: 28px;
-      }
     }
 
     .profile-head {
@@ -6334,6 +6321,31 @@ button.achievement-item {
 .live-score-value .live-score-digit.live-score-digit-flash {
   background: transparent !important;
   border: 0 !important;
+}
+</style>
+
+
+<style>
+/* ===== Desktop Hero achievements: final override ===== */
+@media (min-width: 980px) {
+  .player-hero-v2 .player-awards-v2 {
+    min-height: 60px !important;
+  }
+
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements {
+    gap: 10px !important;
+    max-width: none !important;
+  }
+
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements img,
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements .badge-fallback {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+    border-radius: 16px !important;
+    font-size: 28px !important;
+  }
 }
 </style>
 
