@@ -7222,6 +7222,7 @@ button.achievement-item {
     // Remember the previous live score across polling cycles.
     // When one side changes, that digit flashes for 60 seconds.
     const previousLiveScoreByUid = new Map();
+    const previousLivePhaseByUid = new Map();
     const liveGoalFlashUntilByUid = new Map();
     const LIVE_GOAL_FLASH_MS = 60 * 1000;
 
@@ -7343,6 +7344,57 @@ button.achievement-item {
             <span class="${changedHome ? "goal-new" : ""}">${escapeHtml(home)}</span>
             <span class="goal-sep">—</span>
             <span class="${changedAway ? "goal-new" : ""}">${escapeHtml(away)}</span>
+          </div>
+        </div>
+      `;
+
+      card.querySelector(".goal-toast-close")?.addEventListener("click", () => card.remove());
+      stack.appendChild(card);
+    }
+
+    function showFinishedToast(liveData, fixtureSource = null) {
+      if (!goalNotificationsEnabled) return;
+      if (!window.matchMedia("(min-width: 700px)").matches) return;
+
+      const stack = document.getElementById("goalToastStack");
+      if (!stack) return;
+
+      const match = findSiteMatchForLive(liveData.uid, fixtureSource);
+      if (!match) return;
+
+      const home = String(liveData.home ?? "").trim();
+      const away = String(liveData.away ?? "").trim();
+      const homeNum = Number(home);
+      const awayNum = Number(away);
+      const isDrawNow =
+        Number.isFinite(homeNum) &&
+        Number.isFinite(awayNum) &&
+        homeNum === awayNum;
+
+      const card = document.createElement("article");
+      card.className = `goal-toast ${isDrawNow ? "goal-draw" : "goal-not-draw"}`;
+      card.dataset.uid = liveData.uid;
+
+      card.innerHTML = `
+        <button type="button" class="goal-toast-close" aria-label="Закрыть уведомление">×</button>
+        <div class="goal-toast-head">
+          <div class="goal-toast-title">ОКОНЧЕН</div>
+        </div>
+
+        <button type="button" class="goal-toast-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+          ${starsHtml(match.popularity, false)}
+        </button>
+
+        <div class="goal-toast-match">
+          <div class="goal-toast-match-main">
+            <span class="goal-toast-flag">${flagHtml(match.flag_url || match.flag)}</span>
+            <div class="goal-toast-teams">${escapeHtml(match.teams)}</div>
+          </div>
+
+          <div class="goal-toast-score" aria-label="Итоговый счёт ${escapeHtml(home)} — ${escapeHtml(away)}">
+            <span>${escapeHtml(home)}</span>
+            <span class="goal-sep">—</span>
+            <span>${escapeHtml(away)}</span>
           </div>
         </div>
       `;
@@ -7506,6 +7558,7 @@ button.achievement-item {
         const currentHome = String(liveData.home ?? "").trim();
         const currentAway = String(liveData.away ?? "").trim();
         const previousScore = previousLiveScoreByUid.get(uid);
+        const previousPhase = previousLivePhaseByUid.get(uid);
 
         // Do not flash on the very first page load. Flash only when a later poll
         // reports a changed score while the match is actually live.
@@ -7551,12 +7604,26 @@ button.achievement-item {
           }
         }
 
+        // Match-finished popup: only on a later poll when a previously seen
+        // match transitions into FINISHED. This avoids false notifications on page load.
+        if (
+          previousPhase &&
+          previousPhase !== "FINISHED" &&
+          liveData.phase === "FINISHED" &&
+          currentHome !== "" &&
+          currentAway !== ""
+        ) {
+          showFinishedToast(liveData, fixtureByUid.get(uid) || null);
+        }
+
         if (currentHome !== "" && currentAway !== "") {
           previousLiveScoreByUid.set(uid, {
             home: currentHome,
             away: currentAway
           });
         }
+
+        previousLivePhaseByUid.set(uid, liveData.phase);
 
         // Primary binding: stable match_uid shared by site_matches / tech_fixtures / tech_live.
         liveByUid.set(uid, liveData);
@@ -7583,7 +7650,7 @@ button.achievement-item {
 
       if (live.phase === "LIVE") {
         let clock = "LIVE";
-        if (live.status === "HT") clock = "ПЕРЕРЫВ";
+        if (live.status === "HT") clock = "ПЕР";
         else if (live.status === "P") clock = "ПЕН.";
         else if (live.minute !== "" && live.minute !== null && live.minute !== undefined) clock = String(live.minute);
         const home = String(live.home ?? "").trim();
