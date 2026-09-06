@@ -6650,6 +6650,21 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* Final touch picker safety: the interactive button itself owns the hit area. */
+@media (hover:none), (pointer:coarse) {
+  button[data-match-pickers] {
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 20 !important;
+  }
+  button[data-match-pickers] * {
+    pointer-events: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -8544,162 +8559,169 @@ function mapPredictionRow(row) {
       if (indicator) indicator.textContent = tourLabel(current) || `Тур ${current}`;
 
   
-    const countryHistoryModal = document.getElementById("countryHistoryModal");
-    const countryHistoryClose = document.getElementById("countryHistoryClose");
-    const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
+    // IMPORTANT: populateTourControls() runs on every renderAll().
+    // Bind global picker/modal handlers only once, otherwise every refresh
+    // stacks another pointerup/click listener and one tap can toggle the popup
+    // open/closed multiple times (often ending invisible on mobile).
+    if (document.documentElement.dataset.pickerEventsBound !== "1") {
+      document.documentElement.dataset.pickerEventsBound = "1";
+      const countryHistoryModal = document.getElementById("countryHistoryModal");
+      const countryHistoryClose = document.getElementById("countryHistoryClose");
+      const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
 
-    // Unified star-picker interaction.
-    // On touch devices use pointerup directly; relying only on synthetic click
-    // proved unreliable in Android Chrome and could also be swallowed by parent rows.
-    let lastPickerTouchAt = 0;
+      // Unified star-picker interaction.
+      // On touch devices use pointerup directly; relying only on synthetic click
+      // proved unreliable in Android Chrome and could also be swallowed by parent rows.
+      let lastPickerTouchAt = 0;
 
-    function toggleMatchPickers(anchor) {
-      if (!anchor) return;
+      function toggleMatchPickers(anchor) {
+        if (!anchor) return;
 
-      const pop = document.getElementById("globalPickersPopover");
-      const matchId = String(anchor.dataset.matchPickers || "");
-      const sameMatch = pop?.dataset.matchId === matchId;
-      const visible = pop?.classList.contains("is-visible");
+        const pop = document.getElementById("globalPickersPopover");
+        const matchId = String(anchor.dataset.matchPickers || "");
+        const sameMatch = pop?.dataset.matchId === matchId;
+        const visible = pop?.classList.contains("is-visible");
 
-      if (visible && sameMatch) {
-        hideGlobalPickersPopover();
-      } else {
-        if (pop) pop.dataset.matchId = matchId;
-        showGlobalPickersPopover(anchor, matchId);
+        if (visible && sameMatch) {
+          hideGlobalPickersPopover();
+        } else {
+          if (pop) pop.dataset.matchId = matchId;
+          showGlobalPickersPopover(anchor, matchId);
+        }
       }
-    }
 
-    document.addEventListener("pointerup", (event) => {
-      const picker = event.target.closest?.("[data-match-pickers]");
-      if (!picker) return;
+      document.addEventListener("pointerup", (event) => {
+        const picker = event.target.closest?.("[data-match-pickers]");
+        if (!picker) return;
 
-      const isTouchPointer =
-        event.pointerType === "touch" ||
-        event.pointerType === "pen" ||
-        window.matchMedia("(hover:none), (pointer:coarse)").matches;
+        const isTouchPointer =
+          event.pointerType === "touch" ||
+          event.pointerType === "pen" ||
+          window.matchMedia("(hover:none), (pointer:coarse)").matches;
 
-      if (!isTouchPointer) return;
+        if (!isTouchPointer) return;
 
-      event.preventDefault();
-      event.stopPropagation();
-      lastPickerTouchAt = Date.now();
-      toggleMatchPickers(picker);
-    }, { passive: false });
-
-    document.addEventListener("click", (event) => {
-      // Star controls get first priority over clickable country/continent rows.
-      const stars = event.target.closest?.("[data-match-pickers]");
-      if (stars) {
         event.preventDefault();
         event.stopPropagation();
+        lastPickerTouchAt = Date.now();
+        toggleMatchPickers(picker);
+      }, { passive: false });
 
-        // Android may emit a synthetic click after pointerup. Do not toggle twice.
-        if (Date.now() - lastPickerTouchAt < 700) return;
-
-        toggleMatchPickers(stars);
-        return;
-      }
-
-      const countryRow = event.target.closest(".chart-row[data-country]");
-      if (countryRow) {
-        openCountryHistory(countryRow.dataset.country || "");
-        return;
-      }
-
-      const continentRow = event.target.closest(".chart-row[data-continent]");
-      if (continentRow) {
-        openContinentHistory(continentRow.dataset.continent || "");
-        return;
-      }
-
-      const tourHeader = event.target.closest(".country-tour-title");
-      if (tourHeader) {
-        const group = tourHeader.closest(".country-tour-group");
-        if (group) {
-          const willOpen = !group.classList.contains("is-open");
-          group.classList.toggle("is-open", willOpen);
-          tourHeader.setAttribute("aria-expanded", willOpen ? "true" : "false");
-        }
-        return;
-      }
-
-      if (!event.target.closest("#globalPickersPopover")) hideGlobalPickersPopover();
-    });
-
-    document.getElementById("pickerMobileBackdrop")?.addEventListener("click", hideGlobalPickersPopover);
-
-    document.addEventListener("mouseover", (event) => {
-      const stars = event.target.closest("[data-match-pickers]");
-      if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
-      const pop = document.getElementById("globalPickersPopover");
-      if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
-      showGlobalPickersPopover(stars, stars.dataset.matchPickers);
-    });
-
-    document.addEventListener("mouseout", (event) => {
-      const stars = event.target.closest("[data-match-pickers]");
-      if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
-
-      setTimeout(() => {
-        const pop = document.getElementById("globalPickersPopover");
-        if (!pop) return;
-        if (!pop.matches(":hover") && !stars.matches(":hover")) hideGlobalPickersPopover();
-      }, 70);
-    });
-
-    const globalPickersPopover = document.getElementById("globalPickersPopover");
-    if (globalPickersPopover) {
-      globalPickersPopover.addEventListener("mouseleave", () => {
-        if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
-          hideGlobalPickersPopover();
-        }
-      });
-    }
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        const active = document.activeElement;
-
-        const pickerControl = active?.closest?.("[data-match-pickers]");
-        if (pickerControl) {
+      document.addEventListener("click", (event) => {
+        // Star controls get first priority over clickable country/continent rows.
+        const stars = event.target.closest?.("[data-match-pickers]");
+        if (stars) {
           event.preventDefault();
-          const pop = document.getElementById("globalPickersPopover");
-          const matchId = String(pickerControl.dataset.matchPickers || "");
-          if (pop) pop.dataset.matchId = matchId;
-          showGlobalPickersPopover(pickerControl, matchId);
+          event.stopPropagation();
+
+          // Android may emit a synthetic click after pointerup. Do not toggle twice.
+          if (Date.now() - lastPickerTouchAt < 700) return;
+
+          toggleMatchPickers(stars);
           return;
         }
 
-        const row = active?.closest?.(".chart-row[data-country]");
-        if (row) {
-          event.preventDefault();
-          openCountryHistory(row.dataset.country || "");
+        const countryRow = event.target.closest(".chart-row[data-country]");
+        if (countryRow) {
+          openCountryHistory(countryRow.dataset.country || "");
           return;
         }
 
-        const continentRow = active?.closest?.(".chart-row[data-continent]");
+        const continentRow = event.target.closest(".chart-row[data-continent]");
         if (continentRow) {
-          event.preventDefault();
           openContinentHistory(continentRow.dataset.continent || "");
           return;
         }
-        const tourHeader = active?.closest?.(".country-tour-title");
+
+        const tourHeader = event.target.closest(".country-tour-title");
         if (tourHeader) {
-          event.preventDefault();
-          tourHeader.click();
+          const group = tourHeader.closest(".country-tour-group");
+          if (group) {
+            const willOpen = !group.classList.contains("is-open");
+            group.classList.toggle("is-open", willOpen);
+            tourHeader.setAttribute("aria-expanded", willOpen ? "true" : "false");
+          }
           return;
         }
-      }
-      if (event.key === "Escape" && countryHistoryModal && !countryHistoryModal.classList.contains("hidden")) {
-        closeCountryHistory();
-      }
-    });
 
-    if (countryHistoryClose) countryHistoryClose.addEventListener("click", closeCountryHistory);
-    if (countryHistoryBackdrop) countryHistoryBackdrop.addEventListener("click", closeCountryHistory);
+        if (!event.target.closest("#globalPickersPopover")) hideGlobalPickersPopover();
+      });
 
-    window.addEventListener("resize", hideGlobalPickersPopover);
-    document.querySelector(".country-history-card")?.addEventListener("scroll", hideGlobalPickersPopover, { passive: true });
+      document.getElementById("pickerMobileBackdrop")?.addEventListener("click", hideGlobalPickersPopover);
+
+      document.addEventListener("mouseover", (event) => {
+        const stars = event.target.closest("[data-match-pickers]");
+        if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+        const pop = document.getElementById("globalPickersPopover");
+        if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
+        showGlobalPickersPopover(stars, stars.dataset.matchPickers);
+      });
+
+      document.addEventListener("mouseout", (event) => {
+        const stars = event.target.closest("[data-match-pickers]");
+        if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+
+        setTimeout(() => {
+          const pop = document.getElementById("globalPickersPopover");
+          if (!pop) return;
+          if (!pop.matches(":hover") && !stars.matches(":hover")) hideGlobalPickersPopover();
+        }, 70);
+      });
+
+      const globalPickersPopover = document.getElementById("globalPickersPopover");
+      if (globalPickersPopover) {
+        globalPickersPopover.addEventListener("mouseleave", () => {
+          if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
+            hideGlobalPickersPopover();
+          }
+        });
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          const active = document.activeElement;
+
+          const pickerControl = active?.closest?.("[data-match-pickers]");
+          if (pickerControl) {
+            event.preventDefault();
+            const pop = document.getElementById("globalPickersPopover");
+            const matchId = String(pickerControl.dataset.matchPickers || "");
+            if (pop) pop.dataset.matchId = matchId;
+            showGlobalPickersPopover(pickerControl, matchId);
+            return;
+          }
+
+          const row = active?.closest?.(".chart-row[data-country]");
+          if (row) {
+            event.preventDefault();
+            openCountryHistory(row.dataset.country || "");
+            return;
+          }
+
+          const continentRow = active?.closest?.(".chart-row[data-continent]");
+          if (continentRow) {
+            event.preventDefault();
+            openContinentHistory(continentRow.dataset.continent || "");
+            return;
+          }
+          const tourHeader = active?.closest?.(".country-tour-title");
+          if (tourHeader) {
+            event.preventDefault();
+            tourHeader.click();
+            return;
+          }
+        }
+        if (event.key === "Escape" && countryHistoryModal && !countryHistoryModal.classList.contains("hidden")) {
+          closeCountryHistory();
+        }
+      });
+
+      if (countryHistoryClose) countryHistoryClose.addEventListener("click", closeCountryHistory);
+      if (countryHistoryBackdrop) countryHistoryBackdrop.addEventListener("click", closeCountryHistory);
+
+      window.addEventListener("resize", hideGlobalPickersPopover);
+      document.querySelector(".country-history-card")?.addEventListener("scroll", hideGlobalPickersPopover, { passive: true });
+    }
 
     const matchesTourSelect = document.getElementById("matchesTourSelect");
       if (matchesTourSelect) {
