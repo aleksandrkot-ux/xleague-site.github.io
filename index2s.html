@@ -6349,6 +6349,18 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* Achievement thumbnails: keep source proportions, crop into icon frame */
+.player-achievements-v2 .achievement-item img,
+#tourAchievements .achievement-item img,
+#profileAchievements .achievement-item img,
+.profile-inline-achievements img {
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
