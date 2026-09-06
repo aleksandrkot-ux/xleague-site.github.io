@@ -1086,7 +1086,7 @@ html, body {
       justify-content: space-between;
       gap: 12px;
       padding: 13px;
-      border-radius: 20px;
+      border-radius: 16px;
       background: var(--card);
       border: 1px solid var(--line);
     }
@@ -3181,7 +3181,7 @@ html, body {
 
   .player-rank-v2 {
     min-width: 0;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.2;
   }
 
@@ -3548,8 +3548,8 @@ main,
 }
 .player-awards-v2 .profile-inline-achievements img,
 .player-awards-v2 .profile-inline-achievements .badge-fallback {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 7px;
   font-size: 12px;
 }
@@ -6424,7 +6424,7 @@ button.achievement-item {
   left: 18px;
   bottom: 18px;
   z-index: 240;
-  width: min(350px, calc(100vw - 36px));
+  width: min(320px, calc(100vw - 36px));
   display: flex;
   flex-direction: column-reverse;
   gap: 10px;
@@ -6434,13 +6434,11 @@ button.achievement-item {
 .goal-toast {
   position: relative;
   overflow: visible;
-  padding: 14px 15px 14px;
+  padding: 10px 12px 10px;
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 100% 0%, rgba(251,113,133,.08), transparent 40%),
-    #18191c;
-  box-shadow: 0 18px 48px rgba(0,0,0,.48);
+  background: #18191c;
+  box-shadow: 0 14px 34px rgba(0,0,0,.44);
   color: #fff;
   pointer-events: auto;
   animation: xleague-goal-toast-in .22s ease-out both;
@@ -6456,7 +6454,7 @@ button.achievement-item {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-right: 28px;
+  padding-right: 24px;
 }
 
 .goal-toast-title {
@@ -6470,17 +6468,17 @@ button.achievement-item {
 .goal-toast-minute {
   color: #f3bd5a;
   -webkit-text-fill-color: #f3bd5a;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 1000;
   animation: xleague-live-minute-pulse 1.5s ease-in-out infinite;
 }
 
 .goal-toast-close {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 26px;
-  height: 26px;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
   display: grid;
   place-items: center;
   border-radius: 999px;
@@ -6491,12 +6489,12 @@ button.achievement-item {
 }
 
 .goal-toast-stars {
-  margin-top: 8px;
+  margin-top: 5px;
   margin-left: -4px;
 }
 
 .goal-toast-match {
-  margin-top: 9px;
+  margin-top: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -6505,8 +6503,8 @@ button.achievement-item {
 
 .goal-toast-flag {
   flex: 0 0 auto;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -6526,33 +6524,76 @@ button.achievement-item {
 .goal-toast-teams {
   min-width: 0;
   color: #f4f4f5;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 950;
   line-height: 1.25;
   white-space: normal;
   overflow-wrap: anywhere;
 }
 
+.goal-toast-match {
+  justify-content: space-between;
+}
+
+.goal-toast-match-main {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .goal-toast-score {
-  margin-top: 9px;
+  flex: 0 0 auto;
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  gap: 5px;
   color: #fff;
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 1000;
   letter-spacing: -.03em;
+  white-space: nowrap;
 }
 
 .goal-toast-score .goal-new {
-  color: #fb7185;
-  -webkit-text-fill-color: #fb7185;
-  font-size: 25px;
+  font-size: 21px;
 }
 
 .goal-toast-score .goal-sep {
   color: #8a8a8a;
-  font-size: 17px;
+  font-size: 15px;
+}
+
+/* Goal meaning for the tournament: draw restored = green, draw broken/absent = red. */
+.goal-toast.goal-draw {
+  border-color: rgba(52,211,153,.28);
+  box-shadow:
+    inset 3px 0 0 #34d399,
+    0 14px 34px rgba(0,0,0,.44);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(52,211,153,.11), transparent 34%),
+    #18191c;
+}
+
+.goal-toast.goal-not-draw {
+  border-color: rgba(251,113,133,.24);
+  box-shadow:
+    inset 3px 0 0 #fb7185,
+    0 14px 34px rgba(0,0,0,.44);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(251,113,133,.10), transparent 34%),
+    #18191c;
+}
+
+.goal-toast.goal-draw .goal-toast-title,
+.goal-toast.goal-draw .goal-toast-score .goal-new {
+  color: #34d399;
+  -webkit-text-fill-color: #34d399;
+}
+
+.goal-toast.goal-not-draw .goal-toast-title,
+.goal-toast.goal-not-draw .goal-toast-score .goal-new {
+  color: #fb7185;
+  -webkit-text-fill-color: #fb7185;
 }
 
 @media (max-width: 699px) {
@@ -7269,14 +7310,23 @@ button.achievement-item {
       const away = String(liveData.away ?? "").trim();
 
       const card = document.createElement("article");
-      card.className = "goal-toast";
+      const homeNum = Number(home);
+      const awayNum = Number(away);
+      const isDrawNow =
+        Number.isFinite(homeNum) &&
+        Number.isFinite(awayNum) &&
+        homeNum === awayNum;
+
+      card.className = `goal-toast ${isDrawNow ? "goal-draw" : "goal-not-draw"}`;
       card.dataset.uid = liveData.uid;
 
       card.innerHTML = `
         <button type="button" class="goal-toast-close" aria-label="Закрыть уведомление">×</button>
         <div class="goal-toast-head">
-          <div class="goal-toast-title">ГОЛ!</div>
-          <div class="goal-toast-minute">${escapeHtml(minuteText)}</div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="goal-toast-title">ГОЛ!</div>
+            <div class="goal-toast-minute">${escapeHtml(minuteText)}</div>
+          </div>
         </div>
 
         <button type="button" class="goal-toast-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
@@ -7284,14 +7334,16 @@ button.achievement-item {
         </button>
 
         <div class="goal-toast-match">
-          <span class="goal-toast-flag">${flagHtml(match.flag_url || match.flag)}</span>
-          <div class="goal-toast-teams">${escapeHtml(match.teams)}</div>
-        </div>
+          <div class="goal-toast-match-main">
+            <span class="goal-toast-flag">${flagHtml(match.flag_url || match.flag)}</span>
+            <div class="goal-toast-teams">${escapeHtml(match.teams)}</div>
+          </div>
 
-        <div class="goal-toast-score" aria-label="Счёт ${escapeHtml(home)} — ${escapeHtml(away)}">
-          <span class="${changedHome ? "goal-new" : ""}">${escapeHtml(home)}</span>
-          <span class="goal-sep">—</span>
-          <span class="${changedAway ? "goal-new" : ""}">${escapeHtml(away)}</span>
+          <div class="goal-toast-score" aria-label="Счёт ${escapeHtml(home)} — ${escapeHtml(away)}">
+            <span class="${changedHome ? "goal-new" : ""}">${escapeHtml(home)}</span>
+            <span class="goal-sep">—</span>
+            <span class="${changedAway ? "goal-new" : ""}">${escapeHtml(away)}</span>
+          </div>
         </div>
       `;
 
