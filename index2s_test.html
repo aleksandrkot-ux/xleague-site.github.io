@@ -7028,6 +7028,46 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* v9 — center all circular X close buttons */
+.news-close,
+.goal-toast-close {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+/* The glyph itself has uneven font metrics, so pin it optically. */
+.news-close {
+  font-size: 0 !important;
+}
+.news-close::before {
+  content: "×";
+  display: block;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.goal-toast-close {
+  font-size: 0 !important;
+}
+.goal-toast-close::before {
+  content: "×";
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+</style>
+
 </head>
 <body>
   <div class="app">
