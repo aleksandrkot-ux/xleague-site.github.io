@@ -7068,6 +7068,29 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* v10 — article user links */
+.news-user-link{
+  display:inline;
+  padding:0;
+  margin:0;
+  border:0;
+  background:none;
+  color:#b6ff3b;
+  font:inherit;
+  font-weight:950;
+  line-height:inherit;
+  text-decoration:none;
+  cursor:pointer;
+  vertical-align:baseline;
+}
+.news-user-link:hover{
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -11747,84 +11770,136 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   function formatBody(raw) {
     let text = String(raw ?? "").replace(/\r\n?/g, "\n");
 
-    const renderBlock = (type, content) => {
-      const t = String(type).toLowerCase();
-      const safe = esc(String(content).trim()).replaceAll("\n", "<br>");
-      if (!safe) return "";
-
-      if (t === "заголовок" || t === "heading") {
-        return `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${safe}</div>`;
-      }
-      if (t === "цитата" || t === "quote") {
-        return `<div class="news-article-quote">${safe}</div>`;
-      }
-      return safe;
+    // ---- New article syntax ---------------------------------------------
+    // Allowed:
+    // <b>, <i>, <br>, <h3>, <blockquote>, <user>
+    // Everything else is escaped as ordinary text.
+    //
+    // <user>AB</user> opens AB's player statistics.
+    // Display aliases can differ from the actual tournament player name.
+    const USER_ALIASES = {
+      "Анатолий": "Анатолий (Синдикат)"
     };
 
-    const renderInline = (type, content) => {
-      const t = String(type).toLowerCase();
-      const safe = esc(String(content).trim());
-      if (!safe) return "";
-      if (t === "жирный" || t === "bold")
-        return `<strong class="news-inline-bold">${safe}</strong>`;
-      if (t === "курсив" || t === "italic")
-        return `<em class="news-inline-italic">${safe}</em>`;
-      return safe;
+    const safeInline = [];
+    const safeBlock = [];
+    const inlineToken = "@@XHTMLINLINE";
+    const blockToken = "@@XHTMLBLOCK";
+
+    const keepInline = html => {
+      const id = safeInline.length;
+      safeInline.push(html);
+      return `${inlineToken}${id}@@`;
     };
 
-    // Multiline headings/quotes only. Inline styles are deliberately NOT
-    // normalized across lines, so they can never swallow following text.
+    const keepBlock = html => {
+      const id = safeBlock.length;
+      safeBlock.push(html);
+      return `\n\n${blockToken}${id}@@\n\n`;
+    };
+
+    // HTML headings and quotes are block elements.
+    text = text.replace(/<h3\b[^>]*>([\s\S]*?)<\/h3>/gi, (_, content) => {
+      const title = esc(String(content).replace(/<[^>]*>/g, "").trim());
+      return keepBlock(
+        `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${title}</div>`
+      );
+    });
+
+    text = text.replace(/<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>/gi, (_, content) => {
+      const quote = esc(String(content).replace(/<[^>]*>/g, "").trim()).replaceAll("\n", "<br>");
+      return keepBlock(`<div class="news-article-quote">${quote}</div>`);
+    });
+
+    // User links. Whitespace inside <user> is intentionally ignored.
+    text = text.replace(/<user\b[^>]*>([\s\S]*?)<\/user>/gi, (_, content) => {
+      const display = String(content).replace(/<[^>]*>/g, "").trim();
+      if (!display) return "";
+      const target = USER_ALIASES[display] || display;
+      return keepInline(
+        `<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`
+      );
+    });
+
+    // Bold and italic are true inline elements.
+    text = text.replace(/<b\b[^>]*>([\s\S]*?)<\/b>/gi, (_, content) => {
+      return keepInline(`<strong class="news-inline-bold">${esc(String(content).replace(/<[^>]*>/g, "").trim())}</strong>`);
+    });
+
+    text = text.replace(/<i\b[^>]*>([\s\S]*?)<\/i>/gi, (_, content) => {
+      return keepInline(`<em class="news-inline-italic">${esc(String(content).replace(/<[^>]*>/g, "").trim())}</em>`);
+    });
+
+    text = text.replace(/<br\s*\/?>/gi, () => keepInline("<br>"));
+
+    // ---- Backward compatibility with old // syntax ---------------------
+    // Old articles can remain untouched.
+    const oldBlocks = [];
+    const oldBlockToken = "@@XOLDBLOCK";
+
     text = text.replace(
       /\/\/\s*(заголовок|цитата|heading|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
       (_, type, content) => `//${type} ${content.replace(/\n+/g, " ")} //`
     );
 
-    const blocks = [];
-    const blockToken = "@@XNEWSBLOCK";
-    let blockN = 0;
-
     text = text.replace(
       /\/\/\s*(заголовок|цитата|heading|quote)\s*(?:\/\/)?\s*([\s\S]*?)\s*\/\//gi,
       (_, type, content) => {
-        const id = blockN++;
-        blocks[id] = renderBlock(type, content);
-        return `\n\n${blockToken}${id}@@\n\n`;
+        const t = String(type).toLowerCase();
+        const safe = esc(String(content).trim()).replaceAll("\n", "<br>");
+        const html = (t === "заголовок" || t === "heading")
+          ? `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${safe}</div>`
+          : `<div class="news-article-quote">${safe}</div>`;
+        const id = oldBlocks.length;
+        oldBlocks.push(html);
+        return `\n\n${oldBlockToken}${id}@@\n\n`;
       }
     );
 
-    // IMPORTANT FIX:
-    // bold/italic may match only inside ONE physical line.
-    // If closing // is missing, source text is left untouched rather than
-    // consuming the next sentence/paragraph.
     text = text.replace(
       /\/\/\s*(жирный|курсив|bold|italic)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
-      (_, type, content) => renderInline(type, content)
+      (_, type, content) => {
+        const t = String(type).toLowerCase();
+        const safe = esc(String(content).trim());
+        if (t === "жирный" || t === "bold")
+          return keepInline(`<strong class="news-inline-bold">${safe}</strong>`);
+        return keepInline(`<em class="news-inline-italic">${safe}</em>`);
+      }
     );
 
+    // Escape all remaining source text. Only placeholders created above
+    // are restored as HTML, so arbitrary HTML from Sheets cannot execute.
+    const allBlockPattern = new RegExp(
+      `(${blockToken}\\d+@@|${oldBlockToken}\\d+@@)`
+    );
     const out = [];
-    const parts = text.split(new RegExp(`(${blockToken}\\d+@@)`));
 
-    for (const part of parts) {
-      const m = part.match(new RegExp(`^${blockToken}(\\d+)@@$`));
+    for (const part of text.split(allBlockPattern)) {
+      let m = part.match(new RegExp(`^${blockToken}(\\d+)@@$`));
       if (m) {
-        out.push(blocks[Number(m[1])] || "");
+        out.push(safeBlock[Number(m[1])] || "");
         continue;
       }
 
-      for (const p of part.split(/\n\s*\n+/).map(x => x.trim()).filter(Boolean)) {
-        const placeholders = [];
-        let prepared = p.replace(
-          /<(strong class="news-inline-bold"|em class="news-inline-italic")>([\s\S]*?)<\/(strong|em)>/g,
-          match => {
-            const id = placeholders.length;
-            placeholders.push(match);
-            return `@@XINLINE${id}@@`;
-          }
-        );
+      m = part.match(new RegExp(`^${oldBlockToken}(\\d+)@@$`));
+      if (m) {
+        out.push(oldBlocks[Number(m[1])] || "");
+        continue;
+      }
 
-        prepared = esc(prepared).replaceAll("\n", "<br>");
-        prepared = prepared.replace(/@@XINLINE(\d+)@@/g, (_, id) => placeholders[Number(id)] || "");
-        out.push(`<p>${prepared}</p>`);
+      const paras = part
+        .split(/\n\s*\n+/)
+        .map(x => x.trim())
+        .filter(Boolean);
+
+      for (let p of paras) {
+        p = esc(p).replaceAll("\n", "<br>");
+
+        p = p.replace(new RegExp(`${inlineToken}(\\d+)@@`, "g"), (_, id) => {
+          return safeInline[Number(id)] || "";
+        });
+
+        out.push(`<p>${p}</p>`);
       }
     }
 
@@ -11924,6 +11999,39 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     const archiveItem = event.target.closest("[data-archive-news]");
     if (archiveItem) {
       openNews(Number(archiveItem.dataset.archiveNews));
+    }
+
+
+    const userLink = event.target.closest("[data-news-user]");
+    if (userLink) {
+      const playerName = String(userLink.dataset.newsUser || "").trim();
+      if (!playerName) return;
+
+      // Close article first, then reuse the site's already-working
+      // player/profile click target instead of duplicating profile logic.
+      closeNews();
+
+      const candidates = Array.from(document.querySelectorAll(
+        "[data-player], [data-player-name], [data-user], .player-name, .stats-player-name"
+      ));
+
+      const normalize = value => String(value || "").trim().toLocaleLowerCase("ru-RU");
+
+      const target = candidates.find(el => {
+        const values = [
+          el.dataset?.player,
+          el.dataset?.playerName,
+          el.dataset?.user,
+          el.textContent
+        ];
+        return values.some(v => normalize(v) === normalize(playerName));
+      });
+
+      if (target) {
+        setTimeout(() => target.click(), 0);
+      } else {
+        console.warn("NEWS USER PROFILE NOT FOUND:", playerName);
+      }
     }
   });
 
