@@ -6982,6 +6982,26 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* v6: explicit article formatting */
+.news-modal-body .news-article-heading{
+  padding-top:4px !important;
+  color:#b6ff3b !important;
+  font-size:21px !important;
+  line-height:1.22 !important;
+  font-weight:1000 !important;
+}
+.news-modal-body .news-article-bold{
+  color:#fff !important;
+  font-weight:1000 !important;
+}
+.news-modal-body .news-article-italic{
+  font-style:italic !important;
+  opacity:.92;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -7019,11 +7039,6 @@ button.achievement-item {
     <div class="results-ticker hidden" id="resultsTicker" aria-label="Последние результаты">
       <div class="results-ticker-track" id="resultsTickerTrack"></div>
     </div>
-
-    
-  <div class="inactive-news-more-wrap">
-    <button type="button" class="inactive-news-more" id="allNewsBtn">Все новости →</button>
-  </div>
 <div class="filter-row" id="filterRow"></div>
 
   <main>
@@ -7069,6 +7084,9 @@ button.achievement-item {
         </div>
       </div>
     </article>
+  </div>
+  <div class="inactive-news-more-wrap">
+    <button type="button" class="inactive-news-more" id="allNewsBtn">Все новости →</button>
   </div>
 </div>
 
@@ -11661,49 +11679,69 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   }
 
   function formatBody(raw) {
-    const text = String(raw ?? "").replace(/\r\n?/g, "\n");
-    const lines = text.split("\n");
-    const out = [];
-    let paragraph = [];
+    let text = String(raw ?? "").replace(/\r\n?/g, "\n");
 
-    const flushParagraph = () => {
-      const joined = paragraph.join("\n").trim();
-      if (joined) out.push(`<p>${esc(joined).replaceAll("\n", "<br>")}</p>`);
-      paragraph = [];
+    const typeClass = {
+      "заголовок": "news-article-heading",
+      "heading": "news-article-heading",
+      "жирный": "news-article-bold",
+      "bold": "news-article-bold",
+      "курсив": "news-article-italic",
+      "italic": "news-article-italic",
+      "цитата": "news-article-quote",
+      "quote": "news-article-quote",
+      "абзац": ""
     };
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const trimmed = line.trim();
+    const renderBlock = (type, content) => {
+      const cls = typeClass[String(type).toLowerCase()] ?? "";
+      const safe = esc(String(content).trim()).replaceAll("\n", "<br>");
+      if (!safe) return "";
+      if (cls === "news-article-heading" || cls === "news-article-quote")
+        return `<div class="${cls}">${safe}</div>`;
+      if (cls) return `<p class="${cls}">${safe}</p>`;
+      return `<p>${safe}</p>`;
+    };
 
-      const cmd = trimmed.match(/^\/\/\s*(заголовок|жирный|курсив|цитата)\s*$/i);
-      if (cmd) {
-        flushParagraph();
-        const type = cmd[1].toLowerCase();
-        const block = [];
-        i++;
-        while (i < lines.length && lines[i].trim() !== "//") {
-          block.push(lines[i]);
-          i++;
-        }
-        const content = esc(block.join("\n").trim()).replaceAll("\n", "<br>");
-        if (!content) continue;
+    const blocks = [];
+    const token = "@@XNEWSBLOCK";
+    let n = 0;
 
-        if (type === "заголовок") out.push(`<div class="news-article-heading">${content}</div>`);
-        if (type === "жирный") out.push(`<p class="news-article-bold">${content}</p>`);
-        if (type === "курсив") out.push(`<p class="news-article-italic">${content}</p>`);
-        if (type === "цитата") out.push(`<div class="news-article-quote">${content}</div>`);
+    // //жирный [newline] text [newline] //
+    text = text.replace(
+      /\/\/\s*(заголовок|жирный|курсив|цитата|абзац|heading|bold|italic|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      (_, type, content) => {
+        const id = n++;
+        blocks[id] = renderBlock(type, content);
+        return `${token}${id}@@`;
+      }
+    );
+
+    // //жирный text //   and   //жирный//text//
+    text = text.replace(
+      /\/\/\s*(заголовок|жирный|курсив|цитата|абзац|heading|bold|italic|quote)\s*(?:\/\/)?\s*([\s\S]*?)\s*\/\//gi,
+      (_, type, content) => {
+        const id = n++;
+        blocks[id] = renderBlock(type, content);
+        return `${token}${id}@@`;
+      }
+    );
+
+    const out = [];
+    const parts = text.split(new RegExp(`(${token}\\d+@@)`));
+
+    for (const part of parts) {
+      const m = part.match(new RegExp(`^${token}(\\d+)@@$`));
+      if (m) {
+        out.push(blocks[Number(m[1])] || "");
         continue;
       }
 
-      if (!trimmed) {
-        flushParagraph();
-      } else {
-        paragraph.push(line);
+      for (const p of part.split(/\n\s*\n+/).map(x => x.trim()).filter(Boolean)) {
+        out.push(`<p>${esc(p).replaceAll("\n", "<br>")}</p>`);
       }
     }
 
-    flushParagraph();
     return out.join("");
   }
 
