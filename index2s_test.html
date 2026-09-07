@@ -11707,11 +11707,6 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   function formatBody(raw) {
     let text = String(raw ?? "").replace(/\r\n?/g, "\n");
 
-    // Headings/quotes remain block elements.
-    // Bold/italic are true inline fragments and no longer force a new paragraph.
-    const blockTypes = new Set(["заголовок", "heading", "цитата", "quote"]);
-    const inlineTypes = new Set(["жирный", "bold", "курсив", "italic"]);
-
     const renderBlock = (type, content) => {
       const t = String(type).toLowerCase();
       const safe = esc(String(content).trim()).replaceAll("\n", "<br>");
@@ -11720,11 +11715,9 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       if (t === "заголовок" || t === "heading") {
         return `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${safe}</div>`;
       }
-
       if (t === "цитата" || t === "quote") {
         return `<div class="news-article-quote">${safe}</div>`;
       }
-
       return safe;
     };
 
@@ -11732,25 +11725,20 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const t = String(type).toLowerCase();
       const safe = esc(String(content).trim());
       if (!safe) return "";
-
-      if (t === "жирный" || t === "bold") {
+      if (t === "жирный" || t === "bold")
         return `<strong class="news-inline-bold">${safe}</strong>`;
-      }
-
-      if (t === "курсив" || t === "italic") {
+      if (t === "курсив" || t === "italic")
         return `<em class="news-inline-italic">${safe}</em>`;
-      }
-
       return safe;
     };
 
-    // First normalize multiline command blocks into one-line tokens.
+    // Multiline headings/quotes only. Inline styles are deliberately NOT
+    // normalized across lines, so they can never swallow following text.
     text = text.replace(
-      /\/\/\s*(заголовок|жирный|курсив|цитата|heading|bold|italic|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      /\/\/\s*(заголовок|цитата|heading|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
       (_, type, content) => `//${type} ${content.replace(/\n+/g, " ")} //`
     );
 
-    // Extract true block commands so they stay between paragraphs.
     const blocks = [];
     const blockToken = "@@XNEWSBLOCK";
     let blockN = 0;
@@ -11764,9 +11752,12 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       }
     );
 
-    // Inline formatting is replaced directly inside the surrounding text.
+    // IMPORTANT FIX:
+    // bold/italic may match only inside ONE physical line.
+    // If closing // is missing, source text is left untouched rather than
+    // consuming the next sentence/paragraph.
     text = text.replace(
-      /\/\/\s*(жирный|курсив|bold|italic)\s*(?:\/\/)?\s*([\s\S]*?)\s*\/\//gi,
+      /\/\/\s*(жирный|курсив|bold|italic)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
       (_, type, content) => renderInline(type, content)
     );
 
@@ -11780,14 +11771,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         continue;
       }
 
-      const paras = part
-        .split(/\n\s*\n+/)
-        .map(x => x.trim())
-        .filter(Boolean);
-
-      for (const p of paras) {
-        // p already contains only our own strong/em tags.
-        // Escape everything else while preserving those controlled tags.
+      for (const p of part.split(/\n\s*\n+/).map(x => x.trim()).filter(Boolean)) {
         const placeholders = [];
         let prepared = p.replace(
           /<(strong class="news-inline-bold"|em class="news-inline-italic")>([\s\S]*?)<\/(strong|em)>/g,
@@ -11800,7 +11784,6 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
         prepared = esc(prepared).replaceAll("\n", "<br>");
         prepared = prepared.replace(/@@XINLINE(\d+)@@/g, (_, id) => placeholders[Number(id)] || "");
-
         out.push(`<p>${prepared}</p>`);
       }
     }
