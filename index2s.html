@@ -9677,11 +9677,13 @@ return `
       document.getElementById("picksList").innerHTML = filtered.map(playerCard).join("");
       document.querySelectorAll("[data-open-player]").forEach(btn => {
         btn.addEventListener("click", (e) => {
+          e.preventDefault();
           e.stopPropagation();
-          const select = document.getElementById("playerSelect");
-          if (select) select.value = btn.dataset.openPlayer;
-          renderPlayerProfile();
-          showScreen("players");
+
+          const playerName = String(btn.dataset.openPlayer || "").trim();
+          if (!playerName) return;
+
+          openPlayerCard(playerName);
         });
       });
 
