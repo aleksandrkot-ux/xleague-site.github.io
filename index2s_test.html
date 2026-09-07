@@ -6832,6 +6832,156 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== News archive + article typography v5 ===== */
+.inactive-news-more-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:-2px;
+}
+.inactive-news-more{
+  min-height:38px;
+  padding:9px 16px;
+  border-radius:999px;
+  border:1px solid rgba(182,255,59,.18);
+  background:rgba(182,255,59,.075);
+  color:#b6ff3b;
+  font-size:11px;
+  font-weight:1000;
+}
+.inactive-news-more:hover{background:rgba(182,255,59,.12)}
+
+#newsModal .info-title{
+  font-size:24px;
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+#newsModal .info-subtitle{
+  margin-top:5px;
+  font-size:11px;
+  color:#8f9490;
+}
+
+.news-modal-body{
+  gap:16px !important;
+}
+.news-modal-body p{
+  margin:0;
+  color:#d0d2d0;
+  font-size:14px;
+  line-height:1.72;
+  font-weight:650;
+  letter-spacing:.002em;
+}
+.news-modal-body .news-article-heading{
+  margin:10px 0 0;
+  color:#fff;
+  font-size:20px;
+  line-height:1.22;
+  font-weight:1000;
+  letter-spacing:-.02em;
+}
+.news-modal-body .news-article-bold{
+  color:#f4f5f3;
+  font-size:14px;
+  line-height:1.65;
+  font-weight:1000;
+}
+.news-modal-body .news-article-italic{
+  color:#c5c8c4;
+  font-size:14px;
+  line-height:1.68;
+  font-style:italic;
+  font-weight:600;
+}
+.news-modal-body .news-article-quote{
+  margin:2px 0;
+  padding:12px 14px;
+  border-left:3px solid #b6ff3b;
+  border-radius:0 14px 14px 0;
+  background:rgba(182,255,59,.065);
+  color:#d7dad5;
+  font-size:14px;
+  line-height:1.66;
+  font-weight:650;
+}
+.news-modal-meta{
+  color:#8f9490;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.news-archive-list{
+  display:grid;
+  gap:10px;
+}
+.news-archive-item{
+  display:grid;
+  grid-template-columns:96px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  width:100%;
+  padding:10px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.035);
+  text-align:left;
+}
+.news-archive-item:hover{
+  border-color:rgba(182,255,59,.17);
+  background:rgba(182,255,59,.05);
+}
+.news-archive-thumb{
+  width:96px;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  border-radius:13px;
+  background:#0d0f0d;
+}
+.news-archive-thumb img{
+  width:100%;height:100%;display:block;object-fit:cover;
+}
+.news-archive-date{
+  color:#8f9490;
+  font-size:9px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.news-archive-title{
+  margin-top:4px;
+  color:#fff;
+  font-size:13px;
+  line-height:1.25;
+  font-weight:1000;
+}
+.news-archive-preview{
+  margin-top:5px;
+  color:#aeb2ad;
+  font-size:10px;
+  line-height:1.35;
+  font-weight:700;
+}
+@media(min-width:700px){
+  #newsModal .info-sheet{
+    max-width:680px !important;
+    border-radius:28px !important;
+    left:50% !important;
+    bottom:50% !important;
+    transform:translate(-50%,50%) !important;
+    max-height:82vh !important;
+  }
+}
+@media(max-width:699px){
+  .news-archive-item{
+    grid-template-columns:78px minmax(0,1fr);
+  }
+  .news-archive-thumb{width:78px}
+  #newsModal .info-title{font-size:21px}
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6870,7 +7020,11 @@ button.achievement-item {
       <div class="results-ticker-track" id="resultsTickerTrack"></div>
     </div>
 
-    <div class="filter-row" id="filterRow"></div>
+    
+  <div class="inactive-news-more-wrap">
+    <button type="button" class="inactive-news-more" id="allNewsBtn">Все новости →</button>
+  </div>
+<div class="filter-row" id="filterRow"></div>
 
   <main>
   <section class="screen active" id="screen-matches">
@@ -11611,10 +11765,45 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     modal?.classList.add("hidden");
   }
 
+  function renderArchive() {
+    if (!modal || !modalTitle || !modalSubtitle || !modalBody) return;
+
+    modalTitle.textContent = "Все новости";
+    modalSubtitle.textContent = `${liveNews.length} публикац${liveNews.length === 1 ? "ия" : (liveNews.length >= 2 && liveNews.length <= 4 ? "ии" : "ий")}`;
+
+    modalBody.innerHTML = `
+      <div class="news-archive-list">
+        ${liveNews.map((row, index) => {
+          const image = previewImage(row) || "mages/xleague_welcome_logo.png";
+          return `
+            <button type="button" class="news-archive-item" data-archive-news="${index}">
+              <span class="news-archive-thumb"><img src="${esc(image)}" alt=""></span>
+              <span>
+                <span class="news-archive-date">${esc(formatDate(row.date))}</span>
+                <span class="news-archive-title">${esc(row.title || "Новость X League")}</span>
+                <span class="news-archive-preview">${esc(row.preview || "")}</span>
+              </span>
+            </button>`;
+        }).join("")}
+      </div>`;
+
+    modal.classList.remove("hidden");
+  }
+
   document.addEventListener("click", (event) => {
     const btn = event.target.closest("[data-live-news]");
-    if (btn) openNews(Number(btn.dataset.liveNews));
+    if (btn) {
+      openNews(Number(btn.dataset.liveNews));
+      return;
+    }
+
+    const archiveItem = event.target.closest("[data-archive-news]");
+    if (archiveItem) {
+      openNews(Number(archiveItem.dataset.archiveNews));
+    }
   });
+
+  document.getElementById("allNewsBtn")?.addEventListener("click", renderArchive);
 
   document.getElementById("newsClose")?.addEventListener("click", closeNews);
   document.getElementById("newsBackdrop")?.addEventListener("click", closeNews);
