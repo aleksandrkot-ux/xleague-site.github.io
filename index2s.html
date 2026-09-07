@@ -6671,6 +6671,520 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+.inactive-home-shell{display:grid;gap:16px;margin:18px 0 20px}
+.inactive-welcome{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.1fr);gap:24px;align-items:center;min-height:300px;padding:26px;border-radius:28px;border:1px solid rgba(255,255,255,.07);background:radial-gradient(circle at 16% 16%,rgba(45,126,255,.14),transparent 32%),radial-gradient(circle at 86% 16%,rgba(182,255,59,.12),transparent 36%),#151619;box-shadow:0 18px 46px rgba(0,0,0,.30)}
+.inactive-welcome-media{display:flex;align-items:center;justify-content:center;min-height:230px}
+.inactive-welcome-media img{display:block;width:min(100%,430px);max-height:230px;object-fit:contain;filter:drop-shadow(0 14px 34px rgba(0,0,0,.38))}
+.inactive-welcome-kicker{display:inline-flex;padding:6px 10px;margin-bottom:12px;border-radius:999px;border:1px solid rgba(182,255,59,.22);background:rgba(182,255,59,.08);color:#b6ff3b;font-size:10px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
+.inactive-welcome h2{margin:0;color:#fff;font-size:clamp(28px,4vw,46px);line-height:.98;letter-spacing:-.04em}
+.inactive-welcome p{margin:14px 0 0;color:#c8c8cc;font-size:14px;line-height:1.62;font-weight:700}
+.inactive-welcome-meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.inactive-welcome-chip{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06);color:#d8d8dc;font-size:10px;font-weight:900}
+.inactive-news-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.inactive-news-head h3{margin:0;color:#fff;font-size:18px;font-weight:1000}
+.inactive-news-head span{color:#7f7f85;font-size:11px;font-weight:850}
+.inactive-news-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.inactive-news-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:24px;border:1px solid rgba(255,255,255,.065);background:#161719;box-shadow:0 14px 34px rgba(0,0,0,.20)}
+.inactive-news-preview{aspect-ratio:16/7;overflow:hidden;background:#0c0d10}
+.inactive-news-preview img{width:100%;height:100%;display:block;object-fit:cover;opacity:.78}
+.inactive-news-body{display:flex;flex:1 1 auto;flex-direction:column;padding:16px}
+.inactive-news-date{color:#8a8a90;font-size:10px;font-weight:900;text-transform:uppercase}
+.inactive-news-title{margin-top:7px;color:#fff;font-size:17px;font-weight:1000;line-height:1.15}
+.inactive-news-text{margin-top:9px;color:#a9a9ae;font-size:12px;line-height:1.5;font-weight:700}
+.inactive-news-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:15px}
+.inactive-news-action{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font-size:10px;font-weight:1000;text-decoration:none}
+.inactive-news-action.primary{border-color:rgba(182,255,59,.22);background:rgba(182,255,59,.09);color:#b6ff3b}
+.news-modal-body{display:grid;gap:12px}.news-modal-body p{margin:0;color:#c7c7cb;font-size:13px;line-height:1.62;font-weight:700}
+@media(max-width:900px){.inactive-welcome{grid-template-columns:1fr}.inactive-welcome-media{min-height:180px}.inactive-welcome-media img{max-height:190px}}
+@media(max-width:699px){.inactive-home-shell{gap:12px;margin-top:12px}.inactive-welcome{min-height:0;padding:18px;border-radius:24px;gap:14px}.inactive-welcome-media{min-height:140px}.inactive-welcome-media img{max-height:150px}.inactive-welcome h2{font-size:30px}.inactive-welcome p{font-size:12px;line-height:1.55}.inactive-news-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style>
+.news-modal-body .news-article-heading{
+  margin:8px 0 2px;color:#fff;font-size:18px;line-height:1.2;font-weight:1000;
+}
+.news-modal-body .news-article-bold{font-weight:1000;color:#f1f1f3}
+.news-modal-body .news-article-italic{font-style:italic;color:#c7c7cb}
+.news-modal-body .news-article-quote{
+  margin:2px 0;padding:10px 12px;border-left:3px solid #b6ff3b;
+  border-radius:0 12px 12px 0;background:rgba(182,255,59,.055);color:#d5d5d8;
+}
+.news-modal-body .news-telegram-link{
+  display:inline-flex;align-items:center;width:fit-content;margin-top:6px;
+  min-height:34px;padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);
+  color:#fff;font-size:10px;font-weight:1000;text-decoration:none;
+}
+</style>
+
+<style>
+/* Welcome card separation — desktop */
+@media (min-width: 700px) {
+  .inactive-welcome {
+    border: 1px solid rgba(182,255,59,.16);
+    background:
+      radial-gradient(circle at 13% 18%, rgba(182,255,59,.095), transparent 34%),
+      radial-gradient(circle at 84% 15%, rgba(182,255,59,.055), transparent 38%),
+      linear-gradient(135deg, #151b14 0%, #121613 48%, #151915 100%);
+    box-shadow:
+      0 18px 46px rgba(0,0,0,.30),
+      inset 0 1px 0 rgba(255,255,255,.025);
+  }
+}
+</style>
+
+
+<style>
+/* ===== Visual balance v3 ===== */
+
+/* Welcome goes back to a neutral dark card. */
+@media (min-width: 700px) {
+  .inactive-welcome {
+    border-color: rgba(255,255,255,.07) !important;
+    background:
+      radial-gradient(circle at 14% 18%, rgba(40,92,160,.08), transparent 34%),
+      #151619 !important;
+    box-shadow: 0 18px 46px rgba(0,0,0,.30) !important;
+  }
+
+  /* The source logo has a black background: blend that black into the hero
+     instead of putting it on top of a green-tinted field. */
+  .inactive-welcome-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    background:
+      radial-gradient(ellipse at center, #050607 0%, #050607 54%, rgba(5,6,7,.92) 70%, rgba(21,22,25,0) 100%);
+  }
+
+  .inactive-welcome-media::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, #151619 0%, transparent 10%, transparent 90%, #151619 100%),
+      linear-gradient(180deg, #151619 0%, transparent 10%, transparent 90%, #151619 100%);
+  }
+
+  .inactive-welcome-media img {
+    position: relative;
+    z-index: 0;
+  }
+}
+
+/* News cards get the subtle green separation instead. */
+.inactive-news-card {
+  border-color: rgba(182,255,59,.13) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182,255,59,.055), transparent 38%),
+    linear-gradient(145deg, #171b16 0%, #151817 48%, #161719 100%) !important;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.018) !important;
+}
+
+.inactive-news-card:hover {
+  border-color: rgba(182,255,59,.20) !important;
+}
+
+/* Give the on-site article sheet the same subtle X League green separation. */
+#newsModal .info-sheet {
+  border-color: rgba(182,255,59,.15) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182,255,59,.05), transparent 30%),
+    #121512 !important;
+}
+</style>
+
+
+<style>
+/* ===== News polish v4 ===== */
+
+/* A little more visible green depth in the opened article. */
+#newsModal .info-sheet {
+  border-color: rgba(182,255,59,.18) !important;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(182,255,59,.085), transparent 34%),
+    radial-gradient(circle at 8% 96%, rgba(182,255,59,.035), transparent 38%),
+    linear-gradient(145deg, #151a14 0%, #121512 52%, #151815 100%) !important;
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.58),
+    inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+/* News previews: keep a wide card, but crop less aggressively.
+   The image still fills the width; its visible area is taller. */
+.inactive-news-img {
+  aspect-ratio: 16 / 8.2 !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+/* Give large desktop cards a little more image height without becoming huge. */
+@media (min-width: 1000px) {
+  .inactive-news-img {
+    aspect-ratio: 16 / 8.6 !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== News archive + article typography v5 ===== */
+.inactive-news-more-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:-2px;
+}
+.inactive-news-more{
+  min-height:38px;
+  padding:9px 16px;
+  border-radius:999px;
+  border:1px solid rgba(182,255,59,.18);
+  background:rgba(182,255,59,.075);
+  color:#b6ff3b;
+  font-size:11px;
+  font-weight:1000;
+}
+.inactive-news-more:hover{background:rgba(182,255,59,.12)}
+
+#newsModal .info-title{
+  font-size:24px;
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+#newsModal .info-subtitle{
+  margin-top:5px;
+  font-size:11px;
+  color:#8f9490;
+}
+
+.news-modal-body{
+  gap:16px !important;
+}
+.news-modal-body p{
+  margin:0;
+  color:#d0d2d0;
+  font-size:14px;
+  line-height:1.72;
+  font-weight:650;
+  letter-spacing:.002em;
+}
+.news-modal-body .news-article-heading{
+  margin:10px 0 0;
+  color:#fff;
+  font-size:20px;
+  line-height:1.22;
+  font-weight:1000;
+  letter-spacing:-.02em;
+}
+.news-modal-body .news-article-bold{
+  color:#f4f5f3;
+  font-size:14px;
+  line-height:1.65;
+  font-weight:1000;
+}
+.news-modal-body .news-article-italic{
+  color:#c5c8c4;
+  font-size:14px;
+  line-height:1.68;
+  font-style:italic;
+  font-weight:600;
+}
+.news-modal-body .news-article-quote{
+  margin:2px 0;
+  padding:12px 14px;
+  border-left:3px solid #b6ff3b;
+  border-radius:0 14px 14px 0;
+  background:rgba(182,255,59,.065);
+  color:#d7dad5;
+  font-size:14px;
+  line-height:1.66;
+  font-weight:650;
+}
+.news-modal-meta{
+  color:#8f9490;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.news-archive-list{
+  display:grid;
+  gap:10px;
+}
+.news-archive-item{
+  display:grid;
+  grid-template-columns:96px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  width:100%;
+  padding:10px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.035);
+  text-align:left;
+}
+.news-archive-item:hover{
+  border-color:rgba(182,255,59,.17);
+  background:rgba(182,255,59,.05);
+}
+.news-archive-thumb{
+  width:96px;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  border-radius:13px;
+  background:#0d0f0d;
+}
+.news-archive-thumb img{
+  width:100%;height:100%;display:block;object-fit:cover;
+}
+.news-archive-date{
+  color:#8f9490;
+  font-size:9px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.news-archive-title{
+  margin-top:4px;
+  color:#fff;
+  font-size:13px;
+  line-height:1.25;
+  font-weight:1000;
+}
+.news-archive-preview{
+  margin-top:5px;
+  color:#aeb2ad;
+  font-size:10px;
+  line-height:1.35;
+  font-weight:700;
+}
+@media(min-width:700px){
+  #newsModal .info-sheet{
+    max-width:680px !important;
+    border-radius:28px !important;
+    left:50% !important;
+    bottom:50% !important;
+    transform:translate(-50%,50%) !important;
+    max-height:82vh !important;
+  }
+}
+@media(max-width:699px){
+  .news-archive-item{
+    grid-template-columns:78px minmax(0,1fr);
+  }
+  .news-archive-thumb{width:78px}
+  #newsModal .info-title{font-size:21px}
+}
+</style>
+
+
+<style>
+/* v6: explicit article formatting */
+.news-modal-body .news-article-heading{
+  padding-top:4px !important;
+  color:#b6ff3b !important;
+  font-size:21px !important;
+  line-height:1.22 !important;
+  font-weight:1000 !important;
+}
+.news-modal-body .news-article-bold{
+  color:#fff !important;
+  font-weight:1000 !important;
+}
+.news-modal-body .news-article-italic{
+  font-style:italic !important;
+  opacity:.92;
+}
+</style>
+
+
+<style>
+/* v7: inline article formatting */
+.news-modal-body .news-inline-bold{
+  color:#fff;
+  font-weight:1000;
+}
+.news-modal-body .news-inline-italic{
+  color:#d2d5d1;
+  font-style:italic;
+  font-weight:650;
+}
+.news-modal-body .news-article-heading{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+.news-modal-body .news-heading-mark{
+  color:#b6ff3b;
+  font-size:.78em;
+  line-height:1;
+  flex:0 0 auto;
+  transform:translateY(-1px);
+}
+</style>
+
+
+<style>
+/* v9 — center all circular X close buttons */
+.news-close,
+.goal-toast-close {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+/* The glyph itself has uneven font metrics, so pin it optically. */
+.news-close {
+  font-size: 0 !important;
+}
+.news-close::before {
+  content: "×";
+  display: block;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.goal-toast-close {
+  font-size: 0 !important;
+}
+.goal-toast-close::before {
+  content: "×";
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+</style>
+
+
+<style>
+/* v10 — article user links */
+.news-user-link{
+  display:inline;
+  padding:0;
+  margin:0;
+  border:0;
+  background:none;
+  color:#b6ff3b;
+  font:inherit;
+  font-weight:950;
+  line-height:inherit;
+  text-decoration:none;
+  cursor:pointer;
+  vertical-align:baseline;
+}
+.news-user-link:hover{
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+</style>
+
+
+<style>
+/* v11 — tighter article rhythm and working inline user links */
+.news-modal-body{
+  gap:10px !important;
+}
+.news-modal-body p{
+  margin:0 !important;
+}
+.news-modal-body .news-article-heading{
+  margin:12px 0 4px !important;
+}
+.news-user-link-bold{
+  font-weight:1000 !important;
+}
+.news-user-link-italic{
+  font-style:italic !important;
+}
+</style>
+
+
+<style>
+/* v12 — robust article parser + profile links */
+.news-modal-body{
+  gap:10px !important;
+}
+.news-modal-body p{
+  margin:0 !important;
+  line-height:1.65 !important;
+}
+.news-modal-body p + p{
+  margin-top:4px !important;
+}
+.news-modal-body .news-article-heading{
+  margin:12px 0 5px !important;
+}
+.news-user-link{
+  color:#b6ff3b !important;
+  font-weight:950 !important;
+  text-decoration:underline;
+  text-decoration-color:rgba(182,255,59,.34);
+  text-underline-offset:3px;
+}
+.news-user-link:hover{
+  text-decoration-color:#b6ff3b;
+}
+</style>
+
+
+<style>
+/* v13 — clearer article hierarchy, quieter player links */
+
+/* Section headings: clearly separate article blocks without becoming giant cards */
+.news-modal-body .news-article-heading{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  margin:18px 0 8px !important;
+  padding:7px 10px !important;
+  border-left:3px solid #aaff2c !important;
+  border-radius:7px !important;
+  background:rgba(170,255,44,.055) !important;
+  color:#b6ff3b !important;
+  font-size:18px !important;
+  font-weight:1000 !important;
+  line-height:1.25 !important;
+  letter-spacing:-.15px !important;
+}
+.news-modal-body .news-article-heading:first-child{
+  margin-top:2px !important;
+}
+.news-modal-body .news-heading-mark{
+  flex:0 0 auto;
+  color:#b6ff3b !important;
+  font-size:14px !important;
+  line-height:1 !important;
+}
+
+/* Player links should read as links, not as dozens of mini-headings */
+.news-modal-body .news-user-link{
+  color:#d7e9bf !important;
+  font-weight:900 !important;
+  text-decoration:underline !important;
+  text-decoration-color:rgba(182,255,59,.38) !important;
+  text-decoration-thickness:1px !important;
+  text-underline-offset:3px !important;
+  transition:color .15s ease, text-decoration-color .15s ease !important;
+}
+.news-modal-body .news-user-link:hover{
+  color:#b6ff3b !important;
+  text-decoration-color:#b6ff3b !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6708,11 +7222,57 @@ button.achievement-item {
     <div class="results-ticker hidden" id="resultsTicker" aria-label="Последние результаты">
       <div class="results-ticker-track" id="resultsTickerTrack"></div>
     </div>
-
-    <div class="filter-row" id="filterRow"></div>
+<div class="filter-row" id="filterRow"></div>
 
   <main>
   <section class="screen active" id="screen-matches">
+<div class="inactive-home-shell" id="inactiveHomePrototype" style="display:none">
+  <section class="inactive-welcome">
+    <div class="inactive-welcome-media"><img src="mages/xleague_welcome_logo.png" alt="X League — второй сезон"></div>
+    <div>
+      <div class="inactive-welcome-kicker">X League · Второй сезон</div>
+      <h2>Добро пожаловать в X League</h2>
+      <p>X League — турнир прогнозистов, в котором мы не пытаемся угадать победителя. Мы ищем ничьи. Каждый тур участники выбирают футбольные матчи, которые, по их мнению, закончатся вничью. Чем выше коэффициент и точнее выбор — тем больше очков.</p>
+      <p>Здесь можно следить за матчами в реальном времени, смотреть выборы других участников, изучать статистику игроков и лиги, охотиться за достижениями и наблюдать, как один гол способен полностью перевернуть положение в туре.</p>
+      <div class="inactive-welcome-meta">
+        <span class="inactive-welcome-chip">⚽ Прогнозы на ничьи</span>
+        <span class="inactive-welcome-chip">📊 Live-статистика</span>
+        <span class="inactive-welcome-chip">🏆 Сезон + плей-офф</span>
+      </div>
+    </div>
+  </section>
+  <div class="inactive-news-head"><h3>Последнее в X League</h3><span>Тестовый режим</span></div>
+  <div class="inactive-news-grid">
+    <article class="inactive-news-card">
+      <div class="inactive-news-preview"><img src="mages/xleague_welcome_logo.png" alt=""></div>
+      <div class="inactive-news-body">
+        <div class="inactive-news-date">06 сентября 2026</div>
+        <div class="inactive-news-title">Итоги второго тура</div>
+        <div class="inactive-news-text">Короткий анонс новости: кто поднялся в таблице, какие матчи решили тур и чем запомнился игровой уикенд.</div>
+        <div class="inactive-news-actions">
+          <button type="button" class="inactive-news-action primary" data-news-open="tour2">Читать на сайте</button>
+          <a class="inactive-news-action" href="https://t.me/panpopan/3518" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+        </div>
+      </div>
+    </article>
+    <article class="inactive-news-card">
+      <div class="inactive-news-preview"><img src="mages/xleague_welcome_logo.png" alt=""></div>
+      <div class="inactive-news-body">
+        <div class="inactive-news-date">07 сентября 2026</div>
+        <div class="inactive-news-title">Что дальше: неделя между турами</div>
+        <div class="inactive-news-text">На неделе X League живёт не только матчами: новости, обновления, ачивки и подготовка к следующему игровому уикенду.</div>
+        <div class="inactive-news-actions">
+          <button type="button" class="inactive-news-action primary" data-news-open="between">Читать на сайте</button>
+          <a class="inactive-news-action" href="https://t.me/panpopan/3527" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="inactive-news-more-wrap">
+    <button type="button" class="inactive-news-more" id="allNewsBtn">Все новости →</button>
+  </div>
+</div>
+
     <div class="stats-toolbar local-tour-toolbar">
       <label for="matchesTourSelect">Этап</label>
       <select id="matchesTourSelect"></select>
@@ -11244,5 +11804,355 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       liveLabelObserver.observe(document.body, { childList: true, subtree: true });
     });
   </script>
+
+<div class="info-modal hidden" id="newsModal">
+  <div class="info-backdrop" id="newsBackdrop"></div>
+  <div class="info-sheet">
+    <div class="info-sheet-head">
+      <div><div class="info-title" id="newsModalTitle">Новость X League</div><div class="info-subtitle" id="newsModalSubtitle"></div></div>
+      <button class="info-close" id="newsClose" aria-label="Закрыть">×</button>
+    </div>
+    <div class="news-modal-body" id="newsModalBody"></div>
+  </div>
+</div>
+
+
+
+
+<script>
+(() => {
+  const shell = document.getElementById("inactiveHomePrototype");
+  if (!shell) return;
+
+  const grid = shell.querySelector(".inactive-news-grid");
+  const headNote = shell.querySelector(".inactive-news-head span");
+  const modal = document.getElementById("newsModal");
+  const modalTitle = document.getElementById("newsModalTitle");
+  const modalSubtitle = document.getElementById("newsModalSubtitle");
+  const modalBody = document.getElementById("newsModalBody");
+
+  let liveNews = [];
+
+  const esc = (value) => String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+  function isPublished(value) {
+    const v = String(value ?? "").trim().toLowerCase();
+    return ["1", "true", "yes", "да", "published"].includes(v);
+  }
+
+  function parseDate(value) {
+    const raw = String(value ?? "").trim();
+    const m = raw.match(/^(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{4})$/);
+    if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+    const d = new Date(raw);
+    return Number.isNaN(d.getTime()) ? new Date(0) : d;
+  }
+
+  function formatDate(value) {
+    const d = parseDate(value);
+    if (!d.getTime()) return String(value ?? "");
+    return new Intl.DateTimeFormat("ru-RU", {
+      day: "2-digit", month: "long", year: "numeric"
+    }).format(d);
+  }
+
+  function formatBody(raw) {
+    let source = String(raw ?? "").replace(/\r\n?/g, "\n");
+
+    const USER_ALIASES = {
+      "Анатолий": "Анатолий (Синдикат)"
+    };
+
+    // Backward compatibility for old // syntax.
+    source = source.replace(
+      /\/\/\s*(заголовок|heading)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      (_, type, content) => `<h3>${content}</h3>`
+    );
+    source = source.replace(
+      /\/\/\s*(цитата|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      (_, type, content) => `<blockquote>${content}</blockquote>`
+    );
+    source = source.replace(
+      /\/\/\s*(заголовок|heading)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<h3>${content}</h3>`
+    );
+    source = source.replace(
+      /\/\/\s*(цитата|quote)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<blockquote>${content}</blockquote>`
+    );
+    source = source.replace(
+      /\/\/\s*(жирный|bold)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<b>${content}</b>`
+    );
+    source = source.replace(
+      /\/\/\s*(курсив|italic)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<i>${content}</i>`
+    );
+
+    function renderInlineNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return esc(node.nodeValue || "");
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) return "";
+
+      const tag = node.tagName.toLowerCase();
+
+      if (tag === "b" || tag === "strong") {
+        return `<strong class="news-inline-bold">${Array.from(node.childNodes).map(renderInlineNode).join("")}</strong>`;
+      }
+
+      if (tag === "i" || tag === "em") {
+        return `<em class="news-inline-italic">${Array.from(node.childNodes).map(renderInlineNode).join("")}</em>`;
+      }
+
+      if (tag === "br") return "<br>";
+
+      if (tag === "user") {
+        const display = String(node.textContent || "").trim();
+        if (!display) return "";
+        const target = USER_ALIASES[display] || display;
+        return `<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`;
+      }
+
+      return Array.from(node.childNodes).map(renderInlineNode).join("");
+    }
+
+    function renderChildren(el) {
+      return Array.from(el.childNodes).map(renderInlineNode).join("");
+    }
+
+    // Parse the whole article once. This is the important fix:
+    // <h3> can now appear anywhere in the source, without requiring
+    // surrounding blank lines or being the only thing in a paragraph.
+    const doc = new DOMParser().parseFromString(`<body>${source}</body>`, "text/html");
+    const out = [];
+    let paragraphParts = [];
+
+    const flushParagraph = () => {
+      let html = paragraphParts.join("");
+      paragraphParts = [];
+
+      html = html
+        .replace(/\s+/g, " ")
+        .replace(/\s*<br>\s*/g, "<br>")
+        .trim();
+
+      if (html) out.push(`<p>${html}</p>`);
+    };
+
+    for (const node of Array.from(doc.body.childNodes)) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const rawText = String(node.nodeValue || "");
+
+        // Blank lines create paragraph breaks; single line breaks become spaces.
+        const chunks = rawText.split(/\n\s*\n+/);
+        chunks.forEach((chunk, idx) => {
+          const clean = esc(chunk.replace(/\n+/g, " "));
+          if (clean.trim()) paragraphParts.push(clean);
+          if (idx < chunks.length - 1) flushParagraph();
+        });
+        continue;
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) continue;
+
+      const tag = node.tagName.toLowerCase();
+
+      if (tag === "h3") {
+        flushParagraph();
+        const content = renderChildren(node);
+        out.push(
+          `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${content}</div>`
+        );
+        continue;
+      }
+
+      if (tag === "blockquote") {
+        flushParagraph();
+        out.push(`<div class="news-article-quote">${renderChildren(node)}</div>`);
+        continue;
+      }
+
+      paragraphParts.push(renderInlineNode(node));
+    }
+
+    flushParagraph();
+    return out.join("");
+  }
+
+  function previewImage(row) {
+    return String(
+      row.image_url || row.preview_image || row.image || row.img || ""
+    ).trim();
+  }
+
+  function renderCards() {
+    if (!grid) return;
+
+    const visible = liveNews.slice(0, 2);
+    grid.innerHTML = visible.map((row, index) => {
+      const image = previewImage(row);
+      const imageHtml = image
+        ? `<img src="${esc(image)}" alt="">`
+        : `<img src="mages/xleague_welcome_logo.png" alt="">`;
+
+      const tg = String(row.telegram_url || "").trim();
+      const tgHtml = tg
+        ? `<a class="inactive-news-action" href="${esc(tg)}" target="_blank" rel="noopener noreferrer">Telegram ↗</a>`
+        : "";
+
+      return `
+        <article class="inactive-news-card">
+          <div class="inactive-news-preview">${imageHtml}</div>
+          <div class="inactive-news-body">
+            <div class="inactive-news-date">${esc(formatDate(row.date))}</div>
+            <div class="inactive-news-title">${esc(row.title || "Новость X League")}</div>
+            <div class="inactive-news-text">${esc(row.preview || "")}</div>
+            <div class="inactive-news-actions">
+              <button type="button" class="inactive-news-action primary" data-live-news="${index}">Читать на сайте</button>
+              ${tgHtml}
+            </div>
+          </div>
+        </article>`;
+    }).join("");
+
+    if (headNote) headNote.textContent = liveNews.length > 2 ? `Последние 2 из ${liveNews.length}` : "";
+  }
+
+  function openNews(index) {
+    const row = liveNews[index];
+    if (!row || !modal || !modalTitle || !modalSubtitle || !modalBody) return;
+
+    modalTitle.textContent = row.title || "Новость X League";
+    modalSubtitle.textContent = formatDate(row.date);
+
+    const tg = String(row.telegram_url || "").trim();
+    modalBody.innerHTML =
+      formatBody(row.body || "") +
+      (tg ? `<a class="news-telegram-link" href="${esc(tg)}" target="_blank" rel="noopener noreferrer">Открыть в Telegram ↗</a>` : "");
+
+    modal.classList.remove("hidden");
+  }
+
+  function closeNews() {
+    modal?.classList.add("hidden");
+  }
+
+  function renderArchive() {
+    if (!modal || !modalTitle || !modalSubtitle || !modalBody) return;
+
+    modalTitle.textContent = "Все новости";
+    modalSubtitle.textContent = `${liveNews.length} публикац${liveNews.length === 1 ? "ия" : (liveNews.length >= 2 && liveNews.length <= 4 ? "ии" : "ий")}`;
+
+    modalBody.innerHTML = `
+      <div class="news-archive-list">
+        ${liveNews.map((row, index) => {
+          const image = previewImage(row) || "mages/xleague_welcome_logo.png";
+          return `
+            <button type="button" class="news-archive-item" data-archive-news="${index}">
+              <span class="news-archive-thumb"><img src="${esc(image)}" alt=""></span>
+              <span>
+                <span class="news-archive-date">${esc(formatDate(row.date))}</span>
+                <span class="news-archive-title">${esc(row.title || "Новость X League")}</span>
+                <span class="news-archive-preview">${esc(row.preview || "")}</span>
+              </span>
+            </button>`;
+        }).join("")}
+      </div>`;
+
+    modal.classList.remove("hidden");
+  }
+
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-live-news]");
+    if (btn) {
+      openNews(Number(btn.dataset.liveNews));
+      return;
+    }
+
+    const archiveItem = event.target.closest("[data-archive-news]");
+    if (archiveItem) {
+      openNews(Number(archiveItem.dataset.archiveNews));
+    }
+
+
+    const userLink = event.target.closest("[data-news-user]");
+    if (userLink) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const playerName = String(userLink.dataset.newsUser || "").trim();
+      if (!playerName) return;
+
+      const playerSelect = document.getElementById("playerSelect");
+      if (!playerSelect) {
+        console.warn("NEWS PLAYER SELECT NOT FOUND");
+        return;
+      }
+
+      const wanted = playerName.toLocaleLowerCase("ru-RU");
+      const option = Array.from(playerSelect.options || []).find(opt =>
+        String(opt.value || "").trim().toLocaleLowerCase("ru-RU") === wanted ||
+        String(opt.textContent || "").trim().toLocaleLowerCase("ru-RU") === wanted
+      );
+
+      if (!option) {
+        console.warn("NEWS USER PROFILE NOT FOUND:", playerName);
+        return;
+      }
+
+      closeNews();
+
+      // Reuse the site's native player logic.
+      playerSelect.value = option.value;
+      playerSelect.dispatchEvent(new Event("change", { bubbles: true }));
+
+      const playersTab = document.querySelector('.nav-btn[data-screen="players"]');
+      if (playersTab) {
+        setTimeout(() => playersTab.click(), 0);
+      }
+    }
+  });
+
+  document.getElementById("allNewsBtn")?.addEventListener("click", renderArchive);
+
+  document.getElementById("newsClose")?.addEventListener("click", closeNews);
+  document.getElementById("newsBackdrop")?.addEventListener("click", closeNews);
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeNews();
+  });
+
+  async function loadNews() {
+    try {
+      const response = await fetch("https://api.playxliga.ru/bootstrap", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const bootstrap = await response.json();
+
+      const rows = Array.isArray(bootstrap?.data?.site_news)
+        ? bootstrap.data.site_news
+        : [];
+
+      liveNews = rows
+        .filter(row => isPublished(row.published))
+        .sort((a, b) => parseDate(b.date) - parseDate(a.date));
+
+      renderCards();
+      shell.style.display = liveNews.length ? "" : "none";
+    } catch (error) {
+      console.error("SITE NEWS LOAD ERROR:", error);
+      shell.style.display = "none";
+    }
+  }
+
+  loadNews();
+})();
+</script>
+
 </body>
 </html>
