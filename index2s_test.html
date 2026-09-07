@@ -6736,6 +6736,70 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== Visual balance v3 ===== */
+
+/* Welcome goes back to a neutral dark card. */
+@media (min-width: 700px) {
+  .inactive-welcome {
+    border-color: rgba(255,255,255,.07) !important;
+    background:
+      radial-gradient(circle at 14% 18%, rgba(40,92,160,.08), transparent 34%),
+      #151619 !important;
+    box-shadow: 0 18px 46px rgba(0,0,0,.30) !important;
+  }
+
+  /* The source logo has a black background: blend that black into the hero
+     instead of putting it on top of a green-tinted field. */
+  .inactive-welcome-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    background:
+      radial-gradient(ellipse at center, #050607 0%, #050607 54%, rgba(5,6,7,.92) 70%, rgba(21,22,25,0) 100%);
+  }
+
+  .inactive-welcome-media::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, #151619 0%, transparent 10%, transparent 90%, #151619 100%),
+      linear-gradient(180deg, #151619 0%, transparent 10%, transparent 90%, #151619 100%);
+  }
+
+  .inactive-welcome-media img {
+    position: relative;
+    z-index: 0;
+  }
+}
+
+/* News cards get the subtle green separation instead. */
+.inactive-news-card {
+  border-color: rgba(182,255,59,.13) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182,255,59,.055), transparent 38%),
+    linear-gradient(145deg, #171b16 0%, #151817 48%, #161719 100%) !important;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.018) !important;
+}
+
+.inactive-news-card:hover {
+  border-color: rgba(182,255,59,.20) !important;
+}
+
+/* Give the on-site article sheet the same subtle X League green separation. */
+#newsModal .info-sheet {
+  border-color: rgba(182,255,59,.15) !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(182,255,59,.05), transparent 30%),
+    #121512 !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
