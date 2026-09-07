@@ -7111,6 +7111,34 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* v12 — robust article parser + profile links */
+.news-modal-body{
+  gap:10px !important;
+}
+.news-modal-body p{
+  margin:0 !important;
+  line-height:1.65 !important;
+}
+.news-modal-body p + p{
+  margin-top:4px !important;
+}
+.news-modal-body .news-article-heading{
+  margin:12px 0 5px !important;
+}
+.news-user-link{
+  color:#b6ff3b !important;
+  font-weight:950 !important;
+  text-decoration:underline;
+  text-decoration-color:rgba(182,255,59,.34);
+  text-underline-offset:3px;
+}
+.news-user-link:hover{
+  text-decoration-color:#b6ff3b;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -11788,127 +11816,116 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   }
 
   function formatBody(raw) {
-    let text = String(raw ?? "").replace(/\r\n?/g, "\n");
+    let source = String(raw ?? "").replace(/\r\n?/g, "\n");
 
     const USER_ALIASES = {
       "Анатолий": "Анатолий (Синдикат)"
     };
 
-    const inline = [];
-    const blocks = [];
-    const IOPEN = "XNEWSI";
-    const ICLOSE = "ENDXNEWSI";
-    const BOPEN = "XNEWSB";
-    const BCLOSE = "ENDXNEWSB";
+    // Backward compatibility: convert the old // syntax into the new mini-HTML
+    // before parsing. Inline commands are line-bounded so they cannot eat text.
+    source = source.replace(
+      /\/\/\s*(заголовок|heading)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      (_, type, content) => `<h3>${content}</h3>`
+    );
+    source = source.replace(
+      /\/\/\s*(цитата|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      (_, type, content) => `<blockquote>${content}</blockquote>`
+    );
+    source = source.replace(
+      /\/\/\s*(заголовок|heading)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<h3>${content}</h3>`
+    );
+    source = source.replace(
+      /\/\/\s*(цитата|quote)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<blockquote>${content}</blockquote>`
+    );
+    source = source.replace(
+      /\/\/\s*(жирный|bold)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<b>${content}</b>`
+    );
+    source = source.replace(
+      /\/\/\s*(курсив|italic)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
+      (_, type, content) => `<i>${content}</i>`
+    );
 
-    const inlineToken = html => {
-      const id = inline.length;
-      inline.push(html);
-      return `${IOPEN}${id}${ICLOSE}`;
-    };
-    const blockToken = html => {
-      const id = blocks.length;
-      blocks.push(html);
-      return `\n\n${BOPEN}${id}${BCLOSE}\n\n`;
-    };
+    function renderNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return esc(node.nodeValue || "");
+      }
 
-    const stripTags = value => String(value ?? "").replace(/<[^>]*>/g, "");
+      if (node.nodeType !== Node.ELEMENT_NODE) return "";
 
-    // New HTML-like syntax.
-    text = text.replace(/<h3\b[^>]*>([\s\S]*?)<\/h3>/gi, (_, content) => {
-      const title = esc(stripTags(content).trim());
-      return blockToken(`<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${title}</div>`);
-    });
+      const tag = node.tagName.toLowerCase();
+      const children = Array.from(node.childNodes).map(renderNode).join("");
 
-    text = text.replace(/<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>/gi, (_, content) => {
-      const quote = esc(stripTags(content).trim()).replaceAll("\n", "<br>");
-      return blockToken(`<div class="news-article-quote">${quote}</div>`);
-    });
+      if (tag === "b" || tag === "strong") {
+        return `<strong class="news-inline-bold">${children}</strong>`;
+      }
 
-    // Nested <b><user>...</user></b> and <i><user>...</user></i>
-    // are handled before ordinary b/i.
-    text = text.replace(/<(b|i)\b[^>]*>\s*<user\b[^>]*>([\s\S]*?)<\/user>\s*<\/\1>/gi,
-      (_, tag, content) => {
-        const display = stripTags(content).trim();
+      if (tag === "i" || tag === "em") {
+        return `<em class="news-inline-italic">${children}</em>`;
+      }
+
+      if (tag === "br") return "<br>";
+
+      if (tag === "user") {
+        const display = String(node.textContent || "").trim();
         if (!display) return "";
         const target = USER_ALIASES[display] || display;
-        const cls = tag.toLowerCase() === "b" ? " news-user-link-bold" : " news-user-link-italic";
-        return inlineToken(`<button type="button" class="news-user-link${cls}" data-news-user="${esc(target)}">${esc(display)}</button>`);
+        return `<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`;
       }
-    );
 
-    text = text.replace(/<user\b[^>]*>([\s\S]*?)<\/user>/gi, (_, content) => {
-      const display = stripTags(content).trim();
-      if (!display) return "";
-      const target = USER_ALIASES[display] || display;
-      return inlineToken(`<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`);
-    });
+      // Unknown tags are stripped, but their text/content is preserved.
+      return children;
+    }
 
-    text = text.replace(/<b\b[^>]*>([\s\S]*?)<\/b>/gi, (_, content) =>
-      inlineToken(`<strong class="news-inline-bold">${esc(stripTags(content).trim())}</strong>`)
-    );
+    function renderInlineFragment(fragment) {
+      const doc = new DOMParser().parseFromString(`<body>${fragment}</body>`, "text/html");
+      return Array.from(doc.body.childNodes).map(renderNode).join("");
+    }
 
-    text = text.replace(/<i\b[^>]*>([\s\S]*?)<\/i>/gi, (_, content) =>
-      inlineToken(`<em class="news-inline-italic">${esc(stripTags(content).trim())}</em>`)
-    );
+    function renderHeading(fragment) {
+      const doc = new DOMParser().parseFromString(`<body>${fragment}</body>`, "text/html");
+      const h3 = doc.body.querySelector("h3");
+      if (!h3) return "";
+      const content = Array.from(h3.childNodes).map(renderNode).join("");
+      return `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${content}</div>`;
+    }
 
-    // <br> is a line break only. Do not let it become a paragraph separator.
-    text = text.replace(/<br\s*\/?>/gi, () => inlineToken("<br>"));
+    function renderQuote(fragment) {
+      const doc = new DOMParser().parseFromString(`<body>${fragment}</body>`, "text/html");
+      const q = doc.body.querySelector("blockquote");
+      if (!q) return "";
+      const content = Array.from(q.childNodes).map(renderNode).join("");
+      return `<div class="news-article-quote">${content}</div>`;
+    }
 
-    // Backward compatibility for old // syntax.
-    text = text.replace(
-      /\/\/\s*(заголовок|цитата|heading|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
-      (_, type, content) => `//${type} ${content.replace(/\n+/g, " ")} //`
-    );
+    // Empty physical lines = paragraph break.
+    // A single physical newline is only a space.
+    // <br> is the only forced line break inside a paragraph.
+    const chunks = source
+      .split(/\n\s*\n+/)
+      .map(x => x.trim())
+      .filter(Boolean);
 
-    text = text.replace(
-      /\/\/\s*(заголовок|цитата|heading|quote)\s*(?:\/\/)?\s*([\s\S]*?)\s*\/\//gi,
-      (_, type, content) => {
-        const t = String(type).toLowerCase();
-        const safe = esc(String(content).trim()).replaceAll("\n", "<br>");
-        return blockToken(
-          (t === "заголовок" || t === "heading")
-            ? `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${safe}</div>`
-            : `<div class="news-article-quote">${safe}</div>`
-        );
-      }
-    );
-
-    text = text.replace(
-      /\/\/\s*(жирный|курсив|bold|italic)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,
-      (_, type, content) => {
-        const t = String(type).toLowerCase();
-        const safe = esc(String(content).trim());
-        return inlineToken(
-          (t === "жирный" || t === "bold")
-            ? `<strong class="news-inline-bold">${safe}</strong>`
-            : `<em class="news-inline-italic">${safe}</em>`
-        );
-      }
-    );
-
-    const blockRe = new RegExp(`(${BOPEN}\\d+${BCLOSE})`);
-    const inlineRe = new RegExp(`${IOPEN}(\\d+)${ICLOSE}`, "g");
     const out = [];
 
-    for (const part of text.split(blockRe)) {
-      const bm = part.match(new RegExp(`^${BOPEN}(\\d+)${BCLOSE}$`));
-      if (bm) {
-        out.push(blocks[Number(bm[1])] || "");
+    for (let chunk of chunks) {
+      chunk = chunk.replace(/\n+/g, " ");
+
+      // Dedicated block elements.
+      if (/^\s*<h3\b/i.test(chunk) && /<\/h3>\s*$/i.test(chunk)) {
+        out.push(renderHeading(chunk));
         continue;
       }
 
-      // Empty lines create paragraphs. A literal <br> never does.
-      for (let p of part.split(/\n\s*\n+/).map(x => x.trim()).filter(Boolean)) {
-        p = esc(p);
-
-        // A single physical newline from Sheets should behave like a normal
-        // space; explicit <br> is the only forced line break.
-        p = p.replace(/\n+/g, " ");
-
-        p = p.replace(inlineRe, (_, id) => inline[Number(id)] || "");
-        out.push(`<p>${p}</p>`);
+      if (/^\s*<blockquote\b/i.test(chunk) && /<\/blockquote>\s*$/i.test(chunk)) {
+        out.push(renderQuote(chunk));
+        continue;
       }
+
+      out.push(`<p>${renderInlineFragment(chunk)}</p>`);
     }
 
     return out.join("");
@@ -12018,43 +12035,32 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const playerName = String(userLink.dataset.newsUser || "").trim();
       if (!playerName) return;
 
-      closeNews();
-
-      // Use the site's native player selector/profile route where possible.
-      const playerSelect = document.querySelector(
-        '#playerSelect, #player-select, select[data-player-select], .player-select select'
-      );
-
-      if (playerSelect) {
-        const wanted = playerName.toLocaleLowerCase("ru-RU");
-        const option = Array.from(playerSelect.options || []).find(opt =>
-          String(opt.value || "").trim().toLocaleLowerCase("ru-RU") === wanted ||
-          String(opt.textContent || "").trim().toLocaleLowerCase("ru-RU") === wanted
-        );
-
-        if (option) {
-          playerSelect.value = option.value;
-          playerSelect.dispatchEvent(new Event("change", { bubbles: true }));
-          return;
-        }
+      const playerSelect = document.getElementById("playerSelect");
+      if (!playerSelect) {
+        console.warn("NEWS PLAYER SELECT NOT FOUND");
+        return;
       }
 
-      // Fallback to any already rendered player navigation element.
-      const normalize = value => String(value || "").trim().toLocaleLowerCase("ru-RU");
-      const candidates = Array.from(document.querySelectorAll(
-        "[data-player], [data-player-name], [data-user], .player-name, .stats-player-name"
-      ));
-      const target = candidates.find(el => [
-        el.dataset?.player,
-        el.dataset?.playerName,
-        el.dataset?.user,
-        el.textContent
-      ].some(v => normalize(v) === normalize(playerName)));
+      const wanted = playerName.toLocaleLowerCase("ru-RU");
+      const option = Array.from(playerSelect.options || []).find(opt =>
+        String(opt.value || "").trim().toLocaleLowerCase("ru-RU") === wanted ||
+        String(opt.textContent || "").trim().toLocaleLowerCase("ru-RU") === wanted
+      );
 
-      if (target) {
-        setTimeout(() => target.click(), 0);
-      } else {
+      if (!option) {
         console.warn("NEWS USER PROFILE NOT FOUND:", playerName);
+        return;
+      }
+
+      closeNews();
+
+      // Reuse the site's native player logic.
+      playerSelect.value = option.value;
+      playerSelect.dispatchEvent(new Event("change", { bubbles: true }));
+
+      const playersTab = document.querySelector('.nav-btn[data-screen="players"]');
+      if (playersTab) {
+        setTimeout(() => playersTab.click(), 0);
       }
     }
   });
