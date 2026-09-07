@@ -7012,19 +7012,19 @@ button.achievement-item {
 
         <div class="prize-hero">
           <div class="prize-kicker">Текущий фонд</div>
-          <div class="prize-total">30 300 ₽</div>
-          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+300 ₽</strong> добавили участники</div>
+          <div class="prize-total">30 800 ₽</div>
+          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+800 ₽</strong> добавили участники</div>
         </div>
 
         <div class="prize-grid">
           <div class="prize-card">
             <div class="prize-card-title">🏆 Регулярный сезон</div>
-            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 100 ₽</strong></div>
-            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 070 ₽</strong></div>
-            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 040 ₽</strong></div>
-            <div class="prize-place-row"><span>4 место</span><strong>3 030 ₽</strong></div>
-            <div class="prize-place-row"><span>5 место</span><strong>1 010 ₽</strong></div>
-            <div class="prize-place-row"><span>6–15 места</span><strong>505 ₽</strong></div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 268 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 187 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 107 ₽</strong></div>
+            <div class="prize-place-row"><span>4 место</span><strong>3 080 ₽</strong></div>
+            <div class="prize-place-row"><span>5 место</span><strong>1 028 ₽</strong></div>
+            <div class="prize-place-row"><span>6–15 места</span><strong>513 ₽</strong></div>
           </div>
 
           <div class="prize-card">
@@ -7043,6 +7043,8 @@ button.achievement-item {
         <div class="prize-card">
           <div class="prize-card-title">🦆 Меценаты X League</div>
           <div class="patron-row"><span>PaVeL</span><strong>300 ₽</strong></div>
+          <div class="patron-row"><span>AB</span><strong>300 ₽</strong></div>
+          <div class="patron-row"><span>Faylen</span><strong>200 ₽</strong></div>
           <div class="patron-note">Отдельное спасибо участникам турнира, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
         </div>
       </div>
@@ -10376,14 +10378,11 @@ sourceMatches.forEach(match => {
       if (countryEl) countryEl.innerHTML = `<div class="prefer-flags">${playerPreferredCountriesHtml(playerName)}</div>`;
 
       const displayTour = Number(displayPrediction?.tour || currentTour || 0);
-      // Recent form must include the currently displayed tour as soon as
-      // its picks have settled. Previously we used "< displayTour", which
-      // deliberately excluded the current tour and left only 3 dots from T1.
-      const toursForForm = history
-        .filter(p => !displayTour || Number(p.tour) <= displayTour)
+      const previousToursForForm = history
+        .filter(p => !displayTour || Number(p.tour) < displayTour)
         .sort((a, b) => Number(b.tour) - Number(a.tour));
-      const formTourSource = toursForForm.length
-        ? toursForForm
+      const formTourSource = previousToursForForm.length
+        ? previousToursForForm
         : history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
       const formTours = formTourSource
         .filter(tour => (tour.picks || []).some(pick => pick && pick.result))
