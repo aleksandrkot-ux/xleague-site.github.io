@@ -10376,11 +10376,14 @@ sourceMatches.forEach(match => {
       if (countryEl) countryEl.innerHTML = `<div class="prefer-flags">${playerPreferredCountriesHtml(playerName)}</div>`;
 
       const displayTour = Number(displayPrediction?.tour || currentTour || 0);
-      const previousToursForForm = history
-        .filter(p => !displayTour || Number(p.tour) < displayTour)
+      // Recent form must include the currently displayed tour as soon as
+      // its picks have settled. Previously we used "< displayTour", which
+      // deliberately excluded the current tour and left only 3 dots from T1.
+      const toursForForm = history
+        .filter(p => !displayTour || Number(p.tour) <= displayTour)
         .sort((a, b) => Number(b.tour) - Number(a.tour));
-      const formTourSource = previousToursForForm.length
-        ? previousToursForForm
+      const formTourSource = toursForForm.length
+        ? toursForForm
         : history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
       const formTours = formTourSource
         .filter(tour => (tour.picks || []).some(pick => pick && pick.result))
