@@ -7002,6 +7002,32 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* v7: inline article formatting */
+.news-modal-body .news-inline-bold{
+  color:#fff;
+  font-weight:1000;
+}
+.news-modal-body .news-inline-italic{
+  color:#d2d5d1;
+  font-style:italic;
+  font-weight:650;
+}
+.news-modal-body .news-article-heading{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+}
+.news-modal-body .news-heading-mark{
+  color:#b6ff3b;
+  font-size:.78em;
+  line-height:1;
+  flex:0 0 auto;
+  transform:translateY(-1px);
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -11681,64 +11707,101 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   function formatBody(raw) {
     let text = String(raw ?? "").replace(/\r\n?/g, "\n");
 
-    const typeClass = {
-      "заголовок": "news-article-heading",
-      "heading": "news-article-heading",
-      "жирный": "news-article-bold",
-      "bold": "news-article-bold",
-      "курсив": "news-article-italic",
-      "italic": "news-article-italic",
-      "цитата": "news-article-quote",
-      "quote": "news-article-quote",
-      "абзац": ""
-    };
+    // Headings/quotes remain block elements.
+    // Bold/italic are true inline fragments and no longer force a new paragraph.
+    const blockTypes = new Set(["заголовок", "heading", "цитата", "quote"]);
+    const inlineTypes = new Set(["жирный", "bold", "курсив", "italic"]);
 
     const renderBlock = (type, content) => {
-      const cls = typeClass[String(type).toLowerCase()] ?? "";
+      const t = String(type).toLowerCase();
       const safe = esc(String(content).trim()).replaceAll("\n", "<br>");
       if (!safe) return "";
-      if (cls === "news-article-heading" || cls === "news-article-quote")
-        return `<div class="${cls}">${safe}</div>`;
-      if (cls) return `<p class="${cls}">${safe}</p>`;
-      return `<p>${safe}</p>`;
+
+      if (t === "заголовок" || t === "heading") {
+        return `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${safe}</div>`;
+      }
+
+      if (t === "цитата" || t === "quote") {
+        return `<div class="news-article-quote">${safe}</div>`;
+      }
+
+      return safe;
     };
 
-    const blocks = [];
-    const token = "@@XNEWSBLOCK";
-    let n = 0;
+    const renderInline = (type, content) => {
+      const t = String(type).toLowerCase();
+      const safe = esc(String(content).trim());
+      if (!safe) return "";
 
-    // //жирный [newline] text [newline] //
+      if (t === "жирный" || t === "bold") {
+        return `<strong class="news-inline-bold">${safe}</strong>`;
+      }
+
+      if (t === "курсив" || t === "italic") {
+        return `<em class="news-inline-italic">${safe}</em>`;
+      }
+
+      return safe;
+    };
+
+    // First normalize multiline command blocks into one-line tokens.
     text = text.replace(
-      /\/\/\s*(заголовок|жирный|курсив|цитата|абзац|heading|bold|italic|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      /\/\/\s*(заголовок|жирный|курсив|цитата|heading|bold|italic|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
+      (_, type, content) => `//${type} ${content.replace(/\n+/g, " ")} //`
+    );
+
+    // Extract true block commands so they stay between paragraphs.
+    const blocks = [];
+    const blockToken = "@@XNEWSBLOCK";
+    let blockN = 0;
+
+    text = text.replace(
+      /\/\/\s*(заголовок|цитата|heading|quote)\s*(?:\/\/)?\s*([\s\S]*?)\s*\/\//gi,
       (_, type, content) => {
-        const id = n++;
+        const id = blockN++;
         blocks[id] = renderBlock(type, content);
-        return `${token}${id}@@`;
+        return `\n\n${blockToken}${id}@@\n\n`;
       }
     );
 
-    // //жирный text //   and   //жирный//text//
+    // Inline formatting is replaced directly inside the surrounding text.
     text = text.replace(
-      /\/\/\s*(заголовок|жирный|курсив|цитата|абзац|heading|bold|italic|quote)\s*(?:\/\/)?\s*([\s\S]*?)\s*\/\//gi,
-      (_, type, content) => {
-        const id = n++;
-        blocks[id] = renderBlock(type, content);
-        return `${token}${id}@@`;
-      }
+      /\/\/\s*(жирный|курсив|bold|italic)\s*(?:\/\/)?\s*([\s\S]*?)\s*\/\//gi,
+      (_, type, content) => renderInline(type, content)
     );
 
     const out = [];
-    const parts = text.split(new RegExp(`(${token}\\d+@@)`));
+    const parts = text.split(new RegExp(`(${blockToken}\\d+@@)`));
 
     for (const part of parts) {
-      const m = part.match(new RegExp(`^${token}(\\d+)@@$`));
+      const m = part.match(new RegExp(`^${blockToken}(\\d+)@@$`));
       if (m) {
         out.push(blocks[Number(m[1])] || "");
         continue;
       }
 
-      for (const p of part.split(/\n\s*\n+/).map(x => x.trim()).filter(Boolean)) {
-        out.push(`<p>${esc(p).replaceAll("\n", "<br>")}</p>`);
+      const paras = part
+        .split(/\n\s*\n+/)
+        .map(x => x.trim())
+        .filter(Boolean);
+
+      for (const p of paras) {
+        // p already contains only our own strong/em tags.
+        // Escape everything else while preserving those controlled tags.
+        const placeholders = [];
+        let prepared = p.replace(
+          /<(strong class="news-inline-bold"|em class="news-inline-italic")>([\s\S]*?)<\/(strong|em)>/g,
+          match => {
+            const id = placeholders.length;
+            placeholders.push(match);
+            return `@@XINLINE${id}@@`;
+          }
+        );
+
+        prepared = esc(prepared).replaceAll("\n", "<br>");
+        prepared = prepared.replace(/@@XINLINE(\d+)@@/g, (_, id) => placeholders[Number(id)] || "");
+
+        out.push(`<p>${prepared}</p>`);
       }
     }
 
