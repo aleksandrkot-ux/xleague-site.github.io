@@ -7139,6 +7139,52 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* v13 — clearer article hierarchy, quieter player links */
+
+/* Section headings: clearly separate article blocks without becoming giant cards */
+.news-modal-body .news-article-heading{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  margin:18px 0 8px !important;
+  padding:7px 10px !important;
+  border-left:3px solid #aaff2c !important;
+  border-radius:7px !important;
+  background:rgba(170,255,44,.055) !important;
+  color:#b6ff3b !important;
+  font-size:18px !important;
+  font-weight:1000 !important;
+  line-height:1.25 !important;
+  letter-spacing:-.15px !important;
+}
+.news-modal-body .news-article-heading:first-child{
+  margin-top:2px !important;
+}
+.news-modal-body .news-heading-mark{
+  flex:0 0 auto;
+  color:#b6ff3b !important;
+  font-size:14px !important;
+  line-height:1 !important;
+}
+
+/* Player links should read as links, not as dozens of mini-headings */
+.news-modal-body .news-user-link{
+  color:#d7e9bf !important;
+  font-weight:900 !important;
+  text-decoration:underline !important;
+  text-decoration-color:rgba(182,255,59,.38) !important;
+  text-decoration-thickness:1px !important;
+  text-underline-offset:3px !important;
+  transition:color .15s ease, text-decoration-color .15s ease !important;
+}
+.news-modal-body .news-user-link:hover{
+  color:#b6ff3b !important;
+  text-decoration-color:#b6ff3b !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
