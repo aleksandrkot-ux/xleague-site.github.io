@@ -7091,6 +7091,26 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* v11 — tighter article rhythm and working inline user links */
+.news-modal-body{
+  gap:10px !important;
+}
+.news-modal-body p{
+  margin:0 !important;
+}
+.news-modal-body .news-article-heading{
+  margin:12px 0 4px !important;
+}
+.news-user-link-bold{
+  font-weight:1000 !important;
+}
+.news-user-link-italic{
+  font-style:italic !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -11770,73 +11790,72 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   function formatBody(raw) {
     let text = String(raw ?? "").replace(/\r\n?/g, "\n");
 
-    // ---- New article syntax ---------------------------------------------
-    // Allowed:
-    // <b>, <i>, <br>, <h3>, <blockquote>, <user>
-    // Everything else is escaped as ordinary text.
-    //
-    // <user>AB</user> opens AB's player statistics.
-    // Display aliases can differ from the actual tournament player name.
     const USER_ALIASES = {
       "Анатолий": "Анатолий (Синдикат)"
     };
 
-    const safeInline = [];
-    const safeBlock = [];
-    const inlineToken = "@@XHTMLINLINE";
-    const blockToken = "@@XHTMLBLOCK";
+    const inline = [];
+    const blocks = [];
+    const IOPEN = "XNEWSI";
+    const ICLOSE = "ENDXNEWSI";
+    const BOPEN = "XNEWSB";
+    const BCLOSE = "ENDXNEWSB";
 
-    const keepInline = html => {
-      const id = safeInline.length;
-      safeInline.push(html);
-      return `${inlineToken}${id}@@`;
+    const inlineToken = html => {
+      const id = inline.length;
+      inline.push(html);
+      return `${IOPEN}${id}${ICLOSE}`;
+    };
+    const blockToken = html => {
+      const id = blocks.length;
+      blocks.push(html);
+      return `\n\n${BOPEN}${id}${BCLOSE}\n\n`;
     };
 
-    const keepBlock = html => {
-      const id = safeBlock.length;
-      safeBlock.push(html);
-      return `\n\n${blockToken}${id}@@\n\n`;
-    };
+    const stripTags = value => String(value ?? "").replace(/<[^>]*>/g, "");
 
-    // HTML headings and quotes are block elements.
+    // New HTML-like syntax.
     text = text.replace(/<h3\b[^>]*>([\s\S]*?)<\/h3>/gi, (_, content) => {
-      const title = esc(String(content).replace(/<[^>]*>/g, "").trim());
-      return keepBlock(
-        `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${title}</div>`
-      );
+      const title = esc(stripTags(content).trim());
+      return blockToken(`<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${title}</div>`);
     });
 
     text = text.replace(/<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>/gi, (_, content) => {
-      const quote = esc(String(content).replace(/<[^>]*>/g, "").trim()).replaceAll("\n", "<br>");
-      return keepBlock(`<div class="news-article-quote">${quote}</div>`);
+      const quote = esc(stripTags(content).trim()).replaceAll("\n", "<br>");
+      return blockToken(`<div class="news-article-quote">${quote}</div>`);
     });
 
-    // User links. Whitespace inside <user> is intentionally ignored.
+    // Nested <b><user>...</user></b> and <i><user>...</user></i>
+    // are handled before ordinary b/i.
+    text = text.replace(/<(b|i)\b[^>]*>\s*<user\b[^>]*>([\s\S]*?)<\/user>\s*<\/\1>/gi,
+      (_, tag, content) => {
+        const display = stripTags(content).trim();
+        if (!display) return "";
+        const target = USER_ALIASES[display] || display;
+        const cls = tag.toLowerCase() === "b" ? " news-user-link-bold" : " news-user-link-italic";
+        return inlineToken(`<button type="button" class="news-user-link${cls}" data-news-user="${esc(target)}">${esc(display)}</button>`);
+      }
+    );
+
     text = text.replace(/<user\b[^>]*>([\s\S]*?)<\/user>/gi, (_, content) => {
-      const display = String(content).replace(/<[^>]*>/g, "").trim();
+      const display = stripTags(content).trim();
       if (!display) return "";
       const target = USER_ALIASES[display] || display;
-      return keepInline(
-        `<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`
-      );
+      return inlineToken(`<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`);
     });
 
-    // Bold and italic are true inline elements.
-    text = text.replace(/<b\b[^>]*>([\s\S]*?)<\/b>/gi, (_, content) => {
-      return keepInline(`<strong class="news-inline-bold">${esc(String(content).replace(/<[^>]*>/g, "").trim())}</strong>`);
-    });
+    text = text.replace(/<b\b[^>]*>([\s\S]*?)<\/b>/gi, (_, content) =>
+      inlineToken(`<strong class="news-inline-bold">${esc(stripTags(content).trim())}</strong>`)
+    );
 
-    text = text.replace(/<i\b[^>]*>([\s\S]*?)<\/i>/gi, (_, content) => {
-      return keepInline(`<em class="news-inline-italic">${esc(String(content).replace(/<[^>]*>/g, "").trim())}</em>`);
-    });
+    text = text.replace(/<i\b[^>]*>([\s\S]*?)<\/i>/gi, (_, content) =>
+      inlineToken(`<em class="news-inline-italic">${esc(stripTags(content).trim())}</em>`)
+    );
 
-    text = text.replace(/<br\s*\/?>/gi, () => keepInline("<br>"));
+    // <br> is a line break only. Do not let it become a paragraph separator.
+    text = text.replace(/<br\s*\/?>/gi, () => inlineToken("<br>"));
 
-    // ---- Backward compatibility with old // syntax ---------------------
-    // Old articles can remain untouched.
-    const oldBlocks = [];
-    const oldBlockToken = "@@XOLDBLOCK";
-
+    // Backward compatibility for old // syntax.
     text = text.replace(
       /\/\/\s*(заголовок|цитата|heading|quote)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
       (_, type, content) => `//${type} ${content.replace(/\n+/g, " ")} //`
@@ -11847,12 +11866,11 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       (_, type, content) => {
         const t = String(type).toLowerCase();
         const safe = esc(String(content).trim()).replaceAll("\n", "<br>");
-        const html = (t === "заголовок" || t === "heading")
-          ? `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${safe}</div>`
-          : `<div class="news-article-quote">${safe}</div>`;
-        const id = oldBlocks.length;
-        oldBlocks.push(html);
-        return `\n\n${oldBlockToken}${id}@@\n\n`;
+        return blockToken(
+          (t === "заголовок" || t === "heading")
+            ? `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${safe}</div>`
+            : `<div class="news-article-quote">${safe}</div>`
+        );
       }
     );
 
@@ -11861,44 +11879,34 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       (_, type, content) => {
         const t = String(type).toLowerCase();
         const safe = esc(String(content).trim());
-        if (t === "жирный" || t === "bold")
-          return keepInline(`<strong class="news-inline-bold">${safe}</strong>`);
-        return keepInline(`<em class="news-inline-italic">${safe}</em>`);
+        return inlineToken(
+          (t === "жирный" || t === "bold")
+            ? `<strong class="news-inline-bold">${safe}</strong>`
+            : `<em class="news-inline-italic">${safe}</em>`
+        );
       }
     );
 
-    // Escape all remaining source text. Only placeholders created above
-    // are restored as HTML, so arbitrary HTML from Sheets cannot execute.
-    const allBlockPattern = new RegExp(
-      `(${blockToken}\\d+@@|${oldBlockToken}\\d+@@)`
-    );
+    const blockRe = new RegExp(`(${BOPEN}\\d+${BCLOSE})`);
+    const inlineRe = new RegExp(`${IOPEN}(\\d+)${ICLOSE}`, "g");
     const out = [];
 
-    for (const part of text.split(allBlockPattern)) {
-      let m = part.match(new RegExp(`^${blockToken}(\\d+)@@$`));
-      if (m) {
-        out.push(safeBlock[Number(m[1])] || "");
+    for (const part of text.split(blockRe)) {
+      const bm = part.match(new RegExp(`^${BOPEN}(\\d+)${BCLOSE}$`));
+      if (bm) {
+        out.push(blocks[Number(bm[1])] || "");
         continue;
       }
 
-      m = part.match(new RegExp(`^${oldBlockToken}(\\d+)@@$`));
-      if (m) {
-        out.push(oldBlocks[Number(m[1])] || "");
-        continue;
-      }
+      // Empty lines create paragraphs. A literal <br> never does.
+      for (let p of part.split(/\n\s*\n+/).map(x => x.trim()).filter(Boolean)) {
+        p = esc(p);
 
-      const paras = part
-        .split(/\n\s*\n+/)
-        .map(x => x.trim())
-        .filter(Boolean);
+        // A single physical newline from Sheets should behave like a normal
+        // space; explicit <br> is the only forced line break.
+        p = p.replace(/\n+/g, " ");
 
-      for (let p of paras) {
-        p = esc(p).replaceAll("\n", "<br>");
-
-        p = p.replace(new RegExp(`${inlineToken}(\\d+)@@`, "g"), (_, id) => {
-          return safeInline[Number(id)] || "";
-        });
-
+        p = p.replace(inlineRe, (_, id) => inline[Number(id)] || "");
         out.push(`<p>${p}</p>`);
       }
     }
@@ -12004,28 +12012,44 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
     const userLink = event.target.closest("[data-news-user]");
     if (userLink) {
+      event.preventDefault();
+      event.stopPropagation();
+
       const playerName = String(userLink.dataset.newsUser || "").trim();
       if (!playerName) return;
 
-      // Close article first, then reuse the site's already-working
-      // player/profile click target instead of duplicating profile logic.
       closeNews();
 
+      // Use the site's native player selector/profile route where possible.
+      const playerSelect = document.querySelector(
+        '#playerSelect, #player-select, select[data-player-select], .player-select select'
+      );
+
+      if (playerSelect) {
+        const wanted = playerName.toLocaleLowerCase("ru-RU");
+        const option = Array.from(playerSelect.options || []).find(opt =>
+          String(opt.value || "").trim().toLocaleLowerCase("ru-RU") === wanted ||
+          String(opt.textContent || "").trim().toLocaleLowerCase("ru-RU") === wanted
+        );
+
+        if (option) {
+          playerSelect.value = option.value;
+          playerSelect.dispatchEvent(new Event("change", { bubbles: true }));
+          return;
+        }
+      }
+
+      // Fallback to any already rendered player navigation element.
+      const normalize = value => String(value || "").trim().toLocaleLowerCase("ru-RU");
       const candidates = Array.from(document.querySelectorAll(
         "[data-player], [data-player-name], [data-user], .player-name, .stats-player-name"
       ));
-
-      const normalize = value => String(value || "").trim().toLocaleLowerCase("ru-RU");
-
-      const target = candidates.find(el => {
-        const values = [
-          el.dataset?.player,
-          el.dataset?.playerName,
-          el.dataset?.user,
-          el.textContent
-        ];
-        return values.some(v => normalize(v) === normalize(playerName));
-      });
+      const target = candidates.find(el => [
+        el.dataset?.player,
+        el.dataset?.playerName,
+        el.dataset?.user,
+        el.textContent
+      ].some(v => normalize(v) === normalize(playerName)));
 
       if (target) {
         setTimeout(() => target.click(), 0);
