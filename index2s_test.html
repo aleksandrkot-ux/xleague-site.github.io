@@ -6671,6 +6671,54 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+.inactive-home-shell{display:grid;gap:16px;margin:18px 0 20px}
+.inactive-welcome{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.1fr);gap:24px;align-items:center;min-height:300px;padding:26px;border-radius:28px;border:1px solid rgba(255,255,255,.07);background:radial-gradient(circle at 16% 16%,rgba(45,126,255,.14),transparent 32%),radial-gradient(circle at 86% 16%,rgba(182,255,59,.12),transparent 36%),#151619;box-shadow:0 18px 46px rgba(0,0,0,.30)}
+.inactive-welcome-media{display:flex;align-items:center;justify-content:center;min-height:230px}
+.inactive-welcome-media img{display:block;width:min(100%,430px);max-height:230px;object-fit:contain;filter:drop-shadow(0 14px 34px rgba(0,0,0,.38))}
+.inactive-welcome-kicker{display:inline-flex;padding:6px 10px;margin-bottom:12px;border-radius:999px;border:1px solid rgba(182,255,59,.22);background:rgba(182,255,59,.08);color:#b6ff3b;font-size:10px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
+.inactive-welcome h2{margin:0;color:#fff;font-size:clamp(28px,4vw,46px);line-height:.98;letter-spacing:-.04em}
+.inactive-welcome p{margin:14px 0 0;color:#c8c8cc;font-size:14px;line-height:1.62;font-weight:700}
+.inactive-welcome-meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.inactive-welcome-chip{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06);color:#d8d8dc;font-size:10px;font-weight:900}
+.inactive-news-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.inactive-news-head h3{margin:0;color:#fff;font-size:18px;font-weight:1000}
+.inactive-news-head span{color:#7f7f85;font-size:11px;font-weight:850}
+.inactive-news-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.inactive-news-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:24px;border:1px solid rgba(255,255,255,.065);background:#161719;box-shadow:0 14px 34px rgba(0,0,0,.20)}
+.inactive-news-preview{aspect-ratio:16/7;overflow:hidden;background:#0c0d10}
+.inactive-news-preview img{width:100%;height:100%;display:block;object-fit:cover;opacity:.78}
+.inactive-news-body{display:flex;flex:1 1 auto;flex-direction:column;padding:16px}
+.inactive-news-date{color:#8a8a90;font-size:10px;font-weight:900;text-transform:uppercase}
+.inactive-news-title{margin-top:7px;color:#fff;font-size:17px;font-weight:1000;line-height:1.15}
+.inactive-news-text{margin-top:9px;color:#a9a9ae;font-size:12px;line-height:1.5;font-weight:700}
+.inactive-news-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:15px}
+.inactive-news-action{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font-size:10px;font-weight:1000;text-decoration:none}
+.inactive-news-action.primary{border-color:rgba(182,255,59,.22);background:rgba(182,255,59,.09);color:#b6ff3b}
+.news-modal-body{display:grid;gap:12px}.news-modal-body p{margin:0;color:#c7c7cb;font-size:13px;line-height:1.62;font-weight:700}
+@media(max-width:900px){.inactive-welcome{grid-template-columns:1fr}.inactive-welcome-media{min-height:180px}.inactive-welcome-media img{max-height:190px}}
+@media(max-width:699px){.inactive-home-shell{gap:12px;margin-top:12px}.inactive-welcome{min-height:0;padding:18px;border-radius:24px;gap:14px}.inactive-welcome-media{min-height:140px}.inactive-welcome-media img{max-height:150px}.inactive-welcome h2{font-size:30px}.inactive-welcome p{font-size:12px;line-height:1.55}.inactive-news-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style>
+.news-modal-body .news-article-heading{
+  margin:8px 0 2px;color:#fff;font-size:18px;line-height:1.2;font-weight:1000;
+}
+.news-modal-body .news-article-bold{font-weight:1000;color:#f1f1f3}
+.news-modal-body .news-article-italic{font-style:italic;color:#c7c7cb}
+.news-modal-body .news-article-quote{
+  margin:2px 0;padding:10px 12px;border-left:3px solid #b6ff3b;
+  border-radius:0 12px 12px 0;background:rgba(182,255,59,.055);color:#d5d5d8;
+}
+.news-modal-body .news-telegram-link{
+  display:inline-flex;align-items:center;width:fit-content;margin-top:6px;
+  min-height:34px;padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);
+  color:#fff;font-size:10px;font-weight:1000;text-decoration:none;
+}
+</style>
 </head>
 <body>
   <div class="app">
@@ -6713,6 +6761,50 @@ button.achievement-item {
 
   <main>
   <section class="screen active" id="screen-matches">
+<div class="inactive-home-shell" id="inactiveHomePrototype" style="display:none">
+  <section class="inactive-welcome">
+    <div class="inactive-welcome-media"><img src="xleague_welcome_logo.png" alt="X League — второй сезон"></div>
+    <div>
+      <div class="inactive-welcome-kicker">X League · Второй сезон</div>
+      <h2>Добро пожаловать в X League</h2>
+      <p>X League — турнир прогнозистов, в котором мы не пытаемся угадать победителя. Мы ищем ничьи. Каждый тур участники выбирают футбольные матчи, которые, по их мнению, закончатся вничью. Чем выше коэффициент и точнее выбор — тем больше очков.</p>
+      <p>Здесь можно следить за матчами в реальном времени, смотреть выборы других участников, изучать статистику игроков и лиги, охотиться за достижениями и наблюдать, как один гол способен полностью перевернуть положение в туре.</p>
+      <div class="inactive-welcome-meta">
+        <span class="inactive-welcome-chip">⚽ Прогнозы на ничьи</span>
+        <span class="inactive-welcome-chip">📊 Live-статистика</span>
+        <span class="inactive-welcome-chip">🏆 Сезон + плей-офф</span>
+      </div>
+    </div>
+  </section>
+  <div class="inactive-news-head"><h3>Последнее в X League</h3><span>Тестовый режим</span></div>
+  <div class="inactive-news-grid">
+    <article class="inactive-news-card">
+      <div class="inactive-news-preview"><img src="xleague_welcome_logo.png" alt=""></div>
+      <div class="inactive-news-body">
+        <div class="inactive-news-date">06 сентября 2026</div>
+        <div class="inactive-news-title">Итоги второго тура</div>
+        <div class="inactive-news-text">Короткий анонс новости: кто поднялся в таблице, какие матчи решили тур и чем запомнился игровой уикенд.</div>
+        <div class="inactive-news-actions">
+          <button type="button" class="inactive-news-action primary" data-news-open="tour2">Читать на сайте</button>
+          <a class="inactive-news-action" href="https://t.me/panpopan/3518" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+        </div>
+      </div>
+    </article>
+    <article class="inactive-news-card">
+      <div class="inactive-news-preview"><img src="xleague_welcome_logo.png" alt=""></div>
+      <div class="inactive-news-body">
+        <div class="inactive-news-date">07 сентября 2026</div>
+        <div class="inactive-news-title">Что дальше: неделя между турами</div>
+        <div class="inactive-news-text">На неделе X League живёт не только матчами: новости, обновления, ачивки и подготовка к следующему игровому уикенду.</div>
+        <div class="inactive-news-actions">
+          <button type="button" class="inactive-news-action primary" data-news-open="between">Читать на сайте</button>
+          <a class="inactive-news-action" href="https://t.me/panpopan/3527" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+
     <div class="stats-toolbar local-tour-toolbar">
       <label for="matchesTourSelect">Этап</label>
       <select id="matchesTourSelect"></select>
@@ -11244,5 +11336,204 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       liveLabelObserver.observe(document.body, { childList: true, subtree: true });
     });
   </script>
+
+<div class="info-modal hidden" id="newsModal">
+  <div class="info-backdrop" id="newsBackdrop"></div>
+  <div class="info-sheet">
+    <div class="info-sheet-head">
+      <div><div class="info-title" id="newsModalTitle">Новость X League</div><div class="info-subtitle" id="newsModalSubtitle"></div></div>
+      <button class="info-close" id="newsClose" aria-label="Закрыть">×</button>
+    </div>
+    <div class="news-modal-body" id="newsModalBody"></div>
+  </div>
+</div>
+
+
+
+
+<script>
+(() => {
+  const shell = document.getElementById("inactiveHomePrototype");
+  if (!shell) return;
+
+  const grid = shell.querySelector(".inactive-news-grid");
+  const headNote = shell.querySelector(".inactive-news-head span");
+  const modal = document.getElementById("newsModal");
+  const modalTitle = document.getElementById("newsModalTitle");
+  const modalSubtitle = document.getElementById("newsModalSubtitle");
+  const modalBody = document.getElementById("newsModalBody");
+
+  let liveNews = [];
+
+  const esc = (value) => String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+  function isPublished(value) {
+    const v = String(value ?? "").trim().toLowerCase();
+    return ["1", "true", "yes", "да", "published"].includes(v);
+  }
+
+  function parseDate(value) {
+    const raw = String(value ?? "").trim();
+    const m = raw.match(/^(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{4})$/);
+    if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+    const d = new Date(raw);
+    return Number.isNaN(d.getTime()) ? new Date(0) : d;
+  }
+
+  function formatDate(value) {
+    const d = parseDate(value);
+    if (!d.getTime()) return String(value ?? "");
+    return new Intl.DateTimeFormat("ru-RU", {
+      day: "2-digit", month: "long", year: "numeric"
+    }).format(d);
+  }
+
+  function formatBody(raw) {
+    const text = String(raw ?? "").replace(/\r\n?/g, "\n");
+    const lines = text.split("\n");
+    const out = [];
+    let paragraph = [];
+
+    const flushParagraph = () => {
+      const joined = paragraph.join("\n").trim();
+      if (joined) out.push(`<p>${esc(joined).replaceAll("\n", "<br>")}</p>`);
+      paragraph = [];
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      const cmd = trimmed.match(/^\/\/\s*(заголовок|жирный|курсив|цитата)\s*$/i);
+      if (cmd) {
+        flushParagraph();
+        const type = cmd[1].toLowerCase();
+        const block = [];
+        i++;
+        while (i < lines.length && lines[i].trim() !== "//") {
+          block.push(lines[i]);
+          i++;
+        }
+        const content = esc(block.join("\n").trim()).replaceAll("\n", "<br>");
+        if (!content) continue;
+
+        if (type === "заголовок") out.push(`<div class="news-article-heading">${content}</div>`);
+        if (type === "жирный") out.push(`<p class="news-article-bold">${content}</p>`);
+        if (type === "курсив") out.push(`<p class="news-article-italic">${content}</p>`);
+        if (type === "цитата") out.push(`<div class="news-article-quote">${content}</div>`);
+        continue;
+      }
+
+      if (!trimmed) {
+        flushParagraph();
+      } else {
+        paragraph.push(line);
+      }
+    }
+
+    flushParagraph();
+    return out.join("");
+  }
+
+  function previewImage(row) {
+    return String(
+      row.image_url || row.preview_image || row.image || row.img || ""
+    ).trim();
+  }
+
+  function renderCards() {
+    if (!grid) return;
+
+    const visible = liveNews.slice(0, 2);
+    grid.innerHTML = visible.map((row, index) => {
+      const image = previewImage(row);
+      const imageHtml = image
+        ? `<img src="${esc(image)}" alt="">`
+        : `<img src="xleague_welcome_logo.png" alt="">`;
+
+      const tg = String(row.telegram_url || "").trim();
+      const tgHtml = tg
+        ? `<a class="inactive-news-action" href="${esc(tg)}" target="_blank" rel="noopener noreferrer">Telegram ↗</a>`
+        : "";
+
+      return `
+        <article class="inactive-news-card">
+          <div class="inactive-news-preview">${imageHtml}</div>
+          <div class="inactive-news-body">
+            <div class="inactive-news-date">${esc(formatDate(row.date))}</div>
+            <div class="inactive-news-title">${esc(row.title || "Новость X League")}</div>
+            <div class="inactive-news-text">${esc(row.preview || "")}</div>
+            <div class="inactive-news-actions">
+              <button type="button" class="inactive-news-action primary" data-live-news="${index}">Читать на сайте</button>
+              ${tgHtml}
+            </div>
+          </div>
+        </article>`;
+    }).join("");
+
+    if (headNote) headNote.textContent = liveNews.length > 2 ? `Последние 2 из ${liveNews.length}` : "";
+  }
+
+  function openNews(index) {
+    const row = liveNews[index];
+    if (!row || !modal || !modalTitle || !modalSubtitle || !modalBody) return;
+
+    modalTitle.textContent = row.title || "Новость X League";
+    modalSubtitle.textContent = formatDate(row.date);
+
+    const tg = String(row.telegram_url || "").trim();
+    modalBody.innerHTML =
+      formatBody(row.body || "") +
+      (tg ? `<a class="news-telegram-link" href="${esc(tg)}" target="_blank" rel="noopener noreferrer">Открыть в Telegram ↗</a>` : "");
+
+    modal.classList.remove("hidden");
+  }
+
+  function closeNews() {
+    modal?.classList.add("hidden");
+  }
+
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-live-news]");
+    if (btn) openNews(Number(btn.dataset.liveNews));
+  });
+
+  document.getElementById("newsClose")?.addEventListener("click", closeNews);
+  document.getElementById("newsBackdrop")?.addEventListener("click", closeNews);
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeNews();
+  });
+
+  async function loadNews() {
+    try {
+      const response = await fetch("https://api.playxliga.ru/bootstrap", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const bootstrap = await response.json();
+
+      const rows = Array.isArray(bootstrap?.data?.site_news)
+        ? bootstrap.data.site_news
+        : [];
+
+      liveNews = rows
+        .filter(row => isPublished(row.published))
+        .sort((a, b) => parseDate(b.date) - parseDate(a.date));
+
+      renderCards();
+      shell.style.display = liveNews.length ? "" : "none";
+    } catch (error) {
+      console.error("SITE NEWS LOAD ERROR:", error);
+      shell.style.display = "none";
+    }
+  }
+
+  loadNews();
+})();
+</script>
+
 </body>
 </html>
