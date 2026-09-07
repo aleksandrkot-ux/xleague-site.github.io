@@ -11868,8 +11868,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       "Анатолий": "Анатолий (Синдикат)"
     };
 
-    // Backward compatibility: convert the old // syntax into the new mini-HTML
-    // before parsing. Inline commands are line-bounded so they cannot eat text.
+    // Backward compatibility for old // syntax.
     source = source.replace(
       /\/\/\s*(заголовок|heading)\s*\n([\s\S]*?)\n\s*\/\/(?=\s*(?:\n|$))/gi,
       (_, type, content) => `<h3>${content}</h3>`
@@ -11895,7 +11894,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       (_, type, content) => `<i>${content}</i>`
     );
 
-    function renderNode(node) {
+    function renderInlineNode(node) {
       if (node.nodeType === Node.TEXT_NODE) {
         return esc(node.nodeValue || "");
       }
@@ -11903,14 +11902,13 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       if (node.nodeType !== Node.ELEMENT_NODE) return "";
 
       const tag = node.tagName.toLowerCase();
-      const children = Array.from(node.childNodes).map(renderNode).join("");
 
       if (tag === "b" || tag === "strong") {
-        return `<strong class="news-inline-bold">${children}</strong>`;
+        return `<strong class="news-inline-bold">${Array.from(node.childNodes).map(renderInlineNode).join("")}</strong>`;
       }
 
       if (tag === "i" || tag === "em") {
-        return `<em class="news-inline-italic">${children}</em>`;
+        return `<em class="news-inline-italic">${Array.from(node.childNodes).map(renderInlineNode).join("")}</em>`;
       }
 
       if (tag === "br") return "<br>";
@@ -11922,58 +11920,69 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         return `<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`;
       }
 
-      // Unknown tags are stripped, but their text/content is preserved.
-      return children;
+      return Array.from(node.childNodes).map(renderInlineNode).join("");
     }
 
-    function renderInlineFragment(fragment) {
-      const doc = new DOMParser().parseFromString(`<body>${fragment}</body>`, "text/html");
-      return Array.from(doc.body.childNodes).map(renderNode).join("");
+    function renderChildren(el) {
+      return Array.from(el.childNodes).map(renderInlineNode).join("");
     }
 
-    function renderHeading(fragment) {
-      const doc = new DOMParser().parseFromString(`<body>${fragment}</body>`, "text/html");
-      const h3 = doc.body.querySelector("h3");
-      if (!h3) return "";
-      const content = Array.from(h3.childNodes).map(renderNode).join("");
-      return `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${content}</div>`;
-    }
-
-    function renderQuote(fragment) {
-      const doc = new DOMParser().parseFromString(`<body>${fragment}</body>`, "text/html");
-      const q = doc.body.querySelector("blockquote");
-      if (!q) return "";
-      const content = Array.from(q.childNodes).map(renderNode).join("");
-      return `<div class="news-article-quote">${content}</div>`;
-    }
-
-    // Empty physical lines = paragraph break.
-    // A single physical newline is only a space.
-    // <br> is the only forced line break inside a paragraph.
-    const chunks = source
-      .split(/\n\s*\n+/)
-      .map(x => x.trim())
-      .filter(Boolean);
-
+    // Parse the whole article once. This is the important fix:
+    // <h3> can now appear anywhere in the source, without requiring
+    // surrounding blank lines or being the only thing in a paragraph.
+    const doc = new DOMParser().parseFromString(`<body>${source}</body>`, "text/html");
     const out = [];
+    let paragraphParts = [];
 
-    for (let chunk of chunks) {
-      chunk = chunk.replace(/\n+/g, " ");
+    const flushParagraph = () => {
+      let html = paragraphParts.join("");
+      paragraphParts = [];
 
-      // Dedicated block elements.
-      if (/^\s*<h3\b/i.test(chunk) && /<\/h3>\s*$/i.test(chunk)) {
-        out.push(renderHeading(chunk));
+      html = html
+        .replace(/\s+/g, " ")
+        .replace(/\s*<br>\s*/g, "<br>")
+        .trim();
+
+      if (html) out.push(`<p>${html}</p>`);
+    };
+
+    for (const node of Array.from(doc.body.childNodes)) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const rawText = String(node.nodeValue || "");
+
+        // Blank lines create paragraph breaks; single line breaks become spaces.
+        const chunks = rawText.split(/\n\s*\n+/);
+        chunks.forEach((chunk, idx) => {
+          const clean = esc(chunk.replace(/\n+/g, " "));
+          if (clean.trim()) paragraphParts.push(clean);
+          if (idx < chunks.length - 1) flushParagraph();
+        });
         continue;
       }
 
-      if (/^\s*<blockquote\b/i.test(chunk) && /<\/blockquote>\s*$/i.test(chunk)) {
-        out.push(renderQuote(chunk));
+      if (node.nodeType !== Node.ELEMENT_NODE) continue;
+
+      const tag = node.tagName.toLowerCase();
+
+      if (tag === "h3") {
+        flushParagraph();
+        const content = renderChildren(node);
+        out.push(
+          `<div class="news-article-heading"><span class="news-heading-mark" aria-hidden="true">✦</span>${content}</div>`
+        );
         continue;
       }
 
-      out.push(`<p>${renderInlineFragment(chunk)}</p>`);
+      if (tag === "blockquote") {
+        flushParagraph();
+        out.push(`<div class="news-article-quote">${renderChildren(node)}</div>`);
+        continue;
+      }
+
+      paragraphParts.push(renderInlineNode(node));
     }
 
+    flushParagraph();
     return out.join("");
   }
 
