@@ -1086,7 +1086,7 @@ html, body {
       justify-content: space-between;
       gap: 12px;
       padding: 13px;
-      border-radius: 20px;
+      border-radius: 16px;
       background: var(--card);
       border: 1px solid var(--line);
     }
@@ -1203,6 +1203,14 @@ html, body {
     .country-table-v2 td:nth-child(2) {
       width: auto;
       text-align: left;
+    }
+
+    /* Center country-stat wins/losses under their В / П headers */
+    .country-table-v2 th:nth-child(3),
+    .country-table-v2 td:nth-child(3),
+    .country-table-v2 th:nth-child(4),
+    .country-table-v2 td:nth-child(4) {
+      text-align: center;
     }
 
     .country-table-placeholder-v2 {
@@ -3173,7 +3181,7 @@ html, body {
 
   .player-rank-v2 {
     min-width: 0;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.2;
   }
 
@@ -3540,8 +3548,8 @@ main,
 }
 .player-awards-v2 .profile-inline-achievements img,
 .player-awards-v2 .profile-inline-achievements .badge-fallback {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 7px;
   font-size: 12px;
 }
@@ -3815,64 +3823,6 @@ main,
 }
 
 
-
-/* Live score styling */
-.match-status.live-score-status {
-  display: inline-flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: 7px;
-  color: #fff !important;
-}
-
-.live-score-value {
-  display: inline-block;
-  padding: 3px 7px;
-  border-radius: 9px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.13);
-  color: #fff !important;
-  font-size: 18px;
-  font-weight: 1000;
-  letter-spacing: .02em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.live-minute {
-  display: inline-block;
-  color: #fb7185 !important;
-  font-size: 12px;
-  font-weight: 1000;
-  line-height: 1;
-}
-
-.live-minute-number {
-  display: inline-block;
-}
-
-.live-minute-apostrophe {
-  display: inline-block;
-  margin-left: 1px;
-  transform-origin: center;
-  animation: xleague-live-pulse 1.35s ease-in-out infinite;
-}
-
-.live-minute.live-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: .03em;
-}
-
-@keyframes xleague-live-pulse {
-  0%, 100% { opacity: .58; transform: scale(1); text-shadow: 0 0 0 rgba(251,113,133,0); }
-  50% { opacity: 1; transform: scale(1.10); text-shadow: 0 0 9px rgba(251,113,133,.62); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .live-minute-apostrophe { animation: none; opacity: 1; }
-}
-
 /* Current-tour live state */
 .player-current-v2 .dot.pending {
   background: #f5f5f5 !important;
@@ -3934,28 +3884,6 @@ main,
 .player-current-v2 [class*="odd"]{
  color:#fbbf24 !important;
  -webkit-text-fill-color:#fbbf24 !important;
-}
-
-
-@media (min-width: 700px) {
-  .match-status.live-score,
-  .live-score {
-    color: #c2c2c2 !important;
-    -webkit-text-fill-color: #c2c2c2 !important;
-    font-weight: 800 !important;
-  }
-}
-
-
-.match-live-label {
-  margin-left: 6px;
-  color: #ef4444 !important;
-  -webkit-text-fill-color: #ef4444 !important;
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  vertical-align: 1px;
 }
 
 </style>
@@ -5353,6 +5281,69 @@ button.achievement-item {
   }
 }
 
+</style>
+
+
+<style>
+/* ===== X League: cancelled/void match state ===== */
+.dot.cancelled,
+.profile-dot.cancelled {
+  background: #d8c36a !important;
+  box-shadow: 0 0 12px rgba(216,195,106,.30) !important;
+}
+
+.match-status.cancelled {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+
+.pick-name.pick-cancelled,
+.pick-name.pick-cancelled .pick-num,
+.past-tour-pick-name.pick-cancelled {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+
+.player-current-v2 .profile-pick-card.cancelled {
+  border-color: rgba(216,195,106,.28) !important;
+  background: linear-gradient(180deg, rgba(216,195,106,.075), rgba(216,195,106,.025)) !important;
+}
+
+.player-current-v2 .profile-pick-card.cancelled,
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-match,
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-meta,
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-meta span:first-child {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+
+.player-current-v2 .profile-pick-card.cancelled .profile-pick-meta .current-tour-odd {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+}
+
+.country-history-score.is-cancelled {
+  color: #d8c36a !important;
+  -webkit-text-fill-color: #d8c36a !important;
+}
+
+/* ===== Predictions cards: visual hierarchy tweak ===== */
+.live-badge { font-weight: 500 !important; }
+
+.dead-badge {
+  background: rgba(255,255,255,.025) !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  color: #9a9a9a !important;
+  -webkit-text-fill-color: #9a9a9a !important;
+  font-weight: 500 !important;
+}
+
+.pick-preview {
+  color: #b8b8b8 !important;
+  -webkit-text-fill-color: #b8b8b8 !important;
+  font-weight: 850;
+}
+
 
 /* ===== Prize fund prototype ===== */
 .prize-btn {
@@ -5501,6 +5492,1183 @@ button.achievement-item {
   .prize-total { font-size: 30px; }
 }
 
+
+/* ===== Recent results ticker ===== */
+.results-ticker {
+  width: 100%;
+  height: 30px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #0b0d0f;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  white-space: nowrap;
+}
+
+.results-ticker.hidden {
+  display: none;
+}
+
+.results-ticker-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  min-width: max-content;
+  will-change: transform;
+  animation: xleagueTicker 38s linear infinite;
+}
+
+
+.results-ticker.paused .results-ticker-track {
+  animation-play-state: paused;
+}
+
+.results-ticker-group {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.results-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 13px;
+  color: #a3a3a3;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 30px;
+}
+
+.results-ticker-sep {
+  color: #ef4444;
+  font-size: 10px;
+}
+
+.results-ticker-item.draw .results-ticker-sep {
+  color: var(--accent);
+}
+
+.results-ticker-score {
+  color: #fff;
+  font-weight: 1000;
+}
+
+.results-ticker-item.draw,
+.results-ticker-item.draw .results-ticker-score {
+  color: var(--accent);
+}
+
+.results-ticker-flag {
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  max-width: 15px;
+  border-radius: 999px;
+  object-fit: cover;
+  flex: 0 0 15px;
+  display: block;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+
+/* ===== Overall standings mode for ticker ===== */
+.results-ticker-item.standing { gap: 5px; }
+.results-ticker-rank { color:#fff !important; -webkit-text-fill-color:#fff !important; font-weight:1000; }
+.results-ticker-player { color:#d4d4d8 !important; -webkit-text-fill-color:#d4d4d8 !important; font-weight:900; }
+.results-ticker-move.up { color:#34d399 !important; -webkit-text-fill-color:#34d399 !important; }
+.results-ticker-move.down { color:#fb7185 !important; -webkit-text-fill-color:#fb7185 !important; }
+.results-ticker-move.new { color:#fbbf24 !important; -webkit-text-fill-color:#fbbf24 !important; }
+.results-ticker-move.same { color:#8a8a8a !important; -webkit-text-fill-color:#8a8a8a !important; }
+
+/* Firefox ticker compositing fix */
+.results-ticker-item,
+.results-ticker-group {
+  flex-shrink: 0;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@keyframes xleagueTicker {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (max-width: 430px) {
+  .results-ticker-item {
+    padding: 0 11px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results-ticker {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .results-ticker::-webkit-scrollbar { display: none; }
+  .results-ticker-track { animation: none; }
+  .results-ticker-group:nth-child(2) { display: none; }
+}
+
+
+
+
+
+
+@media (min-width: 980px) {
+  .app {
+    grid-template-rows: auto 30px 58px minmax(0, 1fr) !important;
+  }
+
+  .results-ticker {
+    grid-column: 2;
+    grid-row: 2;
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    z-index: 18;
+  }
+
+  .filter-row {
+    grid-column: 2;
+    grid-row: 3 !important;
+    margin-top: 0;
+  }
+
+  main {
+    grid-column: 2;
+    grid-row: 4 !important;
+  }
+
+  .bottom-nav {
+    grid-row: 1 / -1 !important;
+  }
+}
+
+
+
+/* Desktop ticker containment fix */
+@media (min-width: 980px) {
+  .results-ticker {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    justify-self: stretch;
+  }
+
+  .results-ticker-track {
+    max-width: none;
+  }
+}
+
+
+
+/* Ticker result colors — override global text-color rules */
+.results-ticker .results-ticker-item.draw,
+.results-ticker .results-ticker-item.draw span,
+.results-ticker .results-ticker-item.draw .results-ticker-score,
+.results-ticker .results-ticker-item.draw .results-ticker-sep {
+  color: #8fae62 !important;
+  -webkit-text-fill-color: #8fae62 !important;
+}
+
+.results-ticker .results-ticker-item:not(.draw) .results-ticker-sep {
+  color: #ef4444 !important;
+  -webkit-text-fill-color: #ef4444 !important;
+}
+
+</style>
+
+
+<style>
+/* ===== X League LIVE: tech_live frontend ===== */
+.match-status.live-score-status {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 7px;
+  color: #fff !important;
+}
+
+.live-score-value {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.13);
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 1000;
+  letter-spacing: .02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-minute {
+  display: inline-block;
+  color: #fb7185 !important;
+  font-size: 12px;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+.live-minute-number { display: inline-block; }
+
+.live-minute-apostrophe {
+  display: inline-block;
+  margin-left: 1px;
+  transform-origin: center;
+  animation: xleague-live-minute-pulse 1.35s ease-in-out infinite;
+}
+
+.live-minute.live-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+@keyframes xleague-live-minute-pulse {
+  0%, 100% { opacity: .58; transform: scale(1); text-shadow: 0 0 0 rgba(251,113,133,0); }
+  50% { opacity: 1; transform: scale(1.10); text-shadow: 0 0 9px rgba(251,113,133,.62); }
+}
+
+.match-live-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  color: #ef4444 !important;
+  -webkit-text-fill-color: #ef4444 !important;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+.match-live-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: xleague-live-dot-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes xleague-live-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-minute-apostrophe,
+  .match-live-dot { animation: none; opacity: 1; }
+}
+</style>
+
+
+<style>
+/* ===== X League: compact square player achievements ===== */
+.player-achievements-v2 .achievement-strip {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 108px)) !important;
+  gap: 10px !important;
+  overflow: visible !important;
+  justify-content: start !important;
+}
+
+.player-achievements-v2 .achievement-item {
+  width: 108px !important;
+  height: 108px !important;
+  min-width: 108px !important;
+  max-width: 108px !important;
+  flex: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 10px 8px !important;
+  border-radius: 18px !important;
+  text-align: center !important;
+}
+
+.player-achievements-v2 .achievement-item > span {
+  grid-row: auto !important;
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px !important;
+  border-radius: 11px !important;
+  font-size: 18px !important;
+}
+
+.player-achievements-v2 .achievement-item img {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 9px !important;
+}
+
+.player-achievements-v2 .achievement-text {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.player-achievements-v2 .achievement-text strong {
+  width: 100% !important;
+  font-size: 10.5px !important;
+  line-height: 1.15 !important;
+  font-weight: 1000 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+.player-achievements-v2 .achievement-text small {
+  width: 100% !important;
+  font-size: 8.5px !important;
+  line-height: 1.15 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+@media (max-width: 430px) {
+  .player-achievements-v2 .achievement-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .player-achievements-v2 .achievement-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== X League: achievement tiles v2 — readable title + intact meta ===== */
+.player-achievements-v2 .achievement-strip {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, 124px) !important;
+  gap: 10px !important;
+  justify-content: start !important;
+  overflow: visible !important;
+}
+
+.player-achievements-v2 .achievement-item {
+  width: 124px !important;
+  height: 124px !important;
+  min-width: 124px !important;
+  max-width: 124px !important;
+  padding: 9px 8px 8px !important;
+  gap: 5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+  overflow: hidden !important;
+}
+
+.player-achievements-v2 .achievement-item > span {
+  width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  flex: 0 0 36px !important;
+  margin: 0 !important;
+}
+
+.player-achievements-v2 .achievement-item img {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.player-achievements-v2 .achievement-text {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  overflow: hidden !important;
+}
+
+.player-achievements-v2 .achievement-text strong {
+  width: 100% !important;
+  min-height: 27px !important;
+  font-size: 10.5px !important;
+  line-height: 1.25 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+.player-achievements-v2 .achievement-text small {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 23px !important;
+  padding: 4px 5px !important;
+  border-radius: 7px !important;
+  background: rgba(255,255,255,.055) !important;
+  font-size: 8.5px !important;
+  line-height: 1.15 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 430px) {
+  .player-achievements-v2 .achievement-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .player-achievements-v2 .achievement-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 118px !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .player-achievements-v2 .achievement-text small {
+    font-size: 8px !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== X League: standardized compact achievement tiles ===== */
+.player-achievements-v2 .achievement-tile-standard {
+  width: 118px !important;
+  height: 118px !important;
+  min-width: 118px !important;
+  max-width: 118px !important;
+  padding: 10px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  overflow: hidden !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard > span {
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  flex: 0 0 38px !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard img {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard .achievement-copy {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard .achievement-tile-tag {
+  display: block !important;
+  width: 100% !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  font-weight: 1000 !important;
+  letter-spacing: .04em !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.player-achievements-v2 .achievement-tile-standard .achievement-tile-tour {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-height: 22px !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.06) !important;
+  color: #bdbdbd !important;
+  font-size: 9px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+@media (max-width: 430px) {
+  .player-achievements-v2 .achievement-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .player-achievements-v2 .achievement-tile-standard {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 112px !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== X League LIVE score semantics + goal flash ===== */
+
+.live-score-value.live-score-draw,
+.live-score-value.live-score-draw .live-score-digit,
+.live-score-value.live-score-draw .live-score-separator {
+  color: #34d399 !important;
+  -webkit-text-fill-color: #34d399 !important;
+  border-color: rgba(52,211,153,.24) !important;
+  background: rgba(52,211,153,.075) !important;
+}
+
+.live-score-value.live-score-behind,
+.live-score-value.live-score-behind .live-score-digit,
+.live-score-value.live-score-behind .live-score-separator {
+  color: #e78996 !important;
+  -webkit-text-fill-color: #e78996 !important;
+  border-color: rgba(231,137,150,.20) !important;
+  background: rgba(231,137,150,.055) !important;
+}
+
+.live-score-digit {
+  position: relative;
+  display: inline-block;
+  min-width: .58em;
+  text-align: center;
+  transform-origin: center;
+}
+
+.live-score-separator {
+  display: inline-block;
+  margin: 0 1px;
+}
+
+.live-minute,
+.live-minute.live-label {
+  color: #f3bd5a !important;
+  -webkit-text-fill-color: #f3bd5a !important;
+  text-shadow: 0 0 8px rgba(243,189,90,.18);
+}
+
+@keyframes xleague-live-minute-pulse {
+  0%, 100% {
+    opacity: .62;
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(243,189,90,0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+    text-shadow: 0 0 8px rgba(243,189,90,.50);
+  }
+}
+
+.live-score-digit-flash {
+  z-index: 1;
+  animation: xleague-goal-digit-flash 1.15s ease-in-out infinite;
+}
+
+@keyframes xleague-goal-digit-flash {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+    text-shadow: 0 0 0 rgba(255,255,255,0);
+  }
+  50% {
+    transform: scale(1.22);
+    filter: brightness(1.38);
+    text-shadow:
+      0 0 5px rgba(255,255,255,.72),
+      0 0 13px currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-score-digit-flash {
+    animation: none;
+    transform: scale(1.10);
+    text-decoration: underline;
+  }
+}
+</style>
+
+
+<style>
+/* ===== X League goal sound toggle ===== */
+.sound-toggle-btn {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.055);
+  color: #9a9a9a;
+  -webkit-text-fill-color: #9a9a9a;
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.sound-toggle-btn.is-on {
+  border-color: rgba(182,255,59,.24);
+  background: rgba(182,255,59,.08);
+  color: #b6ff3b;
+  -webkit-text-fill-color: #b6ff3b;
+}
+
+.sound-toggle-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+@media (max-width: 420px) {
+  .sound-toggle-btn {
+    width: 32px;
+    padding: 0;
+  }
+
+  .sound-toggle-text {
+    display: none;
+  }
+}
+
+/* ===== Live score field: no permanent outer shadow ===== */
+.live-score-value,
+.live-score-value.live-score-draw,
+.live-score-value.live-score-behind {
+  box-shadow: none !important;
+  filter: none;
+}
+
+/* Even quieter card fill; the score digits carry the state, not a glowing box. */
+.live-score-value.live-score-draw {
+  background: rgba(52,211,153,.035) !important;
+  border-color: rgba(52,211,153,.22) !important;
+}
+
+.live-score-value.live-score-behind {
+  background: rgba(231,137,150,.028) !important;
+  border-color: rgba(231,137,150,.18) !important;
+}
+</style>
+
+
+<style>
+/* ===== Live score: hard remove permanent glow/shadow ===== */
+.match-status.live-score-status,
+.live-score-value,
+.live-score-value.live-score-draw,
+.live-score-value.live-score-behind,
+.live-score-value .live-score-digit,
+.live-score-value .live-score-separator {
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+/* Make the score pill visually flatter on the dark card. */
+.live-score-value.live-score-draw {
+  background: rgba(52,211,153,.018) !important;
+  border-color: rgba(52,211,153,.20) !important;
+}
+
+.live-score-value.live-score-behind {
+  background: rgba(231,137,150,.016) !important;
+  border-color: rgba(231,137,150,.17) !important;
+}
+
+/* Goal animation is the only state allowed to glow. */
+.live-score-value .live-score-digit.live-score-digit-flash {
+  filter: brightness(1.38) !important;
+  animation: xleague-goal-digit-flash 1.15s ease-in-out infinite !important;
+}
+
+@keyframes xleague-goal-digit-flash {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1) !important;
+    text-shadow: none !important;
+  }
+  50% {
+    transform: scale(1.22);
+    filter: brightness(1.38) !important;
+    text-shadow:
+      0 0 5px rgba(255,255,255,.72),
+      0 0 12px currentColor !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== Mobile sound control: separate row, never overlaps the logo ===== */
+.mobile-sound-row {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  /* The header keeps its original compact one-row layout. */
+  #soundToggleBtn {
+    display: none !important;
+  }
+
+  .mobile-sound-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 5px 14px 4px;
+    background: #0b0d0f;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+
+  #soundToggleBtnMobile {
+    width: auto !important;
+    min-width: 92px;
+    height: 28px;
+    padding: 0 9px !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 5;
+  }
+
+  #soundToggleBtnMobile .sound-toggle-text {
+    display: inline !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== Live score cleanup: only the OUTER score pill has fill/border =====
+   Earlier grouped selectors also applied background/border to each digit and
+   the dash. That created the visible little dark/colored "boxes" around 0 - 0. */
+.live-score-value.live-score-draw .live-score-digit,
+.live-score-value.live-score-draw .live-score-separator,
+.live-score-value.live-score-behind .live-score-digit,
+.live-score-value.live-score-behind .live-score-separator {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  outline: 0 !important;
+}
+
+/* Keep only one subtle outer field. */
+.live-score-value.live-score-draw {
+  background: rgba(52,211,153,.018) !important;
+  border: 1px solid rgba(52,211,153,.20) !important;
+  box-shadow: none !important;
+}
+
+.live-score-value.live-score-behind {
+  background: rgba(231,137,150,.016) !important;
+  border: 1px solid rgba(231,137,150,.17) !important;
+  box-shadow: none !important;
+}
+
+/* Goal flash may glow, but still must not acquire its own box. */
+.live-score-value .live-score-digit.live-score-digit-flash {
+  background: transparent !important;
+  border: 0 !important;
+}
+</style>
+
+
+<style>
+/* ===== Desktop Hero achievements: final override ===== */
+@media (min-width: 980px) {
+  .player-hero-v2 .player-awards-v2 {
+    min-height: 46px !important;
+  }
+
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements {
+    gap: 8px !important;
+    max-width: none !important;
+  }
+
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements img,
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements .badge-fallback {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 11px !important;
+    font-size: 20px !important;
+  }
+}
+</style>
+
+
+<style>
+/* Achievement thumbnails: keep source proportions, crop into icon frame */
+.player-achievements-v2 .achievement-item img,
+#tourAchievements .achievement-item img,
+#profileAchievements .achievement-item img,
+.profile-inline-achievements img {
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+</style>
+
+
+<style>
+/* ===== Unified match stars + desktop goal notifications ===== */
+.match-stars-picker,
+.goal-toast-stars {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  padding: 3px 4px;
+  margin: -3px -4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.match-stars-picker .stars,
+.goal-toast-stars .stars {
+  pointer-events: none;
+}
+
+/* Goal popup toggle sits next to the sound toggle on desktop. */
+.live-notify-toggle-btn {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.055);
+  color: #9a9a9a;
+  -webkit-text-fill-color: #9a9a9a;
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.live-notify-toggle-btn.is-on {
+  border-color: rgba(182,255,59,.24);
+  background: rgba(182,255,59,.08);
+  color: #b6ff3b;
+  -webkit-text-fill-color: #b6ff3b;
+}
+
+.live-notify-toggle-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* Desktop only for now. New cards stack upward from the lower-left corner. */
+.goal-toast-stack {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 240;
+  width: min(320px, calc(100vw - 36px));
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.goal-toast {
+  position: relative;
+  overflow: visible;
+  padding: 10px 12px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: #18191c;
+  box-shadow: 0 14px 34px rgba(0,0,0,.44);
+  color: #fff;
+  pointer-events: auto;
+  animation: xleague-goal-toast-in .22s ease-out both;
+}
+
+@keyframes xleague-goal-toast-in {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.goal-toast-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-right: 24px;
+}
+
+.goal-toast-title {
+  color: #fb7185;
+  -webkit-text-fill-color: #fb7185;
+  font-size: 15px;
+  font-weight: 1000;
+  letter-spacing: .04em;
+}
+
+.goal-toast-minute {
+  color: #f3bd5a;
+  -webkit-text-fill-color: #f3bd5a;
+  font-size: 12px;
+  font-weight: 1000;
+  animation: xleague-live-minute-pulse 1.5s ease-in-out infinite;
+}
+
+.goal-toast-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.055);
+  color: #9a9a9a;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.goal-toast-stars {
+  margin-top: 5px;
+  margin-left: -4px;
+}
+
+.goal-toast-match {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.goal-toast-flag {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  font-size: 13px;
+}
+
+.goal-toast-flag img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+.goal-toast-teams {
+  min-width: 0;
+  color: #f4f4f5;
+  font-size: 12px;
+  font-weight: 950;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.goal-toast-match {
+  justify-content: space-between;
+}
+
+.goal-toast-match-main {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.goal-toast-score {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 1000;
+  letter-spacing: -.03em;
+  white-space: nowrap;
+}
+
+.goal-toast-score .goal-new {
+  font-size: 21px;
+}
+
+.goal-toast-score .goal-sep {
+  color: #8a8a8a;
+  font-size: 15px;
+}
+
+/* Goal meaning for the tournament: draw restored = green, draw broken/absent = red. */
+.goal-toast.goal-draw {
+  border-color: rgba(52,211,153,.28);
+  box-shadow:
+    inset 3px 0 0 #34d399,
+    0 14px 34px rgba(0,0,0,.44);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(52,211,153,.11), transparent 34%),
+    #18191c;
+}
+
+.goal-toast.goal-not-draw {
+  border-color: rgba(251,113,133,.24);
+  box-shadow:
+    inset 3px 0 0 #fb7185,
+    0 14px 34px rgba(0,0,0,.44);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(251,113,133,.10), transparent 34%),
+    #18191c;
+}
+
+.goal-toast.goal-draw .goal-toast-title,
+.goal-toast.goal-draw .goal-toast-score .goal-new {
+  color: #34d399;
+  -webkit-text-fill-color: #34d399;
+}
+
+.goal-toast.goal-not-draw .goal-toast-title,
+.goal-toast.goal-not-draw .goal-toast-score .goal-new {
+  color: #fb7185;
+  -webkit-text-fill-color: #fb7185;
+}
+
+@media (max-width: 699px) {
+  .live-notify-toggle-btn,
+  .goal-toast-stack {
+    display: none !important;
+  }
+
+  /* Main match stars get the same tap affordance as the country-stat stars. */
+  .match-stars-picker {
+    min-width: 104px;
+    min-height: 40px;
+    padding: 6px 5px;
+    margin: -6px -5px;
+    justify-content: flex-end;
+    touch-action: manipulation;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goal-toast,
+  .goal-toast-minute {
+    animation: none !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== Reliable star picker taps on touch devices ===== */
+[data-match-pickers] {
+  position: relative;
+  z-index: 8;
+}
+
+[data-match-pickers] .stars {
+  pointer-events: none;
+}
+
+@media (hover:none), (pointer:coarse) {
+  [data-match-pickers] {
+    touch-action: manipulation !important;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .match-stars-picker,
+  .country-history-stars {
+    min-height: 42px !important;
+    min-width: 104px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+</style>
+
+
+<style>
+/* Final touch picker safety: the interactive button itself owns the hit area. */
+@media (hover:none), (pointer:coarse) {
+  button[data-match-pickers] {
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 20 !important;
+  }
+  button[data-match-pickers] * {
+    pointer-events: none !important;
+  }
+}
+</style>
+
+
+<style>
+@media (hover:none), (pointer:coarse) {
+}
 </style>
 
 </head>
@@ -5515,12 +6683,31 @@ button.achievement-item {
           </div></a>
         </div>
         <div class="header-actions">
-          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30K</span></button>
+          <button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-pressed="false" aria-label="Включить звук голов">
+            <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
+            <span class="sound-toggle-text">Звук офф</span>
+          </button>
+          <button class="live-notify-toggle-btn is-on" id="liveNotifyToggleBtn" type="button" aria-pressed="true" aria-label="Выключить всплывающие уведомления о голах">
+            <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span>
+            <span class="live-notify-toggle-text">Увед. вкл</span>
+          </button>
+          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30,8K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
       </div>
     </header>
+
+    <div class="mobile-sound-row" aria-label="Настройка звука">
+      <button class="sound-toggle-btn is-off" id="soundToggleBtnMobile" type="button" aria-pressed="false" aria-label="Включить звук голов">
+        <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
+        <span class="sound-toggle-text">Звук офф</span>
+      </button>
+    </div>
+
+    <div class="results-ticker hidden" id="resultsTicker" aria-label="Последние результаты">
+      <div class="results-ticker-track" id="resultsTickerTrack"></div>
+    </div>
 
     <div class="filter-row" id="filterRow"></div>
 
@@ -5534,7 +6721,7 @@ button.achievement-item {
     <div id="upcomingSection">
       <div class="section-title">
         <div class="section-title-left">Предстоящие</div>
-        <div class="section-title-right">Ближайшие 7</div>
+        <div class="section-title-right">Ближайшие 6</div>
       </div>
 
       <div class="stack" id="upcomingList"></div>
@@ -5812,7 +6999,6 @@ button.achievement-item {
 
 </main>
 
-
     <div class="info-modal hidden" id="prizeModal">
       <div class="info-backdrop" id="prizeBackdrop"></div>
       <div class="info-sheet prize-sheet">
@@ -5826,19 +7012,19 @@ button.achievement-item {
 
         <div class="prize-hero">
           <div class="prize-kicker">Текущий фонд</div>
-          <div class="prize-total">30 000 ₽</div>
-          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+0 ₽</strong> добавили участники</div>
+          <div class="prize-total">30 800 ₽</div>
+          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+800 ₽</strong> добавили участники</div>
         </div>
 
         <div class="prize-grid">
           <div class="prize-card">
             <div class="prize-card-title">🏆 Регулярный сезон</div>
-            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 000 ₽</strong></div>
-            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 000 ₽</strong></div>
-            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 000 ₽</strong></div>
-            <div class="prize-place-row"><span>4 место</span><strong>3 000 ₽</strong></div>
-            <div class="prize-place-row"><span>5 место</span><strong>1 000 ₽</strong></div>
-            <div class="prize-place-row"><span>6–15 места</span><strong>500 ₽</strong></div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 268 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 187 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 107 ₽</strong></div>
+            <div class="prize-place-row"><span>4 место</span><strong>3 080 ₽</strong></div>
+            <div class="prize-place-row"><span>5 место</span><strong>1 028 ₽</strong></div>
+            <div class="prize-place-row"><span>6–15 места</span><strong>513 ₽</strong></div>
           </div>
 
           <div class="prize-card">
@@ -5856,8 +7042,10 @@ button.achievement-item {
 
         <div class="prize-card">
           <div class="prize-card-title">🦆 Меценаты X League</div>
-          <div class="patron-row"><span>Пока никто</span><strong>0 ₽</strong></div>
-          <div class="patron-note">Отдельное спасибо персонажам, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
+          <div class="patron-row"><span>PaVeL</span><strong>300 ₽</strong></div>
+          <div class="patron-row"><span>AB</span><strong>300 ₽</strong></div>
+          <div class="patron-row"><span>Faylen</span><strong>200 ₽</strong></div>
+          <div class="patron-note">Отдельное спасибо участникам турнира, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
         </div>
       </div>
     </div>
@@ -5886,9 +7074,9 @@ button.achievement-item {
     <strong>🟢 Начисление очков</strong>
     <span>
       Очки начисляются только за угаданные матчи по прогрессивной шкале:<br>
-      • коэффициент до 5,00 включительно → коэффициент × 10 − коэффициент;<br>
-      • коэффициент от 5,01 до 7,00 → коэффициент × 8 − коэффициент;<br>
-      • коэффициент от 7,01 и выше → коэффициент × 7 − коэффициент.<br>
+      • коэффициент до 5,00 включительно → коэффициент × 10 − 10 (стоимость нашего флэта);<br>
+      • коэффициент от 5,01 до 7,00 → коэффициент × 8 − 10 (стоимость нашего флэта);<br>
+      • коэффициент от 7,01 и выше → коэффициент × 7 − 10 (стоимость нашего флэта).<br>
       За проигранный прогноз начисляется 0 очков.
     </span>
   </div>
@@ -5991,6 +7179,7 @@ button.achievement-item {
 
   <div class="picker-mobile-backdrop" id="pickerMobileBackdrop"></div>
   <div class="global-pickers-popover" id="globalPickersPopover" aria-hidden="true"></div>
+  <div class="goal-toast-stack" id="goalToastStack" aria-live="polite" aria-atomic="false"></div>
 
   <nav class="bottom-nav">
   <div class="bottom-nav-grid">
@@ -6051,8 +7240,8 @@ button.achievement-item {
       ]}
     ];
 
-    let matches = [...DEMO_MATCHES];
-    let predictions = [...DEMO_PREDICTIONS];
+    let matches = [];
+    let predictions = [];
     let siteTable = [];
     let siteOverall = [];
     let sitePlayers = [];
@@ -6069,23 +7258,322 @@ button.achievement-item {
     // 1) Publish/export your Google Sheet so opensheet can read it.
     // 2) Paste only the spreadsheet ID below.
     // Example: https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit
-    const SHEET_ID = "1hlOq6jF-uQCf-wjKs8YShQl3CLpcd235rgTiodQZZRA";
-    const SHEET_API = (tab) => `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(tab)}`;
-    const SHEETS_TIMEOUT_MS = 9000;
+    const SHEET_ID = "1aOaRL3yJMFQHJZLrMpUNI9BylVS3WeaLpVW8FDLLQnY";
+    const SHEET_API = (tab) => `https://api.playxliga.ru/sheet/${encodeURIComponent(tab)}`;
+    const BOOTSTRAP_API = "https://api.playxliga.ru/bootstrap";
+    const SHEETS_TIMEOUT_MS = 12000;
     const CACHE_KEY = `xleague_cache_${SHEET_ID}`;
 
-    // === X LEAGUE LIVE DATA (TEST workbook) ===
-    // The browser reads tech_live/tech_fixtures from the TEST Google Sheet.
+
+    // === X LEAGUE LIVE DATA ===
+    // Browser reads tech_live/tech_fixtures through the site proxy.
     // API-Football is called only by the VPS worker, never by visitors.
     let liveByMatchKey = new Map();
+    let liveByUid = new Map();
+
+    // Remember the previous live score across polling cycles.
+    // When one side changes, that digit flashes for 60 seconds.
+    const previousLiveScoreByUid = new Map();
+    const previousLivePhaseByUid = new Map();
+    const liveGoalFlashUntilByUid = new Map();
+    const LIVE_GOAL_FLASH_MS = 60 * 1000;
+
+    // Goal sound: user-controlled and remembered on this device.
+    const GOAL_SOUND_URL = "./mixkit-software-interface-start-2574.wav";
+    const GOAL_SOUND_STORAGE_KEY = "xleague_goal_sound_enabled";
+    const notifiedLiveScoreByUid = new Map();
+    let goalSoundEnabled = localStorage.getItem(GOAL_SOUND_STORAGE_KEY) === "1";
+    let goalSoundUnlocked = false;
+    let goalSoundUnlockBound = false;
+
+    // Desktop goal popups: enabled by default, remembered on this device.
+    const GOAL_NOTIFY_STORAGE_KEY = "xleague_goal_notifications_enabled";
+    let goalNotificationsEnabled = localStorage.getItem(GOAL_NOTIFY_STORAGE_KEY) !== "0";
+
+    function renderGoalNotifyToggle() {
+      const btn = document.getElementById("liveNotifyToggleBtn");
+      if (!btn) return;
+
+      btn.classList.toggle("is-on", goalNotificationsEnabled);
+      btn.classList.toggle("is-off", !goalNotificationsEnabled);
+      btn.setAttribute("aria-pressed", goalNotificationsEnabled ? "true" : "false");
+      btn.setAttribute(
+        "aria-label",
+        goalNotificationsEnabled
+          ? "Выключить всплывающие уведомления о голах"
+          : "Включить всплывающие уведомления о голах"
+      );
+
+      const icon = btn.querySelector(".live-notify-toggle-icon");
+      const text = btn.querySelector(".live-notify-toggle-text");
+      if (icon) icon.textContent = goalNotificationsEnabled ? "🔔" : "🔕";
+      if (text) text.textContent = goalNotificationsEnabled ? "Увед. вкл" : "Увед. офф";
+    }
+
+    function clearGoalToasts() {
+      const stack = document.getElementById("goalToastStack");
+      if (stack) stack.innerHTML = "";
+    }
+
+    function bindGoalNotifyToggle() {
+      const btn = document.getElementById("liveNotifyToggleBtn");
+      if (!btn) return;
+
+      renderGoalNotifyToggle();
+      if (btn.dataset.bound === "1") return;
+      btn.dataset.bound = "1";
+
+      btn.addEventListener("click", () => {
+        goalNotificationsEnabled = !goalNotificationsEnabled;
+        localStorage.setItem(GOAL_NOTIFY_STORAGE_KEY, goalNotificationsEnabled ? "1" : "0");
+        renderGoalNotifyToggle();
+        if (!goalNotificationsEnabled) clearGoalToasts();
+      });
+    }
+
+    function findSiteMatchForLive(uid, fixtureSource = null) {
+      const byUid = matches.find(match => String(match.matchUid || "") === String(uid));
+      if (byUid) return byUid;
+
+      if (fixtureSource) {
+        const targetKey = liveMatchKey(fixtureSource.match, fixtureSource.date, fixtureSource.time);
+        const byFallback = matches.find(match =>
+          liveMatchKey(match.teams, match.date, match.time) === targetKey
+        );
+        if (byFallback) return byFallback;
+      }
+
+      return null;
+    }
+
+    function showGoalToast(liveData, changedHome, changedAway, fixtureSource = null) {
+      if (!goalNotificationsEnabled) return;
+      if (!window.matchMedia("(min-width: 700px)").matches) return;
+
+      const stack = document.getElementById("goalToastStack");
+      if (!stack) return;
+
+      const match = findSiteMatchForLive(liveData.uid, fixtureSource);
+      if (!match) return;
+
+      const minuteRaw = String(liveData.minute ?? "").trim();
+      const minuteText = minuteRaw ? `${minuteRaw}'` : "LIVE";
+
+      const home = String(liveData.home ?? "").trim();
+      const away = String(liveData.away ?? "").trim();
+
+      const card = document.createElement("article");
+      const homeNum = Number(home);
+      const awayNum = Number(away);
+      const isDrawNow =
+        Number.isFinite(homeNum) &&
+        Number.isFinite(awayNum) &&
+        homeNum === awayNum;
+
+      card.className = `goal-toast ${isDrawNow ? "goal-draw" : "goal-not-draw"}`;
+      card.dataset.uid = liveData.uid;
+
+      card.innerHTML = `
+        <button type="button" class="goal-toast-close" aria-label="Закрыть уведомление">×</button>
+        <div class="goal-toast-head">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div class="goal-toast-title">ГОЛ!</div>
+            <div class="goal-toast-minute">${escapeHtml(minuteText)}</div>
+          </div>
+        </div>
+
+        <button type="button" class="goal-toast-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+          ${starsHtml(match.popularity, false)}
+        </button>
+
+        <div class="goal-toast-match">
+          <div class="goal-toast-match-main">
+            <span class="goal-toast-flag">${flagHtml(match.flag_url || match.flag)}</span>
+            <div class="goal-toast-teams">${escapeHtml(match.teams)}</div>
+          </div>
+
+          <div class="goal-toast-score" aria-label="Счёт ${escapeHtml(home)} — ${escapeHtml(away)}">
+            <span class="${changedHome ? "goal-new" : ""}">${escapeHtml(home)}</span>
+            <span class="goal-sep">—</span>
+            <span class="${changedAway ? "goal-new" : ""}">${escapeHtml(away)}</span>
+          </div>
+        </div>
+      `;
+
+      card.querySelector(".goal-toast-close")?.addEventListener("click", () => card.remove());
+      stack.appendChild(card);
+    }
+
+    function showFinishedToast(liveData, fixtureSource = null) {
+      if (!goalNotificationsEnabled) return;
+      if (!window.matchMedia("(min-width: 700px)").matches) return;
+
+      const stack = document.getElementById("goalToastStack");
+      if (!stack) return;
+
+      const match = findSiteMatchForLive(liveData.uid, fixtureSource);
+      if (!match) return;
+
+      const home = String(liveData.home ?? "").trim();
+      const away = String(liveData.away ?? "").trim();
+      const homeNum = Number(home);
+      const awayNum = Number(away);
+      const isDrawNow =
+        Number.isFinite(homeNum) &&
+        Number.isFinite(awayNum) &&
+        homeNum === awayNum;
+
+      const card = document.createElement("article");
+      card.className = `goal-toast ${isDrawNow ? "goal-draw" : "goal-not-draw"}`;
+      card.dataset.uid = liveData.uid;
+
+      card.innerHTML = `
+        <button type="button" class="goal-toast-close" aria-label="Закрыть уведомление">×</button>
+        <div class="goal-toast-head">
+          <div class="goal-toast-title">ОКОНЧЕН</div>
+        </div>
+
+        <button type="button" class="goal-toast-stars" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+          ${starsHtml(match.popularity, false)}
+        </button>
+
+        <div class="goal-toast-match">
+          <div class="goal-toast-match-main">
+            <span class="goal-toast-flag">${flagHtml(match.flag_url || match.flag)}</span>
+            <div class="goal-toast-teams">${escapeHtml(match.teams)}</div>
+          </div>
+
+          <div class="goal-toast-score" aria-label="Итоговый счёт ${escapeHtml(home)} — ${escapeHtml(away)}">
+            <span>${escapeHtml(home)}</span>
+            <span class="goal-sep">—</span>
+            <span>${escapeHtml(away)}</span>
+          </div>
+        </div>
+      `;
+
+      card.querySelector(".goal-toast-close")?.addEventListener("click", () => card.remove());
+      stack.appendChild(card);
+    }
+
+    function makeGoalAudio() {
+      const audio = new Audio(GOAL_SOUND_URL);
+      audio.preload = "auto";
+      audio.volume = 0.72;
+      return audio;
+    }
+
+    const goalSoundWarmup = makeGoalAudio();
+    goalSoundWarmup.addEventListener("error", () => {
+      console.warn("Goal sound file failed to load:", GOAL_SOUND_URL);
+    });
+
+    function renderSoundToggle() {
+      const buttons = document.querySelectorAll(".sound-toggle-btn");
+      if (!buttons.length) return;
+
+      buttons.forEach(btn => {
+        btn.classList.toggle("is-on", goalSoundEnabled);
+        btn.classList.toggle("is-off", !goalSoundEnabled);
+        btn.setAttribute("aria-pressed", goalSoundEnabled ? "true" : "false");
+        btn.setAttribute("aria-label", goalSoundEnabled ? "Выключить звук голов" : "Включить звук голов");
+
+        const icon = btn.querySelector(".sound-toggle-icon");
+        const text = btn.querySelector(".sound-toggle-text");
+        if (icon) icon.textContent = goalSoundEnabled ? "🔊" : "🔇";
+        if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук офф";
+      });
+    }
+
+    async function unlockGoalSound(playPreview = false) {
+      if (goalSoundUnlocked && !playPreview) return true;
+
+      try {
+        goalSoundWarmup.currentTime = 0;
+        goalSoundWarmup.volume = playPreview ? 0.48 : 0.001;
+        await goalSoundWarmup.play();
+
+        if (!playPreview) {
+          goalSoundWarmup.pause();
+          goalSoundWarmup.currentTime = 0;
+        }
+
+        goalSoundWarmup.volume = 0.72;
+        goalSoundUnlocked = true;
+        return true;
+      } catch (err) {
+        console.warn("Goal sound unlock failed", err);
+        return false;
+      }
+    }
+
+    function bindDeferredGoalSoundUnlock() {
+      if (goalSoundUnlockBound) return;
+      goalSoundUnlockBound = true;
+
+      const unlockOnce = async () => {
+        if (goalSoundEnabled && !goalSoundUnlocked) {
+          await unlockGoalSound(false);
+        }
+
+        window.removeEventListener("pointerdown", unlockOnce, true);
+        window.removeEventListener("touchstart", unlockOnce, true);
+        window.removeEventListener("keydown", unlockOnce, true);
+      };
+
+      window.addEventListener("pointerdown", unlockOnce, true);
+      window.addEventListener("touchstart", unlockOnce, true);
+      window.addEventListener("keydown", unlockOnce, true);
+    }
+
+    function playGoalSound(uid, home, away) {
+      if (!goalSoundEnabled || !goalSoundUnlocked) return;
+
+      const scoreKey = `${home}-${away}`;
+      if (notifiedLiveScoreByUid.get(uid) === scoreKey) return;
+      notifiedLiveScoreByUid.set(uid, scoreKey);
+
+      try {
+        const audio = makeGoalAudio();
+        audio.play().catch(err => console.warn("Goal sound play failed", err));
+      } catch (err) {
+        console.warn("Goal sound create failed", err);
+      }
+    }
+
+    function bindSoundToggle() {
+      const buttons = document.querySelectorAll(".sound-toggle-btn");
+      if (!buttons.length) return;
+
+      renderSoundToggle();
+      bindDeferredGoalSoundUnlock();
+
+      buttons.forEach(btn => {
+        if (btn.dataset.bound === "1") return;
+        btn.dataset.bound = "1";
+
+        btn.addEventListener("click", async () => {
+          goalSoundEnabled = !goalSoundEnabled;
+          localStorage.setItem(GOAL_SOUND_STORAGE_KEY, goalSoundEnabled ? "1" : "0");
+          renderSoundToggle();
+
+          if (goalSoundEnabled) {
+            // A small confirmation chirp also counts as the user gesture needed
+            // by Chrome/Safari to permit later automatic goal sounds.
+            await unlockGoalSound(true);
+          } else {
+            goalSoundUnlocked = false;
+          }
+        });
+      });
+    }
 
     function liveMatchKey(teams, date, time) {
       const normTeams = String(teams || "")
         .toLowerCase()
         .replace(/ё/g, "е")
-        .replace(/[^a-zа-я0-9]+/gi, " " )
+        .replace(/[^a-zа-я0-9]+/gi, " ")
         .trim()
-        .replace(/\s+/g, " " );
+        .replace(/\s+/g, " ");
       return `${normTeams}|${String(date || "").trim()}|${String(time || "").trim()}`;
     }
 
@@ -6102,11 +7590,13 @@ button.achievement-item {
       });
 
       liveByMatchKey = new Map();
+      liveByUid = new Map();
+
       liveRows.forEach(row => {
-        const uid = String(get(row, ["match_uid", "uid", "A"]));
-        const source = fixtureByUid.get(uid);
-        if (!source) return;
-        liveByMatchKey.set(liveMatchKey(source.match, source.date, source.time), {
+        const uid = String(get(row, ["match_uid", "uid", "A"])).trim();
+        if (!uid) return;
+
+        const liveData = {
           uid,
           phase: String(get(row, ["phase", "C"])).toUpperCase(),
           status: String(get(row, ["status", "D"])).toUpperCase(),
@@ -6115,38 +7605,196 @@ button.achievement-item {
           away: get(row, ["away_score", "G"]),
           score: get(row, ["score", "H"]),
           updatedAt: get(row, ["updated_at", "K"])
-        });
+        };
+
+        const currentHome = String(liveData.home ?? "").trim();
+        const currentAway = String(liveData.away ?? "").trim();
+        const previousScore = previousLiveScoreByUid.get(uid);
+        const previousPhase = previousLivePhaseByUid.get(uid);
+
+        // Do not flash on the very first page load. Flash only when a later poll
+        // reports a changed score while the match is actually live.
+        if (
+          previousScore &&
+          liveData.phase === "LIVE" &&
+          currentHome !== "" &&
+          currentAway !== ""
+        ) {
+          const changedHome = previousScore.home !== currentHome;
+          const changedAway = previousScore.away !== currentAway;
+
+          if (changedHome || changedAway) {
+            const previousFlash = liveGoalFlashUntilByUid.get(uid) || {};
+            liveGoalFlashUntilByUid.set(uid, {
+              home: changedHome ? Date.now() + LIVE_GOAL_FLASH_MS : (previousFlash.home || 0),
+              away: changedAway ? Date.now() + LIVE_GOAL_FLASH_MS : (previousFlash.away || 0)
+            });
+
+            playGoalSound(uid, currentHome, currentAway);
+
+            // A popup is a real goal only when the score increased.
+            // Score corrections/VAR rollbacks may still update the main score,
+            // but they do not create a false "ГОЛ!" notification.
+            const prevHomeNum = Number(previousScore.home);
+            const prevAwayNum = Number(previousScore.away);
+            const curHomeNum = Number(currentHome);
+            const curAwayNum = Number(currentAway);
+
+            const scoredHome =
+              Number.isFinite(prevHomeNum) &&
+              Number.isFinite(curHomeNum) &&
+              curHomeNum > prevHomeNum;
+
+            const scoredAway =
+              Number.isFinite(prevAwayNum) &&
+              Number.isFinite(curAwayNum) &&
+              curAwayNum > prevAwayNum;
+
+            if (scoredHome || scoredAway) {
+              showGoalToast(liveData, scoredHome, scoredAway, fixtureByUid.get(uid) || null);
+            }
+          }
+        }
+
+        // Match-finished popup: only on a later poll when a previously seen
+        // match transitions into FINISHED. This avoids false notifications on page load.
+        if (
+          previousPhase &&
+          previousPhase !== "FINISHED" &&
+          liveData.phase === "FINISHED" &&
+          currentHome !== "" &&
+          currentAway !== ""
+        ) {
+          showFinishedToast(liveData, fixtureByUid.get(uid) || null);
+        }
+
+        if (currentHome !== "" && currentAway !== "") {
+          previousLiveScoreByUid.set(uid, {
+            home: currentHome,
+            away: currentAway
+          });
+        }
+
+        previousLivePhaseByUid.set(uid, liveData.phase);
+
+        // Primary binding: stable match_uid shared by site_matches / tech_fixtures / tech_live.
+        liveByUid.set(uid, liveData);
+
+        // Backward-compatible fallback for old rows/pages without match_uid.
+        const source = fixtureByUid.get(uid);
+        if (source) {
+          liveByMatchKey.set(
+            liveMatchKey(source.match, source.date, source.time),
+            liveData
+          );
+        }
       });
     }
 
     function liveScoreData(match) {
-      const live = liveByMatchKey.get(liveMatchKey(match.teams, match.date, match.time));
+      // UID is authoritative. Name/date/time matching is only a fallback because
+      // display labels can differ from tech_fixtures (date_label, dashes, spelling, etc.).
+      const uid = String(match?.matchUid || "").trim();
+      const live = (uid ? liveByUid.get(uid) : null)
+        || liveByMatchKey.get(liveMatchKey(match.teams, match.date, match.time));
+
       if (!live || !live.score) return null;
 
       if (live.phase === "LIVE") {
         let clock = "LIVE";
-        if (live.status === "HT") clock = "ПЕРЕРЫВ";
+        if (live.status === "HT") clock = "ПЕР";
         else if (live.status === "P") clock = "ПЕН.";
         else if (live.minute !== "" && live.minute !== null && live.minute !== undefined) clock = String(live.minute);
-        return { score: live.score, clock, live: true, minuteNumber: live.minute !== "" && live.minute !== null && live.minute !== undefined && live.status !== "HT" && live.status !== "P" };
+        const home = String(live.home ?? "").trim();
+        const away = String(live.away ?? "").trim();
+        const flashUntil = liveGoalFlashUntilByUid.get(live.uid) || {};
+        const nowMs = Date.now();
+
+        return {
+          score: live.score,
+          home,
+          away,
+          isDraw: home !== "" && away !== "" && home === away,
+          flashHome: Number(flashUntil.home || 0) > nowMs,
+          flashAway: Number(flashUntil.away || 0) > nowMs,
+          clock,
+          live: true,
+          minuteNumber: live.minute !== "" && live.minute !== null && live.minute !== undefined && live.status !== "HT" && live.status !== "P"
+        };
       }
 
       // A FINISHED row may appear in tech_live before Sheets receives the official FT score.
-      // It is still display-only: match.status remains pending until Sheets formulas change it.
-      if (live.phase === "FINISHED") return { score: live.score, clock: "FT", live: false };
+      // Display it immediately; Sheets remains authoritative for win/lose state.
+      if (live.phase === "FINISHED") {
+        const home = String(live.home ?? "").trim();
+        const away = String(live.away ?? "").trim();
+        return {
+          score: live.score,
+          home,
+          away,
+          isDraw: home !== "" && away !== "" && home === away,
+          flashHome: false,
+          flashAway: false,
+          clock: "FT",
+          live: false
+        };
+      }
       return null;
     }
 
     async function refreshLiveFromSheets() {
-      try {
-        const [liveRows, fixtureRows] = await Promise.all([
-          loadTab(TABS.live).catch(() => []),
-          loadTab(TABS.fixtures).catch(() => [])
-        ]);
-        buildLiveIndex(liveRows, fixtureRows);
+      // Live data must be "sticky": a temporary network/VPN/API failure must
+      // NOT erase the last good score and turn it back into an hourglass.
+      const [liveResult, fixtureResult, matchResult] = await Promise.allSettled([
+        loadTab(TABS.live),
+        loadTab(TABS.fixtures),
+        loadTab(TABS.matches)
+      ]);
+
+      let changed = false;
+
+      if (
+        liveResult.status === "fulfilled" &&
+        Array.isArray(liveResult.value)
+      ) {
+        // Notifications from the previous successful poll expire here (~30 s).
+        clearGoalToasts();
+
+        const fixtureRows =
+          fixtureResult.status === "fulfilled" &&
+          Array.isArray(fixtureResult.value)
+            ? fixtureResult.value
+            : [];
+
+        buildLiveIndex(liveResult.value, fixtureRows);
+        changed = true;
+      } else {
+        console.warn(
+          "X League live refresh failed; keeping last good live snapshot",
+          liveResult.status === "rejected" ? liveResult.reason : liveResult.value
+        );
+      }
+
+      // site_matches is the authoritative settled state (win/lose/cancelled).
+      // If this refresh fails, keep the previous in-memory matches as well.
+      if (
+        matchResult.status === "fulfilled" &&
+        Array.isArray(matchResult.value) &&
+        matchResult.value.length
+      ) {
+        matches = matchResult.value.map(mapMatchRow).filter(x => x.id && x.teams);
+        matchById = new Map(matches.map(x => [x.id, x]));
+        changed = true;
+      } else if (matchResult.status === "rejected") {
+        console.warn(
+          "X League site_matches refresh failed; keeping previous snapshot",
+          matchResult.reason
+        );
+      }
+
+      if (changed) {
         renderMatches();
-      } catch (err) {
-        console.warn("X League tech_live unavailable", err);
+        renderResultsTicker();
       }
     }
 
@@ -6199,6 +7847,8 @@ button.achievement-item {
       sitePlayoff = playoffRows;
       siteConfig = rowsToConfig(cfgRows);
       matchById = new Map(matches.map(x => [x.id, x]));
+      renderResultsTicker();
+      initResultsTickerToggle();
 
       const currentTour = toNum(siteConfig.current_tour || siteConfig.currentTour || siteConfig["current tour"], 0);
       if (currentTour) selectedTour = currentTour;
@@ -6289,6 +7939,10 @@ function scoreByMatchId(id) {
     function normalizeStatus(value, resultValue) {
       const raw = String(value ?? "").trim().toLowerCase();
       const res = String(resultValue ?? "").trim();
+      const resultNum = toNum(res, NaN);
+
+      // A void result from Sheets is authoritative even if a stale machine status still says pending.
+      if (res.toLowerCase() === "x" || raw.includes("🚫")) return "cancelled";
 
       // Machine statuses from site_matches!K: pending / win / lose / cancelled
       if (["pending", "win", "lose", "cancelled"].includes(raw)) return raw;
@@ -6296,20 +7950,38 @@ function scoreByMatchId(id) {
       // Human-readable statuses from Sheets
       if (raw.includes("cancel") || raw.includes("postpon") || raw.includes("отмен") || raw.includes("перен")) return "cancelled";
       if (raw.includes("⏳") || raw.includes("pending") || raw.includes("active")) return "pending";
-      if (raw.includes("✅") || raw.includes("win") || raw.includes("draw") || res === "1") return "win";
-      if (raw.includes("❌") || raw.includes("lose") || raw.includes("loss") || res === "0") return "lose";
 
-      return "cancelled";
+      // Sheets may serialize result cells as 0, 0.0, 0,0 / 1, 1.0, 1,0.
+      // Treat their numeric value as authoritative instead of comparing only exact strings.
+      if (raw.includes("✅") || raw.includes("win") || raw.includes("draw") || resultNum === 1) return "win";
+      if (raw.includes("❌") || raw.includes("lose") || raw.includes("loss") || resultNum === 0) return "lose";
+
+      // Unknown/blank state must never masquerade as a cancelled match.
+      return "pending";
     }
 
     function normalizeDate(value) {
       const raw = String(value ?? "").trim();
       if (!raw) return "";
-      const m = raw.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})$/);
+
+      // X League sheet dates are day-first.
+      // Explicitly parse DD.MM[.YYYY] before Date(), because JS interprets
+      // ambiguous strings such as "05.09" as MM.DD in some browsers.
+      let m = raw.match(/^(\d{1,2})[.\/-](\d{1,2})$/);
+      if (m) {
+        const yyyy = String(new Date().getFullYear());
+        return `${yyyy}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+      }
+
+      m = raw.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{2,4})$/);
       if (m) {
         const yyyy = m[3].length === 2 ? `20${m[3]}` : m[3];
         return `${yyyy}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
       }
+
+      // ISO YYYY-MM-DD remains safe and unambiguous.
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+
       const d = new Date(raw);
       if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10);
       return raw;
@@ -6333,11 +8005,155 @@ function scoreByMatchId(id) {
         sortDate: normalizeDate(dateRaw),
         time: get(row, ["time", "Time", "Время", "время"], ""),
         teams: get(row, ["match", "Match", "Матч", "Матчи", "match_name", "teams"], "Unknown match"),
+        matchUid: String(get(row, ["match_uid", "match uid", "uid", "Match UID", "M"], "")).trim(),
         score: get(row, ["score", "Score", "Счёт", "Счет", "счёт"], ""),
         status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
         api_status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
         popularity: toNum(get(row, ["popularity", "stars", "Популярность"], 0), 0)
       };
+    }
+
+
+    function updateResultsTickerSpeed() {
+      const track = document.getElementById("resultsTickerTrack");
+      if (!track) return;
+
+      const firstGroup = track.querySelector(".results-ticker-group");
+      if (!firstGroup) return;
+
+      // Keep one constant visual speed regardless of how long the ticker content is.
+      // Two identical groups are rendered, so -50% remains a seamless loop.
+      const pixelsPerSecond = 40;
+      const groupWidth = firstGroup.getBoundingClientRect().width;
+      if (!groupWidth) return;
+
+      const duration = Math.max(24, groupWidth / pixelsPerSecond);
+      track.style.animationDuration = `${duration}s`;
+
+      // Restart from the beginning after content changes so the duplicated groups
+      // stay perfectly aligned when the ticker switches between table/results.
+      track.style.animationName = "none";
+      void track.offsetWidth;
+      track.style.animationName = "xleagueTicker";
+    }
+
+    function scheduleResultsTickerSpeedUpdate() {
+      requestAnimationFrame(() => requestAnimationFrame(updateResultsTickerSpeed));
+    }
+
+    function renderResultsTicker() {
+      const ticker = document.getElementById("resultsTicker");
+      const track = document.getElementById("resultsTickerTrack");
+      if (!ticker || !track) return;
+
+      const esc = (value) => String(value ?? "")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+      // Для тикера текущим считается только тур со статусом active.
+      // Если активного тура нет, мы между турами и показываем общую таблицу.
+      const activeTourRow = siteTours.find(row => {
+        const status = String(get(row, ["status", "Status", "Статус"], ""))
+          .trim().toLowerCase();
+        return status === "active";
+      });
+
+      const activeTour = activeTourRow
+        ? toNum(get(activeTourRow, ["tour", "Tour", "Тур"]), 0)
+        : 0;
+
+      const currentResults = activeTour
+        ? matches
+            .filter(m =>
+              Number(m.tour) === activeTour &&
+              m.score &&
+              (m.status === "win" || m.status === "lose")
+            )
+            .sort((a, b) => {
+              // Stable newest-first order for the ticker.
+              // Use real timestamps instead of lexicographic date strings.
+              const diff = getMatchTimestamp(b) - getMatchTimestamp(a);
+              if (diff !== 0) return diff;
+
+              // Stable fallback for matches with the same kickoff time.
+              return Number(b.id || 0) - Number(a.id || 0);
+            })
+        : [];
+
+      const showOverall = !activeTour || currentResults.length === 0;
+
+      if (showOverall && siteOverall.length) {
+        const rows = siteOverall.slice()
+          .sort((a,b) => (a.rank || 9999) - (b.rank || 9999) || b.total - a.total);
+
+        const moveHtml = (value) => {
+          const raw = String(value || "—").trim();
+          const upper = raw.toUpperCase();
+          if (raw.startsWith("⬆") || raw.startsWith("↑"))
+            return '<span class="results-ticker-move up">▲</span>';
+          if (raw.startsWith("⬇") || raw.startsWith("↓"))
+            return '<span class="results-ticker-move down">▼</span>';
+          if (upper.includes("NEW"))
+            return '<span class="results-ticker-move new">NEW</span>';
+          return '<span class="results-ticker-move same">—</span>';
+        };
+
+        const item = (r,i) => `<span class="results-ticker-item standing">
+          <span class="results-ticker-rank">${esc(r.rank || i + 1)}.</span>
+          <span class="results-ticker-player">${esc(r.name)}</span>
+          <span class="results-ticker-points">${esc(r.total)} оч.</span>
+          ${moveHtml(r.move)}
+          <span class="results-ticker-sep">◆</span>
+        </span>`;
+
+        const group = rows.map(item).join("");
+        track.innerHTML =
+          `<div class="results-ticker-group">${group}</div>` +
+          `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
+        ticker.classList.remove("hidden");
+        scheduleResultsTickerSpeedUpdate();
+        return;
+      }
+
+      const finished = currentResults.slice(0, 10);
+      if (!finished.length) {
+        ticker.classList.add("hidden");
+        track.innerHTML = "";
+        return;
+      }
+
+      const item = (m) => {
+        const score = String(m.score || "").trim();
+        const nums = score.match(/(\d+)\s*[-–—:]\s*(\d+)/);
+        const isDraw = m.status === "win" || !!(nums && nums[1] === nums[2]);
+        const flag = m.flag_url
+          ? `<img class="results-ticker-flag" src="${esc(m.flag_url)}" alt="">`
+          : (m.flag ? `<span>${esc(m.flag)}</span>` : "");
+
+        return `<span class="results-ticker-item${isDraw ? " draw" : ""}">
+          ${flag}<span>${esc(m.teams)}</span>
+          <span class="results-ticker-score${isDraw ? " draw" : ""}">${esc(score)}</span>
+          <span class="results-ticker-sep">◆</span>
+        </span>`;
+      };
+
+      const group = finished.map(item).join("");
+      track.innerHTML =
+        `<div class="results-ticker-group">${group}</div>` +
+        `<div class="results-ticker-group" aria-hidden="true">${group}</div>`;
+      ticker.classList.remove("hidden");
+      scheduleResultsTickerSpeedUpdate();
+    }
+
+
+    function initResultsTickerToggle() {
+      const ticker = document.getElementById("resultsTicker");
+      if (!ticker || ticker.dataset.toggleReady === "1") return;
+
+      ticker.dataset.toggleReady = "1";
+      ticker.addEventListener("click", () => {
+        ticker.classList.toggle("paused");
+      });
     }
 
 function mapPredictionRow(row) {
@@ -6361,7 +8177,7 @@ function mapPredictionRow(row) {
     bonus: toNum(get(row, ["bonus", "Bonus", "Q"])),
     odd: toNum(get(row, ["total_odd", "total odd", "S", "express_odd"])),
     move: get(row, ["move", "movement", "status"], "—"),
-    picks: [pick(1), pick(2), pick(3)].filter(p => p.matchId || p.match)
+    picks: [pick(1), pick(2), pick(3),pick(4)].filter(p => p.matchId || p.match)
   };
 }
     function mapOverallRow(row) {
@@ -6388,54 +8204,54 @@ function mapPredictionRow(row) {
     }
 
     async function loadSheetsData() {
-      if (!SHEET_ID || SHEET_ID === "PASTE_YOUR_SPREADSHEET_ID_HERE") {
-        console.warn("SHEET_ID is not set. Demo data is used.");
-        return false;
-      }
-
       try {
-      const [
-  m,
-  p,
-  t,
-  o,
-  pl,
-  a,
-  rh,
-  toursRows,
-  playoffRows,
-  cfgRows
-] = await Promise.all([
-  loadTab(TABS.matches),
-  loadTab(TABS.predictions),
-  loadTab(TABS.table).catch(() => []),
-  loadTab(TABS.overall).catch(() => []),
-  loadTab(TABS.players).catch(() => []),
-  loadTab(TABS.achievements).catch(() => []),
-  loadTab(TABS.rankHistory).catch(() => []),
-  loadTab(TABS.tours).catch(() => []),
-  loadTab(TABS.playoff).catch(() => []),
-  loadTab(TABS.config).catch(() => [])
-]);
+        // Startup uses one VPS disk-cache request instead of many sheet requests.
+        const bootstrap = await fetchJsonWithTimeout(BOOTSTRAP_API);
+        if (!bootstrap || bootstrap.ok !== true || !bootstrap.data) {
+          throw new Error("Invalid bootstrap response");
+        }
 
-        const payload = { m, p, t, o, pl, a, rh, toursRows, playoffRows, cfgRows };
+        const d = bootstrap.data;
+        const payload = {
+          m: d[TABS.matches] || [],
+          p: d[TABS.predictions] || [],
+          t: d[TABS.table] || [],
+          o: d[TABS.overall] || [],
+          pl: d[TABS.players] || [],
+          a: d[TABS.achievements] || [],
+          rh: d[TABS.rankHistory] || [],
+          toursRows: d[TABS.tours] || [],
+          playoffRows: d[TABS.playoff] || [],
+          cfgRows: d[TABS.config] || []
+        };
+
         applySheetsPayload(payload);
         saveCachedSheetsData(payload);
         hideDataNotice();
         return true;
       } catch (err) {
-        console.error("Google Sheets loading failed.", err);
+        console.error("Bootstrap loading failed.", err);
         const cached = readCachedSheetsData();
         if (cached) {
           applySheetsPayload(cached);
-          showDataNotice("Показаны последние сохранённые данные. Обновление Google Sheets не ответило вовремя.");
+          showDataNotice("Показаны последние сохранённые данные. Свежие данные временно недоступны.");
           return true;
         }
-        showDataNotice("Данные Google Sheets не загрузились. Показан демо-режим, попробуйте обновить страницу позже.");
+        matches = [];
+        predictions = [];
+        siteTable = [];
+        siteOverall = [];
+        sitePlayers = [];
+        siteAchievements = [];
+        siteTours = [];
+        sitePlayoff = [];
+        rankHistory = [];
+        siteConfig = {};
+        matchById = new Map();
+        showDataNotice("Не удалось загрузить данные. Попробуйте открыть сайт ещё раз чуть позже.");
         return false;
       }
     }
-
 
     function applyStagger(containerSelector, itemSelector, maxItems = 14) {
       const container = document.querySelector(containerSelector);
@@ -6585,23 +8401,34 @@ function mapPredictionRow(row) {
     }
 
     function matchStatus(match) {
-      const liveData = liveScoreData(match);
+      const status = match.api_status || match.status || "pending";
 
-      // Live state only changes what the visitor sees.
-      // It does NOT turn a pending Google Sheets row into WIN/LOSE.
-      if (match.status === "pending") {
+      if (status === "pending") {
+        const liveData = liveScoreData(match);
         if (liveData) {
           const clockClass = liveData.live ? "live-minute" : "live-minute live-label";
           const clockHtml = liveData.minuteNumber
             ? `<span class="live-minute-number">${escapeHtml(liveData.clock)}</span><span class="live-minute-apostrophe">'</span>`
             : escapeHtml(liveData.clock);
-          return `<span class="match-status pending live-score-status"><span class="live-score-value">${escapeHtml(liveData.score)}</span><span class="${clockClass}">${clockHtml}</span></span>`;
+
+          const scoreToneClass = liveData.isDraw ? "live-score-draw" : "live-score-behind";
+          const hasSplitScore = liveData.home !== "" && liveData.away !== "";
+
+          const scoreHtml = hasSplitScore
+            ? `<span class="live-score-value ${scoreToneClass}">
+                 <span class="live-score-digit${liveData.flashHome ? " live-score-digit-flash" : ""}">${escapeHtml(liveData.home)}</span>
+                 <span class="live-score-separator">-</span>
+                 <span class="live-score-digit${liveData.flashAway ? " live-score-digit-flash" : ""}">${escapeHtml(liveData.away)}</span>
+               </span>`
+            : `<span class="live-score-value ${scoreToneClass}">${escapeHtml(liveData.score)}</span>`;
+
+          return `<span class="match-status pending live-score-status">${scoreHtml}<span class="${clockClass}">${clockHtml}</span></span>`;
         }
         return `<span class="match-status pending">⏳</span>`;
       }
 
-      // Once Sheets has an official result, Sheets remains authoritative.
-      if (match.status === "win") return `<span class="match-status win">${escapeHtml(match.score)} ✅</span>`;
+      if (status === "cancelled") return `<span class="match-status cancelled">отм</span>`;
+      if (status === "win") return `<span class="match-status win">${escapeHtml(match.score)} ✅</span>`;
       return `<span class="match-status lose">${escapeHtml(match.score)} ❌</span>`;
     }
 
@@ -6612,7 +8439,9 @@ function mapPredictionRow(row) {
             <div style="min-width:0;">
               <div class="match-meta-line">
                 <div class="match-meta">${escapeHtml(match.date)} · ${escapeHtml(match.time)}</div>
-                ${starsHtml(match.popularity)}
+                <button type="button" class="match-stars-picker" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">
+                  ${starsHtml(match.popularity, false)}
+                </button>
               </div>
               <div class="match-title-row"><span class="match-flag">${flagHtml(match.flag_url || match.flag)}</span><div class="match-name">${escapeHtml(match.teams)}</div></div>
             </div>
@@ -6738,41 +8567,26 @@ function mapPredictionRow(row) {
       if (indicator) indicator.textContent = tourLabel(current) || `Тур ${current}`;
 
   
-    const countryHistoryModal = document.getElementById("countryHistoryModal");
-    const countryHistoryClose = document.getElementById("countryHistoryClose");
-    const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
+    // IMPORTANT: populateTourControls() runs on every renderAll().
+    // Bind global picker/modal handlers only once, otherwise every refresh
+    // stacks another pointerup/click listener and one tap can toggle the popup
+    // open/closed multiple times (often ending invisible on mobile).
+    if (document.documentElement.dataset.pickerEventsBound !== "1") {
+      document.documentElement.dataset.pickerEventsBound = "1";
+      const countryHistoryModal = document.getElementById("countryHistoryModal");
+      const countryHistoryClose = document.getElementById("countryHistoryClose");
+      const countryHistoryBackdrop = document.getElementById("countryHistoryBackdrop");
 
-    document.addEventListener("click", (event) => {
-      const countryRow = event.target.closest(".chart-row[data-country]");
-      if (countryRow) {
-        openCountryHistory(countryRow.dataset.country || "");
-        return;
-      }
-
-      const continentRow = event.target.closest(".chart-row[data-continent]");
-      if (continentRow) {
-        openContinentHistory(continentRow.dataset.continent || "");
-        return;
-      }
-
-      const tourHeader = event.target.closest(".country-tour-title");
-      if (tourHeader) {
-        const group = tourHeader.closest(".country-tour-group");
-        if (group) {
-          const willOpen = !group.classList.contains("is-open");
-          group.classList.toggle("is-open", willOpen);
-          tourHeader.setAttribute("aria-expanded", willOpen ? "true" : "false");
-        }
-        return;
-      }
-
-      const stars = event.target.closest(".country-history-stars");
-      if (stars) {
-        event.preventDefault();
-        event.stopPropagation();
+      // Unified star-picker interaction.
+      // On touch devices use pointerup directly; relying only on synthetic click
+      // proved unreliable in Android Chrome and could also be swallowed by parent rows.
+      let lastPickerTouchAt = 0;
+      // Mobile: keep deliberate long-press behaviour to avoid accidental taps.
+      function toggleMatchPickers(anchor) {
+        if (!anchor) return;
 
         const pop = document.getElementById("globalPickersPopover");
-        const matchId = String(stars.dataset.matchPickers || "");
+        const matchId = String(anchor.dataset.matchPickers || "");
         const sameMatch = pop?.dataset.matchId === matchId;
         const visible = pop?.classList.contains("is-visible");
 
@@ -6780,79 +8594,146 @@ function mapPredictionRow(row) {
           hideGlobalPickersPopover();
         } else {
           if (pop) pop.dataset.matchId = matchId;
-          showGlobalPickersPopover(stars, matchId);
+          showGlobalPickersPopover(anchor, matchId);
         }
-        return;
       }
 
-      if (!event.target.closest("#globalPickersPopover")) hideGlobalPickersPopover();
-    });
+      document.addEventListener("pointerup", (event) => {
+        const picker = event.target.closest?.("[data-match-pickers]");
+        if (!picker) return;
 
+        // Finger taps intentionally do not toggle the picker.
+        // On Android a deliberate long press exposes the existing hover-style
+        // popover, which is less prone to accidental activation while scrolling.
+        if (event.pointerType === "touch") return;
 
-    document.getElementById("pickerMobileBackdrop")?.addEventListener("click", hideGlobalPickersPopover);
+        const isCoarsePointer =
+          event.pointerType === "pen" ||
+          window.matchMedia("(pointer:coarse)").matches;
 
-    document.addEventListener("mouseover", (event) => {
-      const stars = event.target.closest(".country-history-stars");
-      if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
-      const pop = document.getElementById("globalPickersPopover");
-      if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
-      showGlobalPickersPopover(stars, stars.dataset.matchPickers);
-    });
+        if (!isCoarsePointer) return;
 
-    document.addEventListener("mouseout", (event) => {
-      const stars = event.target.closest(".country-history-stars");
-      if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+        event.preventDefault();
+        event.stopPropagation();
+        lastPickerTouchAt = Date.now();
+        toggleMatchPickers(picker);
+      }, { passive: false });
 
-      // Give the cursor a moment to move into the global popover.
-      setTimeout(() => {
-        const pop = document.getElementById("globalPickersPopover");
-        if (!pop) return;
-        if (!pop.matches(":hover") && !stars.matches(":hover")) hideGlobalPickersPopover();
-      }, 70);
-    });
-
-        const globalPickersPopover = document.getElementById("globalPickersPopover");
-    if (globalPickersPopover) {
-      globalPickersPopover.addEventListener("mouseleave", () => {
-        if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
-          hideGlobalPickersPopover();
-        }
-      });
-    }
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        const active = document.activeElement;
-        const row = active?.closest?.(".chart-row[data-country]");
-        if (row) {
+      document.addEventListener("click", (event) => {
+        // Star controls get first priority over clickable country/continent rows.
+        const stars = event.target.closest?.("[data-match-pickers]");
+        if (stars) {
           event.preventDefault();
-          openCountryHistory(row.dataset.country || "");
+          event.stopPropagation();
+
+          // Android may emit a synthetic click after pointerup. Do not toggle twice.
+          if (Date.now() - lastPickerTouchAt < 700) return;
+
+          toggleMatchPickers(stars);
           return;
         }
 
-        const continentRow = active?.closest?.(".chart-row[data-continent]");
+        const countryRow = event.target.closest(".chart-row[data-country]");
+        if (countryRow) {
+          openCountryHistory(countryRow.dataset.country || "");
+          return;
+        }
+
+        const continentRow = event.target.closest(".chart-row[data-continent]");
         if (continentRow) {
-          event.preventDefault();
           openContinentHistory(continentRow.dataset.continent || "");
           return;
         }
-        const tourHeader = active?.closest?.(".country-tour-title");
+
+        const tourHeader = event.target.closest(".country-tour-title");
         if (tourHeader) {
-          event.preventDefault();
-          tourHeader.click();
+          const group = tourHeader.closest(".country-tour-group");
+          if (group) {
+            const willOpen = !group.classList.contains("is-open");
+            group.classList.toggle("is-open", willOpen);
+            tourHeader.setAttribute("aria-expanded", willOpen ? "true" : "false");
+          }
           return;
         }
-      }
-      if (event.key === "Escape" && countryHistoryModal && !countryHistoryModal.classList.contains("hidden")) {
-        closeCountryHistory();
-      }
-    });
 
-    if (countryHistoryClose) countryHistoryClose.addEventListener("click", closeCountryHistory);
-    if (countryHistoryBackdrop) countryHistoryBackdrop.addEventListener("click", closeCountryHistory);
+        if (!event.target.closest("#globalPickersPopover")) hideGlobalPickersPopover();
+      });
 
-    window.addEventListener("resize", hideGlobalPickersPopover);
-    document.querySelector(".country-history-card")?.addEventListener("scroll", hideGlobalPickersPopover, { passive: true });
+      document.getElementById("pickerMobileBackdrop")?.addEventListener("click", hideGlobalPickersPopover);
+
+      document.addEventListener("mouseover", (event) => {
+        const stars = event.target.closest("[data-match-pickers]");
+        if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+        const pop = document.getElementById("globalPickersPopover");
+        if (pop) pop.dataset.matchId = String(stars.dataset.matchPickers || "");
+        showGlobalPickersPopover(stars, stars.dataset.matchPickers);
+      });
+
+      document.addEventListener("mouseout", (event) => {
+        const stars = event.target.closest("[data-match-pickers]");
+        if (!stars || !window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+
+        setTimeout(() => {
+          const pop = document.getElementById("globalPickersPopover");
+          if (!pop) return;
+          if (!pop.matches(":hover") && !stars.matches(":hover")) hideGlobalPickersPopover();
+        }, 70);
+      });
+
+      const globalPickersPopover = document.getElementById("globalPickersPopover");
+      if (globalPickersPopover) {
+        globalPickersPopover.addEventListener("mouseleave", () => {
+          if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
+            hideGlobalPickersPopover();
+          }
+        });
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          const active = document.activeElement;
+
+          const pickerControl = active?.closest?.("[data-match-pickers]");
+          if (pickerControl) {
+            event.preventDefault();
+            const pop = document.getElementById("globalPickersPopover");
+            const matchId = String(pickerControl.dataset.matchPickers || "");
+            if (pop) pop.dataset.matchId = matchId;
+            showGlobalPickersPopover(pickerControl, matchId);
+            return;
+          }
+
+          const row = active?.closest?.(".chart-row[data-country]");
+          if (row) {
+            event.preventDefault();
+            openCountryHistory(row.dataset.country || "");
+            return;
+          }
+
+          const continentRow = active?.closest?.(".chart-row[data-continent]");
+          if (continentRow) {
+            event.preventDefault();
+            openContinentHistory(continentRow.dataset.continent || "");
+            return;
+          }
+          const tourHeader = active?.closest?.(".country-tour-title");
+          if (tourHeader) {
+            event.preventDefault();
+            tourHeader.click();
+            return;
+          }
+        }
+        if (event.key === "Escape" && countryHistoryModal && !countryHistoryModal.classList.contains("hidden")) {
+          closeCountryHistory();
+        }
+      });
+
+      if (countryHistoryClose) countryHistoryClose.addEventListener("click", closeCountryHistory);
+      if (countryHistoryBackdrop) countryHistoryBackdrop.addEventListener("click", closeCountryHistory);
+
+      window.addEventListener("resize", hideGlobalPickersPopover);
+      document.querySelector(".country-history-card")?.addEventListener("scroll", hideGlobalPickersPopover, { passive: true });
+    }
 
     const matchesTourSelect = document.getElementById("matchesTourSelect");
       if (matchesTourSelect) {
@@ -6869,16 +8750,28 @@ function mapPredictionRow(row) {
     const tableSelect = document.getElementById("tableSelect");
       if (tableSelect) {
         const previous = tableSelect.value;
+        const alreadyInitialized = tableSelect.dataset.tourInitialized === "1";
+
         tableSelect.innerHTML =
           regularOptions +
           `<option value="overall">🏆 Общая таблица</option>` +
           playoffOption;
 
-        if (previous && [...tableSelect.options].some(o => o.value === previous)) {
+        // On the first real data load always open the actual current stage.
+        // After that, preserve a user's manual selection while the page is open.
+        if (
+          alreadyInitialized &&
+          previous &&
+          [...tableSelect.options].some(o => o.value === previous)
+        ) {
           tableSelect.value = previous;
         } else {
-          tableSelect.value = isPlayoffTour(current) && hasPlayoff ? "playoff" : "overall";
+          tableSelect.value = isPlayoffTour(current) && hasPlayoff
+            ? "playoff"
+            : String(current);
         }
+
+        tableSelect.dataset.tourInitialized = "1";
       }
 
       const achievementModal = document.getElementById("achievementModal");
@@ -6908,16 +8801,28 @@ function mapPredictionRow(row) {
       const tourSelect = document.getElementById("tourSelect");
       if (tourSelect) {
         const previous = tourSelect.value;
+        const alreadyInitialized = tourSelect.dataset.tourInitialized === "1";
+
         tourSelect.innerHTML =
           `<option value="overall">Общая</option>` +
           regularOptions +
           playoffOption;
 
-        if (previous && [...tourSelect.options].some(o => o.value === previous)) {
+        // First opening = actual current stage. Later refreshes keep
+        // whatever the user selected manually.
+        if (
+          alreadyInitialized &&
+          previous &&
+          [...tourSelect.options].some(o => o.value === previous)
+        ) {
           tourSelect.value = previous;
         } else {
-          tourSelect.value = isPlayoffTour(current) && hasPlayoff ? "playoff" : String(current);
+          tourSelect.value = isPlayoffTour(current) && hasPlayoff
+            ? "playoff"
+            : String(current);
         }
+
+        tourSelect.dataset.tourInitialized = "1";
       }
 
       const playerTourSelect = document.getElementById("playerTourSelect");
@@ -6934,19 +8839,36 @@ function mapPredictionRow(row) {
 
     function currentTourMatches() {
       const currentTour = matchesSelectedTour || getDefaultTour();
-      const scoped = currentTour ? matches.filter(m => Number(m.tour) === Number(currentTour)) : matches;
-      return scoped.filter(m => m.status !== "cancelled" && m.api_status !== "cancelled");
+      return currentTour ? matches.filter(m => Number(m.tour) === Number(currentTour)) : matches;
+    }
+
+    function rawLiveDataForMatch(match) {
+      const uid = String(match?.matchUid || "").trim();
+      return (uid ? liveByUid.get(uid) : null)
+        || liveByMatchKey.get(liveMatchKey(match?.teams, match?.date, match?.time));
+    }
+
+    function isMatchLiveFinished(match) {
+      const live = rawLiveDataForMatch(match);
+      return !!live && live.phase === "FINISHED";
     }
 
    function renderMatches() {
   const scopedMatches = currentTourMatches();
 
   const upcoming = scopedMatches
-    .filter(m => m.status === "pending" || m.api_status === "pending")
+    .filter(m =>
+      !isMatchLiveFinished(m) &&
+      (m.status === "pending" || m.api_status === "pending")
+    )
     .sort(compareDateTimeAsc);
 
   const finished = scopedMatches
-    .filter(m => ["win", "lose"].includes(m.status) || ["win", "lose"].includes(m.api_status))
+    .filter(m =>
+      isMatchLiveFinished(m) ||
+      ["win", "lose", "cancelled"].includes(m.status) ||
+      ["win", "lose", "cancelled"].includes(m.api_status)
+    )
     .sort(compareDateTimeDesc);
 
 
@@ -6970,7 +8892,7 @@ if (screenMatches) {
       document.getElementById("upcomingList").innerHTML = showUpcoming
   ? (
       upcoming.length
-        ? (homeLimit ? upcoming.slice(0, 7) : upcoming).map(matchCard).join("")
+        ? (homeLimit ? upcoming.slice(0, 6) : upcoming).map(matchCard).join("")
         : `<div class="empty-state">Текущие матчи отсутствуют</div>`
     )
   : "";
@@ -6979,7 +8901,7 @@ if (screenMatches) {
         ? (homeLimit ? finished.slice(0, 5) : finished).map(matchCard).join("")
         : "";
 
-      document.getElementById("allUpcomingBtn").classList.toggle("hidden", !homeLimit || upcoming.length <= 7);
+      document.getElementById("allUpcomingBtn").classList.toggle("hidden", !homeLimit || upcoming.length <= 6);
       document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= 5);
     }
 
@@ -6987,12 +8909,57 @@ if (screenMatches) {
   const el = document.getElementById("profileRankChart");
   if (!el) return;
 
-  const rows = rankHistory
+  // Completed regular tours come from the frozen historical table.
+  let rows = rankHistory
     .filter(r =>
       String(r.player).trim() === String(playerName).trim() &&
       isRegularTour(r.tour)
     )
-    .sort((a, b) => Number(a.tour) - Number(b.tour));
+    .map(r => ({
+      ...r,
+      tour: Number(r.tour),
+      rank: Number(r.rank),
+      liveCurrent: false
+    }))
+    .filter(r => Number.isFinite(r.tour) && Number.isFinite(r.rank) && r.rank > 0);
+
+  // The active tour is different: its point must show the player's ACTUAL
+  // overall position right now. If rank_history already contains a row for
+  // the active tour, replace that stale/intermediate value instead of using it.
+  const activeTourRow = siteTours.find(row => {
+    const status = String(get(row, ["status", "Status", "Статус", "B"], ""))
+      .trim()
+      .toLowerCase();
+    return status === "active";
+  });
+
+  const activeTour = activeTourRow
+    ? toNum(get(activeTourRow, ["tour", "Tour", "Тур", "A"], 0), 0)
+    : 0;
+
+  const overall = siteOverall.find(p =>
+    String(p.name).trim() === String(playerName).trim()
+  ) || {};
+
+  const currentRank = Number(overall.rank);
+
+  if (
+    activeTour &&
+    isRegularTour(activeTour) &&
+    Number.isFinite(currentRank) &&
+    currentRank > 0
+  ) {
+    // Preserve only completed tours; the active tour gets a live point.
+    rows = rows.filter(r => Number(r.tour) !== Number(activeTour));
+
+    rows.push({
+      tour: Number(activeTour),
+      rank: currentRank,
+      liveCurrent: true
+    });
+  }
+
+  rows.sort((a, b) => Number(a.tour) - Number(b.tour));
 
   if (!rows.length) {
     el.innerHTML = `<div class="empty-state">Нет данных</div>`;
@@ -7013,7 +8980,8 @@ if (screenMatches) {
       x,
       y,
       rank: r.rank,
-      tour: r.tour
+      tour: r.tour,
+      liveCurrent: !!r.liveCurrent
     };
   });
 
@@ -7103,6 +9071,7 @@ if (screenMatches) {
   const resultClass =
     pickResult === "win" ? "pick-win" :
     pickResult === "lose" ? "pick-lose" :
+    pickResult === "cancelled" ? "pick-cancelled" :
     "pick-pending";
 
 
@@ -7554,6 +9523,7 @@ sourceMatches.forEach(match => {
       const status = match.api_status || match.status || "pending";
       if (status === "win") return { cls: "is-win", score: match.score || "Ничья" };
       if (status === "lose") return { cls: "is-lose", score: match.score || "Не ничья" };
+      if (status === "cancelled") return { cls: "is-cancelled", score: "отм" };
       return { cls: "is-pending", score: match.score || "—" };
     }
 
@@ -7570,7 +9540,7 @@ sourceMatches.forEach(match => {
       if (kicker) kicker.textContent = isContinent ? "Матчи континента в X League" : "Матчи страны в X League";
 
       let geoMatches = matches.filter(match => {
-        if (!match || match.api_status === "cancelled" || match.status === "cancelled") return false;
+        if (!match) return false;
         if (Number(match.popularity || 0) <= 0) return false;
 
         const country = cleanCountryName(match.country || "");
@@ -7950,7 +9920,8 @@ sourceMatches.forEach(match => {
       const top3Pts = sortedPoints.length ? sortedPoints[Math.min(2, sortedPoints.length - 1)] : 0;
 
       const picks = rows.flatMap(p => Array.isArray(p.picks) ? p.picks : []);
-      const odds = picks.map(p => toNum(p.odd, NaN)).filter(Number.isFinite);
+      const statsPicks = picks.filter(p => p.result !== "cancelled");
+      const odds = statsPicks.map(p => toNum(p.odd, NaN)).filter(Number.isFinite);
       const settled = picks.filter(p => p.result === "win" || p.result === "lose");
       const wins = settled.filter(p => p.result === "win");
       const losses = settled.filter(p => p.result === "lose");
@@ -8042,9 +10013,7 @@ sourceMatches.forEach(match => {
     }
 
     function updateStats(tour) {
-      const fallback = statsByTour[tour] || statsByTour["5"];
-      const hasRealPredictions = Array.isArray(predictions) && predictions.length && predictions !== DEMO_PREDICTIONS;
-      const s = hasRealPredictions ? calculateRealStats(tour) : fallback;
+      const s = calculateRealStats(tour);
 
       animateStatText("statPlayers", s.players);
       animateStatText("statAvgPts", s.avgPts);
@@ -8076,11 +10045,20 @@ sourceMatches.forEach(match => {
 
       const profit = document.getElementById("statProfit");
       const roi = document.getElementById("statRoi");
-      [profit, roi].forEach(el => {
+
+      const setFinanceColor = (el, value) => {
         if (!el) return;
-        el.classList.toggle("positive", !String(el.textContent).startsWith("-"));
-        el.classList.toggle("negative", String(el.textContent).startsWith("-"));
-      });
+        const numericValue = Number(String(value ?? "0")
+          .replace("%", "")
+          .replace(/\s/g, "")
+          .replace(",", "."));
+
+        el.classList.toggle("positive", numericValue > 0);
+        el.classList.toggle("negative", numericValue < 0);
+      };
+
+      setFinanceColor(profit, s.profit);
+      setFinanceColor(roi, s.roi);
 
       renderTourAchievements(tour);
       updateMetaCharts(tour);
@@ -8209,6 +10187,8 @@ sourceMatches.forEach(match => {
               flag_url: match?.flag_url || "",
               wins: 0,
               losses: 0,
+              cancelled: 0,
+              picks: 0,
               flats: 0
             });
           }
@@ -8218,15 +10198,20 @@ sourceMatches.forEach(match => {
           const result = pick.result || match?.status || "pending";
           const odd = toNum(pick.odd, 0);
           if (result === "win") {
+            row.picks += 1;
             row.wins += 1;
             row.flats += Math.max(0, odd - 1);
           } else if (result === "lose") {
+            row.picks += 1;
             row.losses += 1;
             row.flats -= 1;
+          } else if (result === "cancelled") {
+            row.picks += 1;
+            row.cancelled += 1;
           }
         });
       });
-      return [...map.values()].filter(row => row.wins || row.losses);
+      return [...map.values()].filter(row => row.picks > 0);
     }
 
     function formatFlatValue(value) {
@@ -8352,7 +10337,7 @@ sourceMatches.forEach(match => {
       const displayPrediction = currentPrediction || history[history.length - 1];
       if (!displayPrediction) return;
 
-      const settledPicks = history.flatMap(p => p.picks).filter(p => p.result !== "pending");
+      const settledPicks = history.flatMap(p => p.picks).filter(p => p.result === "win" || p.result === "lose");
       currentCountryRows = playerCountryStats(history);
       bindCountrySorting();
       renderCountryStats(false);
@@ -8409,7 +10394,7 @@ sourceMatches.forEach(match => {
       if (formEl) {
         formEl.innerHTML = formTours.map((picks, tourIndex) => {
           const dots = picks.map(pick => profileDot(
-            pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending"
+            pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : pick.result === "cancelled" ? "cancelled" : "pending"
           )).join("");
           const separator = tourIndex < formTours.length - 1
             ? '<span class="profile-form-separator" aria-hidden="true"></span>'
@@ -8440,7 +10425,7 @@ sourceMatches.forEach(match => {
         } else {
           picksEl.innerHTML = currentPrediction.picks.map((pick, index) => {
             const match = matchById.get(pick.matchId);
-            const resultClass = pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : "pending";
+            const resultClass = pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : pick.result === "cancelled" ? "cancelled" : "pending";
             return `
               <div class="profile-pick-card ${resultClass}">
                 <div class="profile-pick-top">
@@ -8484,14 +10469,27 @@ sourceMatches.forEach(match => {
         const achievements = playerAchievements(playerName);
         achEl.innerHTML = achievements.length ? achievements.map(row => {
           const tour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
+          const code = String(achievementCode(row) || "").trim().toUpperCase();
+          const title = achievementTitle(row);
           const desc = achievementDescription(row);
-          const smallText = desc ? `${desc}${tour ? ` · ${tourLabel(tour)}` : ""}` : (tour ? tourLabel(tour) : "");
+
+          // Compact profile tile standard:
+          // icon -> short achievement tag/code -> tour.
+          // Full human-readable title/description remain in tooltip and modal.
+          const tagText = code || title || "ACHIEVEMENT";
+          const tourText = tour ? tourLabel(tour) : "X League";
+          const tooltipParts = [title || tagText, desc, tourText].filter(Boolean);
+
           return `
-            <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} title="${escapeHtml(smallText ? `${achievementTitle(row)} — ${smallText}` : achievementTitle(row))}" aria-label="Открыть ачивку ${escapeHtml(achievementTitle(row))}">
+            <button type="button"
+              class="achievement-item achievement-clickable achievement-tile-standard"
+              ${achievementTriggerAttributes(row)}
+              title="${escapeHtml(tooltipParts.join(" — "))}"
+              aria-label="Открыть ачивку ${escapeHtml(title || tagText)}">
               <span>${achievementIconHtml(row)}</span>
               <div class="achievement-copy">
-                <strong>${escapeHtml(achievementTitle(row))}</strong>
-                <small>${escapeHtml(smallText)}</small>
+                <strong class="achievement-tile-tag">${escapeHtml(tagText)}</strong>
+                <small class="achievement-tile-tour">${escapeHtml(tourText)}</small>
               </div>
             </button>
           `;
@@ -8502,7 +10500,7 @@ sourceMatches.forEach(match => {
       if (pastEl) {
         const past = history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
         pastEl.innerHTML = past.length ? past.map(p => {
-          const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : "⏳").join("");
+          const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : pick.result === "cancelled" ? "🟡" : "⏳").join("");
 const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
   const pickResult = pick.result || match?.status || "pending";
@@ -8512,6 +10510,7 @@ const picksHtml = p.picks.map((pick, index) => {
   const resultClass =
     pickResult === "win" ? "pick-win" :
     pickResult === "lose" ? "pick-lose" :
+    pickResult === "cancelled" ? "pick-cancelled" :
     "pick-pending";
 
   return `
@@ -9194,51 +11193,56 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
 
     async function boot() {
-      // Сначала мгновенно рисуем интерфейс, чтобы пользователь не видел пустую/вечную загрузку.
+      bindSoundToggle();
+      bindGoalNotifyToggle();
+
+      // Paint immediately from the last good browser snapshot when available.
       const cached = readCachedSheetsData();
       if (cached) {
         applySheetsPayload(cached);
+        renderAll();
       }
-      renderAll();
-      startLivePolling();
 
-      // Потом пробуем подтянуть свежие данные из Google Sheets с таймаутом.
+      // Fresh startup data arrives in one /bootstrap request.
+      // Only after that do we start live polling, avoiding a startup request storm.
       const loaded = await loadSheetsData();
       if (loaded) renderAll();
+      else if (!cached) renderAll();
+
+      startLivePolling();
     }
 
     boot();
-  
-function applyLiveLabels() {
-  document.querySelectorAll(".match-card").forEach(card => {
-    const live = card.querySelector(".live-score, .live-minute, .live-minute-wrap");
-    const meta = card.querySelector(".match-meta");
-    if (!meta) return;
 
-    let label = meta.querySelector(".match-live-label");
+    function applyLiveLabels() {
+      document.querySelectorAll(".match-card").forEach(card => {
+        const live = card.querySelector(".live-score-status .live-minute");
+        const meta = card.querySelector(".match-meta");
+        if (!meta) return;
 
-    if (live) {
-      if (!label) {
-        label = document.createElement("span");
-        label.className = "match-live-label";
-        label.textContent = "LIVE";
-        meta.appendChild(label);
-      }
-    } else if (label) {
-      label.remove();
+        let label = meta.querySelector(".match-live-label");
+
+        if (live) {
+          if (!label) {
+            label = document.createElement("span");
+            label.className = "match-live-label";
+            label.innerHTML = '<span class="match-live-dot" aria-hidden="true"></span>LIVE';
+            meta.appendChild(label);
+          }
+        } else if (label) {
+          label.remove();
+        }
+      });
     }
-  });
-}
 
+    const liveLabelObserver = new MutationObserver(() => {
+      requestAnimationFrame(applyLiveLabels);
+    });
 
-const liveLabelObserver = new MutationObserver(() => {
-  requestAnimationFrame(applyLiveLabels);
-});
-document.addEventListener("DOMContentLoaded", () => {
-  applyLiveLabels();
-  liveLabelObserver.observe(document.body, { childList: true, subtree: true });
-});
-
-</script>
+    document.addEventListener("DOMContentLoaded", () => {
+      applyLiveLabels();
+      liveLabelObserver.observe(document.body, { childList: true, subtree: true });
+    });
+  </script>
 </body>
 </html>
