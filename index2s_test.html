@@ -6719,6 +6719,23 @@ button.achievement-item {
   color:#fff;font-size:10px;font-weight:1000;text-decoration:none;
 }
 </style>
+
+<style>
+/* Welcome card separation — desktop */
+@media (min-width: 700px) {
+  .inactive-welcome {
+    border: 1px solid rgba(182,255,59,.16);
+    background:
+      radial-gradient(circle at 13% 18%, rgba(182,255,59,.095), transparent 34%),
+      radial-gradient(circle at 84% 15%, rgba(182,255,59,.055), transparent 38%),
+      linear-gradient(135deg, #151b14 0%, #121613 48%, #151915 100%);
+    box-shadow:
+      0 18px 46px rgba(0,0,0,.30),
+      inset 0 1px 0 rgba(255,255,255,.025);
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -6763,7 +6780,7 @@ button.achievement-item {
   <section class="screen active" id="screen-matches">
 <div class="inactive-home-shell" id="inactiveHomePrototype" style="display:none">
   <section class="inactive-welcome">
-    <div class="inactive-welcome-media"><img src="xleague_welcome_logo.png" alt="X League — второй сезон"></div>
+    <div class="inactive-welcome-media"><img src="mages/xleague_welcome_logo.png" alt="X League — второй сезон"></div>
     <div>
       <div class="inactive-welcome-kicker">X League · Второй сезон</div>
       <h2>Добро пожаловать в X League</h2>
@@ -6779,7 +6796,7 @@ button.achievement-item {
   <div class="inactive-news-head"><h3>Последнее в X League</h3><span>Тестовый режим</span></div>
   <div class="inactive-news-grid">
     <article class="inactive-news-card">
-      <div class="inactive-news-preview"><img src="xleague_welcome_logo.png" alt=""></div>
+      <div class="inactive-news-preview"><img src="mages/xleague_welcome_logo.png" alt=""></div>
       <div class="inactive-news-body">
         <div class="inactive-news-date">06 сентября 2026</div>
         <div class="inactive-news-title">Итоги второго тура</div>
@@ -6791,7 +6808,7 @@ button.achievement-item {
       </div>
     </article>
     <article class="inactive-news-card">
-      <div class="inactive-news-preview"><img src="xleague_welcome_logo.png" alt=""></div>
+      <div class="inactive-news-preview"><img src="mages/xleague_welcome_logo.png" alt=""></div>
       <div class="inactive-news-body">
         <div class="inactive-news-date">07 сентября 2026</div>
         <div class="inactive-news-title">Что дальше: неделя между турами</div>
@@ -11454,7 +11471,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const image = previewImage(row);
       const imageHtml = image
         ? `<img src="${esc(image)}" alt="">`
-        : `<img src="xleague_welcome_logo.png" alt="">`;
+        : `<img src="mages/xleague_welcome_logo.png" alt="">`;
 
       const tg = String(row.telegram_url || "").trim();
       const tgHtml = tg
