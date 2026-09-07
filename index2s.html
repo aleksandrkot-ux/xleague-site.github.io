@@ -7185,6 +7185,18 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== News image lightbox v1 ===== */
+.inactive-news-preview[data-news-image], .news-article-image[data-news-image]{cursor:zoom-in;}
+.news-article-image{width:100%;margin:0 0 6px;overflow:hidden;border-radius:18px;border:1px solid rgba(182,255,59,.13);background:#090b09;}
+.news-article-image img{display:block;width:100%;height:auto;max-height:58vh;object-fit:contain;background:#090b09;}
+.news-image-lightbox{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);}
+.news-image-lightbox.hidden{display:none;}
+.news-image-lightbox-img{display:block;max-width:min(96vw,1600px);max-height:92vh;width:auto;height:auto;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,.65);}
+.news-image-lightbox-close{position:fixed;top:18px;right:18px;width:42px;height:42px;border-radius:999px;background:rgba(25,25,25,.88);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:30px;line-height:1;display:grid;place-items:center;z-index:201;}
+@media(max-width:699px){.news-image-lightbox{padding:10px}.news-image-lightbox-img{max-width:100%;max-height:90vh}.news-image-lightbox-close{top:10px;right:10px}}
+</style>
 </head>
 <body>
   <div class="app">
@@ -12009,7 +12021,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
       return `
         <article class="inactive-news-card">
-          <div class="inactive-news-preview">${imageHtml}</div>
+          <div class="inactive-news-preview" data-news-image="${esc(image || 'mages/xleague_welcome_logo.png')}">${imageHtml}</div>
           <div class="inactive-news-body">
             <div class="inactive-news-date">${esc(formatDate(row.date))}</div>
             <div class="inactive-news-title">${esc(row.title || "Новость X League")}</div>
@@ -12033,7 +12045,12 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     modalSubtitle.textContent = formatDate(row.date);
 
     const tg = String(row.telegram_url || "").trim();
+    const articleImage = previewImage(row);
+    const articleImageHtml = articleImage
+      ? `<div class="news-article-image" data-news-image="${esc(articleImage)}"><img src="${esc(articleImage)}" alt="${esc(row.title || "Новость X League")}"></div>`
+      : "";
     modalBody.innerHTML =
+      articleImageHtml +
       formatBody(row.body || "") +
       (tg ? `<a class="news-telegram-link" href="${esc(tg)}" target="_blank" rel="noopener noreferrer">Открыть в Telegram ↗</a>` : "");
 
@@ -12069,7 +12086,47 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     modal.classList.remove("hidden");
   }
 
+  function openNewsImage(src, alt = "") {
+    if (!src) return;
+    let lightbox = document.getElementById("newsImageLightbox");
+    if (!lightbox) {
+      lightbox = document.createElement("div");
+      lightbox.id = "newsImageLightbox";
+      lightbox.className = "news-image-lightbox hidden";
+      lightbox.innerHTML = `<button type="button" class="news-image-lightbox-close" aria-label="Закрыть">×</button><img class="news-image-lightbox-img" alt="">`;
+      document.body.appendChild(lightbox);
+    }
+    const img = lightbox.querySelector(".news-image-lightbox-img");
+    img.src = src;
+    img.alt = alt;
+    lightbox.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeNewsImage() {
+    const lightbox = document.getElementById("newsImageLightbox");
+    if (!lightbox) return;
+    lightbox.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+
   document.addEventListener("click", (event) => {
+    const lightbox = event.target.closest("#newsImageLightbox");
+    if (lightbox && (event.target === lightbox || event.target.closest(".news-image-lightbox-close"))) {
+      closeNewsImage();
+      return;
+    }
+
+    const imageTarget = event.target.closest("[data-news-image]");
+    if (imageTarget) {
+      event.preventDefault();
+      event.stopPropagation();
+      const src = String(imageTarget.dataset.newsImage || "").trim();
+      const alt = imageTarget.querySelector("img")?.alt || "";
+      openNewsImage(src, alt);
+      return;
+    }
+
     const btn = event.target.closest("[data-live-news]");
     if (btn) {
       openNews(Number(btn.dataset.liveNews));
