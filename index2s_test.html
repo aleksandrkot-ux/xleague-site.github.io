@@ -6800,6 +6800,38 @@ button.achievement-item {
 }
 </style>
 
+
+<style>
+/* ===== News polish v4 ===== */
+
+/* A little more visible green depth in the opened article. */
+#newsModal .info-sheet {
+  border-color: rgba(182,255,59,.18) !important;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(182,255,59,.085), transparent 34%),
+    radial-gradient(circle at 8% 96%, rgba(182,255,59,.035), transparent 38%),
+    linear-gradient(145deg, #151a14 0%, #121512 52%, #151815 100%) !important;
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.58),
+    inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+/* News previews: keep a wide card, but crop less aggressively.
+   The image still fills the width; its visible area is taller. */
+.inactive-news-img {
+  aspect-ratio: 16 / 8.2 !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+/* Give large desktop cards a little more image height without becoming huge. */
+@media (min-width: 1000px) {
+  .inactive-news-img {
+    aspect-ratio: 16 / 8.6 !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
