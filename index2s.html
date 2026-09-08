@@ -7836,6 +7836,26 @@ button.achievement-item {
     const SHEETS_TIMEOUT_MS = 12000;
     const CACHE_KEY = `xleague_cache_${SHEET_ID}`;
 
+    // One shared bootstrap request per page load. News and the main app reuse it.
+    let bootstrapPromise = null;
+    let latestBootstrap = null;
+
+    function getBootstrap() {
+      if (!bootstrapPromise) {
+        bootstrapPromise = fetchJsonWithTimeout(BOOTSTRAP_API)
+          .then(data => {
+            latestBootstrap = data;
+            return data;
+          })
+          .catch(err => {
+            // Allow a later retry if the first bootstrap request failed.
+            bootstrapPromise = null;
+            throw err;
+          });
+      }
+      return bootstrapPromise;
+    }
+
 
     // === X LEAGUE LIVE DATA ===
     // Browser reads tech_live/tech_fixtures through the site proxy.
@@ -8314,12 +8334,76 @@ button.achievement-item {
       return null;
     }
 
+    // Tournament timing is anchored to Moscow time, regardless of visitor timezone.
+    function getMoscowParts(date = new Date()) {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/Moscow",
+        weekday: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).formatToParts(date);
+      const out = {};
+      parts.forEach(part => { if (part.type !== "literal") out[part.type] = part.value; });
+      return {
+        weekday: out.weekday,
+        hour: Number(out.hour),
+        minute: Number(out.minute)
+      };
+    }
+
+    function isLiveWindow(date = new Date()) {
+      const { weekday, hour, minute } = getMoscowParts(date);
+      const mins = hour * 60 + minute;
+      if (weekday === "Fri") return mins >= 23 * 60 + 50;
+      if (weekday === "Sat" || weekday === "Sun") return true;
+      if (weekday === "Mon") return mins < 2 * 60;
+      return false;
+    }
+
+    function isFixtureBuildWindow(date = new Date()) {
+      const { weekday, hour, minute } = getMoscowParts(date);
+      const mins = hour * 60 + minute;
+      if (weekday === "Fri") return mins >= 12 * 60;
+      if (weekday === "Sat") {
+        return mins < 60 || (mins >= 11 * 60 + 55 && mins <= 12 * 60 + 10);
+      }
+      return false;
+    }
+
+    let cachedFixtureRows = [];
+    let fixturesLoadedOnce = false;
+    let saturdayNoonFixtureRefreshDone = false;
+
+    async function refreshFixturesIfNeeded(force = false) {
+      const { weekday, hour, minute } = getMoscowParts();
+      const mins = hour * 60 + minute;
+      const saturdayNoonRefresh = weekday === "Sat" && mins >= 12 * 60 && !saturdayNoonFixtureRefreshDone;
+
+      if (!force && fixturesLoadedOnce && !saturdayNoonRefresh) return cachedFixtureRows;
+      if (!force && !isFixtureBuildWindow() && !isLiveWindow()) return cachedFixtureRows;
+
+      try {
+        const rows = await loadTab(TABS.fixtures);
+        if (Array.isArray(rows)) {
+          cachedFixtureRows = rows;
+          fixturesLoadedOnce = true;
+          if (saturdayNoonRefresh) saturdayNoonFixtureRefreshDone = true;
+        }
+      } catch (err) {
+        console.warn("X League tech_fixtures refresh failed; keeping last good snapshot", err);
+      }
+      return cachedFixtureRows;
+    }
+
     async function refreshLiveFromSheets() {
+      if (!isLiveWindow()) return;
+
       // Live data must be "sticky": a temporary network/VPN/API failure must
       // NOT erase the last good score and turn it back into an hourglass.
-      const [liveResult, fixtureResult, matchResult] = await Promise.allSettled([
+      const fixtureRows = await refreshFixturesIfNeeded();
+      const [liveResult, matchResult] = await Promise.allSettled([
         loadTab(TABS.live),
-        loadTab(TABS.fixtures),
         loadTab(TABS.matches)
       ]);
 
@@ -8329,15 +8413,7 @@ button.achievement-item {
         liveResult.status === "fulfilled" &&
         Array.isArray(liveResult.value)
       ) {
-        // Notifications from the previous successful poll expire here (~30 s).
         clearGoalToasts();
-
-        const fixtureRows =
-          fixtureResult.status === "fulfilled" &&
-          Array.isArray(fixtureResult.value)
-            ? fixtureResult.value
-            : [];
-
         buildLiveIndex(liveResult.value, fixtureRows);
         changed = true;
       } else {
@@ -8347,8 +8423,7 @@ button.achievement-item {
         );
       }
 
-      // site_matches is the authoritative settled state (win/lose/cancelled).
-      // If this refresh fails, keep the previous in-memory matches as well.
+      // site_matches is authoritative for settled win/lose/cancelled state.
       if (
         matchResult.status === "fulfilled" &&
         Array.isArray(matchResult.value) &&
@@ -8370,9 +8445,20 @@ button.achievement-item {
       }
     }
 
+    let livePollingTimer = null;
+
     function startLivePolling() {
-      refreshLiveFromSheets();
-      setInterval(refreshLiveFromSheets, 30000);
+      if (livePollingTimer) return;
+
+      // Outside the weekend live window there is no 30-second polling at all.
+      // Fixtures may still be requested once during their Friday/Saturday build window.
+      if (!isLiveWindow()) {
+        if (isFixtureBuildWindow()) refreshFixturesIfNeeded();
+        return;
+      }
+
+      refreshFixturesIfNeeded(true).finally(() => refreshLiveFromSheets());
+      livePollingTimer = setInterval(refreshLiveFromSheets, 30000);
     }
 
     function fetchJsonWithTimeout(url, timeout = SHEETS_TIMEOUT_MS) {
@@ -8778,7 +8864,7 @@ function mapPredictionRow(row) {
     async function loadSheetsData() {
       try {
         // Startup uses one VPS disk-cache request instead of many sheet requests.
-        const bootstrap = await fetchJsonWithTimeout(BOOTSTRAP_API);
+        const bootstrap = await getBootstrap();
         if (!bootstrap || bootstrap.ok !== true || !bootstrap.data) {
           throw new Error("Invalid bootstrap response");
         }
@@ -12189,9 +12275,8 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
   async function loadNews() {
     try {
-      const response = await fetch("https://api.playxliga.ru/bootstrap", { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const bootstrap = await response.json();
+      // Reuse the exact same bootstrap request as the main application.
+      const bootstrap = latestBootstrap || await getBootstrap();
 
       const rows = Array.isArray(bootstrap?.data?.site_news)
         ? bootstrap.data.site_news
