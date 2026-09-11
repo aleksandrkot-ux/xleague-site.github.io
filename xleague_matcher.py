@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from countries import COUNTRIES
 
-VERSION = "xleague-matcher-2026-09-11-reconcile1"
+VERSION = "xleague-matcher-2026-09-11-reconcile2"
 
 FIXTURE_CACHE_FILE = Path("/root/xleague-api/matcher_fixture_cache.json")
 TEAM_FIXTURE_CACHE_FILE = Path("/root/xleague-api/matcher_team_fixture_cache.json")
@@ -22,6 +22,34 @@ TABLE_TZ = timezone(timedelta(hours=3))
 
 MAX_TIME_DIFF = 60
 READY_THRESHOLD = 80
+
+BAD_TEAM_KEYS = {
+    "загрузка",
+    "загрузка...",
+    "loading",
+    "loading...",
+    "#n/a",
+    "#ref!",
+    "#value!",
+    "#error!",
+    "#name?",
+    "#div/0!",
+}
+
+def is_valid_team_key(value):
+    key = str(value or "").strip()
+    if not key:
+        return False
+
+    normalized = key.lower().replace("…", "...")
+
+    if normalized in BAD_TEAM_KEYS:
+        return False
+
+    if normalized.startswith("#"):
+        return False
+
+    return True
 
 # tech_fixtures exact layout:
 # A match_uid | B tour | C date | D time | E match | F country
@@ -58,7 +86,12 @@ def api_team_fixtures(api_key, team_id, season=2026):
 
 def add_team(ws, memory, key, team_id, api_name, country):
     key = str(key).strip()
-    if not key or not team_id:
+
+    if not is_valid_team_key(key):
+        print(f"LEARN SKIP: invalid team key: {key!r}")
+        return False
+
+    if not team_id:
         return False
 
     team_id = int(team_id)
@@ -412,7 +445,11 @@ for row in matches[3:]:
     )
 
     for team_key in (home_key, away_key):
-        if team_key and team_key not in team_row_by_key:
+        if not is_valid_team_key(team_key):
+            print(f"TEAM KEY SKIP: invalid temporary value: {team_key!r}")
+            continue
+
+        if team_key not in team_row_by_key:
             missing_team_rows.append(
                 [team_key, "", "", country, "UNRESOLVED", ""]
             )
