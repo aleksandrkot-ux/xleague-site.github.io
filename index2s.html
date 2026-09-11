@@ -11985,9 +11985,11 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
   function applyHomepageNewsVisibility() {
     const visible = showHomepageNewsToday();
-    if (newsHead) newsHead.style.display = visible ? "" : "none";
-    if (grid) grid.style.display = visible ? "" : "none";
-    if (newsMore) newsMore.style.display = visible ? "" : "none";
+
+    // Mon–Thu: welcome banner + news.
+    // Fri–Sun: hide the whole homepage promo/news shell
+    // so the current tour starts immediately below the tabs.
+    if (shell) shell.style.display = visible ? "" : "none";
   }
 
   function parseDate(value) {
@@ -12332,8 +12334,8 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         .sort((a, b) => parseDate(b.date) - parseDate(a.date));
 
       renderCards();
-      applyHomepageNewsVisibility();
       shell.style.display = liveNews.length ? "" : "none";
+      applyHomepageNewsVisibility();
     } catch (error) {
       console.error("SITE NEWS LOAD ERROR:", error);
       shell.style.display = "none";
