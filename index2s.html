@@ -11949,6 +11949,8 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   if (!shell) return;
 
   const grid = shell.querySelector(".inactive-news-grid");
+  const newsHead = shell.querySelector(".inactive-news-head");
+  const newsMore = shell.querySelector(".inactive-news-more-wrap");
   const headNote = shell.querySelector(".inactive-news-head span");
   const modal = document.getElementById("newsModal");
   const modalTitle = document.getElementById("newsModalTitle");
@@ -11967,6 +11969,25 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   function isPublished(value) {
     const v = String(value ?? "").trim().toLowerCase();
     return ["1", "true", "yes", "да", "published"].includes(v);
+  }
+
+  // Homepage news are shown Monday–Thursday only.
+  // Friday–Sunday the welcome card stays, but the news block is hidden
+  // so the current tour matches move up on the main screen.
+  function showHomepageNewsToday() {
+    const weekday = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Europe/Moscow",
+      weekday: "short"
+    }).format(new Date());
+
+    return ["Mon", "Tue", "Wed", "Thu"].includes(weekday);
+  }
+
+  function applyHomepageNewsVisibility() {
+    const visible = showHomepageNewsToday();
+    if (newsHead) newsHead.style.display = visible ? "" : "none";
+    if (grid) grid.style.display = visible ? "" : "none";
+    if (newsMore) newsMore.style.display = visible ? "" : "none";
   }
 
   function parseDate(value) {
@@ -12311,6 +12332,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         .sort((a, b) => parseDate(b.date) - parseDate(a.date));
 
       renderCards();
+      applyHomepageNewsVisibility();
       shell.style.display = liveNews.length ? "" : "none";
     } catch (error) {
       console.error("SITE NEWS LOAD ERROR:", error);
