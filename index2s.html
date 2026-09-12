@@ -11129,7 +11129,7 @@ sourceMatches.forEach(match => {
         }
       }
 
-      setText("profileTotalPts", totalPts);
+      setText("profileTotalPts", formatRuNumber(totalPts, 2));
       const availableRegularTours = getAvailableTours().filter(isRegularTour);
       const regularTourTarget = availableRegularTours.length
         ? Math.max(...availableRegularTours)
