@@ -11921,9 +11921,21 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         renderAll();
       }
 
+      // If there is no usable local snapshot, do not leave the visitor staring
+      // at an apparently empty interface while bootstrap/retry is still running.
+      // Delay the notice a little so fast connections do not see a distracting flash.
+      let loadingNoticeTimer = null;
+      if (!cached) {
+        loadingNoticeTimer = setTimeout(() => {
+          showDataNotice("Загружаем актуальные данные…");
+        }, 800);
+      }
+
       // Fresh startup data arrives in one /bootstrap request.
       // Only after that do we start live polling, avoiding a startup request storm.
       const loaded = await loadSheetsData();
+      if (loadingNoticeTimer) clearTimeout(loadingNoticeTimer);
+
       if (loaded) renderAll();
       else if (!cached) renderAll();
 
