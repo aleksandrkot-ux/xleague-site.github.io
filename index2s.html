@@ -7858,6 +7858,8 @@ button.achievement-item {
     const SHEET_API = (tab) => `https://api.playxliga.ru/sheet/${encodeURIComponent(tab)}`;
     const BOOTSTRAP_API = "https://api.playxliga.ru/bootstrap";
     const SHEETS_TIMEOUT_MS = 12000;
+    const BOOTSTRAP_TIMEOUT_MS = 20000;
+    const BOOTSTRAP_RETRY_DELAY_MS = 1500;
     const CACHE_VERSION = "v2";
     const CACHE_KEY = `xleague_cache_${CACHE_VERSION}_${SHEET_ID}`;
     const CACHE_MAX_AGE_MS = 30 * 60 * 1000;
@@ -7866,15 +7868,32 @@ button.achievement-item {
     let bootstrapPromise = null;
     let latestBootstrap = null;
 
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function fetchBootstrapWithRetry() {
+      try {
+        return await fetchJsonWithTimeout(BOOTSTRAP_API, BOOTSTRAP_TIMEOUT_MS);
+      } catch (firstError) {
+        console.warn("Bootstrap first attempt failed; retrying once.", firstError);
+        await wait(BOOTSTRAP_RETRY_DELAY_MS);
+
+        const separator = BOOTSTRAP_API.includes("?") ? "&" : "?";
+        const retryUrl = `${BOOTSTRAP_API}${separator}_=${Date.now()}`;
+        return fetchJsonWithTimeout(retryUrl, BOOTSTRAP_TIMEOUT_MS);
+      }
+    }
+
     function getBootstrap() {
       if (!bootstrapPromise) {
-        bootstrapPromise = fetchJsonWithTimeout(BOOTSTRAP_API)
+        bootstrapPromise = fetchBootstrapWithRetry()
           .then(data => {
             latestBootstrap = data;
             return data;
           })
           .catch(err => {
-            // Allow a later retry if the first bootstrap request failed.
+            // Allow a later retry if both startup attempts failed.
             bootstrapPromise = null;
             throw err;
           });
