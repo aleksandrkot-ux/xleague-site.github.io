@@ -323,6 +323,25 @@ body {
     order: -1;
   }
 }
+
+
+/* ===== HOME v2: welcome + permanent news ===== */
+.welcome-card{margin:0 auto 22px;padding:22px 26px;max-width:760px;text-align:center;border:1px solid #252b2f;border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),#101315}
+.welcome-kicker{color:#b3ff3c;font-size:10px;font-weight:900;letter-spacing:1.1px;text-transform:uppercase}
+.welcome-card h1{margin:8px 0 10px;font-size:25px;line-height:1.05}
+.welcome-card p{max-width:650px;margin:0 auto;color:#aab0b4;font-size:12px;line-height:1.6;font-weight:700}
+.home-layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(245px,.72fr);gap:16px;align-items:start}
+.seasons-wrap{min-width:0}.news-wrap{min-width:0}
+.news-head{display:flex;align-items:end;justify-content:space-between;gap:8px;margin-bottom:13px}
+.news-head .section-title{margin:0}.news-count{color:#666f75;font-size:9px;font-weight:800}
+.news-list{display:grid;gap:10px;max-height:510px;overflow-y:auto;padding-right:3px;scrollbar-width:thin;scrollbar-color:#343a3e transparent}
+.news-card{display:block;overflow:hidden;border:1px solid #252b2f;border-radius:14px;background:#101315;color:inherit;text-decoration:none;cursor:pointer}
+.news-thumb{aspect-ratio:16/7;overflow:hidden;background:#0b0d0e}.news-thumb img{width:100%;height:100%;display:block;object-fit:cover}
+.news-copy{padding:10px 11px 11px}.news-date{color:#747c81;font-size:8px;font-weight:900;text-transform:uppercase}.news-title{margin-top:4px;font-size:12px;line-height:1.2;font-weight:900}.news-preview{margin-top:5px;color:#969da2;font-size:10px;line-height:1.35;font-weight:700;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.news-more{display:inline-block;margin-top:7px;color:#b3ff3c;font-size:9px;font-weight:900}
+.news-empty{padding:16px;border:1px solid #252b2f;border-radius:14px;color:#777f84;font-size:10px;text-align:center;background:#101315}
+.news-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(0,0,0,.76);backdrop-filter:blur(7px)}.news-modal.open{display:flex}.news-dialog{position:relative;width:min(760px,100%);max-height:min(82vh,780px);overflow-y:auto;overflow-x:hidden;border:1px solid #30363a;border-radius:20px;background:#101315;box-shadow:0 24px 80px rgba(0,0,0,.5)}.news-close{position:sticky;float:right;top:12px;margin:12px 12px 0 0;z-index:2;width:36px;height:36px;border:1px solid #343a3e;border-radius:50%;background:#202426;color:#b8bdc0;font-size:23px;line-height:1;display:grid;place-items:center;cursor:pointer}.news-article{padding:22px 24px 26px;min-width:0}.news-article h2{margin:0 48px 5px 0;font-size:25px}.news-article-date{color:#747c81;font-size:10px;font-weight:900}.news-article-image{margin:17px 0;border-radius:14px;overflow:hidden}.news-article-image img{display:block;width:100%;height:auto;max-height:52vh;object-fit:contain;background:#090b0c}.news-body{color:#c1c5c8;font-size:12px;line-height:1.65;font-weight:700;overflow-wrap:anywhere}.news-body h3{color:#fff;font-size:16px}.news-body blockquote{margin:12px 0;padding:10px 12px;border-left:3px solid #b3ff3c;background:rgba(179,255,60,.05)}.news-tg{display:inline-block;margin-top:14px;color:#b3ff3c;font-size:10px;font-weight:900;text-decoration:none}
+@media(max-width:650px){.welcome-card{margin-bottom:14px;padding:17px 15px}.welcome-card h1{font-size:22px}.welcome-card p{font-size:11px}.home-layout{display:flex;flex-direction:column;gap:14px}.seasons-wrap,.news-wrap{width:100%}.seasons{display:contents}.season.current{order:1}.news-wrap{order:2}.season:not(.current){order:3}.rules{margin-top:15px}.news-list{max-height:none;overflow:visible}.news-card{display:grid;grid-template-columns:112px minmax(0,1fr)}.news-thumb{aspect-ratio:auto;min-height:100%;}.news-copy{padding:9px 10px}.news-preview{-webkit-line-clamp:3}.news-article{padding:18px 16px 22px}.news-article h2{font-size:21px}.news-modal{padding:10px}.news-dialog{max-height:88vh}}
+
 </style>
 </head>
 
@@ -341,72 +360,39 @@ body {
     <div class="subtitle">Fantasy Betting Tournament</div>
   </header>
 
-  <div class="section-title">Сезоны X League</div>
-
-  <section class="seasons">
-
-    <!-- CURRENT SEASON -->
-
-    <a class="season current" href="./index2s.html">
-
-      <div class="season-number">СЕЗОН 2</div>
-
-      <div class="status live">
-        <span class="live-dot"></span>
-        ИДЁТ СЕЙЧАС
-      </div>
-
-      <div class="season-description">
-        Второй сезон X League
-      </div>
-
-      <div class="open-season">
-        ОТКРЫТЬ СЕЗОН →
-      </div>
-
-    </a>
-
-
-    <!-- SEASON 1 -->
-
-    <a class="season" href="./season1.html">
-
-      <div class="season-number">СЕЗОН 1</div>
-
-      <div class="status">
-        ЗАВЕРШЁН
-      </div>
-
-      <div class="podium">
-
-        <div class="podium-row">
-          <span class="medal">🥇</span>
-          <span class="player">tony🐳Tott @tonyTott</span>
-          <span class="points">235</span>
-        </div>
-
-        <div class="podium-row">
-          <span class="medal">🥈</span>
-          <span class="player">AB @making_wiser</span>
-          <span class="points">229</span>
-        </div>
-
-        <div class="podium-row">
-          <span class="medal">🥉</span>
-          <span class="player">TM</span>
-          <span class="points">220</span>
-        </div>
-
-      </div>
-
-      <div class="open-season">
-        ОТКРЫТЬ СЕЗОН →
-      </div>
-
-    </a>
-
+  <section class="welcome-card">
+    <div class="welcome-kicker">X League · Второй сезон</div>
+    <h1>Добро пожаловать в X League</h1>
+    <p>X League — турнир прогнозистов, в котором мы не пытаемся угадать победителя. Мы ищем ничьи. Следите за матчами, выборами участников, статистикой сезона и тем, как один гол меняет весь тур.</p>
   </section>
 
+  <div class="home-layout">
+    <div class="seasons-wrap">
+      <div class="section-title">Сезоны X League</div>
+      <section class="seasons">
+        <a class="season current" href="./index2s.html">
+          <div class="season-number">СЕЗОН 2</div>
+          <div class="status live"><span class="live-dot"></span>ИДЁТ СЕЙЧАС</div>
+          <div class="season-description">Второй сезон X League</div>
+          <div class="open-season">ОТКРЫТЬ СЕЗОН →</div>
+        </a>
+        <a class="season" href="./season1.html">
+          <div class="season-number">СЕЗОН 1</div>
+          <div class="status">ЗАВЕРШЁН</div>
+          <div class="podium">
+            <div class="podium-row"><span class="medal">🥇</span><span class="player">tony🐳Tott @tonyTott</span><span class="points">235</span></div>
+            <div class="podium-row"><span class="medal">🥈</span><span class="player">AB @making_wiser</span><span class="points">229</span></div>
+            <div class="podium-row"><span class="medal">🥉</span><span class="player">TM</span><span class="points">220</span></div>
+          </div>
+          <div class="open-season">ОТКРЫТЬ СЕЗОН →</div>
+        </a>
+      </section>
+    </div>
+    <aside class="news-wrap">
+      <div class="news-head"><div class="section-title">Новости X League</div><span class="news-count" id="newsCount"></span></div>
+      <div class="news-list" id="newsList"><div class="news-empty">Загружаем новости…</div></div>
+    </aside>
+  </div>
 
   <!-- RULES -->
 
@@ -477,6 +463,62 @@ body {
   </footer>
 
 </main>
+
+
+<div class="news-modal" id="homeNewsModal" aria-hidden="true">
+  <div class="news-dialog" role="dialog" aria-modal="true" aria-labelledby="homeNewsTitle">
+    <button class="news-close" id="homeNewsClose" type="button" aria-label="Закрыть">×</button>
+    <article class="news-article">
+      <h2 id="homeNewsTitle">Новость X League</h2>
+      <div class="news-article-date" id="homeNewsDate"></div>
+      <div id="homeNewsImage"></div>
+      <div class="news-body" id="homeNewsBody"></div>
+      <a class="news-tg" id="homeNewsTelegram" target="_blank" rel="noopener noreferrer" hidden>Открыть в Telegram ↗</a>
+    </article>
+  </div>
+</div>
+<script>
+(() => {
+  const API = 'https://api.playxliga.ru/bootstrap';
+  const list = document.getElementById('newsList');
+  const count = document.getElementById('newsCount');
+  const modal = document.getElementById('homeNewsModal');
+  const title = document.getElementById('homeNewsTitle');
+  const dateEl = document.getElementById('homeNewsDate');
+  const imageEl = document.getElementById('homeNewsImage');
+  const bodyEl = document.getElementById('homeNewsBody');
+  const tgEl = document.getElementById('homeNewsTelegram');
+  let news = [];
+  const esc = v => String(v ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+  const published = v => ['1','true','yes','да','published'].includes(String(v ?? '').trim().toLowerCase());
+  function parseDate(v){ const raw=String(v??'').trim(),m=raw.match(/^(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{4})$/); if(m)return new Date(+m[3],+m[2]-1,+m[1]); const d=new Date(raw); return Number.isNaN(d.getTime())?new Date(0):d; }
+  function fmtDate(v){ const d=parseDate(v); return d.getTime()?new Intl.DateTimeFormat('ru-RU',{day:'2-digit',month:'long',year:'numeric'}).format(d):String(v??''); }
+  function img(row){ return String(row.image_url||row.preview_image||row.image||row.img||'').trim(); }
+  function bodyHtml(raw){
+    let x=String(raw??'').replace(/\r\n?/g,'\n');
+    x=x.replace(/<user>(.*?)<\/user>/gi,'$1');
+    x=x.replace(/\/\/\s*(заголовок|heading)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,'<h3>$2</h3>');
+    x=x.replace(/\/\/\s*(цитата|quote)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,'<blockquote>$2</blockquote>');
+    x=x.replace(/\/\/\s*(жирный|bold)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,'<strong>$2</strong>');
+    x=x.replace(/\/\/\s*(курсив|italic)\s*(?:\/\/)?\s*([^\n]*?)\s*\/\//gi,'<em>$2</em>');
+    const doc=new DOMParser().parseFromString('<body>'+x+'</body>','text/html');
+    doc.querySelectorAll('script,style,iframe,object,embed').forEach(n=>n.remove());
+    let html=doc.body.innerHTML.trim();
+    if(!/<(?:p|h3|blockquote|div|ul|ol)\b/i.test(html)) html=html.split(/\n\s*\n+/).map(p=>p.trim()).filter(Boolean).map(p=>'<p>'+p.replace(/\n/g,' ')+'</p>').join('');
+    return html;
+  }
+  function render(){
+    if(!news.length){ list.innerHTML='<div class="news-empty">Пока нет опубликованных новостей.</div>'; count.textContent=''; return; }
+    count.textContent=news.length+' '+(news.length===1?'публикация':'публикаций');
+    list.innerHTML=news.map((r,i)=>{const im=img(r)||'mages/xleague_welcome_logo.png';return `<article class="news-card" data-news="${i}"><div class="news-thumb"><img src="${esc(im)}" alt=""></div><div class="news-copy"><div class="news-date">${esc(fmtDate(r.date))}</div><div class="news-title">${esc(r.title||'Новость X League')}</div><div class="news-preview">${esc(r.preview||'')}</div><span class="news-more">Далее →</span></div></article>`}).join('');
+  }
+  function open(i){const r=news[i];if(!r)return;title.textContent=r.title||'Новость X League';dateEl.textContent=fmtDate(r.date);const im=img(r);imageEl.innerHTML=im?`<div class="news-article-image"><img src="${esc(im)}" alt="${esc(r.title||'')}"></div>`:'';bodyEl.innerHTML=bodyHtml(r.body||'');const tg=String(r.telegram_url||'').trim();tgEl.hidden=!tg;if(tg)tgEl.href=tg;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+  function close(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  list.addEventListener('click',e=>{const card=e.target.closest('[data-news]');if(card)open(+card.dataset.news);});
+  document.getElementById('homeNewsClose').addEventListener('click',close);modal.addEventListener('click',e=>{if(e.target===modal)close();});document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+  fetch(API+'?home_ts='+Date.now(),{cache:'no-store',headers:{'Cache-Control':'no-cache'}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(b=>{const rows=Array.isArray(b?.data?.site_news)?b.data.site_news:[];news=rows.filter(r=>published(r.published)).sort((a,b)=>parseDate(b.date)-parseDate(a.date));render();}).catch(err=>{console.error('HOME NEWS LOAD ERROR',err);list.innerHTML='<div class="news-empty">Новости временно не загрузились. Обновите страницу чуть позже.</div>';});
+})();
+</script>
 
 </body>
 </html>
