@@ -7220,6 +7220,71 @@ button.achievement-item {
 .news-image-lightbox-close{position:fixed;top:18px;right:18px;width:42px;height:42px;border-radius:999px;background:rgba(25,25,25,.88);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:30px;line-height:1;display:grid;place-items:center;z-index:201;}
 @media(max-width:699px){.news-image-lightbox{padding:10px}.news-image-lightbox-img{max-width:100%;max-height:90vh}.news-image-lightbox-close{top:10px;right:10px}}
 </style>
+
+<style id="xleague-fixes-20260915">
+/* 1: optically center every circular close X, including notifications. */
+.info-close,
+.achievement-modal-close,
+.country-history-close,
+.news-image-lightbox-close,
+.goal-toast-close {
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:0 !important;
+  line-height:1 !important;
+  text-align:center !important;
+  font-size:0 !important;
+}
+.info-close::before,
+.achievement-modal-close::before,
+.country-history-close::before,
+.news-image-lightbox-close::before,
+.goal-toast-close::before {
+  content:"×";
+  display:block;
+  line-height:1;
+  transform:translateY(-1px);
+}
+.info-close::before, .achievement-modal-close::before, .country-history-close::before { font-size:24px; font-weight:700; }
+.news-image-lightbox-close::before { font-size:28px; font-weight:600; }
+.goal-toast-close::before { font-size:18px; font-weight:700; }
+
+/* 2: player chip in achievement modal is a real profile action. */
+.achievement-profile-link {
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 10px;border-radius:999px;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);
+  color:#d4d4d8;font-size:11px;font-weight:900;line-height:1;
+}
+.achievement-profile-link:hover { border-color:rgba(182,255,59,.28); color:#b6ff3b; }
+
+/* 6: news/article modal must never overflow horizontally on laptops. */
+#newsModal .info-sheet {
+  width:min(680px, calc(100vw - 32px)) !important;
+  max-width:calc(100vw - 32px) !important;
+  overflow-x:hidden !important;
+}
+#newsModal .info-sheet-head,
+#newsModal .news-modal-body,
+#newsModal .news-modal-body > *,
+#newsModal .news-article-image,
+#newsModal .news-article-image img { min-width:0 !important; max-width:100% !important; }
+#newsModal .news-modal-body,
+#newsModal .news-modal-body p,
+#newsModal .news-modal-body div { overflow-wrap:anywhere; word-break:normal; }
+#newsModal .news-article-image img { width:100% !important; height:auto !important; object-fit:contain !important; }
+@media (min-width:700px) and (max-width:1100px) {
+  #newsModal .info-sheet { max-height:88vh !important; }
+}
+@media (max-width:699px) {
+  #newsModal .info-sheet { width:100% !important; max-width:430px !important; }
+}
+
+/* 7: flat form/result dots — no glow. */
+.dot.win, .dot.lose, .profile-dot.win, .profile-dot.lose { box-shadow:none !important; }
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -7240,7 +7305,7 @@ button.achievement-item {
             <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span>
             <span class="live-notify-toggle-text">Увед. вкл</span>
           </button>
-          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">30,8K</span></button>
+          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">31,3K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
@@ -7608,19 +7673,19 @@ button.achievement-item {
 
         <div class="prize-hero">
           <div class="prize-kicker">Текущий фонд</div>
-          <div class="prize-total">30 800 ₽</div>
-          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+800 ₽</strong> добавили участники</div>
+          <div class="prize-total">31 300 ₽</div>
+          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+1 300 ₽</strong> добавили участники</div>
         </div>
 
         <div class="prize-grid">
           <div class="prize-card">
             <div class="prize-card-title">🏆 Регулярный сезон</div>
-            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 268 ₽</strong></div>
-            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 187 ₽</strong></div>
-            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 107 ₽</strong></div>
-            <div class="prize-place-row"><span>4 место</span><strong>3 080 ₽</strong></div>
-            <div class="prize-place-row"><span>5 место</span><strong>1 028 ₽</strong></div>
-            <div class="prize-place-row"><span>6–15 места</span><strong>513 ₽</strong></div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>10 437 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>7 304 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 174 ₽</strong></div>
+            <div class="prize-place-row"><span>4 место</span><strong>3 130 ₽</strong></div>
+            <div class="prize-place-row"><span>5 место</span><strong>1 045 ₽</strong></div>
+            <div class="prize-place-row"><span>6–15 места</span><strong>521 ₽</strong></div>
           </div>
 
           <div class="prize-card">
@@ -7638,6 +7703,7 @@ button.achievement-item {
 
         <div class="prize-card">
           <div class="prize-card-title">🦆 Меценаты X League</div>
+          <div class="patron-row"><span>Дмитрий @Tabik36</span><strong>500 ₽</strong></div>
           <div class="patron-row"><span>PaVeL</span><strong>300 ₽</strong></div>
           <div class="patron-row"><span>AB</span><strong>300 ₽</strong></div>
           <div class="patron-row"><span>Faylen</span><strong>200 ₽</strong></div>
@@ -7860,9 +7926,9 @@ button.achievement-item {
     const SHEETS_TIMEOUT_MS = 12000;
     const BOOTSTRAP_TIMEOUT_MS = 20000;
     const BOOTSTRAP_RETRY_DELAY_MS = 1500;
-    const CACHE_VERSION = "v2";
+    const CACHE_VERSION = "v3";
     const CACHE_KEY = `xleague_cache_${CACHE_VERSION}_${SHEET_ID}`;
-    const CACHE_MAX_AGE_MS = 30 * 60 * 1000;
+    const CACHE_MAX_AGE_MS = 5 * 60 * 1000;
 
     // One shared bootstrap request per page load. News and the main app reuse it.
     let bootstrapPromise = null;
@@ -7873,15 +7939,18 @@ button.achievement-item {
     }
 
     async function fetchBootstrapWithRetry() {
+      const freshBootstrapUrl = () => {
+        const separator = BOOTSTRAP_API.includes("?") ? "&" : "?";
+        return `${BOOTSTRAP_API}${separator}_=${Date.now()}`;
+      };
+
       try {
-        return await fetchJsonWithTimeout(BOOTSTRAP_API, BOOTSTRAP_TIMEOUT_MS);
+        // Always use a unique URL so browser/VPN/proxy caches cannot pin an old tour.
+        return await fetchJsonWithTimeout(freshBootstrapUrl(), BOOTSTRAP_TIMEOUT_MS);
       } catch (firstError) {
         console.warn("Bootstrap first attempt failed; retrying once.", firstError);
         await wait(BOOTSTRAP_RETRY_DELAY_MS);
-
-        const separator = BOOTSTRAP_API.includes("?") ? "&" : "?";
-        const retryUrl = `${BOOTSTRAP_API}${separator}_=${Date.now()}`;
-        return fetchJsonWithTimeout(retryUrl, BOOTSTRAP_TIMEOUT_MS);
+        return fetchJsonWithTimeout(freshBootstrapUrl(), BOOTSTRAP_TIMEOUT_MS);
       }
     }
 
@@ -9502,6 +9571,29 @@ function mapPredictionRow(row) {
           if (!trigger) return;
           const row = findAchievementForTrigger(trigger);
           if (row) openAchievementModal(row);
+        });
+
+        document.addEventListener("click", (event) => {
+          const profileLink = event.target.closest("[data-profile-player]");
+          if (!profileLink) return;
+          event.preventDefault();
+          event.stopPropagation();
+
+          const playerName = String(profileLink.dataset.profilePlayer || "").trim();
+          const playerSelect = document.getElementById("playerSelect");
+          if (!playerName || !playerSelect) return;
+
+          const wanted = playerName.toLocaleLowerCase("ru-RU");
+          const option = Array.from(playerSelect.options || []).find(opt =>
+            String(opt.value || "").trim().toLocaleLowerCase("ru-RU") === wanted ||
+            String(opt.textContent || "").trim().toLocaleLowerCase("ru-RU") === wanted
+          );
+          if (!option) return;
+
+          closeAchievementModal();
+          playerSelect.value = option.value;
+          playerSelect.dispatchEvent(new Event("change", { bubbles: true }));
+          document.querySelector('.nav-btn[data-screen="players"]')?.click();
         });
 
         if (achievementModalClose) achievementModalClose.addEventListener("click", closeAchievementModal);
@@ -11434,7 +11526,7 @@ function achievementDescription(row) {
       if (kickerEl) kickerEl.textContent = code ? `Достижение · ${code}` : "Достижение X League";
 
       const meta = [];
-      if (player) meta.push(`<span>👤 ${escapeHtml(player)}</span>`);
+      if (player) meta.push(`<button type="button" class="achievement-profile-link" data-profile-player="${escapeHtml(player)}">👤 ${escapeHtml(player)}</button>`);
       if (tour) meta.push(`<span>🏁 ${escapeHtml(tourLabel(tour))}</span>`);
       metaEl.innerHTML = meta.join("");
       metaEl.classList.toggle("hidden", !meta.length);
