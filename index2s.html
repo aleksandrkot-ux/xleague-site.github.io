@@ -13062,5 +13062,32 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 })();
 </script>
 
+
+<style>
+/* ===== FINAL OVERRIDE: tour achievements 2 columns on desktop ===== */
+@media (min-width: 980px) {
+  #tourAchievementsPanel {
+    min-width: 0 !important;
+  }
+
+  #tourAchievementsPanel #tourAchievements.achievement-strip {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  #tourAchievementsPanel #tourAchievements > .achievement-item {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    grid-column: auto !important;
+    margin: 0 !important;
+  }
+}
+</style>
 </body>
 </html>
