@@ -7531,6 +7531,17 @@ button.achievement-item {
   .favorites-clear-mobile { width:32px; height:32px; font-size:18px; margin-left:auto; }
 }
 </style>
+
+<style>
+/* ===== v6: three-state sound / notification controls ===== */
+.desktop-mode-wrap{position:relative;display:inline-flex}
+.mode-popover{position:absolute;right:0;bottom:calc(100% + 7px);z-index:260;display:none;min-width:145px;padding:5px;border:1px solid rgba(255,255,255,.11);border-radius:13px;background:#15171a;box-shadow:0 12px 30px rgba(0,0,0,.42)}
+.desktop-mode-wrap.is-open .mode-popover{display:grid;gap:3px}
+.mode-option{border:0;border-radius:9px;background:transparent;color:#aaa;padding:8px 9px;text-align:left;font:800 9px/1.1 inherit;white-space:nowrap;cursor:pointer}
+.mode-option:hover{background:rgba(255,255,255,.06);color:#fff}.mode-option.is-selected{background:rgba(182,255,59,.09);color:#b6ff3b}
+.sound-toggle-btn.is-favorites,.live-notify-toggle-btn.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}
+@media(max-width:700px){.desktop-mode-wrap{display:none!important}#soundToggleBtnMobile.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}}
+</style>
 </head>
 <body>
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
@@ -7552,14 +7563,12 @@ button.achievement-item {
           </div></a>
         </div>
         <div class="header-actions">
-          <button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-pressed="false" aria-label="Включить звук голов">
-            <span class="sound-toggle-icon" aria-hidden="true">🔇</span>
-            <span class="sound-toggle-text">Звук офф</span>
-          </button>
-          <button class="live-notify-toggle-btn is-on" id="liveNotifyToggleBtn" type="button" aria-pressed="true" aria-label="Выключить всплывающие уведомления о голах">
-            <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span>
-            <span class="live-notify-toggle-text">Увед. вкл</span>
-          </button>
+          <div class="desktop-mode-wrap" id="soundModeWrap"><button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-haspopup="menu" aria-expanded="false">
+            <span class="sound-toggle-icon" aria-hidden="true">🔇</span><span class="sound-toggle-text">Звук выкл</span></button>
+            <div class="mode-popover" role="menu"><button class="mode-option" data-sound-mode="all">🔊 Все матчи</button><button class="mode-option" data-sound-mode="favorites">🔊 📝 Избранное</button><button class="mode-option" data-sound-mode="off">🔇 Выключить</button></div></div>
+          <div class="desktop-mode-wrap" id="notifyModeWrap"><button class="live-notify-toggle-btn is-on" id="liveNotifyToggleBtn" type="button" aria-haspopup="menu" aria-expanded="false">
+            <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span><span class="live-notify-toggle-text">Увед. все</span></button>
+            <div class="mode-popover" role="menu"><button class="mode-option" data-notify-mode="all">🔔 Все матчи</button><button class="mode-option" data-notify-mode="favorites">🔔 📝 Избранное</button><button class="mode-option" data-notify-mode="off">🔕 Выключить</button></div></div>
           <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">31,8K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
@@ -8259,54 +8268,40 @@ button.achievement-item {
     // Goal sound: user-controlled and remembered on this device.
     const GOAL_SOUND_URL = "./mixkit-software-interface-start-2574.wav";
     const GOAL_SOUND_STORAGE_KEY = "xleague_goal_sound_enabled";
+    const GOAL_SOUND_MODE_KEY = "xleague_goal_sound_mode";
     const notifiedLiveScoreByUid = new Map();
-    let goalSoundEnabled = localStorage.getItem(GOAL_SOUND_STORAGE_KEY) === "1";
+    let goalSoundMode = localStorage.getItem(GOAL_SOUND_MODE_KEY) || (localStorage.getItem(GOAL_SOUND_STORAGE_KEY) === "1" ? "all" : "off");
+    let goalSoundEnabled = goalSoundMode !== "off";
     let goalSoundUnlocked = false;
     let goalSoundUnlockBound = false;
 
     // Desktop goal popups: enabled by default, remembered on this device.
     const GOAL_NOTIFY_STORAGE_KEY = "xleague_goal_notifications_enabled";
-    let goalNotificationsEnabled = localStorage.getItem(GOAL_NOTIFY_STORAGE_KEY) !== "0";
+    const GOAL_NOTIFY_MODE_KEY = "xleague_goal_notifications_mode";
+    let goalNotificationMode = localStorage.getItem(GOAL_NOTIFY_MODE_KEY) || (localStorage.getItem(GOAL_NOTIFY_STORAGE_KEY) === "0" ? "off" : "all");
+    let goalNotificationsEnabled = goalNotificationMode !== "off";
+
+    function eventAllowedForMode(mode, uid, fixtureSource = null) {
+      if (mode === "off") return false;
+      if (mode === "all") return true;
+      const match = findSiteMatchForLive(uid, fixtureSource);
+      return !!(match && isFavoriteMatch(match.id));
+    }
 
     function renderGoalNotifyToggle() {
-      const btn = document.getElementById("liveNotifyToggleBtn");
-      if (!btn) return;
-
-      btn.classList.toggle("is-on", goalNotificationsEnabled);
-      btn.classList.toggle("is-off", !goalNotificationsEnabled);
-      btn.setAttribute("aria-pressed", goalNotificationsEnabled ? "true" : "false");
-      btn.setAttribute(
-        "aria-label",
-        goalNotificationsEnabled
-          ? "Выключить всплывающие уведомления о голах"
-          : "Включить всплывающие уведомления о голах"
-      );
-
-      const icon = btn.querySelector(".live-notify-toggle-icon");
-      const text = btn.querySelector(".live-notify-toggle-text");
-      if (icon) icon.textContent = goalNotificationsEnabled ? "🔔" : "🔕";
-      if (text) text.textContent = goalNotificationsEnabled ? "Увед. вкл" : "Увед. офф";
+      const btn = document.getElementById("liveNotifyToggleBtn"); if (!btn) return;
+      goalNotificationsEnabled = goalNotificationMode !== "off";
+      btn.classList.toggle("is-on", goalNotificationMode === "all"); btn.classList.toggle("is-favorites", goalNotificationMode === "favorites"); btn.classList.toggle("is-off", goalNotificationMode === "off");
+      const icon=btn.querySelector(".live-notify-toggle-icon"), text=btn.querySelector(".live-notify-toggle-text");
+      if(icon) icon.textContent=goalNotificationMode==='off'?'🔕':goalNotificationMode==='favorites'?'🔔📝':'🔔';
+      if(text) text.textContent=goalNotificationMode==='off'?'Увед. выкл':goalNotificationMode==='favorites'?'Увед. 📝':'Увед. все';
+      document.querySelectorAll('[data-notify-mode]').forEach(x=>x.classList.toggle('is-selected',x.dataset.notifyMode===goalNotificationMode));
     }
-
-    function clearGoalToasts() {
-      const stack = document.getElementById("goalToastStack");
-      if (stack) stack.innerHTML = "";
-    }
-
-    function bindGoalNotifyToggle() {
-      const btn = document.getElementById("liveNotifyToggleBtn");
-      if (!btn) return;
-
-      renderGoalNotifyToggle();
-      if (btn.dataset.bound === "1") return;
-      btn.dataset.bound = "1";
-
-      btn.addEventListener("click", () => {
-        goalNotificationsEnabled = !goalNotificationsEnabled;
-        localStorage.setItem(GOAL_NOTIFY_STORAGE_KEY, goalNotificationsEnabled ? "1" : "0");
-        renderGoalNotifyToggle();
-        if (!goalNotificationsEnabled) clearGoalToasts();
-      });
+    function clearGoalToasts(){const stack=document.getElementById("goalToastStack");if(stack)stack.innerHTML="";}
+    function bindGoalNotifyToggle(){
+      const btn=document.getElementById('liveNotifyToggleBtn'), wrap=document.getElementById('notifyModeWrap'); if(!btn||!wrap)return; renderGoalNotifyToggle(); if(btn.dataset.bound==='1')return; btn.dataset.bound='1';
+      btn.addEventListener('click',e=>{e.stopPropagation();wrap.classList.toggle('is-open');btn.setAttribute('aria-expanded',wrap.classList.contains('is-open'));document.getElementById('soundModeWrap')?.classList.remove('is-open');});
+      wrap.querySelectorAll('[data-notify-mode]').forEach(opt=>opt.addEventListener('click',e=>{e.stopPropagation();goalNotificationMode=opt.dataset.notifyMode;localStorage.setItem(GOAL_NOTIFY_MODE_KEY,goalNotificationMode);localStorage.setItem(GOAL_NOTIFY_STORAGE_KEY,goalNotificationMode==='off'?'0':'1');renderGoalNotifyToggle();wrap.classList.remove('is-open');if(goalNotificationMode==='off')clearGoalToasts();}));
     }
 
     function findSiteMatchForLive(uid, fixtureSource = null) {
@@ -8325,7 +8320,7 @@ button.achievement-item {
     }
 
     function showGoalToast(liveData, changedHome, changedAway, fixtureSource = null) {
-      if (!goalNotificationsEnabled) return;
+      if (!goalNotificationsEnabled || !eventAllowedForMode(goalNotificationMode, liveData.uid, fixtureSource)) return;
       if (!window.matchMedia("(min-width: 700px)").matches) return;
 
       const stack = document.getElementById("goalToastStack");
@@ -8383,7 +8378,7 @@ button.achievement-item {
     }
 
     function showFinishedToast(liveData, fixtureSource = null) {
-      if (!goalNotificationsEnabled) return;
+      if (!goalNotificationsEnabled || !eventAllowedForMode(goalNotificationMode, liveData.uid, fixtureSource)) return;
       if (!window.matchMedia("(min-width: 700px)").matches) return;
 
       const stack = document.getElementById("goalToastStack");
@@ -8446,20 +8441,9 @@ button.achievement-item {
     });
 
     function renderSoundToggle() {
-      const buttons = document.querySelectorAll(".sound-toggle-btn");
-      if (!buttons.length) return;
-
-      buttons.forEach(btn => {
-        btn.classList.toggle("is-on", goalSoundEnabled);
-        btn.classList.toggle("is-off", !goalSoundEnabled);
-        btn.setAttribute("aria-pressed", goalSoundEnabled ? "true" : "false");
-        btn.setAttribute("aria-label", goalSoundEnabled ? "Выключить звук голов" : "Включить звук голов");
-
-        const icon = btn.querySelector(".sound-toggle-icon");
-        const text = btn.querySelector(".sound-toggle-text");
-        if (icon) icon.textContent = goalSoundEnabled ? "🔊" : "🔇";
-        if (text) text.textContent = goalSoundEnabled ? "Звук вкл" : "Звук офф";
-      });
+      goalSoundEnabled=goalSoundMode!=="off";
+      document.querySelectorAll('.sound-toggle-btn').forEach(btn=>{btn.classList.toggle('is-on',goalSoundMode==='all');btn.classList.toggle('is-favorites',goalSoundMode==='favorites');btn.classList.toggle('is-off',goalSoundMode==='off');const icon=btn.querySelector('.sound-toggle-icon'),text=btn.querySelector('.sound-toggle-text');if(icon)icon.textContent=goalSoundMode==='off'?'🔇':goalSoundMode==='favorites'?'🔊📝':'🔊';if(text)text.textContent=goalSoundMode==='off'?'Звук выкл':goalSoundMode==='favorites'?'Только 📝':'Звук вкл';});
+      document.querySelectorAll('[data-sound-mode]').forEach(x=>x.classList.toggle('is-selected',x.dataset.soundMode===goalSoundMode));
     }
 
     async function unlockGoalSound(playPreview = false) {
@@ -8503,8 +8487,8 @@ button.achievement-item {
       window.addEventListener("keydown", unlockOnce, true);
     }
 
-    function playGoalSound(uid, home, away) {
-      if (!goalSoundEnabled || !goalSoundUnlocked) return;
+    function playGoalSound(uid, home, away, fixtureSource = null) {
+      if (!goalSoundEnabled || !goalSoundUnlocked || !eventAllowedForMode(goalSoundMode, uid, fixtureSource)) return;
 
       const scoreKey = `${home}-${away}`;
       if (notifiedLiveScoreByUid.get(uid) === scoreKey) return;
@@ -8519,30 +8503,12 @@ button.achievement-item {
     }
 
     function bindSoundToggle() {
-      const buttons = document.querySelectorAll(".sound-toggle-btn");
-      if (!buttons.length) return;
-
-      renderSoundToggle();
-      bindDeferredGoalSoundUnlock();
-
-      buttons.forEach(btn => {
-        if (btn.dataset.bound === "1") return;
-        btn.dataset.bound = "1";
-
-        btn.addEventListener("click", async () => {
-          goalSoundEnabled = !goalSoundEnabled;
-          localStorage.setItem(GOAL_SOUND_STORAGE_KEY, goalSoundEnabled ? "1" : "0");
-          renderSoundToggle();
-
-          if (goalSoundEnabled) {
-            // A small confirmation chirp also counts as the user gesture needed
-            // by Chrome/Safari to permit later automatic goal sounds.
-            await unlockGoalSound(true);
-          } else {
-            goalSoundUnlocked = false;
-          }
-        });
-      });
+      renderSoundToggle(); bindDeferredGoalSoundUnlock();
+      const desktop=document.getElementById('soundToggleBtn'), wrap=document.getElementById('soundModeWrap');
+      if(desktop&&wrap&&desktop.dataset.bound!=='1'){desktop.dataset.bound='1';desktop.addEventListener('click',e=>{e.stopPropagation();wrap.classList.toggle('is-open');document.getElementById('notifyModeWrap')?.classList.remove('is-open');});wrap.querySelectorAll('[data-sound-mode]').forEach(opt=>opt.addEventListener('click',async e=>{e.stopPropagation();goalSoundMode=opt.dataset.soundMode;localStorage.setItem(GOAL_SOUND_MODE_KEY,goalSoundMode);localStorage.setItem(GOAL_SOUND_STORAGE_KEY,goalSoundMode==='off'?'0':'1');renderSoundToggle();wrap.classList.remove('is-open');if(goalSoundMode!=='off')await unlockGoalSound(true);else goalSoundUnlocked=false;}));}
+      const mobile=document.getElementById('soundToggleBtnMobile');
+      if(mobile&&mobile.dataset.bound!=='1'){mobile.dataset.bound='1';mobile.addEventListener('click',async()=>{goalSoundMode=goalSoundMode==='off'?'all':goalSoundMode==='all'?'favorites':'off';localStorage.setItem(GOAL_SOUND_MODE_KEY,goalSoundMode);localStorage.setItem(GOAL_SOUND_STORAGE_KEY,goalSoundMode==='off'?'0':'1');renderSoundToggle();if(goalSoundMode!=='off')await unlockGoalSound(true);else goalSoundUnlocked=false;});}
+      if(!document.body.dataset.modeMenusBound){document.body.dataset.modeMenusBound='1';document.addEventListener('click',()=>document.querySelectorAll('.desktop-mode-wrap.is-open').forEach(x=>x.classList.remove('is-open')));}
     }
 
     function liveMatchKey(teams, date, time) {
@@ -8608,7 +8574,7 @@ button.achievement-item {
               away: changedAway ? Date.now() + LIVE_GOAL_FLASH_MS : (previousFlash.away || 0)
             });
 
-            playGoalSound(uid, currentHome, currentAway);
+            playGoalSound(uid, currentHome, currentAway, fixtureByUid.get(uid) || null);
 
             // A popup is a real goal only when the score increased.
             // Score corrections/VAR rollbacks may still update the main score,
