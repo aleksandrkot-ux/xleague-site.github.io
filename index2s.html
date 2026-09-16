@@ -3964,6 +3964,18 @@ main,
   @keyframes tourStageLivePulse { 0%{box-shadow:0 0 0 0 rgba(239,68,68,.55)} 70%{box-shadow:0 0 0 6px rgba(239,68,68,0)} 100%{box-shadow:0 0 0 0 rgba(239,68,68,0)} }
   .tour-stage-msk { margin-top:11px; padding-top:9px; border-top:1px solid rgba(255,255,255,.06); display:flex; align-items:center; justify-content:space-between; gap:8px; color:#666; font-size:8px; font-weight:700; letter-spacing:.025em; white-space:nowrap; }
   .tour-stage-msk strong { color:#a3a3a3; font-size:11px; font-weight:1000; font-variant-numeric:tabular-nums; }
+
+  /* Narrow laptop gutter: keep the whole board visible left of the sidebar. */
+  .tour-stage-board.is-compact { padding:14px 10px 13px; }
+  .tour-stage-board.is-compact .tour-stage-caption { font-size:8px; letter-spacing:.035em; }
+  .tour-stage-board.is-compact .tour-stage-title-row { gap:5px; margin-top:5px; }
+  .tour-stage-board.is-compact .tour-stage-state-dot { width:6px; height:6px; flex-basis:6px; }
+  .tour-stage-board.is-compact .tour-stage-title { font-size:11px; letter-spacing:0; }
+  .tour-stage-board.is-compact .tour-stage-main { margin-top:10px; }
+  .tour-stage-board.is-compact .tour-stage-countdown { font-size:18px; letter-spacing:0; }
+  .tour-stage-board.is-compact .tour-stage-countdown .unit { font-size:8px; margin-right:3px; }
+  .tour-stage-board.is-compact .tour-stage-msk { margin-top:10px; padding-top:8px; gap:4px; font-size:7px; }
+  .tour-stage-board.is-compact .tour-stage-msk strong { font-size:9px; }
 }
 
 .tour-stage-mobile { display:none; }
@@ -12525,11 +12537,16 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const app = document.querySelector(".app");
       if (!board || !app || window.innerWidth < 980) return;
       const appRect = app.getBoundingClientRect();
-      const boardWidth = board.offsetWidth || 200;
-      // On narrower laptops keep the board beside the app instead of
-      // wasting the limited left gutter on a large fixed gap.
-      const gap = appRect.left < 300 ? 12 : 58;
-      const left = Math.max(8, appRect.left - boardWidth - gap);
+      // The board must live entirely in the free gutter to the LEFT of the app.
+      // On narrow laptops that gutter can be smaller than the normal 200px board,
+      // so shrink the board instead of letting the sidebar cover its right edge.
+      const edge = 10;
+      const gap = appRect.left < 300 ? 10 : 58;
+      const available = Math.max(0, appRect.left - gap - edge);
+      const boardWidth = Math.max(126, Math.min(200, available));
+      const left = Math.max(edge, appRect.left - boardWidth - gap);
+      board.style.width = `${Math.round(boardWidth)}px`;
+      board.classList.toggle("is-compact", boardWidth < 176);
       board.style.left = `${Math.round(left)}px`;
       board.style.top = `${Math.round(appRect.top + 12)}px`;
     }
