@@ -3919,8 +3919,8 @@ main,
     display:block;
     position:fixed;
     z-index:24;
-    width:174px;
-    padding:14px 14px 13px;
+    width:180px;
+    padding:16px 15px 15px;
     border:1px solid rgba(255,255,255,.16);
     border-radius:18px;
     background:rgba(15,17,19,.96);
@@ -3941,7 +3941,8 @@ main,
   }
   .tour-stage-title-row { display:flex; align-items:center; gap:7px; margin-top:6px; }
   .tour-stage-state-dot { width:7px; height:7px; flex:0 0 7px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px rgba(239,68,68,.25); }
-  .tour-stage-state-dot.is-active { background:var(--accent); box-shadow:0 0 10px rgba(182,255,59,.42); }
+  .tour-stage-state-dot.is-entry { background:var(--accent); box-shadow:0 0 10px rgba(182,255,59,.42); }
+  .tour-stage-state-dot.is-tour { display:none; }
   .tour-stage-title {
     margin-top:0;
     color:#fff;
@@ -3952,14 +3953,15 @@ main,
     white-space:nowrap;
   }
   .tour-stage-title.is-entry { color:var(--accent); }
-  .tour-stage-main { margin-top:10px; min-height:31px; display:flex; align-items:center; }
+  .tour-stage-main { margin-top:11px; min-height:31px; display:flex; align-items:center; }
   .tour-stage-countdown { color:#fff; font-size:20px; line-height:1; font-weight:1000; letter-spacing:.015em; font-variant-numeric:tabular-nums; white-space:nowrap; }
   .tour-stage-countdown .unit { color:#777; font-size:10px; margin-left:1px; margin-right:5px; }
-  .tour-stage-counts { display:flex; align-items:center; gap:5px; font-size:10px; line-height:1.25; font-weight:950; white-space:nowrap; }
-  .tour-stage-counts .done { color:#777; }
-  .tour-stage-counts .live { color:var(--accent); }
-  .tour-stage-counts .next { color:#fff; }
-  .tour-stage-counts .slash { color:#444; }
+  .tour-stage-counts { width:100%; display:grid; grid-template-columns:repeat(3,1fr); align-items:center; gap:7px; white-space:nowrap; }
+  .tour-stage-count { display:flex; align-items:center; justify-content:center; gap:5px; min-width:0; color:#fff; font-size:13px; line-height:1; font-weight:1000; font-variant-numeric:tabular-nums; }
+  .tour-stage-count-icon { width:15px; min-width:15px; display:inline-flex; align-items:center; justify-content:center; color:#8a8a8a; font-size:12px; line-height:1; }
+  .tour-stage-count-icon.live-dot { width:8px; min-width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 0 rgba(239,68,68,.55); animation:tourStageLivePulse 1.25s ease-out infinite; }
+  .tour-stage-count-icon.wait { color:#9a9a9a; }
+  @keyframes tourStageLivePulse { 0%{box-shadow:0 0 0 0 rgba(239,68,68,.55)} 70%{box-shadow:0 0 0 6px rgba(239,68,68,0)} 100%{box-shadow:0 0 0 0 rgba(239,68,68,0)} }
   .tour-stage-msk { margin-top:11px; padding-top:9px; border-top:1px solid rgba(255,255,255,.06); display:flex; align-items:center; justify-content:space-between; gap:8px; color:#666; font-size:8px; font-weight:700; letter-spacing:.025em; white-space:nowrap; }
   .tour-stage-msk strong { color:#a3a3a3; font-size:11px; font-weight:1000; font-variant-numeric:tabular-nums; }
 }
@@ -12184,12 +12186,19 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       caption.textContent = labels.cap;
       title.textContent = labels.title;
       title.classList.toggle("is-entry", st.phase === "entry");
-      if (dot) dot.classList.toggle("is-active", st.phase !== "before");
+      if (dot) {
+        dot.classList.toggle("is-entry", st.phase === "entry");
+        dot.classList.toggle("is-tour", st.phase === "tour");
+      }
 
       let mobileValue = "";
       if (st.phase === "tour") {
         const c = stageMatchCounts(tour);
-        main.innerHTML = `<div class="tour-stage-counts"><span class="done">Сыгр. ${c.done}</span><span class="slash">/</span><span class="live">Текущ. ${c.live}</span><span class="slash">/</span><span class="next">Предст. ${c.next}</span></div>`;
+        main.innerHTML = `<div class="tour-stage-counts">
+          <span class="tour-stage-count" title="Сыгранные матчи"><span class="tour-stage-count-icon" aria-hidden="true">🏁</span><span>${c.done}</span></span>
+          <span class="tour-stage-count" title="Матчи LIVE"><span class="tour-stage-count-icon live-dot" aria-hidden="true"></span><span>${c.live}</span></span>
+          <span class="tour-stage-count" title="Предстоящие матчи"><span class="tour-stage-count-icon wait" aria-hidden="true">⏳</span><span>${c.next}</span></span>
+        </div>`;
         mobileValue = `Сыгр. ${c.done} / Текущ. ${c.live} / Предст. ${c.next}`;
       } else {
         const left = Math.max(0, st.targetMs - now.getTime());
