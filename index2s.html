@@ -3967,14 +3967,19 @@ main,
 
   /* Narrow laptop gutter: keep the whole board visible left of the sidebar. */
   .tour-stage-board.is-compact { padding:14px 10px 13px; }
-  .tour-stage-board.is-compact .tour-stage-caption { font-size:8px; letter-spacing:.035em; }
-  .tour-stage-board.is-compact .tour-stage-title-row { gap:5px; margin-top:5px; }
-  .tour-stage-board.is-compact .tour-stage-state-dot { width:6px; height:6px; flex-basis:6px; }
-  .tour-stage-board.is-compact .tour-stage-title { font-size:11px; letter-spacing:0; }
-  .tour-stage-board.is-compact .tour-stage-main { margin-top:10px; }
-  .tour-stage-board.is-compact .tour-stage-countdown { font-size:18px; letter-spacing:0; }
-  .tour-stage-board.is-compact .tour-stage-countdown .unit { font-size:8px; margin-right:3px; }
-  .tour-stage-board.is-compact .tour-stage-msk { margin-top:10px; padding-top:8px; gap:4px; font-size:7px; }
+  .tour-stage-board.is-compact .tour-stage-caption { font-size:8px; letter-spacing:.025em; white-space:normal; line-height:1.2; }
+  .tour-stage-board.is-compact .tour-stage-title-row { gap:5px; margin-top:5px; align-items:flex-start; }
+  .tour-stage-board.is-compact .tour-stage-state-dot { width:6px; height:6px; flex-basis:6px; margin-top:3px; }
+  .tour-stage-board.is-compact .tour-stage-title { font-size:11px; letter-spacing:0; white-space:normal; line-height:1.15; }
+  .tour-stage-board.is-compact .tour-stage-main { margin-top:10px; min-height:46px; }
+  .tour-stage-board.is-compact .tour-stage-countdown {
+    width:100%; display:grid; grid-template-columns:max-content max-content;
+    justify-content:start; column-gap:9px; row-gap:5px;
+    font-size:18px; line-height:1; letter-spacing:0; white-space:normal;
+  }
+  .tour-stage-board.is-compact .tour-stage-countdown .time-part { white-space:nowrap; }
+  .tour-stage-board.is-compact .tour-stage-countdown .unit { font-size:8px; margin-right:0; }
+  .tour-stage-board.is-compact .tour-stage-msk { margin-top:9px; padding-top:8px; gap:4px; font-size:7px; }
   .tour-stage-board.is-compact .tour-stage-msk strong { font-size:9px; }
 }
 
@@ -12476,7 +12481,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const mins = Math.floor((total % 3600) / 60);
       const secs = total % 60;
       const pad = n => String(n).padStart(2,"0");
-      return `${days}<span class="unit">д</span>${pad(hours)}<span class="unit">ч</span>${pad(mins)}<span class="unit">м</span>${pad(secs)}<span class="unit">с</span>`;
+      return `<span class="time-part">${days}<span class="unit">д</span></span><span class="time-part">${pad(hours)}<span class="unit">ч</span></span><span class="time-part">${pad(mins)}<span class="unit">м</span></span><span class="time-part">${pad(secs)}<span class="unit">с</span></span>`;
     }
 
     function renderTourStageBoard() {
@@ -12546,7 +12551,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const boardWidth = Math.max(126, Math.min(200, available));
       const left = Math.max(edge, appRect.left - boardWidth - gap);
       board.style.width = `${Math.round(boardWidth)}px`;
-      board.classList.toggle("is-compact", boardWidth < 176);
+      board.classList.toggle("is-compact", boardWidth < 190);
       board.style.left = `${Math.round(left)}px`;
       board.style.top = `${Math.round(appRect.top + 12)}px`;
     }
