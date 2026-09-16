@@ -3909,6 +3909,120 @@ main,
     text-decoration: underline;
   }
 
+
+
+/* ===== X League tour clock / stage board ===== */
+.tour-stage-board {
+  display: none;
+}
+
+@media (min-width: 980px) {
+  .bottom-nav-grid { height: 100%; }
+
+  .tour-stage-board {
+    display: block;
+    margin-top: auto;
+    padding: 14px 14px 13px;
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 18px;
+    background: rgba(255,255,255,.035);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+  }
+
+  .tour-stage-caption {
+    color: #777;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+
+  .tour-stage-title {
+    margin-top: 5px;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.15;
+    font-weight: 1000;
+    letter-spacing: .01em;
+    white-space: nowrap;
+  }
+
+  .tour-stage-title.is-entry { color: var(--accent); }
+
+  .tour-stage-main {
+    margin-top: 10px;
+    min-height: 31px;
+    display: flex;
+    align-items: center;
+  }
+
+  .tour-stage-countdown {
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 1000;
+    letter-spacing: .015em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .tour-stage-countdown .unit { color: #777; font-size: 10px; margin-left: 1px; margin-right: 5px; }
+
+  .tour-stage-counts {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    line-height: 1.25;
+    font-weight: 950;
+    white-space: nowrap;
+  }
+  .tour-stage-counts .done { color: #777; }
+  .tour-stage-counts .live { color: var(--accent); }
+  .tour-stage-counts .next { color: #fff; }
+  .tour-stage-counts .slash { color: #444; }
+
+  .tour-stage-msk {
+    margin-top: 11px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: #666;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: .04em;
+  }
+  .tour-stage-msk strong {
+    color: #a3a3a3;
+    font-size: 11px;
+    font-weight: 1000;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Mobile: deliberately only a thin status strip. */
+.tour-stage-mobile { display:none; }
+@media (max-width: 979px) {
+  .tour-stage-mobile {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    min-height:34px;
+    padding:7px 14px;
+    background:#0b0d0f;
+    border-bottom:1px solid rgba(255,255,255,.055);
+    font-size:10px;
+    font-weight:950;
+  }
+  .tour-stage-mobile-status { color:#a3a3a3; white-space:nowrap; }
+  .tour-stage-mobile-status.is-entry { color:var(--accent); }
+  .tour-stage-mobile-value { color:#fff; white-space:nowrap; font-variant-numeric:tabular-nums; }
+}
+
 </style>
 
 <style>
@@ -7322,6 +7436,11 @@ button.achievement-item {
     <div class="results-ticker hidden" id="resultsTicker" aria-label="Последние результаты">
       <div class="results-ticker-track" id="resultsTickerTrack"></div>
     </div>
+
+    <div class="tour-stage-mobile" id="tourStageMobile" aria-label="Статус тура">
+      <span class="tour-stage-mobile-status" id="tourStageMobileStatus">—</span>
+      <span class="tour-stage-mobile-value" id="tourStageMobileValue">—</span>
+    </div>
 <div class="filter-row" id="filterRow"></div>
 
   <main>
@@ -7851,6 +7970,13 @@ button.achievement-item {
     <button class="nav-btn" data-screen="table"><span class="nav-icon">🏆</span>Таблица</button>
     <button class="nav-btn" data-screen="stats"><span class="nav-icon">📊</span>Статистика</button>
     <button class="nav-btn" data-screen="players"><span class="nav-icon">👥</span>Игрок</button>
+
+    <div class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
+      <div class="tour-stage-caption" id="tourStageCaption">Тур</div>
+      <div class="tour-stage-title" id="tourStageTitle">—</div>
+      <div class="tour-stage-main" id="tourStageMain"></div>
+      <div class="tour-stage-msk"><span>МОСКВА</span><strong id="tourStageMsk">--:--</strong></div>
+    </div>
 
   </div>
 </nav>
@@ -12003,6 +12129,125 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       playerSelect.addEventListener("change", () => { selectedPlayerName = playerSelect.value; renderPlayerProfile(); });
     }
 
+
+
+    // ===== Tour stage clock =====
+    // Moscow schedule: Mon 00:00–Fri 11:59 before entries; Fri 12:00–23:59 entries; Sat–Sun current tour.
+    function moscowParts(now = new Date()) {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit",
+        weekday: "short", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
+      }).formatToParts(now);
+      const o = Object.fromEntries(parts.map(p => [p.type, p.value]));
+      const wd = {Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7}[o.weekday] || 1;
+      return { year:+o.year, month:+o.month, day:+o.day, weekday:wd, hour:+o.hour, minute:+o.minute, second:+o.second };
+    }
+
+    function moscowWallToUtcMs(y,m,d,h=0,min=0,sec=0) {
+      // Moscow is UTC+3 year-round. Construct target wall-clock instant explicitly.
+      return Date.UTC(y, m-1, d, h-3, min, sec);
+    }
+
+    function tourStageState(now = new Date()) {
+      const p = moscowParts(now);
+      const mins = p.hour * 60 + p.minute;
+      let phase = "before";
+      if (p.weekday === 5 && mins >= 12*60) phase = "entry";
+      else if (p.weekday >= 6) phase = "tour";
+
+      let targetMs = null;
+      if (phase === "before") {
+        const daysToFriday = 5 - p.weekday;
+        targetMs = moscowWallToUtcMs(p.year,p.month,p.day + daysToFriday,12,0,0);
+      } else if (phase === "entry") {
+        targetMs = moscowWallToUtcMs(p.year,p.month,p.day + 1,0,0,0);
+      }
+      return { phase, targetMs, p };
+    }
+
+    function stageActiveTour() {
+      return Number(getDefaultTour() || siteConfig.current_tour || 0) || 0;
+    }
+
+    function stageTourNumber(phase) {
+      const active = stageActiveTour();
+      if (!active) return 0;
+      return phase === "entry" ? active + 1 : active;
+    }
+
+    function stageMatchCounts(tour) {
+      const scoped = matches.filter(m => Number(m.tour) === Number(tour));
+      let done = 0, live = 0;
+      scoped.forEach(m => {
+        const liveRow = rawLiveDataForMatch(m);
+        const finished = isMatchLiveFinished(m) || ["win","lose","cancelled"].includes(m.status) || ["win","lose","cancelled"].includes(m.api_status);
+        if (finished) done += 1;
+        else if (liveRow && liveRow.phase && liveRow.phase !== "FINISHED") live += 1;
+      });
+      return { done, live, next: Math.max(0, scoped.length - done - live), total: scoped.length };
+    }
+
+    function countdownHtml(ms) {
+      const total = Math.max(0, Math.floor(ms / 1000));
+      const days = Math.floor(total / 86400);
+      const hours = Math.floor((total % 86400) / 3600);
+      const mins = Math.floor((total % 3600) / 60);
+      const secs = total % 60;
+      const pad = n => String(n).padStart(2,"0");
+      return `${days}<span class="unit">д</span>${pad(hours)}<span class="unit">ч</span>${pad(mins)}<span class="unit">м</span>${pad(secs)}<span class="unit">с</span>`;
+    }
+
+    function renderTourStageBoard() {
+      const now = new Date();
+      const st = tourStageState(now);
+      const tour = stageTourNumber(st.phase);
+      const title = document.getElementById("tourStageTitle");
+      const caption = document.getElementById("tourStageCaption");
+      const main = document.getElementById("tourStageMain");
+      const msk = document.getElementById("tourStageMsk");
+      const mobStatus = document.getElementById("tourStageMobileStatus");
+      const mobValue = document.getElementById("tourStageMobileValue");
+      if (!title || !main) return;
+
+      const labels = st.phase === "before"
+        ? { cap:`ПРЕДЫДУЩИЙ ТУР №${tour || "—"}`, title:"ДО СБОРА ЗАЯВОК" }
+        : st.phase === "entry"
+          ? { cap:`ТУР №${tour || "—"}`, title:"ПРИЕМ ЗАЯВОК" }
+          : { cap:`ТЕКУЩИЙ ТУР №${tour || "—"}`, title:"ИДЕТ ТУР" };
+
+      caption.textContent = labels.cap;
+      title.textContent = labels.title;
+      title.classList.toggle("is-entry", st.phase === "entry");
+
+      let mobileValue = "";
+      if (st.phase === "tour") {
+        const c = stageMatchCounts(tour);
+        main.innerHTML = `<div class="tour-stage-counts"><span class="done">Сыгр. ${c.done}</span><span class="slash">/</span><span class="live">Текущ. ${c.live}</span><span class="slash">/</span><span class="next">Предст. ${c.next}</span></div>`;
+        mobileValue = `Сыгр. ${c.done} / Текущ. ${c.live} / Предст. ${c.next}`;
+      } else {
+        const left = Math.max(0, st.targetMs - now.getTime());
+        main.innerHTML = `<div class="tour-stage-countdown">${countdownHtml(left)}</div>`;
+        const totalMin = Math.max(0, Math.floor(left/60000));
+        const d = Math.floor(totalMin/1440), h=Math.floor((totalMin%1440)/60), m=totalMin%60;
+        mobileValue = `${d ? d+"д " : ""}${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+      }
+
+      const mp = moscowParts(now);
+      if (msk) msk.textContent = `${String(mp.hour).padStart(2,"0")}:${String(mp.minute).padStart(2,"0")}`;
+      if (mobStatus) {
+        mobStatus.textContent = `${labels.title}${tour ? ` · №${tour}` : ""}`;
+        mobStatus.classList.toggle("is-entry", st.phase === "entry");
+      }
+      if (mobValue) mobValue.textContent = mobileValue;
+    }
+
+    let tourStageTimer = null;
+    function startTourStageBoard() {
+      renderTourStageBoard();
+      if (tourStageTimer) clearInterval(tourStageTimer);
+      tourStageTimer = setInterval(renderTourStageBoard, 1000);
+    }
+
     async function boot() {
       bindSoundToggle();
       bindGoalNotifyToggle();
@@ -12033,6 +12278,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       else if (!cached) renderAll();
 
       startLivePolling();
+      startTourStageBoard();
     }
 
     boot();
