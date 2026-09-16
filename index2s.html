@@ -3988,6 +3988,56 @@ main,
   .tour-stage-mobile-value { color:#fff; white-space:nowrap; font-variant-numeric:tabular-nums; }
 }
 
+
+
+/* ===== X League local favourites prototype v1 ===== */
+.favorite-toggle {
+  appearance:none; border:0; background:transparent; color:#555; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; transition:.16s ease;
+}
+.favorite-toggle:hover { color:#aaa; transform:translateY(-1px); }
+.favorite-toggle.is-active { color:#f1f1f1; filter:drop-shadow(0 0 5px rgba(255,255,255,.18)); }
+.favorite-toggle.is-partial { color:#999; opacity:.8; }
+.match-card .match-row { grid-template-columns:auto minmax(0,1fr) auto; }
+.match-favorite-zone {
+  width:28px; align-self:stretch; margin:-2px 8px -2px -4px; padding-right:7px;
+  border-right:1px solid rgba(255,255,255,.055);
+}
+.match-favorite-zone .favorite-toggle { width:100%; height:100%; min-height:38px; font-size:15px; opacity:.55; }
+.match-favorite-zone .favorite-toggle.is-active { opacity:1; }
+.player-favorite-toggle { width:28px; height:28px; border-radius:9px; font-size:15px; margin-left:5px; }
+.player-top { gap:6px; }
+
+.desktop-favorites-panel { display:none; }
+@media (min-width: 901px) {
+  .desktop-favorites-panel {
+    display:flex; flex-direction:column; min-height:0; flex:1 1 auto; margin-top:14px;
+    padding-top:12px; border-top:1px solid rgba(255,255,255,.055);
+  }
+  .desktop-favorites-empty { color:#555; font-size:10px; line-height:1.45; padding:8px 10px; text-align:center; }
+  .desktop-favorites-list { min-height:0; overflow-y:auto; overflow-x:hidden; padding-right:3px; scrollbar-width:thin; }
+  .fav-mini-card { padding:8px 7px; border-bottom:1px solid rgba(255,255,255,.045); }
+  .fav-mini-card:hover { background:rgba(255,255,255,.025); }
+  .fav-mini-top { display:flex; align-items:center; gap:5px; min-width:0; }
+  .fav-mini-meta { color:#777; font-size:8px; font-weight:800; white-space:nowrap; }
+  .fav-mini-stars { margin-left:auto; min-width:0; transform:scale(.78); transform-origin:right center; }
+  .fav-mini-main { display:grid; grid-template-columns:18px minmax(0,1fr) auto; gap:5px; align-items:center; margin-top:3px; }
+  .fav-mini-flag { font-size:13px; }
+  .fav-mini-name { color:#d8d8d8; font-size:9px; line-height:1.2; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .fav-mini-status { font-size:9px; white-space:nowrap; }
+  .fav-mini-divider { height:1px; margin:7px 5px; background:rgba(255,255,255,.09); }
+  .fav-mini-remove { width:18px; height:18px; font-size:11px; opacity:.45; margin-left:2px; }
+  .fav-mini-card:hover .fav-mini-remove { opacity:.9; }
+  .nav-btn[data-screen="favorites"] { display:none; }
+}
+
+@media (max-width: 900px) {
+  .bottom-nav-grid { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
+  .nav-btn { min-width:0; padding-left:2px !important; padding-right:2px !important; font-size:8px !important; }
+  .nav-icon { font-size:14px !important; }
+  #screen-favorites .section-title { margin-top:2px; }
+}
+
 </style>
 
 <style>
@@ -7929,6 +7979,11 @@ button.achievement-item {
     </div>
 
 
+  <section class="screen" id="screen-favorites">
+    <div class="section-title">📝 Избранное</div>
+    <div id="favoritesMobileList"></div>
+  </section>
+
   <div class="picker-mobile-backdrop" id="pickerMobileBackdrop"></div>
   <div class="global-pickers-popover" id="globalPickersPopover" aria-hidden="true"></div>
   <div class="goal-toast-stack" id="goalToastStack" aria-live="polite" aria-atomic="false"></div>
@@ -7944,7 +7999,11 @@ button.achievement-item {
     <button class="nav-btn" data-screen="table"><span class="nav-icon">🏆</span>Таблица</button>
     <button class="nav-btn" data-screen="stats"><span class="nav-icon">📊</span>Статистика</button>
     <button class="nav-btn" data-screen="players"><span class="nav-icon">👥</span>Игрок</button>
+    <button class="nav-btn" data-screen="favorites"><span class="nav-icon">📝</span>Избранное</button>
 
+  </div>
+  <div class="desktop-favorites-panel" id="desktopFavoritesPanel" aria-label="Избранные матчи">
+    <div class="desktop-favorites-list" id="desktopFavoritesList"></div>
   </div>
 </nav>
 
@@ -9279,6 +9338,127 @@ function mapPredictionRow(row) {
       return escapeHtml(flag || "🌍");
     }
 
+
+    const FAVORITES_STORAGE_KEY = "xleague_favorites_v1";
+    let favoriteState = loadFavoriteState();
+
+    function loadFavoriteState() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(FAVORITES_STORAGE_KEY) || "{}");
+        return {
+          manual: Array.isArray(raw.manual) ? raw.manual.map(String) : [],
+          players: raw.players && typeof raw.players === "object" ? raw.players : {}
+        };
+      } catch (_) { return { manual: [], players: {} }; }
+    }
+
+    function saveFavoriteState() {
+      try { localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favoriteState)); } catch (_) {}
+    }
+
+    function playerFavoriteIds(playerName) {
+      const p = predictions.find(x => String(x.name).trim() === String(playerName).trim());
+      return p ? p.picks.map(x => String(x.matchId)).filter(Boolean) : [];
+    }
+
+    function favoriteIdSet() {
+      const ids = new Set((favoriteState.manual || []).map(String));
+      Object.values(favoriteState.players || {}).forEach(arr => (Array.isArray(arr) ? arr : []).forEach(id => ids.add(String(id))));
+      return ids;
+    }
+
+    function isFavoriteMatch(matchId) { return favoriteIdSet().has(String(matchId)); }
+
+    function favoritePlayerState(player) {
+      const ids = player?.picks?.map(x => String(x.matchId)).filter(Boolean) || [];
+      if (!ids.length) return "none";
+      const set = favoriteIdSet();
+      const count = ids.filter(id => set.has(id)).length;
+      return count === ids.length ? "all" : count ? "partial" : "none";
+    }
+
+    function toggleFavoriteMatch(matchId) {
+      const id = String(matchId);
+      const manual = new Set((favoriteState.manual || []).map(String));
+      if (manual.has(id)) manual.delete(id); else manual.add(id);
+      favoriteState.manual = [...manual];
+      saveFavoriteState();
+      refreshFavoritesUI();
+    }
+
+    function toggleFavoritePlayer(playerName) {
+      const key = String(playerName || "").trim();
+      if (!key) return;
+      if (favoriteState.players[key]) delete favoriteState.players[key];
+      else favoriteState.players[key] = playerFavoriteIds(key);
+      saveFavoriteState();
+      refreshFavoritesUI();
+    }
+
+    function favoriteMatches() {
+      const ids = favoriteIdSet();
+      return matches.filter(m => ids.has(String(m.id)));
+    }
+
+    function favoriteFinished(match) {
+      return isMatchLiveFinished(match) || ["win","lose","cancelled"].includes(match.status) || ["win","lose","cancelled"].includes(match.api_status);
+    }
+
+    function compactStatusHtml(match) {
+      const st = matchStatus(match);
+      return `<span class="fav-mini-status">${st}</span>`;
+    }
+
+    function favoriteMiniCard(match) {
+      return `<div class="fav-mini-card">
+        <div class="fav-mini-top">
+          <span class="fav-mini-meta">${escapeHtml(match.date)} · ${escapeHtml(match.time)}</span>
+          <span class="fav-mini-stars">${starsHtml(match.popularity, false)}</span>
+          <button type="button" class="favorite-toggle fav-mini-remove is-active" data-favorite-match="${escapeHtml(match.id)}" title="Убрать из избранного">📝</button>
+        </div>
+        <div class="fav-mini-main">
+          <span class="fav-mini-flag">${flagHtml(match.flag_url || match.flag)}</span>
+          <span class="fav-mini-name" title="${escapeHtml(match.teams)}">${escapeHtml(match.teams)}</span>
+          ${compactStatusHtml(match)}
+        </div>
+      </div>`;
+    }
+
+    function renderFavorites() {
+      const all = favoriteMatches();
+      const active = all.filter(m => !favoriteFinished(m)).sort(compareDateTimeAsc);
+      const done = all.filter(favoriteFinished).sort(compareDateTimeDesc);
+      const desktop = document.getElementById("desktopFavoritesList");
+      if (desktop) desktop.innerHTML = all.length
+        ? active.map(favoriteMiniCard).join("") + (active.length && done.length ? '<div class="fav-mini-divider"></div>' : '') + done.map(favoriteMiniCard).join("")
+        : '<div class="desktop-favorites-empty">Нажмите 📝 у матча или участника</div>';
+
+      const mobile = document.getElementById("favoritesMobileList");
+      if (mobile) mobile.innerHTML = all.length
+        ? active.map(matchCard).join("") + (active.length && done.length ? '<div class="fav-mini-divider"></div>' : '') + done.map(matchCard).join("")
+        : '<div class="empty-state">В избранном пока нет матчей</div>';
+    }
+
+    function refreshFavoritesUI() {
+      renderFavorites();
+      renderMatches();
+      renderPicks();
+    }
+
+    document.addEventListener("click", (event) => {
+      const matchBtn = event.target.closest?.("[data-favorite-match]");
+      if (matchBtn) {
+        event.preventDefault(); event.stopPropagation();
+        toggleFavoriteMatch(matchBtn.dataset.favoriteMatch);
+        return;
+      }
+      const playerBtn = event.target.closest?.("[data-favorite-player]");
+      if (playerBtn) {
+        event.preventDefault(); event.stopPropagation();
+        toggleFavoritePlayer(playerBtn.dataset.favoritePlayer);
+      }
+    });
+
     function matchStatus(match) {
       const status = match.api_status || match.status || "pending";
 
@@ -9315,6 +9495,7 @@ function mapPredictionRow(row) {
       return `
         <article class="match-card">
           <div class="match-row">
+            <div class="match-favorite-zone"><button type="button" class="favorite-toggle ${isFavoriteMatch(match.id) ? "is-active" : ""}" data-favorite-match="${escapeHtml(match.id)}" title="${isFavoriteMatch(match.id) ? "Убрать из избранного" : "Добавить в избранное"}" aria-label="Избранное">📝</button></div>
             <div style="min-width:0;">
               <div class="match-meta-line">
                 <div class="match-meta">${escapeHtml(match.date)} · ${escapeHtml(match.time)}</div>
@@ -9757,6 +9938,7 @@ function mapPredictionRow(row) {
 
    function renderMatches() {
   const scopedMatches = currentTourMatches();
+  setTimeout(renderFavorites, 0);
 
   const upcoming = scopedMatches
     .filter(m =>
@@ -9952,6 +10134,7 @@ if (screenMatches) {
                 <button class="player-name-link" data-open-player="${escapeHtml(player.name)}">${escapeHtml(player.name)}</button>
                 ${badge}
               </div>
+              <button type="button" class="favorite-toggle player-favorite-toggle ${favoritePlayerState(player) === "all" ? "is-active" : favoritePlayerState(player) === "partial" ? "is-partial" : ""}" data-favorite-player="${escapeHtml(player.name)}" title="Добавить/убрать матчи участника из избранного" aria-label="Матчи участника в избранном">📝</button>
               <div class="dots">${form.map(dot).join("")}</div>
             </div>
 
@@ -12001,7 +12184,10 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
     function showScreen(name) {
       document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
-      document.getElementById(`screen-${name}`).classList.add("active");
+      const targetScreen = document.getElementById(`screen-${name}`);
+      if (!targetScreen) return;
+      targetScreen.classList.add("active");
+      if (name === "favorites") renderFavorites();
 
       document.querySelectorAll(".nav-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.screen === name);
