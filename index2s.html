@@ -7533,11 +7533,14 @@ button.achievement-item {
 </style>
 
 <style>
-/* ===== v6: three-state sound / notification controls ===== */
+/* ===== v7: compact icon-only sound / notification controls ===== */
 .desktop-mode-wrap{position:relative;display:inline-flex}
-.mode-popover{position:absolute;right:0;bottom:calc(100% + 7px);z-index:260;display:none;min-width:145px;padding:5px;border:1px solid rgba(255,255,255,.11);border-radius:13px;background:#15171a;box-shadow:0 12px 30px rgba(0,0,0,.42)}
-.desktop-mode-wrap.is-open .mode-popover{display:grid;gap:3px}
-.mode-option{border:0;border-radius:9px;background:transparent;color:#aaa;padding:8px 9px;text-align:left;font:800 9px/1.1 inherit;white-space:nowrap;cursor:pointer}
+#soundModeWrap > .sound-toggle-btn,#notifyModeWrap > .live-notify-toggle-btn{width:42px!important;min-width:42px!important;height:30px!important;padding:0!important;justify-content:center!important;gap:0!important}
+#soundModeWrap .sound-toggle-text,#notifyModeWrap .live-notify-toggle-text{display:none!important}
+.mode-popover{position:absolute;right:0;top:calc(100% + 7px);bottom:auto;z-index:260;display:none;width:42px;min-width:42px;padding:4px;border:1px solid rgba(255,255,255,.11);border-radius:12px;background:#15171a;box-shadow:0 12px 30px rgba(0,0,0,.42);transform:translateY(-5px);opacity:0}
+.desktop-mode-wrap.is-open .mode-popover{display:grid;gap:3px;animation:xleagueModeDrop .17s ease-out forwards}
+@keyframes xleagueModeDrop{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.mode-option{width:32px;height:30px;padding:0;border:0;border-radius:8px;background:transparent;color:#aaa;display:flex;align-items:center;justify-content:center;font:800 13px/1 inherit;white-space:nowrap;cursor:pointer}
 .mode-option:hover{background:rgba(255,255,255,.06);color:#fff}.mode-option.is-selected{background:rgba(182,255,59,.09);color:#b6ff3b}
 .sound-toggle-btn.is-favorites,.live-notify-toggle-btn.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}
 @media(max-width:700px){.desktop-mode-wrap{display:none!important}#soundToggleBtnMobile.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}}
@@ -7565,10 +7568,10 @@ button.achievement-item {
         <div class="header-actions">
           <div class="desktop-mode-wrap" id="soundModeWrap"><button class="sound-toggle-btn is-off" id="soundToggleBtn" type="button" aria-haspopup="menu" aria-expanded="false">
             <span class="sound-toggle-icon" aria-hidden="true">🔇</span><span class="sound-toggle-text">Звук выкл</span></button>
-            <div class="mode-popover" role="menu"><button class="mode-option" data-sound-mode="all">🔊 Все матчи</button><button class="mode-option" data-sound-mode="favorites">🔊 📝 Избранное</button><button class="mode-option" data-sound-mode="off">🔇 Выключить</button></div></div>
+            <div class="mode-popover" role="menu" aria-label="Режим звука"><button class="mode-option" data-sound-mode="all" title="Звук: все матчи" aria-label="Звук: все матчи">🔊</button><button class="mode-option" data-sound-mode="favorites" title="Звук: только избранное" aria-label="Звук: только избранное">🔊📝</button><button class="mode-option" data-sound-mode="off" title="Звук выключен" aria-label="Звук выключен">🔇</button></div></div>
           <div class="desktop-mode-wrap" id="notifyModeWrap"><button class="live-notify-toggle-btn is-on" id="liveNotifyToggleBtn" type="button" aria-haspopup="menu" aria-expanded="false">
             <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span><span class="live-notify-toggle-text">Увед. все</span></button>
-            <div class="mode-popover" role="menu"><button class="mode-option" data-notify-mode="all">🔔 Все матчи</button><button class="mode-option" data-notify-mode="favorites">🔔 📝 Избранное</button><button class="mode-option" data-notify-mode="off">🔕 Выключить</button></div></div>
+            <div class="mode-popover" role="menu" aria-label="Режим уведомлений"><button class="mode-option" data-notify-mode="all" title="Уведомления: все матчи" aria-label="Уведомления: все матчи">🔔</button><button class="mode-option" data-notify-mode="favorites" title="Уведомления: только избранное" aria-label="Уведомления: только избранное">🔔📝</button><button class="mode-option" data-notify-mode="off" title="Уведомления выключены" aria-label="Уведомления выключены">🔕</button></div></div>
           <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">31,8K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
@@ -8295,6 +8298,7 @@ button.achievement-item {
       const icon=btn.querySelector(".live-notify-toggle-icon"), text=btn.querySelector(".live-notify-toggle-text");
       if(icon) icon.textContent=goalNotificationMode==='off'?'🔕':goalNotificationMode==='favorites'?'🔔📝':'🔔';
       if(text) text.textContent=goalNotificationMode==='off'?'Увед. выкл':goalNotificationMode==='favorites'?'Увед. 📝':'Увед. все';
+      const notifyTitle=goalNotificationMode==='off'?'Уведомления выключены':goalNotificationMode==='favorites'?'Уведомления: только избранное':'Уведомления: все матчи'; btn.title=notifyTitle; btn.setAttribute('aria-label',notifyTitle);
       document.querySelectorAll('[data-notify-mode]').forEach(x=>x.classList.toggle('is-selected',x.dataset.notifyMode===goalNotificationMode));
     }
     function clearGoalToasts(){const stack=document.getElementById("goalToastStack");if(stack)stack.innerHTML="";}
@@ -8442,7 +8446,7 @@ button.achievement-item {
 
     function renderSoundToggle() {
       goalSoundEnabled=goalSoundMode!=="off";
-      document.querySelectorAll('.sound-toggle-btn').forEach(btn=>{btn.classList.toggle('is-on',goalSoundMode==='all');btn.classList.toggle('is-favorites',goalSoundMode==='favorites');btn.classList.toggle('is-off',goalSoundMode==='off');const icon=btn.querySelector('.sound-toggle-icon'),text=btn.querySelector('.sound-toggle-text');if(icon)icon.textContent=goalSoundMode==='off'?'🔇':goalSoundMode==='favorites'?'🔊📝':'🔊';if(text)text.textContent=goalSoundMode==='off'?'Звук выкл':goalSoundMode==='favorites'?'Только 📝':'Звук вкл';});
+      document.querySelectorAll('.sound-toggle-btn').forEach(btn=>{btn.classList.toggle('is-on',goalSoundMode==='all');btn.classList.toggle('is-favorites',goalSoundMode==='favorites');btn.classList.toggle('is-off',goalSoundMode==='off');const icon=btn.querySelector('.sound-toggle-icon'),text=btn.querySelector('.sound-toggle-text');if(icon)icon.textContent=goalSoundMode==='off'?'🔇':goalSoundMode==='favorites'?'🔊📝':'🔊';if(text)text.textContent=goalSoundMode==='off'?'Звук выкл':goalSoundMode==='favorites'?'Только 📝':'Звук вкл';if(btn.id==='soundToggleBtn'){const soundTitle=goalSoundMode==='off'?'Звук выключен':goalSoundMode==='favorites'?'Звук: только избранное':'Звук: все матчи';btn.title=soundTitle;btn.setAttribute('aria-label',soundTitle);}});
       document.querySelectorAll('[data-sound-mode]').forEach(x=>x.classList.toggle('is-selected',x.dataset.soundMode===goalSoundMode));
     }
 
