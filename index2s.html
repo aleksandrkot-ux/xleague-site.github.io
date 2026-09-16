@@ -7476,6 +7476,38 @@ button.achievement-item {
 .dot.win, .dot.lose, .profile-dot.win, .profile-dot.lose { box-shadow:none !important; }
 </style>
 
+
+<style>
+/* ===== X League favourites prototype v4 ===== */
+@media (min-width: 901px) {
+  .bottom-nav { position:relative !important; }
+  .desktop-favorites-panel {
+    position:absolute !important;
+    left:12px; right:12px; bottom:22px;
+    width:auto; height:292px; min-height:292px; max-height:292px;
+    margin:0 !important;
+  }
+  .fav-mini-card { min-height:52px; }
+  .fav-mini-main { align-items:start; }
+  .fav-mini-name {
+    display:flex; flex-direction:column; gap:1px;
+    white-space:normal; overflow:hidden; text-overflow:clip;
+    line-height:1.08; min-width:0;
+  }
+  .fav-mini-team { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+}
+@media (max-width: 900px) {
+  body.favorites-screen-active main {
+    padding-top:0 !important;
+    margin-top:0 !important;
+  }
+  body.favorites-screen-active #screen-favorites {
+    display:block;
+    padding-top:0 !important; margin-top:0 !important;
+  }
+  body.favorites-screen-active #screen-favorites .section-title { margin:6px 2px 10px !important; }
+}
+</style>
 </head>
 <body>
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
@@ -7859,6 +7891,11 @@ button.achievement-item {
 
 
 
+  <section class="screen" id="screen-favorites">
+    <div class="section-title">📝 Избранное</div>
+    <div id="favoritesMobileList"></div>
+  </section>
+
 </main>
 
     <div class="info-modal hidden" id="prizeModal">
@@ -8041,10 +8078,6 @@ button.achievement-item {
     </div>
 
 
-  <section class="screen" id="screen-favorites">
-    <div class="section-title">📝 Избранное</div>
-    <div id="favoritesMobileList"></div>
-  </section>
 
   <div class="picker-mobile-backdrop" id="pickerMobileBackdrop"></div>
   <div class="global-pickers-popover" id="globalPickersPopover" aria-hidden="true"></div>
@@ -9478,7 +9511,15 @@ function mapPredictionRow(row) {
       return `<span class="fav-mini-status">${st}</span>`;
     }
 
+    function splitFavoriteTeams(teams) {
+      const text = String(teams || "").trim();
+      const parts = text.split(/\s+(?:—|–|-)\s+/, 2);
+      if (parts.length < 2) return [text, ""];
+      return [parts[0].trim(), parts[1].trim()];
+    }
+
     function favoriteMiniCard(match) {
+      const [homeTeam, awayTeam] = splitFavoriteTeams(match.teams);
       return `<div class="fav-mini-card">
         <button type="button" class="fav-mini-pick" data-favorite-match="${escapeHtml(match.id)}" title="Убрать из избранного" aria-label="Убрать из избранного">📝</button>
         <div class="fav-mini-top">
@@ -9487,7 +9528,7 @@ function mapPredictionRow(row) {
         </div>
         <div class="fav-mini-main">
           <span class="fav-mini-flag">${flagHtml(match.flag_url || match.flag)}</span>
-          <span class="fav-mini-name" title="${escapeHtml(match.teams)}">${escapeHtml(match.teams)}</span>
+          <span class="fav-mini-name" title="${escapeHtml(match.teams)}"><span class="fav-mini-team">${escapeHtml(homeTeam)}</span>${awayTeam ? `<span class="fav-mini-team">${escapeHtml(awayTeam)}</span>` : ""}</span>
           ${compactStatusHtml(match)}
         </div>
       </div>`;
