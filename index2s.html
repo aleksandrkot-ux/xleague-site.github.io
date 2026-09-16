@@ -3912,107 +3912,70 @@ main,
 
 
 /* ===== X League tour clock / stage board ===== */
-.tour-stage-board {
-  display: none;
-}
+.tour-stage-board { display:none; }
 
 @media (min-width: 980px) {
-  .bottom-nav-grid { height: 100%; }
-
   .tour-stage-board {
-    display: block;
-    margin-top: auto;
-    padding: 14px 14px 13px;
-    border: 1px solid rgba(255,255,255,.075);
-    border-radius: 18px;
-    background: rgba(255,255,255,.035);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    display:block;
+    position:fixed;
+    z-index:24;
+    width:174px;
+    padding:14px 14px 13px;
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:18px;
+    background:rgba(15,17,19,.96);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.035), 0 12px 30px rgba(0,0,0,.22);
+    transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
   }
-
+  .tour-stage-board:hover {
+    border-color:rgba(255,255,255,.52);
+    background:rgba(18,20,22,.98);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 0 0 1px rgba(255,255,255,.05), 0 14px 34px rgba(0,0,0,.30);
+  }
   .tour-stage-caption {
-    color: #777;
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: .07em;
-    text-transform: uppercase;
+    color:#777;
+    font-size:9px;
+    font-weight:500;
+    letter-spacing:.055em;
+    text-transform:uppercase;
   }
-
+  .tour-stage-title-row { display:flex; align-items:center; gap:7px; margin-top:6px; }
+  .tour-stage-state-dot { width:7px; height:7px; flex:0 0 7px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px rgba(239,68,68,.25); }
+  .tour-stage-state-dot.is-active { background:var(--accent); box-shadow:0 0 10px rgba(182,255,59,.42); }
   .tour-stage-title {
-    margin-top: 5px;
-    color: #fff;
-    font-size: 13px;
-    line-height: 1.15;
-    font-weight: 1000;
-    letter-spacing: .01em;
-    white-space: nowrap;
+    margin-top:0;
+    color:#fff;
+    font-size:13px;
+    line-height:1.15;
+    font-weight:1000;
+    letter-spacing:.01em;
+    white-space:nowrap;
   }
-
-  .tour-stage-title.is-entry { color: var(--accent); }
-
-  .tour-stage-main {
-    margin-top: 10px;
-    min-height: 31px;
-    display: flex;
-    align-items: center;
-  }
-
-  .tour-stage-countdown {
-    color: #fff;
-    font-size: 20px;
-    line-height: 1;
-    font-weight: 1000;
-    letter-spacing: .015em;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .tour-stage-countdown .unit { color: #777; font-size: 10px; margin-left: 1px; margin-right: 5px; }
-
-  .tour-stage-counts {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    line-height: 1.25;
-    font-weight: 950;
-    white-space: nowrap;
-  }
-  .tour-stage-counts .done { color: #777; }
-  .tour-stage-counts .live { color: var(--accent); }
-  .tour-stage-counts .next { color: #fff; }
-  .tour-stage-counts .slash { color: #444; }
-
-  .tour-stage-msk {
-    margin-top: 11px;
-    padding-top: 9px;
-    border-top: 1px solid rgba(255,255,255,.06);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    color: #666;
-    font-size: 9px;
-    font-weight: 850;
-    letter-spacing: .04em;
-  }
-  .tour-stage-msk strong {
-    color: #a3a3a3;
-    font-size: 11px;
-    font-weight: 1000;
-    font-variant-numeric: tabular-nums;
-  }
+  .tour-stage-title.is-entry { color:var(--accent); }
+  .tour-stage-main { margin-top:10px; min-height:31px; display:flex; align-items:center; }
+  .tour-stage-countdown { color:#fff; font-size:20px; line-height:1; font-weight:1000; letter-spacing:.015em; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .tour-stage-countdown .unit { color:#777; font-size:10px; margin-left:1px; margin-right:5px; }
+  .tour-stage-counts { display:flex; align-items:center; gap:5px; font-size:10px; line-height:1.25; font-weight:950; white-space:nowrap; }
+  .tour-stage-counts .done { color:#777; }
+  .tour-stage-counts .live { color:var(--accent); }
+  .tour-stage-counts .next { color:#fff; }
+  .tour-stage-counts .slash { color:#444; }
+  .tour-stage-msk { margin-top:11px; padding-top:9px; border-top:1px solid rgba(255,255,255,.06); display:flex; align-items:center; justify-content:space-between; gap:8px; color:#666; font-size:8px; font-weight:700; letter-spacing:.025em; white-space:nowrap; }
+  .tour-stage-msk strong { color:#a3a3a3; font-size:11px; font-weight:1000; font-variant-numeric:tabular-nums; }
 }
 
-/* Mobile: deliberately only a thin status strip. */
 .tour-stage-mobile { display:none; }
 @media (max-width: 979px) {
+  .bottom-nav { display:flex; flex-direction:column; padding-top:0; }
   .tour-stage-mobile {
     display:flex;
+    order:-1;
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    min-height:34px;
-    padding:7px 14px;
+    min-height:30px;
+    margin:0 -8px 7px;
+    padding:6px 14px;
     background:#0b0d0f;
     border-bottom:1px solid rgba(255,255,255,.055);
     font-size:10px;
@@ -7401,6 +7364,15 @@ button.achievement-item {
 
 </head>
 <body>
+  <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
+    <div class="tour-stage-caption" id="tourStageCaption">Тур</div>
+    <div class="tour-stage-title-row">
+      <span class="tour-stage-state-dot" id="tourStageDot" aria-hidden="true"></span>
+      <div class="tour-stage-title" id="tourStageTitle">—</div>
+    </div>
+    <div class="tour-stage-main" id="tourStageMain"></div>
+    <div class="tour-stage-msk"><span>МСК (UTC+3)</span><strong id="tourStageMsk">--:--</strong></div>
+  </aside>
   <div class="app">
     <header class="header">
       <div class="header-row">
@@ -7437,10 +7409,6 @@ button.achievement-item {
       <div class="results-ticker-track" id="resultsTickerTrack"></div>
     </div>
 
-    <div class="tour-stage-mobile" id="tourStageMobile" aria-label="Статус тура">
-      <span class="tour-stage-mobile-status" id="tourStageMobileStatus">—</span>
-      <span class="tour-stage-mobile-value" id="tourStageMobileValue">—</span>
-    </div>
 <div class="filter-row" id="filterRow"></div>
 
   <main>
@@ -7964,19 +7932,16 @@ button.achievement-item {
   <div class="goal-toast-stack" id="goalToastStack" aria-live="polite" aria-atomic="false"></div>
 
   <nav class="bottom-nav">
+  <div class="tour-stage-mobile" id="tourStageMobile" aria-label="Статус тура">
+    <span class="tour-stage-mobile-status" id="tourStageMobileStatus">—</span>
+    <span class="tour-stage-mobile-value" id="tourStageMobileValue">—</span>
+  </div>
   <div class="bottom-nav-grid">
     <button class="nav-btn active" data-screen="matches"><span class="nav-icon">⚽</span>Матчи</button>
     <button class="nav-btn" data-screen="picks"><span class="nav-icon">🎯</span>Прогнозы</button>
     <button class="nav-btn" data-screen="table"><span class="nav-icon">🏆</span>Таблица</button>
     <button class="nav-btn" data-screen="stats"><span class="nav-icon">📊</span>Статистика</button>
     <button class="nav-btn" data-screen="players"><span class="nav-icon">👥</span>Игрок</button>
-
-    <div class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
-      <div class="tour-stage-caption" id="tourStageCaption">Тур</div>
-      <div class="tour-stage-title" id="tourStageTitle">—</div>
-      <div class="tour-stage-main" id="tourStageMain"></div>
-      <div class="tour-stage-msk"><span>МОСКВА</span><strong id="tourStageMsk">--:--</strong></div>
-    </div>
 
   </div>
 </nav>
@@ -12207,6 +12172,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const msk = document.getElementById("tourStageMsk");
       const mobStatus = document.getElementById("tourStageMobileStatus");
       const mobValue = document.getElementById("tourStageMobileValue");
+      const dot = document.getElementById("tourStageDot");
       if (!title || !main) return;
 
       const labels = st.phase === "before"
@@ -12218,6 +12184,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       caption.textContent = labels.cap;
       title.textContent = labels.title;
       title.classList.toggle("is-entry", st.phase === "entry");
+      if (dot) dot.classList.toggle("is-active", st.phase !== "before");
 
       let mobileValue = "";
       if (st.phase === "tour") {
@@ -12235,15 +12202,30 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const mp = moscowParts(now);
       if (msk) msk.textContent = `${String(mp.hour).padStart(2,"0")}:${String(mp.minute).padStart(2,"0")}`;
       if (mobStatus) {
-        mobStatus.textContent = `${labels.title}${tour ? ` · №${tour}` : ""}`;
+        mobStatus.textContent = labels.title;
         mobStatus.classList.toggle("is-entry", st.phase === "entry");
       }
       if (mobValue) mobValue.textContent = mobileValue;
     }
 
+    function positionTourStageBoard() {
+      const board = document.getElementById("tourStageBoard");
+      const app = document.querySelector(".app");
+      if (!board || !app || window.innerWidth < 980) return;
+      const appRect = app.getBoundingClientRect();
+      const boardWidth = board.offsetWidth || 174;
+      const gap = 58;
+      const left = Math.max(18, appRect.left - boardWidth - gap);
+      board.style.left = `${Math.round(left)}px`;
+      board.style.top = `${Math.round(appRect.top + 12)}px`;
+    }
+
+    window.addEventListener("resize", positionTourStageBoard);
+
     let tourStageTimer = null;
     function startTourStageBoard() {
       renderTourStageBoard();
+      positionTourStageBoard();
       if (tourStageTimer) clearInterval(tourStageTimer);
       tourStageTimer = setInterval(renderTourStageBoard, 1000);
     }
