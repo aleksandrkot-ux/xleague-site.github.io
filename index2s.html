@@ -4035,7 +4035,46 @@ main,
   .bottom-nav-grid { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
   .nav-btn { min-width:0; padding-left:2px !important; padding-right:2px !important; font-size:8px !important; }
   .nav-icon { font-size:14px !important; }
-  #screen-favorites .section-title { margin-top:2px; }
+  #screen-favorites { padding-top:0 !important; margin-top:0 !important; }
+  #screen-favorites .section-title { margin:4px 2px 8px !important; }
+  #favoritesMobileList { display:grid; gap:8px; align-content:start; }
+}
+
+/* ===== X League local favourites prototype v2 refinements ===== */
+.favorite-toggle { color:#3f444b; opacity:.52; filter:none; }
+.favorite-toggle:hover { color:#8d949d; opacity:.9; }
+.favorite-toggle.is-active,
+.favorite-toggle.is-partial { color:#ffffff; opacity:1; filter:drop-shadow(0 0 6px rgba(255,255,255,.30)); }
+.match-favorite-zone { width:34px; margin:-12px 9px -12px -12px; padding-right:8px; display:flex; align-items:stretch; }
+.match-favorite-zone .favorite-toggle { font-size:16px; opacity:.45; }
+.match-favorite-zone .favorite-toggle.is-active { opacity:1; background:rgba(255,255,255,.025); }
+.player-favorite-toggle { opacity:.45; }
+.player-favorite-toggle.is-active, .player-favorite-toggle.is-partial { opacity:1; }
+.expand-mark { font-size:0; }
+.expand-mark::before { content:'⌄'; font-size:20px; line-height:1; transform:translateY(-2px); transition:transform .18s ease; }
+.player-card.open .expand-mark::before { transform:rotate(180deg) translateY(-1px); }
+
+@media (min-width: 901px) {
+  .desktop-favorites-panel {
+    flex:0 0 auto; height:244px; min-height:244px; max-height:244px; margin-top:28px; padding:5px;
+    border:1px solid rgba(255,255,255,.075); border-radius:18px; background:rgba(255,255,255,.012); overflow:hidden;
+  }
+  .desktop-favorites-panel:hover { border-color:rgba(255,255,255,.14); }
+  .desktop-favorites-list { height:100%; max-height:100%; overflow-y:auto !important; padding:2px 4px 2px 2px; scrollbar-gutter:stable; }
+  .desktop-favorites-list::-webkit-scrollbar { width:5px; }
+  .desktop-favorites-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,.16); border-radius:999px; }
+  .fav-mini-card { padding:6px 5px; border-bottom:1px solid rgba(255,255,255,.04); }
+  .fav-mini-top { gap:4px; }
+  .fav-mini-meta { font-size:7.5px; }
+  .fav-mini-stars { margin-left:auto; transform:scale(.70); transform-origin:right center; }
+  .fav-mini-main { grid-template-columns:16px minmax(0,1fr) auto; gap:4px; margin-top:2px; }
+  .fav-mini-flag { width:15px; height:15px; display:grid; place-items:center; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.05); font-size:11px; }
+  .fav-mini-flag img { width:15px !important; height:15px !important; min-width:15px; max-width:15px; object-fit:cover; border-radius:999px; display:block; }
+  .fav-mini-name { font-size:8.5px; }
+  .fav-mini-status { font-size:8.5px; }
+  .fav-mini-divider { margin:5px 4px; }
+  .fav-mini-remove { display:none; }
+  .fav-mini-stars-picker { appearance:none; border:0; background:transparent; padding:0; margin-left:auto; cursor:pointer; color:inherit; }
 }
 
 </style>
@@ -9413,8 +9452,7 @@ function mapPredictionRow(row) {
       return `<div class="fav-mini-card">
         <div class="fav-mini-top">
           <span class="fav-mini-meta">${escapeHtml(match.date)} · ${escapeHtml(match.time)}</span>
-          <span class="fav-mini-stars">${starsHtml(match.popularity, false)}</span>
-          <button type="button" class="favorite-toggle fav-mini-remove is-active" data-favorite-match="${escapeHtml(match.id)}" title="Убрать из избранного">📝</button>
+          <button type="button" class="fav-mini-stars fav-mini-stars-picker" data-match-pickers="${escapeHtml(match.id)}" aria-label="Показать пользователей, выбравших матч">${starsHtml(match.popularity, false)}</button>
         </div>
         <div class="fav-mini-main">
           <span class="fav-mini-flag">${flagHtml(match.flag_url || match.flag)}</span>
@@ -10141,7 +10179,7 @@ if (screenMatches) {
             <div class="player-summary">
               <span class="badge badge-accent">${escapeHtml(player.pts)} очков</span>
               <span class="badge badge-dark">x${escapeHtml(formatOdd3(player.odd))}</span>
-              <button class="expand-mark" data-expand aria-label="Раскрыть прогноз">+</button>
+              <button class="expand-mark" data-expand aria-label="Раскрыть прогноз">⌄</button>
             </div>
 
             <div class="pick-preview">${escapeHtml(preview)}</div>
