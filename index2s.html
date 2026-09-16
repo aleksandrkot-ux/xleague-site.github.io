@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ru">
 <head>
@@ -7508,6 +7509,29 @@ button.achievement-item {
   body.favorites-screen-active #screen-favorites .section-title { margin:6px 2px 10px !important; }
 }
 </style>
+
+<style>
+/* ===== X League favourites prototype v5: labels + clear all ===== */
+.favorites-clear-btn {
+  appearance:none; border:0; background:transparent; color:#6d737b; opacity:.72;
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; padding:0; border-radius:7px; font-size:13px; transition:.15s ease;
+}
+.favorites-clear-btn:hover { color:#fff; opacity:1; background:rgba(255,255,255,.055); }
+@media (min-width:901px) {
+  .desktop-favorites-panel { padding:5px !important; }
+  .desktop-favorites-head {
+    height:25px; flex:0 0 25px; padding:0 3px 3px 7px; display:flex; align-items:center;
+    justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.055);
+    color:#777d85; font-size:7.5px; font-weight:900; letter-spacing:.09em;
+  }
+  .desktop-favorites-list { height:calc(100% - 25px) !important; max-height:calc(100% - 25px) !important; }
+}
+@media (max-width:900px) {
+  #screen-favorites .favorites-mobile-title { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .favorites-clear-mobile { width:32px; height:32px; font-size:18px; margin-left:auto; }
+}
+</style>
 </head>
 <body>
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
@@ -7892,7 +7916,7 @@ button.achievement-item {
 
 
   <section class="screen" id="screen-favorites">
-    <div class="section-title">📝 Избранное</div>
+    <div class="section-title favorites-mobile-title"><span>📝 Избранное</span><button type="button" class="favorites-clear-btn favorites-clear-mobile" data-clear-favorites title="Удалить все" aria-label="Удалить все избранные матчи">📝</button></div>
     <div id="favoritesMobileList"></div>
   </section>
 
@@ -8098,6 +8122,7 @@ button.achievement-item {
 
   </div>
   <div class="desktop-favorites-panel" id="desktopFavoritesPanel" aria-label="Избранные матчи">
+    <div class="desktop-favorites-head"><span>ИЗБРАННОЕ</span><button type="button" class="favorites-clear-btn" data-clear-favorites title="Удалить все" aria-label="Удалить все избранные матчи">📝</button></div>
     <div class="desktop-favorites-list" id="desktopFavoritesList"></div>
   </div>
 </nav>
@@ -9497,6 +9522,12 @@ function mapPredictionRow(row) {
       refreshFavoritesUI();
     }
 
+    function clearFavorites() {
+      favoriteState = { manual: [], players: {} };
+      saveFavoriteState();
+      refreshFavoritesUI();
+    }
+
     function favoriteMatches() {
       const ids = favoriteIdSet();
       return matches.filter(m => ids.has(String(m.id)));
@@ -9556,6 +9587,12 @@ function mapPredictionRow(row) {
     }
 
     document.addEventListener("click", (event) => {
+      const clearBtn = event.target.closest?.("[data-clear-favorites]");
+      if (clearBtn) {
+        event.preventDefault(); event.stopPropagation();
+        clearFavorites();
+        return;
+      }
       const matchBtn = event.target.closest?.("[data-favorite-match]");
       if (matchBtn) {
         event.preventDefault(); event.stopPropagation();
