@@ -3919,8 +3919,8 @@ main,
     display:block;
     position:fixed;
     z-index:24;
-    width:180px;
-    padding:16px 15px 15px;
+    width:200px;
+    padding:16px 12px 15px;
     border:1px solid rgba(255,255,255,.16);
     border-radius:18px;
     background:rgba(15,17,19,.96);
@@ -12525,9 +12525,11 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       const app = document.querySelector(".app");
       if (!board || !app || window.innerWidth < 980) return;
       const appRect = app.getBoundingClientRect();
-      const boardWidth = board.offsetWidth || 174;
-      const gap = 58;
-      const left = Math.max(18, appRect.left - boardWidth - gap);
+      const boardWidth = board.offsetWidth || 200;
+      // On narrower laptops keep the board beside the app instead of
+      // wasting the limited left gutter on a large fixed gap.
+      const gap = appRect.left < 300 ? 12 : 58;
+      const left = Math.max(8, appRect.left - boardWidth - gap);
       board.style.left = `${Math.round(left)}px`;
       board.style.top = `${Math.round(appRect.top + 12)}px`;
     }
