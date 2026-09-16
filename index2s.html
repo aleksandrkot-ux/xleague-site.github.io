@@ -12546,10 +12546,14 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       // The board must live entirely in the free gutter to the LEFT of the app.
       // On narrow laptops that gutter can be smaller than the normal 200px board,
       // so shrink the board instead of letting the sidebar cover its right edge.
-      const edge = 10;
-      const gap = appRect.left < 300 ? 10 : 58;
+      const edge = 8;
+      // Real safety gap from the sidebar. The old 10px gap was too small:
+      // the rounded app/sidebar edge visually occupied part of it on narrow laptops.
+      const gap = appRect.left < 300 ? 24 : 58;
       const available = Math.max(0, appRect.left - gap - edge);
-      const boardWidth = Math.max(126, Math.min(200, available));
+      // In compact mode the timer already uses a 2x2 grid, so it is safe to make
+      // the card narrower instead of allowing even a few pixels of overlap.
+      const boardWidth = Math.max(112, Math.min(200, available));
       const left = Math.max(edge, appRect.left - boardWidth - gap);
       board.style.width = `${Math.round(boardWidth)}px`;
       board.classList.toggle("is-compact", boardWidth < 190);
