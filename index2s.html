@@ -13166,5 +13166,20 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 })();
 </script>
 
+<style>
+/* ===== FINAL OVERRIDE: match-card desktop hover =====
+   motion-stagger-item keeps transform via animation-fill-mode: forwards,
+   so the hover transform must explicitly win over that animation state. */
+@media (hover:hover) and (pointer:fine) {
+  #screen-matches .match-card:hover {
+    transform: translateY(-2px) !important;
+    border: 1px solid rgba(255,255,255,.30) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.045),
+      0 12px 28px rgba(0,0,0,.28) !important;
+  }
+}
+</style>
+
 </body>
 </html>
