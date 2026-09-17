@@ -13090,5 +13090,68 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   }
 }
 </style>
+
+
+<style>
+/* ===== FINAL OVERRIDE: keep desktop favourites above one goal notification on narrow laptops ===== */
+@media (min-width: 901px) {
+  .desktop-favorites-panel {
+    transition: bottom .20s ease-out;
+  }
+}
+</style>
+
+<script>
+(() => {
+  const BASE_FAVORITES_BOTTOM = 22;
+  const TOAST_BOTTOM = 18;
+  const SAFE_GAP = 12;
+
+  function syncFavoritesWithGoalToast() {
+    const panel = document.getElementById('desktopFavoritesPanel');
+    const stack = document.getElementById('goalToastStack');
+    const board = document.getElementById('tourStageBoard');
+    if (!panel) return;
+
+    const desktop = window.innerWidth >= 901;
+    const narrowLaptop = window.innerWidth >= 980 && board?.classList.contains('is-compact');
+    const toast = stack?.querySelector('.goal-toast');
+
+    if (!desktop || !narrowLaptop || !toast) {
+      panel.style.bottom = '';
+      return;
+    }
+
+    // Reserve only one notification card. A whole toast stack would push
+    // favourites unnecessarily high when several events arrive together.
+    const toastHeight = Math.ceil(toast.getBoundingClientRect().height);
+    const safeBottom = Math.max(
+      BASE_FAVORITES_BOTTOM,
+      TOAST_BOTTOM + toastHeight + SAFE_GAP
+    );
+    panel.style.bottom = `${safeBottom}px`;
+  }
+
+  const runSync = () => requestAnimationFrame(syncFavoritesWithGoalToast);
+
+  function initFavoritesToastGuard() {
+    const stack = document.getElementById('goalToastStack');
+    if (!stack) return;
+
+    new MutationObserver(runSync).observe(stack, { childList: true });
+    if ('ResizeObserver' in window) new ResizeObserver(runSync).observe(stack);
+
+    window.addEventListener('resize', runSync, { passive: true });
+    runSync();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFavoritesToastGuard, { once: true });
+  } else {
+    initFavoritesToastGuard();
+  }
+})();
+</script>
+
 </body>
 </html>
