@@ -11108,7 +11108,7 @@ sourceMatches.forEach(match => {
       }
 
     el.innerHTML = rows.map((row) => `
- <button type="button" class="achievement-item achievement-clickable" ${achievementTriggerAttributes(row)} aria-label="Открыть ачивку ${escapeHtml(row.title || row.code || "")}">
+ <button type="button" class="achievement-item achievement-clickable${achievementRarityClass(row)}" ${achievementTriggerAttributes(row)} aria-label="Открыть ачивку ${escapeHtml(row.title || row.code || "")}">
   <span>${achievementIconHtml(row.icon)}</span>
 
  <div class="achievement-text">
@@ -11724,7 +11724,7 @@ sourceMatches.forEach(match => {
 
           return `
             <button type="button"
-              class="achievement-item achievement-clickable achievement-tile-standard"
+              class="achievement-item achievement-clickable achievement-tile-standard${achievementRarityClass(row)}"
               ${achievementTriggerAttributes(row)}
               title="${escapeHtml(tooltipParts.join(" — "))}"
               aria-label="Открыть ачивку ${escapeHtml(title || tagText)}">
@@ -11902,6 +11902,25 @@ function achievementDescription(row) {
       return achievementValue(row, ["order", "Order", "Порядок_в_туре", "Порядок", "F", "K"], "");
     }
 
+    // ===== Achievement rarity =====
+    // GOLD / SILVER / BRONZE intentionally have no rarity frame.
+    const ACHIEVEMENT_RARITY = Object.freeze({
+      DREAMER: "norm", NEXTT: "norm", SAPA: "norm", INSIDER: "norm", SOTKA: "norm", NISHA: "norm",
+      DOEXALI: "rare", GIRLS: "rare", SHAMAN: "rare", DVESTI: "rare", KAZINO: "rare", HARD: "rare",
+      SLOW: "rare", SHKOLA: "rare", AMEN: "rare", NEPOPLANU: "rare", KUSH: "rare", OBIDNO: "rare",
+      FANID: "legendary", VJUH: "legendary", BOGACH: "legendary", GIGACHAD: "legendary", OHUELI: "legendary", "300": "legendary"
+    });
+
+    function achievementRarity(row) {
+      const code = String(achievementCode(row) || "").trim().toUpperCase();
+      return ACHIEVEMENT_RARITY[code] || "";
+    }
+
+    function achievementRarityClass(row) {
+      const rarity = achievementRarity(row);
+      return rarity ? ` achievement-rarity-${rarity}` : "";
+    }
+
     function achievementTriggerAttributes(row) {
       return [
         `data-achievement-player="${escapeHtml(achievementPlayer(row))}"`,
@@ -11949,6 +11968,9 @@ function achievementDescription(row) {
       const player = achievementPlayer(row);
       const tour = achievementTour(row);
       const code = achievementCode(row);
+      const rarity = achievementRarity(row);
+      modal.classList.remove("achievement-modal-rarity-norm", "achievement-modal-rarity-rare", "achievement-modal-rarity-legendary");
+      if (rarity) modal.classList.add(`achievement-modal-rarity-${rarity}`);
       let iconUrl = normalizeFlagUrl(achievementIcon(row));
       iconUrl = iconUrl.replace(/sz=w\d+/i, "sz=w1000");
 
@@ -11985,7 +12007,7 @@ function achievementDescription(row) {
         const title = achievementTitle(r);
         const desc = achievementDescription(r);
         const tooltip = desc ? `${title} — ${desc}` : title;
-        return `<button type="button" class="profile-inline-achievement" ${achievementTriggerAttributes(r)} title="${escapeHtml(tooltip)}" aria-label="Открыть ачивку ${escapeHtml(title)}">${achievementIconHtml(r)}</button>`;
+        return `<button type="button" class="profile-inline-achievement${achievementRarityClass(r)}" ${achievementTriggerAttributes(r)} title="${escapeHtml(tooltip)}" aria-label="Открыть ачивку ${escapeHtml(title)}">${achievementIconHtml(r)}</button>`;
       }).join("")}</span>`;
     }
 
@@ -13181,5 +13203,61 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 }
 </style>
 
+
+<style>
+/* ===== X League achievement rarity frames =====
+   NORM = silver/graphite, RARE = violet, LEGENDARY = gold.
+   Medal achievements intentionally remain unframed. */
+:root {
+  --ach-norm: #8B929A;
+  --ach-rare: #A970FF;
+  --ach-legendary: #FFBF3F;
+}
+
+/* Full achievement tiles: color the tile itself, subtly. */
+.achievement-item.achievement-rarity-norm {
+  border-color: rgba(139,146,154,.62) !important;
+  box-shadow: inset 0 0 0 1px rgba(139,146,154,.06);
+}
+.achievement-item.achievement-rarity-rare {
+  border-color: rgba(169,112,255,.78) !important;
+  box-shadow: 0 0 10px rgba(169,112,255,.13), inset 0 0 0 1px rgba(169,112,255,.07);
+}
+.achievement-item.achievement-rarity-legendary {
+  border-color: rgba(255,191,63,.86) !important;
+  box-shadow: 0 0 12px rgba(255,191,63,.16), inset 0 0 0 1px rgba(255,191,63,.08);
+}
+
+/* Hero mini-icons: frame the clickable icon, not the image. */
+.profile-inline-achievement {
+  border: 1px solid transparent;
+  border-radius: 11px;
+  padding: 1px;
+}
+.profile-inline-achievement.achievement-rarity-norm { border-color: rgba(139,146,154,.72); }
+.profile-inline-achievement.achievement-rarity-rare {
+  border-color: rgba(169,112,255,.90);
+  box-shadow: 0 0 7px rgba(169,112,255,.20);
+}
+.profile-inline-achievement.achievement-rarity-legendary {
+  border-color: rgba(255,191,63,.94);
+  box-shadow: 0 0 8px rgba(255,191,63,.22);
+}
+
+/* Open achievement: rarity is visible around the large artwork too. */
+.achievement-modal-rarity-norm #achievementModalImage {
+  outline: 2px solid rgba(139,146,154,.72);
+  box-shadow: 0 0 16px rgba(139,146,154,.10);
+}
+.achievement-modal-rarity-rare #achievementModalImage {
+  outline: 2px solid rgba(169,112,255,.90);
+  box-shadow: 0 0 22px rgba(169,112,255,.18);
+}
+.achievement-modal-rarity-legendary #achievementModalImage {
+  outline: 2px solid rgba(255,191,63,.95);
+  box-shadow: 0 0 24px rgba(255,191,63,.20);
+}
+#achievementModalImage { outline-offset: 3px; }
+</style>
 </body>
 </html>
