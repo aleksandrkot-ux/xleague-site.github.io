@@ -5516,6 +5516,14 @@ button.achievement-item {
   background: #181818 !important;
 }
 
+/* Desktop: clearer ownership of controls on hover, similar to the timer shell */
+@media (hover:hover) and (pointer:fine) {
+  .match-card:hover {
+    border-color: rgba(255,255,255,.22) !important;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.035), 0 12px 28px rgba(0,0,0,.28);
+  }
+}
+
 /* On small screens reduce the vertical grid feeling */
 @media (max-width: 699px) {
   .tour-table th,
