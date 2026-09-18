@@ -3950,7 +3950,26 @@ main,
   }
   .tour-stage-title-row { display:flex; align-items:center; gap:7px; margin-top:6px; }
   .tour-stage-state-dot { width:7px; height:7px; flex:0 0 7px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px rgba(239,68,68,.25); }
-  .tour-stage-state-dot.is-entry { background:var(--accent); box-shadow:0 0 10px rgba(182,255,59,.42); }
+  .tour-stage-state-dot.is-entry {
+    background:var(--accent);
+    box-shadow:0 0 7px rgba(182,255,59,.34);
+    animation: entryDotPulse 1.65s ease-in-out infinite;
+  }
+
+  @keyframes entryDotPulse {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 6px rgba(182,255,59,.30), 0 0 11px rgba(182,255,59,.12);
+    }
+    50% {
+      opacity: .82;
+      box-shadow: 0 0 9px rgba(182,255,59,.58), 0 0 16px rgba(182,255,59,.22);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tour-stage-state-dot.is-entry { animation: none; }
+  }
   .tour-stage-state-dot.is-tour { display:none; }
   .tour-stage-title {
     margin-top:0;
