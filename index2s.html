@@ -8353,6 +8353,8 @@ button.achievement-item {
     let siteOverall = [];
     let sitePlayers = [];
     let siteAchievements = [];
+    let achievementCatalog = [];
+    let achievementRarityByCode = new Map();
     let siteTours = [];
     let sitePlayoff = [];
     let rankHistory = [];
@@ -9023,13 +9025,24 @@ button.achievement-item {
     }
 
     function applySheetsPayload(payload) {
-     const { m = [], p = [], t = [], o = [], pl = [], a = [], rh = [], toursRows = [], playoffRows = [], cfgRows = [] } = payload || {};
+     const { m = [], p = [], t = [], o = [], pl = [], a = [], ac = [], rh = [], toursRows = [], playoffRows = [], cfgRows = [] } = payload || {};
       matches = m.map(mapMatchRow).filter(x => x.id && x.teams);
       predictions = p.map(mapPredictionRow).filter(x => x.name && x.picks.length);
       siteTable = t;
       siteOverall = o.map(mapOverallRow).filter(x => x.name);
       sitePlayers = pl;
       siteAchievements = a;
+      achievementCatalog = ac;
+      achievementRarityByCode = new Map(
+        achievementCatalog
+          .map(row => {
+            const code = String(get(row, ["Код", "code", "Code", "A"], "") || "").trim().toUpperCase();
+            const rarityRaw = String(get(row, ["Редкость", "rarity", "Rarity", "G"], "") || "").trim().toLowerCase();
+            const rarity = rarityRaw === "normal" ? "norm" : rarityRaw;
+            return [code, rarity];
+          })
+          .filter(([code, rarity]) => code && ["norm", "rare", "legendary"].includes(rarity))
+      );
       rankHistory = rh;
       siteTours = toursRows;
       sitePlayoff = playoffRows;
@@ -9069,6 +9082,7 @@ button.achievement-item {
   players: "site_players",
   stats: "site_stats",
   achievements: "site_player_achievements",
+  achievementCatalog: "Ачивки",
   rankHistory: "site_rank_history",
   tours: "site_tours",
   playoff: "play_off",
@@ -9400,6 +9414,16 @@ function mapPredictionRow(row) {
         }
 
         const d = bootstrap.data;
+
+        // Rarity lives in column G of the "Ачивки" catalog.
+        // It is deliberately loaded from the catalog instead of being hardcoded in HTML.
+        let achievementCatalogRows = [];
+        try {
+          achievementCatalogRows = await loadTab(TABS.achievementCatalog);
+        } catch (catalogError) {
+          console.warn("Achievement catalog load failed; rarity frames may be unavailable.", catalogError);
+        }
+
         const payload = {
           m: d[TABS.matches] || [],
           p: d[TABS.predictions] || [],
@@ -9407,6 +9431,7 @@ function mapPredictionRow(row) {
           o: d[TABS.overall] || [],
           pl: d[TABS.players] || [],
           a: d[TABS.achievements] || [],
+          ac: achievementCatalogRows,
           rh: d[TABS.rankHistory] || [],
           toursRows: d[TABS.tours] || [],
           playoffRows: d[TABS.playoff] || [],
@@ -12033,17 +12058,11 @@ function achievementDescription(row) {
     }
 
     // ===== Achievement rarity =====
-    // GOLD / SILVER / BRONZE intentionally have no rarity frame.
-    const ACHIEVEMENT_RARITY = Object.freeze({
-      DREAMER: "norm", NEXTT: "norm", SAPA: "norm", INSIDER: "norm", SOTKA: "norm", NISHA: "norm",
-      DOEXALI: "rare", GIRLS: "rare", SHAMAN: "rare", DVESTI: "rare", KAZINO: "rare", HARD: "rare",
-      SLOW: "rare", SHKOLA: "rare", AMEN: "rare", NEPOPLANU: "rare", KUSH: "rare", OBIDNO: "rare",
-      FANID: "legendary", VJUH: "legendary", BOGACH: "legendary", GIGACHAD: "legendary", OHUELI: "legendary", "300": "legendary"
-    });
-
+    // Source of truth: column G ("Редкость") in the "Ачивки" catalog.
+    // GOLD / SILVER / BRONZE simply have an empty rarity cell and therefore no rarity frame.
     function achievementRarity(row) {
       const code = String(achievementCode(row) || "").trim().toUpperCase();
-      return ACHIEVEMENT_RARITY[code] || "";
+      return achievementRarityByCode.get(code) || "";
     }
 
     function achievementRarityClass(row) {
