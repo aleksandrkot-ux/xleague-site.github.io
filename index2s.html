@@ -4005,13 +4005,9 @@ main,
 
 .desktop-favorites-panel { display:none; }
 @media (min-width: 901px) {
-  .desktop-favorites-panel {
-    display:flex; flex-direction:column; min-height:0; flex:1 1 auto; margin-top:14px;
-    padding-top:12px; border-top:1px solid rgba(255,255,255,.055);
-  }
+  .desktop-favorites-panel { display:flex; flex-direction:column; }
   .desktop-favorites-empty { color:#555; font-size:10px; line-height:1.45; padding:8px 10px; text-align:center; }
-  .desktop-favorites-list { min-height:0; overflow-y:auto; overflow-x:hidden; padding-right:3px; scrollbar-width:thin; }
-  .fav-mini-card { padding:8px 7px; border-bottom:1px solid rgba(255,255,255,.045); }
+  .desktop-favorites-list { min-height:0; overflow-x:hidden; scrollbar-width:thin; }
   .fav-mini-card:hover { background:rgba(255,255,255,.025); }
   .fav-mini-top { display:flex; align-items:center; gap:5px; min-width:0; }
   .fav-mini-meta { color:#777; font-size:8px; font-weight:800; white-space:nowrap; }
@@ -4051,11 +4047,10 @@ main,
 
 @media (min-width: 901px) {
   .desktop-favorites-panel {
-    flex:0 0 auto; height:244px; min-height:244px; max-height:244px; margin-top:28px; padding:5px;
     border:1px solid rgba(255,255,255,.075); border-radius:18px; background:rgba(255,255,255,.012); overflow:hidden;
   }
   .desktop-favorites-panel:hover { border-color:rgba(255,255,255,.14); }
-  .desktop-favorites-list { height:100%; max-height:100%; overflow-y:auto !important; padding:2px 4px 2px 2px; scrollbar-gutter:stable; }
+  .desktop-favorites-list { overflow-y:auto; padding:2px 4px 2px 2px; scrollbar-gutter:stable; }
   .desktop-favorites-list::-webkit-scrollbar { width:5px; }
   .desktop-favorites-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,.16); border-radius:999px; }
   .fav-mini-card { padding:6px 5px; border-bottom:1px solid rgba(255,255,255,.04); }
@@ -4180,10 +4175,6 @@ main,
 <style>
 /* ===== X League favourites prototype v3 ===== */
 @media (min-width: 901px) {
-  .desktop-favorites-panel {
-    height:292px; min-height:292px; max-height:292px;
-    margin-top:auto; margin-bottom:12px;
-  }
   .fav-mini-card { position:relative; padding:6px 5px 6px 24px; min-height:49px; }
   .fav-mini-pick {
     position:absolute; left:2px; top:0; bottom:0; width:19px;
@@ -4195,9 +4186,7 @@ main,
 }
 @media (max-width: 900px) {
   body.favorites-screen-active .filter-row { display:none !important; }
-  body.favorites-screen-active main { padding-top:0 !important; }
-  body.favorites-screen-active #screen-favorites { padding-top:0 !important; margin-top:0 !important; min-height:0 !important; }
-  body.favorites-screen-active #screen-favorites .section-title { margin-top:6px !important; }
+  body.favorites-screen-active #screen-favorites { min-height:0 !important; }
   body.favorites-screen-active #favoritesMobileList { align-content:start !important; justify-content:stretch !important; }
 }
 
@@ -7352,13 +7341,13 @@ button.achievement-item {
 }
 .favorites-clear-btn:hover { color:#fff; opacity:1; background:rgba(255,255,255,.055); }
 @media (min-width:901px) {
-  .desktop-favorites-panel { padding:5px !important; }
+  .desktop-favorites-panel { padding:5px; }
   .desktop-favorites-head {
     height:25px; flex:0 0 25px; padding:0 3px 3px 7px; display:flex; align-items:center;
     justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.055);
     color:#777d85; font-size:7.5px; font-weight:900; letter-spacing:.09em;
   }
-  .desktop-favorites-list { height:calc(100% - 25px) !important; max-height:calc(100% - 25px) !important; }
+  .desktop-favorites-list { height:calc(100% - 25px); max-height:calc(100% - 25px); }
 }
 @media (max-width:900px) {
   #screen-favorites .favorites-mobile-title { display:flex; align-items:center; justify-content:space-between; gap:10px; }
