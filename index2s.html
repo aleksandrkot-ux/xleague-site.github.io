@@ -7706,6 +7706,58 @@ button.achievement-item {
 .sound-toggle-btn.is-favorites,.live-notify-toggle-btn.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}
 @media(max-width:700px){.desktop-mode-wrap{display:none!important}#soundToggleBtnMobile.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}}
 </style>
+
+<style>
+/* ===== Achievement Points: compact profile counter ===== */
+.player-achievements-v2 .achievement-points-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.player-achievements-v2 .achievement-points-head .dashboard-title-v2 {
+  margin-bottom: 0 !important;
+}
+.achievement-points-badge {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.045);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.achievement-points-label {
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.48);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.achievement-points-value {
+  font-size: 15px;
+  line-height: 1;
+  color: rgba(255,255,255,.94);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 640px) {
+  .achievement-points-badge {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+  .achievement-points-value { font-size: 14px; }
+}
+</style>
+
 </head>
 <body>
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
@@ -8053,7 +8105,13 @@ button.achievement-item {
   </section>
 
   <section class="dashboard-card player-achievements-v2">
-    <div class="dashboard-title-v2">🏅 Ачивки игрока</div>
+    <div class="achievement-points-head">
+      <div class="dashboard-title-v2">🏅 Ачивки игрока</div>
+      <div class="achievement-points-badge" title="Achievement Points" aria-label="Achievement Points">
+        <span class="achievement-points-label">AP</span>
+        <span class="achievement-points-value" id="profileAchievementPoints">0</span>
+      </div>
+    </div>
     <div class="achievement-strip" id="profileAchievements"></div>
   </section>
 
@@ -11842,6 +11900,8 @@ sourceMatches.forEach(match => {
       const achEl = document.getElementById("profileAchievements");
       if (achEl) {
         const achievements = playerAchievements(playerName);
+        const achievementPointsEl = document.getElementById("profileAchievementPoints");
+        if (achievementPointsEl) achievementPointsEl.textContent = String(achievementPointsForPlayer(achievements));
         achEl.innerHTML = achievements.length ? achievements.map(row => {
           const tour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
           const code = String(achievementCode(row) || "").trim().toUpperCase();
@@ -12047,6 +12107,39 @@ function achievementDescription(row) {
     function achievementRarity(row) {
       const code = String(achievementCode(row) || "").trim().toUpperCase();
       return ACHIEVEMENT_RARITY[code] || "";
+    }
+
+    // ===== Achievement Points =====
+    // Base value by rarity. The first occurrence of each achievement code
+    // for a player is worth double; repeats use the base value.
+    // Placement medals have no rarity and therefore give 0 AP.
+    const ACHIEVEMENT_POINTS = Object.freeze({
+      norm: 1,
+      rare: 3,
+      legendary: 6
+    });
+    const FIRST_ACHIEVEMENT_MULTIPLIER = 2;
+
+    function achievementPointsForPlayer(rows) {
+      const seenCodes = new Set();
+      const ordered = [...(rows || [])].sort((a, b) => {
+        const ta = toNum(achievementTour(a));
+        const tb = toNum(achievementTour(b));
+        const oa = toNum(achievementOrder(a));
+        const ob = toNum(achievementOrder(b));
+        return ta - tb || oa - ob;
+      });
+
+      return ordered.reduce((total, row) => {
+        const code = String(achievementCode(row) || "").trim().toUpperCase();
+        const rarity = achievementRarity(row);
+        const base = ACHIEVEMENT_POINTS[rarity] || 0;
+        if (!code || !base) return total;
+
+        const isFirst = !seenCodes.has(code);
+        seenCodes.add(code);
+        return total + base * (isFirst ? FIRST_ACHIEVEMENT_MULTIPLIER : 1);
+      }, 0);
     }
 
     function achievementRarityClass(row) {
