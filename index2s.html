@@ -11901,10 +11901,7 @@ sourceMatches.forEach(match => {
       if (achEl) {
         const achievements = playerAchievements(playerName);
         const achievementPointsEl = document.getElementById("profileAchievementPoints");
-        const achievementPointsBadge = achievementPointsEl?.closest(".achievement-points-badge");
-        const achievementPoints = achievementPointsForPlayer(achievements);
-        if (achievementPointsEl) achievementPointsEl.textContent = String(achievementPoints);
-        if (achievementPointsBadge) achievementPointsBadge.hidden = achievementPoints <= 0;
+        if (achievementPointsEl) achievementPointsEl.textContent = String(achievementPointsForPlayer(achievements));
         achEl.innerHTML = achievements.length ? achievements.map(row => {
           const tour = achievementValue(row, ["tour", "Tour", "Тур", "E", "H"], "");
           const code = String(achievementCode(row) || "").trim().toUpperCase();
