@@ -326,7 +326,6 @@ html, body {
 
     .match-card, .player-card, .table-box, .stat-card, .player-mini-card, .cta-card {
       background: var(--card);
-      border: 1px solid var(--line);
       border-radius: 22px;
       box-shadow: 0 10px 24px rgba(0,0,0,.18);
     }
@@ -974,9 +973,6 @@ html, body {
       min-width: 0;
       padding: 14px;
       border-radius: 24px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      box-shadow: 0 10px 24px rgba(0,0,0,.18);
     }
 
     .player-hero-v2 {
@@ -1072,8 +1068,6 @@ html, body {
       
     }
 
-    .player-awards-v2 .profile-inline-achievements {  }
-
     .player-metrics-v2 {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1150,13 +1144,6 @@ html, body {
     }
 
     .player-achievements-v2 .achievement-strip::-webkit-scrollbar { display: none; }
-    .player-achievements-v2 .achievement-item {  }
-
-    .country-table-v2 {
-      
-      
-      
-    }
 
     .country-table-v2 th,
     .country-table-v2 td {
@@ -3566,6 +3553,27 @@ main,
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (min-width: 980px) {
+  .player-hero-v2 .player-awards-v2 {
+    min-height: 46px;
+  }
+
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements {
+    gap: 8px;
+    max-width: none;
+  }
+
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements img,
+  .player-hero-v2 .player-awards-v2 .profile-inline-achievements .badge-fallback {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 11px;
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 700px) {
@@ -6442,29 +6450,6 @@ button.achievement-item {
 </style>
 
 
-<style>
-/* ===== Desktop Hero achievements: final override ===== */
-@media (min-width: 980px) {
-  .player-hero-v2 .player-awards-v2 {
-    min-height: 46px !important;
-  }
-
-  .player-hero-v2 .player-awards-v2 .profile-inline-achievements {
-    gap: 8px !important;
-    max-width: none !important;
-  }
-
-  .player-hero-v2 .player-awards-v2 .profile-inline-achievements img,
-  .player-hero-v2 .player-awards-v2 .profile-inline-achievements .badge-fallback {
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 40px !important;
-    min-height: 40px !important;
-    border-radius: 11px !important;
-    font-size: 20px !important;
-  }
-}
-</style>
 
 
 <style>
@@ -7379,7 +7364,7 @@ button.achievement-item {
   margin-bottom: 10px;
 }
 .player-achievements-v2 .achievement-points-head .dashboard-title-v2 {
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 }
 .achievement-points-badge {
   width: 38px;
