@@ -5329,7 +5329,15 @@ button.achievement-item {
 }
 
 @media (hover:hover) and (pointer:fine) {
-  .player-card:hover,
+  /* Prediction cards also use transform for their stagger entrance animation.
+     Keep hover lift on the independent translate property so the animation
+     cannot suppress hover while its forwards state is retained. */
+  .player-card:hover {
+    translate: 0 -2px;
+    border-color: rgba(182,255,59,.16) !important;
+    box-shadow: 0 12px 28px rgba(0,0,0,.28);
+  }
+
   .stat-card:hover,
   .stats-panel:hover,
   .dashboard-card:hover {
@@ -13224,6 +13232,11 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 </script>
 
 <style>
+/* Prediction-card hover uses the same independent translate channel as match cards. */
+#screen-picks .player-card {
+  transition: translate .16s ease, transform .16s ease, border-color .16s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
 /* ===== Match-card desktop hover =====
    `translate` is independent from the entry animation's `transform`, so no transform !important is needed. */
 @media (hover:hover) and (pointer:fine) {
