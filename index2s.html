@@ -214,7 +214,7 @@ html, body {
       border-radius: 0;
       background: transparent;
       box-shadow: none;
-      overflow: visible;
+      
       flex: 0 0 auto;
     }
 
@@ -489,7 +489,7 @@ html, body {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      
       margin-bottom: 10px;
     }
 
@@ -605,7 +605,7 @@ html, body {
       border-radius: 999px;
       background: rgba(255,255,255,.055);
       color: var(--muted);
-      font-size: 20px;
+      
       font-weight: 1000;
       line-height: 1;
     }
@@ -1022,10 +1022,7 @@ html, body {
       background:
         radial-gradient(circle at 88% 0%, rgba(224, 184, 94, .20), transparent 44%),
         linear-gradient(135deg, #332a18 0%, #282114 48%, #1d1911 100%) !important;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 226, 158, .10),
-        inset 0 0 38px rgba(205, 158, 66, .07),
-        0 12px 28px rgba(0,0,0,.30) !important;
+      
     }
 
     /* 2nd place — graphite silver across the whole Hero. */
@@ -1034,10 +1031,7 @@ html, body {
       background:
         radial-gradient(circle at 88% 0%, rgba(207, 217, 226, .16), transparent 44%),
         linear-gradient(135deg, #30353a 0%, #25292d 48%, #1a1d20 100%) !important;
-      box-shadow:
-        inset 0 1px 0 rgba(239, 246, 252, .09),
-        inset 0 0 38px rgba(164, 178, 190, .06),
-        0 12px 28px rgba(0,0,0,.28) !important;
+      
     }
 
     /* 3rd place — dark bronze across the whole Hero. */
@@ -1046,10 +1040,7 @@ html, body {
       background:
         radial-gradient(circle at 88% 0%, rgba(194, 122, 80, .17), transparent 44%),
         linear-gradient(135deg, #32231c 0%, #281c17 48%, #1c1512 100%) !important;
-      box-shadow:
-        inset 0 1px 0 rgba(236, 169, 126, .08),
-        inset 0 0 38px rgba(166, 91, 55, .06),
-        0 12px 28px rgba(0,0,0,.28) !important;
+      
     }
 
     /* A very soft metallic sheen so the fill does not look flat. */
@@ -1082,12 +1073,12 @@ html, body {
 
     .player-awards-v2 {
       min-height: 32px;
-      display: flex;
+      
       align-items: center;
-      justify-content: flex-end;
+      
     }
 
-    .player-awards-v2 .profile-inline-achievements { margin-left: 0; }
+    .player-awards-v2 .profile-inline-achievements {  }
 
     .player-metrics-v2 {
       display: grid;
@@ -1103,7 +1094,7 @@ html, body {
       gap: 12px;
       padding: 13px;
       border-radius: 16px;
-      background: var(--card);
+      
       border: 1px solid var(--line);
     }
 
@@ -1175,30 +1166,30 @@ html, body {
       margin: 0;
       padding: 0;
       border: 0;
-      background: transparent !important;
+      
       box-shadow: none;
     }
 
     .player-achievements-v2 .achievement-strip {
-      display: flex;
-      gap: 8px;
+      
+      
       overflow-x: auto;
       scrollbar-width: none;
     }
 
     .player-achievements-v2 .achievement-strip::-webkit-scrollbar { display: none; }
-    .player-achievements-v2 .achievement-item { flex: 0 0 210px; }
+    .player-achievements-v2 .achievement-item {  }
 
     .country-table-v2 {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
+      
+      
+      
     }
 
     .country-table-v2 th,
     .country-table-v2 td {
-      padding: 9px 5px;
-      border-top: 1px solid rgba(255,255,255,.05);
+      
+      
       font-size: 10px;
       text-align: right;
     }
@@ -1211,8 +1202,8 @@ html, body {
 
     .country-table-v2 th:first-child,
     .country-table-v2 td:first-child {
-      width: 30px;
-      text-align: left;
+      
+      
     }
 
     .country-table-v2 th:nth-child(2),
@@ -2203,10 +2194,10 @@ html, body {
 
     .profile-head {
       display: flex;
-      align-items: center;
+      
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 14px;
+      
     }
 
     .profile-name {
@@ -3675,11 +3666,11 @@ main,
   will-change: transform;
 }
 .country-table-v2 tbody tr:hover td {
-  background: rgba(255,255,255,.018);
+  
 }
 .country-table-v2 th:first-child,
 .country-table-v2 td:first-child {
-  width: auto;
+  
   text-align: left;
 }
 .country-table-v2 th:nth-child(2),
@@ -4037,19 +4028,19 @@ main,
 
 /* ===== X League local favourites prototype v1 ===== */
 .favorite-toggle {
-  appearance:none; border:0; background:transparent; color:#555; cursor:pointer;
+  appearance:none; border:0; background:transparent;  cursor:pointer;
   display:inline-flex; align-items:center; justify-content:center; transition:.16s ease;
 }
-.favorite-toggle:hover { color:#aaa; transform:translateY(-1px); }
+.favorite-toggle:hover {  transform:translateY(-1px); }
 .favorite-toggle.is-active { color:#f1f1f1; filter:drop-shadow(0 0 5px rgba(255,255,255,.18)); }
 .favorite-toggle.is-partial { color:#999; opacity:.8; }
 .match-card .match-row { grid-template-columns:auto minmax(0,1fr) auto; }
 .match-favorite-zone {
-  width:28px; align-self:stretch; margin:-2px 8px -2px -4px; padding-right:7px;
+   align-self:stretch;  
   border-right:1px solid rgba(255,255,255,.055);
 }
-.match-favorite-zone .favorite-toggle { width:100%; height:100%; min-height:38px; font-size:15px; opacity:.55; }
-.match-favorite-zone .favorite-toggle.is-active { opacity:1; }
+.match-favorite-zone .favorite-toggle { width:100%; height:100%; min-height:38px;   }
+.match-favorite-zone .favorite-toggle.is-active {  }
 .player-favorite-toggle { width:28px; height:28px; border-radius:9px; font-size:15px; margin-left:5px; }
 .player-top { gap:6px; }
 
@@ -4096,7 +4087,7 @@ main,
 .player-favorite-toggle { opacity:.45; }
 .player-favorite-toggle.is-active, .player-favorite-toggle.is-partial { opacity:1; }
 .expand-mark { font-size:0; }
-.expand-mark::before { content:'⌄'; font-size:20px; line-height:1; transform:translateY(-2px); transition:transform .18s ease; }
+.expand-mark::before { content:"⌄"; font-size:20px; line-height:1; transform:translateY(-2px); transition:transform .18s ease; }
 .player-card.open .expand-mark::before { transform:rotate(180deg) translateY(-1px); }
 
 @media (min-width: 901px) {
@@ -4425,7 +4416,7 @@ button.achievement-item {
     linear-gradient(180deg, #1b1b1b 0%, #111 100%);
   box-shadow: 0 30px 90px rgba(0,0,0,.65);
   text-align: center;
-  animation: achievementModalIn .2s ease-out;
+  
 }
 
 @keyframes achievementModalIn {
@@ -4890,7 +4881,7 @@ button.achievement-item {
 .country-history-card {
   position: relative;
   z-index: 1;
-  width: min(560px, 100%);
+  
   max-height: min(780px, calc(100vh - 36px));
   overflow-y: auto;
   padding: 18px;
@@ -4944,14 +4935,14 @@ button.achievement-item {
 }
 
 .country-tour-group + .country-tour-group {
-  margin-top: 18px;
-  padding-top: 16px;
+  
+  
   border-top: 1px solid rgba(255,255,255,.07);
 }
 .country-tour-title {
-  margin-bottom: 9px;
+  
   color: #f4f4f5;
-  font-size: 12px;
+  
   font-weight: 1000;
   text-transform: uppercase;
   letter-spacing: .025em;
@@ -4959,16 +4950,16 @@ button.achievement-item {
 
 .country-match-list {
   display: grid;
-  gap: 8px;
+  
 }
 .country-history-match {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
+  
   align-items: center;
-  padding: 10px 11px;
-  border-radius: 16px;
+  
+  
   background: rgba(255,255,255,.035);
   border: 1px solid rgba(255,255,255,.055);
 }
@@ -4976,12 +4967,12 @@ button.achievement-item {
 .country-history-name {
   display: flex;
   align-items: center;
-  gap: 7px;
+  
   min-width: 0;
   color: #f4f4f5;
-  font-size: 12px;
+  
   font-weight: 950;
-  line-height: 1.25;
+  
 }
 .country-history-name-text {
   min-width: 0;
@@ -4990,8 +4981,8 @@ button.achievement-item {
 }
 .country-history-flag {
   flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
+  
+  
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -5000,20 +4991,20 @@ button.achievement-item {
   font-size: 12px;
 }
 .country-history-flag img {
-  width: 18px;
-  height: 18px;
+  
+  
   object-fit: cover;
   border-radius: 999px;
 }
 .country-history-sub {
-  margin-top: 6px;
+  
   display: flex;
   align-items: center;
-  gap: 9px;
+  
   flex-wrap: wrap;
 }
 .country-history-stars {
-  position: relative;
+  
   display: inline-flex;
   align-items: center;
 }
@@ -5022,9 +5013,9 @@ button.achievement-item {
   cursor: help;
 }
 .country-history-score {
-  min-width: 48px;
+  
   text-align: right;
-  font-size: 15px;
+  
   font-weight: 1000;
   white-space: nowrap;
 }
@@ -5033,25 +5024,25 @@ button.achievement-item {
 .country-history-score.is-pending { color: #8a8a8a; }
 
 .country-pickers-popover {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 7px);
-  z-index: 5;
+  
+  
+  
+  
   width: max-content;
-  min-width: 170px;
-  max-width: 260px;
+  
+  
   padding: 9px 10px;
   border-radius: 13px;
   border: 1px solid rgba(255,255,255,.10);
   background: #24262a;
   box-shadow: 0 12px 28px rgba(0,0,0,.48);
   color: #d4d4d8;
-  font-size: 10px;
+  
   font-weight: 800;
   line-height: 1.45;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-3px);
+  
+  
+  
   transition: opacity .13s ease, transform .13s ease;
 }
 .country-pickers-popover::before {
@@ -5465,7 +5456,7 @@ button.achievement-item {
   margin-top: 2px;
 }
 .country-history-stars {
-  cursor: pointer;
+  
 }
 
 
@@ -6856,38 +6847,32 @@ button.achievement-item {
 
 
 <style>
-@media (hover:none), (pointer:coarse) {
-}
-</style>
-
-
-<style>
-.inactive-home-shell{display:grid;gap:16px;margin:18px 0 20px}
-.inactive-welcome{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.1fr);gap:24px;align-items:center;min-height:300px;padding:26px;border-radius:28px;border:1px solid rgba(255,255,255,.07);background:radial-gradient(circle at 16% 16%,rgba(45,126,255,.14),transparent 32%),radial-gradient(circle at 86% 16%,rgba(182,255,59,.12),transparent 36%),#151619;box-shadow:0 18px 46px rgba(0,0,0,.30)}
-.inactive-welcome-media{display:flex;align-items:center;justify-content:center;min-height:230px}
-.inactive-welcome-media img{display:block;width:min(100%,430px);max-height:230px;object-fit:contain;filter:drop-shadow(0 14px 34px rgba(0,0,0,.38))}
-.inactive-welcome-kicker{display:inline-flex;padding:6px 10px;margin-bottom:12px;border-radius:999px;border:1px solid rgba(182,255,59,.22);background:rgba(182,255,59,.08);color:#b6ff3b;font-size:10px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
-.inactive-welcome h2{margin:0;color:#fff;font-size:clamp(28px,4vw,46px);line-height:.98;letter-spacing:-.04em}
-.inactive-welcome p{margin:14px 0 0;color:#c8c8cc;font-size:14px;line-height:1.62;font-weight:700}
-.inactive-welcome-meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
-.inactive-welcome-chip{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06);color:#d8d8dc;font-size:10px;font-weight:900}
-.inactive-news-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
-.inactive-news-head h3{margin:0;color:#fff;font-size:18px;font-weight:1000}
-.inactive-news-head span{color:#7f7f85;font-size:11px;font-weight:850}
-.inactive-news-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.inactive-news-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:24px;border:1px solid rgba(255,255,255,.065);background:#161719;box-shadow:0 14px 34px rgba(0,0,0,.20)}
-.inactive-news-preview{aspect-ratio:16/7;overflow:hidden;background:#0c0d10}
-.inactive-news-preview img{width:100%;height:100%;display:block;object-fit:cover;opacity:.78}
-.inactive-news-body{display:flex;flex:1 1 auto;flex-direction:column;padding:16px}
-.inactive-news-date{color:#8a8a90;font-size:10px;font-weight:900;text-transform:uppercase}
-.inactive-news-title{margin-top:7px;color:#fff;font-size:17px;font-weight:1000;line-height:1.15}
-.inactive-news-text{margin-top:9px;color:#a9a9ae;font-size:12px;line-height:1.5;font-weight:700}
-.inactive-news-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:15px}
-.inactive-news-action{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font-size:10px;font-weight:1000;text-decoration:none}
-.inactive-news-action.primary{border-color:rgba(182,255,59,.22);background:rgba(182,255,59,.09);color:#b6ff3b}
-.news-modal-body{display:grid;gap:12px}.news-modal-body p{margin:0;color:#c7c7cb;font-size:13px;line-height:1.62;font-weight:700}
-@media(max-width:900px){.inactive-welcome{grid-template-columns:1fr}.inactive-welcome-media{min-height:180px}.inactive-welcome-media img{max-height:190px}}
-@media(max-width:699px){.inactive-home-shell{gap:12px;margin-top:12px}.inactive-welcome{min-height:0;padding:18px;border-radius:24px;gap:14px}.inactive-welcome-media{min-height:140px}.inactive-welcome-media img{max-height:150px}.inactive-welcome h2{font-size:30px}.inactive-welcome p{font-size:12px;line-height:1.55}.inactive-news-grid{grid-template-columns:1fr}}
+.inactive-home-shell{display:grid;gap:16px;margin:18px 0 20px;}
+.inactive-welcome{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.1fr);gap:24px;align-items:center;min-height:300px;padding:26px;border-radius:28px;border:1px solid rgba(255,255,255,.07);background:radial-gradient(circle at 16% 16%,rgba(45,126,255,.14),transparent 32%),radial-gradient(circle at 86% 16%,rgba(182,255,59,.12),transparent 36%),#151619;box-shadow:0 18px 46px rgba(0,0,0,.30);}
+.inactive-welcome-media{display:flex;align-items:center;justify-content:center;min-height:230px;}
+.inactive-welcome-media img{display:block;width:min(100%,430px);max-height:230px;object-fit:contain;filter:drop-shadow(0 14px 34px rgba(0,0,0,.38));}
+.inactive-welcome-kicker{display:inline-flex;padding:6px 10px;margin-bottom:12px;border-radius:999px;border:1px solid rgba(182,255,59,.22);background:rgba(182,255,59,.08);color:#b6ff3b;font-size:10px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;}
+.inactive-welcome h2{margin:0;color:#fff;font-size:clamp(28px,4vw,46px);line-height:.98;letter-spacing:-.04em;}
+.inactive-welcome p{margin:14px 0 0;color:#c8c8cc;font-size:14px;line-height:1.62;font-weight:700;}
+.inactive-welcome-meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+.inactive-welcome-chip{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06);color:#d8d8dc;font-size:10px;font-weight:900;}
+.inactive-news-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;}
+.inactive-news-head h3{margin:0;color:#fff;font-size:18px;font-weight:1000;}
+.inactive-news-head span{color:#7f7f85;font-size:11px;font-weight:850;}
+.inactive-news-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.inactive-news-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:24px;border:1px solid rgba(255,255,255,.065);background:#161719;box-shadow:0 14px 34px rgba(0,0,0,.20);}
+.inactive-news-preview{aspect-ratio:16/7;overflow:hidden;background:#0c0d10;}
+.inactive-news-preview img{width:100%;height:100%;display:block;object-fit:cover;opacity:.78;}
+.inactive-news-body{display:flex;flex:1 1 auto;flex-direction:column;padding:16px;}
+.inactive-news-date{color:#8a8a90;font-size:10px;font-weight:900;text-transform:uppercase;}
+.inactive-news-title{margin-top:7px;color:#fff;font-size:17px;font-weight:1000;line-height:1.15;}
+.inactive-news-text{margin-top:9px;color:#a9a9ae;font-size:12px;line-height:1.5;font-weight:700;}
+.inactive-news-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:15px;}
+.inactive-news-action{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font-size:10px;font-weight:1000;text-decoration:none;}
+.inactive-news-action.primary{border-color:rgba(182,255,59,.22);background:rgba(182,255,59,.09);color:#b6ff3b;}
+.news-modal-body{display:grid;gap:12px;}.news-modal-body p{margin:0;color:#c7c7cb;font-size:13px;line-height:1.62;font-weight:700;}
+@media(max-width:900px){.inactive-welcome{grid-template-columns:1fr;}.inactive-welcome-media{min-height:180px;}.inactive-welcome-media img{max-height:190px;}}
+@media(max-width:699px){.inactive-home-shell{gap:12px;margin-top:12px;}.inactive-welcome{min-height:0;padding:18px;border-radius:24px;gap:14px;}.inactive-welcome-media{min-height:140px;}.inactive-welcome-media img{max-height:150px;}.inactive-welcome h2{font-size:30px;}.inactive-welcome p{font-size:12px;line-height:1.55;}.inactive-news-grid{grid-template-columns:1fr;}}
 </style>
 
 
@@ -6895,8 +6880,8 @@ button.achievement-item {
 .news-modal-body .news-article-heading{
   margin:8px 0 2px;color:#fff;font-size:18px;line-height:1.2;font-weight:1000;
 }
-.news-modal-body .news-article-bold{font-weight:1000;color:#f1f1f3}
-.news-modal-body .news-article-italic{font-style:italic;color:#c7c7cb}
+.news-modal-body .news-article-bold{font-weight:1000;color:#f1f1f3;}
+.news-modal-body .news-article-italic{font-style:italic;color:#c7c7cb;}
 .news-modal-body .news-article-quote{
   margin:2px 0;padding:10px 12px;border-left:3px solid #b6ff3b;
   border-radius:0 12px 12px 0;background:rgba(182,255,59,.055);color:#d5d5d8;
@@ -7039,7 +7024,7 @@ button.achievement-item {
   font-size:11px;
   font-weight:1000;
 }
-.inactive-news-more:hover{background:rgba(182,255,59,.12)}
+.inactive-news-more:hover{background:rgba(182,255,59,.12);}
 
 #newsModal .info-title{
   font-size:24px;
@@ -7166,8 +7151,8 @@ button.achievement-item {
   .news-archive-item{
     grid-template-columns:78px minmax(0,1fr);
   }
-  .news-archive-thumb{width:78px}
-  #newsModal .info-title{font-size:21px}
+  .news-archive-thumb{width:78px;}
+  #newsModal .info-title{font-size:21px;}
 }
 </style>
 
@@ -7384,7 +7369,7 @@ button.achievement-item {
 .news-image-lightbox.hidden{display:none;}
 .news-image-lightbox-img{display:block;max-width:min(96vw,1600px);max-height:92vh;width:auto;height:auto;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,.65);}
 .news-image-lightbox-close{position:fixed;top:18px;right:18px;width:42px;height:42px;border-radius:999px;background:rgba(25,25,25,.88);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:30px;line-height:1;display:grid;place-items:center;z-index:201;}
-@media(max-width:699px){.news-image-lightbox{padding:10px}.news-image-lightbox-img{max-width:100%;max-height:90vh}.news-image-lightbox-close{top:10px;right:10px}}
+@media(max-width:699px){.news-image-lightbox{padding:10px;}.news-image-lightbox-img{max-width:100%;max-height:90vh;}.news-image-lightbox-close{top:10px;right:10px;}}
 </style>
 
 <style id="xleague-fixes-20260915">
@@ -7509,16 +7494,16 @@ button.achievement-item {
 
 <style>
 /* ===== v7: compact icon-only sound / notification controls ===== */
-.desktop-mode-wrap{position:relative;display:inline-flex}
-#soundModeWrap > .sound-toggle-btn,#notifyModeWrap > .live-notify-toggle-btn{width:42px!important;min-width:42px!important;height:30px!important;padding:0!important;justify-content:center!important;gap:0!important}
-#soundModeWrap .sound-toggle-text,#notifyModeWrap .live-notify-toggle-text{display:none!important}
-.mode-popover{position:absolute;right:0;top:calc(100% + 7px);bottom:auto;z-index:260;display:none;width:42px;min-width:42px;padding:4px;border:1px solid rgba(255,255,255,.11);border-radius:12px;background:#15171a;box-shadow:0 12px 30px rgba(0,0,0,.42);transform:translateY(-5px);opacity:0}
-.desktop-mode-wrap.is-open .mode-popover{display:grid;gap:3px;animation:xleagueModeDrop .17s ease-out forwards}
+.desktop-mode-wrap{position:relative;display:inline-flex;}
+#soundModeWrap > .sound-toggle-btn,#notifyModeWrap > .live-notify-toggle-btn{width:42px!important;min-width:42px!important;height:30px!important;padding:0!important;justify-content:center!important;gap:0!important;}
+#soundModeWrap .sound-toggle-text,#notifyModeWrap .live-notify-toggle-text{display:none!important;}
+.mode-popover{position:absolute;right:0;top:calc(100% + 7px);bottom:auto;z-index:260;display:none;width:42px;min-width:42px;padding:4px;border:1px solid rgba(255,255,255,.11);border-radius:12px;background:#15171a;box-shadow:0 12px 30px rgba(0,0,0,.42);transform:translateY(-5px);opacity:0;}
+.desktop-mode-wrap.is-open .mode-popover{display:grid;gap:3px;animation:xleagueModeDrop .17s ease-out forwards;}
 @keyframes xleagueModeDrop{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
-.mode-option{width:32px;height:30px;padding:0;border:0;border-radius:8px;background:transparent;color:#aaa;display:flex;align-items:center;justify-content:center;font:800 13px/1 inherit;white-space:nowrap;cursor:pointer}
-.mode-option:hover{background:rgba(255,255,255,.06);color:#fff}.mode-option.is-selected{background:rgba(182,255,59,.09);color:#b6ff3b}
-.sound-toggle-btn.is-favorites,.live-notify-toggle-btn.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}
-@media(max-width:700px){.desktop-mode-wrap{display:none!important}#soundToggleBtnMobile.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff}}
+.mode-option{width:32px;height:30px;padding:0;border:0;border-radius:8px;background:transparent;color:#aaa;display:flex;align-items:center;justify-content:center;font:800 13px/1 inherit;white-space:nowrap;cursor:pointer;}
+.mode-option:hover{background:rgba(255,255,255,.06);color:#fff;}.mode-option.is-selected{background:rgba(182,255,59,.09);color:#b6ff3b;}
+.sound-toggle-btn.is-favorites,.live-notify-toggle-btn.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff;}
+@media(max-width:700px){.desktop-mode-wrap{display:none!important;}#soundToggleBtnMobile.is-favorites{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;-webkit-text-fill-color:#fff;}}
 </style>
 
 <style>
@@ -7572,6 +7557,7 @@ button.achievement-item {
 }
 </style>
 
+<!-- CSS cleanup phase 2: redundant same-selector declarations removed; behavior preserved -->
 </head>
 <body>
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
