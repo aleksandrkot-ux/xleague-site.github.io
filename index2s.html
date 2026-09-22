@@ -1160,12 +1160,7 @@ html, body {
     }
 
     .country-table-v2 th:first-child,
-    .country-table-v2 td:first-child {
-      
-      
-    }
-
-    .country-table-v2 th:nth-child(2),
+.country-table-v2 th:nth-child(2),
     .country-table-v2 td:nth-child(2) {
       width: auto;
       text-align: left;
@@ -1446,68 +1441,6 @@ html, body {
       font-weight: 1000;
     }
 
-    .info-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 60;
-    }
-
-    .info-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,.72);
-      backdrop-filter: blur(8px);
-    }
-
-    .info-sheet {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      width: 100%;
-      max-width: 430px;
-      max-height: 82vh;
-      transform: translateX(-50%);
-      overflow-y: auto;
-      padding: 16px 14px calc(18px + env(safe-area-inset-bottom));
-      border-radius: 28px 28px 0 0;
-      background: #111;
-      border: 1px solid var(--line);
-      box-shadow: 0 -20px 60px rgba(0,0,0,.45);
-    }
-
-    .info-sheet-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .info-title {
-      font-size: 20px;
-      font-weight: 1000;
-      letter-spacing: -.03em;
-    }
-
-    .info-subtitle {
-      margin-top: 3px;
-      color: var(--muted2);
-      font-size: 12px;
-      font-weight: 850;
-    }
-
-    .info-close {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      color: var(--muted);
-      font-size: 24px;
-      font-weight: 700;
-      line-height: 1;
-    }
 
     .rule-list {
       display: grid;
@@ -1517,12 +1450,7 @@ html, body {
   color: #fbbf24 !important;
   font-weight: 1000;
 }
-    .rule-card {
-      padding: 12px;
-      border-radius: 20px;
-      background: var(--card);
-      border: 1px solid var(--line);
-    }
+
 
     .rule-card strong {
       display: block;
@@ -3558,9 +3486,6 @@ main,
 .country-table-v2 tbody tr {
   will-change: transform;
 }
-.country-table-v2 tbody tr:hover td {
-  
-}
 .country-table-v2 th:first-child,
 .country-table-v2 td:first-child {
   
@@ -3927,7 +3852,6 @@ main,
   border-right:1px solid rgba(255,255,255,.055);
 }
 .match-favorite-zone .favorite-toggle { width:100%; height:100%; min-height:38px;   }
-.match-favorite-zone .favorite-toggle.is-active {  }
 .player-favorite-toggle { width:28px; height:28px; border-radius:9px; font-size:15px; margin-left:5px; }
 .player-top { gap:6px; }
 
@@ -5328,11 +5252,6 @@ button.achievement-item {
 .global-pickers-popover .picker-name + .picker-name {
   margin-top: 2px;
 }
-.country-history-stars {
-  
-}
-
-
 /* v3.6 mobile picker modal */
 @media (hover:none), (pointer:coarse) {
   .global-pickers-popover {
