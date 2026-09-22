@@ -5329,7 +5329,6 @@ button.achievement-item {
 }
 
 @media (hover:hover) and (pointer:fine) {
-  .match-card:hover,
   .player-card:hover,
   .stat-card:hover,
   .stats-panel:hover,
@@ -5638,13 +5637,7 @@ button.achievement-item {
   background: #181818 !important;
 }
 
-/* Desktop: clearer ownership of controls on hover, similar to the timer shell */
-@media (hover:hover) and (pointer:fine) {
-  .match-card:hover {
-    border-color: rgba(255,255,255,.22) !important;
-    box-shadow: 0 0 0 1px rgba(255,255,255,.035), 0 12px 28px rgba(0,0,0,.28);
-  }
-}
+
 
 /* On small screens reduce the vertical grid feeling */
 @media (max-width: 699px) {
@@ -6150,280 +6143,93 @@ button.achievement-item {
 
 
 <style>
-/* ===== X League: compact square player achievements ===== */
+/* ===== Player achievements — consolidated final layout ===== */
 .player-achievements-v2 .achievement-strip {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(108px, 108px)) !important;
-  gap: 10px !important;
-  overflow: visible !important;
-  justify-content: start !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 118px);
+  gap: 10px;
+  justify-content: start;
+  overflow: visible;
 }
 
-.player-achievements-v2 .achievement-item {
-  width: 108px !important;
-  height: 108px !important;
-  min-width: 108px !important;
-  max-width: 108px !important;
-  flex: none !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  padding: 10px 8px !important;
-  border-radius: 18px !important;
-  text-align: center !important;
-}
-
-.player-achievements-v2 .achievement-item > span {
-  grid-row: auto !important;
-  width: 34px !important;
-  height: 34px !important;
-  flex: 0 0 34px !important;
-  border-radius: 11px !important;
-  font-size: 18px !important;
-}
-
-.player-achievements-v2 .achievement-item img {
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 9px !important;
-}
-
-.player-achievements-v2 .achievement-text {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 2px !important;
-  width: 100% !important;
-  min-width: 0 !important;
-}
-
-.player-achievements-v2 .achievement-text strong {
-  width: 100% !important;
-  font-size: 10.5px !important;
-  line-height: 1.15 !important;
-  font-weight: 1000 !important;
-  text-align: center !important;
-  white-space: normal !important;
-  overflow: hidden !important;
-  display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-}
-
-.player-achievements-v2 .achievement-text small {
-  width: 100% !important;
-  font-size: 8.5px !important;
-  line-height: 1.15 !important;
-  text-align: center !important;
-  white-space: normal !important;
-  overflow: hidden !important;
-  display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-}
-
-@media (max-width: 430px) {
-  .player-achievements-v2 .achievement-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-
-  .player-achievements-v2 .achievement-item {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    aspect-ratio: 1 / 1 !important;
-    height: auto !important;
-  }
-}
-</style>
-
-
-<style>
-/* ===== X League: achievement tiles v2 — readable title + intact meta ===== */
-.player-achievements-v2 .achievement-strip {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, 124px) !important;
-  gap: 10px !important;
-  justify-content: start !important;
-  overflow: visible !important;
-}
-
-.player-achievements-v2 .achievement-item {
-  width: 124px !important;
-  height: 124px !important;
-  min-width: 124px !important;
-  max-width: 124px !important;
-  padding: 9px 8px 8px !important;
-  gap: 5px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  text-align: center !important;
-  overflow: hidden !important;
-}
-
-.player-achievements-v2 .achievement-item > span {
-  width: 36px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  flex: 0 0 36px !important;
-  margin: 0 !important;
-}
-
-.player-achievements-v2 .achievement-item img {
-  width: 32px !important;
-  height: 32px !important;
-}
-
-.player-achievements-v2 .achievement-text {
-  width: 100% !important;
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 4px !important;
-  overflow: hidden !important;
-}
-
-.player-achievements-v2 .achievement-text strong {
-  width: 100% !important;
-  min-height: 27px !important;
-  font-size: 10.5px !important;
-  line-height: 1.25 !important;
-  white-space: normal !important;
-  overflow: hidden !important;
-  text-overflow: clip !important;
-  display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-}
-
-.player-achievements-v2 .achievement-text small {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-height: 23px !important;
-  padding: 4px 5px !important;
-  border-radius: 7px !important;
-  background: rgba(255,255,255,.055) !important;
-  font-size: 8.5px !important;
-  line-height: 1.15 !important;
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-@media (max-width: 430px) {
-  .player-achievements-v2 .achievement-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-
-  .player-achievements-v2 .achievement-item {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    height: auto !important;
-    min-height: 118px !important;
-    aspect-ratio: 1 / 1 !important;
-  }
-
-  .player-achievements-v2 .achievement-text small {
-    font-size: 8px !important;
-  }
-}
-</style>
-
-
-<style>
-/* ===== X League: standardized compact achievement tiles ===== */
 .player-achievements-v2 .achievement-tile-standard {
-  width: 118px !important;
-  height: 118px !important;
-  min-width: 118px !important;
-  max-width: 118px !important;
-  padding: 10px 8px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 8px !important;
-  overflow: hidden !important;
+  width: 118px;
+  height: 118px;
+  min-width: 118px;
+  max-width: 118px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  overflow: hidden;
 }
 
 .player-achievements-v2 .achievement-tile-standard > span {
-  width: 38px !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  flex: 0 0 38px !important;
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  flex: 0 0 38px;
 }
 
 .player-achievements-v2 .achievement-tile-standard img {
-  width: 34px !important;
-  height: 34px !important;
+  width: 34px;
+  height: 34px;
 }
 
 .player-achievements-v2 .achievement-tile-standard .achievement-copy {
-  width: 100% !important;
-  min-width: 0 !important;
-  display: flex !important;
-  flex: 1 1 auto !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 5px !important;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .player-achievements-v2 .achievement-tile-standard .achievement-tile-tag {
-  display: block !important;
-  width: 100% !important;
-  color: #fff !important;
-  font-size: 11px !important;
-  line-height: 1.1 !important;
-  font-weight: 1000 !important;
-  letter-spacing: .04em !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  display: block;
+  width: 100%;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.1;
+  font-weight: 1000;
+  letter-spacing: .04em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .player-achievements-v2 .achievement-tile-standard .achievement-tile-tour {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: auto !important;
-  min-height: 22px !important;
-  padding: 4px 8px !important;
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.06) !important;
-  color: #bdbdbd !important;
-  font-size: 9px !important;
-  line-height: 1 !important;
-  font-weight: 900 !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 22px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  color: #bdbdbd;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
 @media (max-width: 430px) {
   .player-achievements-v2 .achievement-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-
   .player-achievements-v2 .achievement-tile-standard {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    height: auto !important;
-    min-height: 112px !important;
-    aspect-ratio: 1 / 1 !important;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: auto;
+    min-height: 112px;
+    aspect-ratio: 1 / 1;
   }
 }
 </style>
@@ -7719,9 +7525,6 @@ button.achievement-item {
 .player-achievements-v2 .achievement-points-head .dashboard-title-v2 {
   margin-bottom: 0 !important;
 }
-.achievement-points-badge[hidden] {
-  display: none !important;
-}
 .achievement-points-badge {
   width: 38px;
   height: 38px;
@@ -7729,13 +7532,13 @@ button.achievement-item {
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,.18);
   background: rgba(255,255,255,.045);
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   line-height: 1;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
 }
+.achievement-points-badge:not([hidden]) { display: flex; }
 .achievement-points-label {
   font-size: 8px;
   line-height: 1;
@@ -13421,12 +13224,11 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 </script>
 
 <style>
-/* ===== FINAL OVERRIDE: match-card desktop hover =====
-   motion-stagger-item keeps transform via animation-fill-mode: forwards,
-   so the hover transform must explicitly win over that animation state. */
+/* ===== Match-card desktop hover =====
+   `translate` is independent from the entry animation's `transform`, so no transform !important is needed. */
 @media (hover:hover) and (pointer:fine) {
   #screen-matches .match-card:hover {
-    transform: translateY(-2px) !important;
+    translate: 0 -2px;
     border: 1px solid rgba(255,255,255,.30) !important;
     box-shadow:
       0 0 0 1px rgba(255,255,255,.045),
