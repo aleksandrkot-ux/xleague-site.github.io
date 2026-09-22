@@ -521,17 +521,13 @@ html, body {
       border: 1px solid rgba(52,211,153,.25);
       color: var(--green);
       font-size: 9px;
-      font-weight: 1000;
       line-height: 1;
     }
 
     .dead-badge {
       padding: 4px 6px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
-      color: var(--muted2);
+      border-radius: 999px;;
       font-size: 9px;
-      font-weight: 1000;
       line-height: 1;
     }
 
@@ -589,10 +585,8 @@ html, body {
 
     .pick-preview {
       margin-top: 2px;
-      color: var(--muted2);
       font-size: 12px;
       line-height: 1.35;
-      font-weight: 850;
       word-break: break-word;
     }
 
@@ -1116,35 +1110,13 @@ html, body {
       min-height: auto;
     }
 
-    .player-form-v2 .profile-dots {
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: nowrap;
-      width: 100%;
-      gap: 0;
-    }
+    
 
-    .player-form-v2 .profile-form-tour {
-      display: inline-flex;
-      align-items: center;
-      flex: 0 0 auto;
-      gap: 8px;
-    }
+    
 
-    .player-form-v2 .profile-form-separator {
-      flex: 0 0 auto;
-      width: 1px;
-      height: 18px;
-      margin: 0 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.72);
-    }
+    
 
-    .player-form-v2 .profile-dot {
-      flex: 0 0 auto;
-      width: 16px;
-      height: 16px;
-    }
+    
 
     .player-activity-v2 { display: grid; gap: 10px; }
 
@@ -3412,10 +3384,7 @@ main,
 }
 
 /* Country rows remain flat, but separators become slightly clearer. */
-.country-table-v2 th,
-.country-table-v2 td {
-  border-top-color: rgba(255,255,255,.065) !important;
-}
+
 
 /* Player selector is also treated as a compact floating panel. */
 #screen-players > .player-toolbar > div {
@@ -3562,11 +3531,7 @@ main,
 }
 
 /* Full achievement section: responsive wrapped grid instead of a clipped strip. */
-.player-achievements-v2 .achievement-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
-  gap: 8px;
-  overflow: visible;
+.player-achievements-v2 .achievement-strip {;;
   padding: 0;
 }
 .player-achievements-v2 .achievement-item {
@@ -3701,9 +3666,7 @@ main,
 .country-table-v2 {
   width: min(100%, 620px);
   min-width: 0;
-  table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0;
+  table-layout: fixed;;
   margin-top: 2px;
   font-variant-numeric: tabular-nums;
 }
@@ -3715,8 +3678,7 @@ main,
   padding: 10px 12px;
 }
 
-.country-table-v2 thead th {
-  background: rgba(255,255,255,.022);
+.country-table-v2 thead th {;
   border-top: 1px solid rgba(255,255,255,.055) !important;
   border-bottom-color: rgba(255,255,255,.08);
 }
@@ -3831,10 +3793,7 @@ main,
 
 
 /* Current-tour live state */
-.player-current-v2 .dot.pending {
-  background: #f5f5f5 !important;
-  box-shadow: 0 0 0 2px rgba(255,255,255,.10), 0 0 12px rgba(255,255,255,.38);
-}
+
 
 .player-current-v2 .profile-pick-card.pending {
   border-color: rgba(255,255,255,.20);
@@ -4375,11 +4334,8 @@ button.achievement-item {
 
 .profile-inline-achievement {
   display: inline-grid;
-  place-items: center;
-  padding: 0;
-  border: 0;
+  place-items: center;;
   background: transparent;
-  border-radius: 10px;
 }
 
 .achievement-modal {
@@ -6371,15 +6327,9 @@ button.achievement-item {
 }
 
 /* Even quieter card fill; the score digits carry the state, not a glowing box. */
-.live-score-value.live-score-draw {
-  background: rgba(52,211,153,.035) !important;
-  border-color: rgba(52,211,153,.22) !important;
-}
 
-.live-score-value.live-score-behind {
-  background: rgba(231,137,150,.028) !important;
-  border-color: rgba(231,137,150,.18) !important;
-}
+
+
 </style>
 
 
@@ -6397,13 +6347,11 @@ button.achievement-item {
 }
 
 /* Make the score pill visually flatter on the dark card. */
-.live-score-value.live-score-draw {
-  background: rgba(52,211,153,.018) !important;
+.live-score-value.live-score-draw {;
   border-color: rgba(52,211,153,.20) !important;
 }
 
-.live-score-value.live-score-behind {
-  background: rgba(231,137,150,.016) !important;
+.live-score-value.live-score-behind {;
   border-color: rgba(231,137,150,.17) !important;
 }
 
@@ -6664,7 +6612,6 @@ button.achievement-item {
   border-radius: 999px;
   background: rgba(255,255,255,.055);
   color: #9a9a9a;
-  font-size: 18px;
   line-height: 1;
 }
 
@@ -6860,7 +6807,7 @@ button.achievement-item {
 .inactive-news-head h3{margin:0;color:#fff;font-size:18px;font-weight:1000;}
 .inactive-news-head span{color:#7f7f85;font-size:11px;font-weight:850;}
 .inactive-news-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
-.inactive-news-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:24px;border:1px solid rgba(255,255,255,.065);background:#161719;box-shadow:0 14px 34px rgba(0,0,0,.20);}
+.inactive-news-card{overflow:hidden;display:flex;flex-direction:column;min-width:0;border-radius:24px;border:1px solid rgba(255,255,255,.065);box-shadow:0 14px 34px rgba(0,0,0,.20);}
 .inactive-news-preview{aspect-ratio:16/7;overflow:hidden;background:#0c0d10;}
 .inactive-news-preview img{width:100%;height:100%;display:block;object-fit:cover;opacity:.78;}
 .inactive-news-body{display:flex;flex:1 1 auto;flex-direction:column;padding:16px;}
@@ -6870,21 +6817,18 @@ button.achievement-item {
 .inactive-news-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:15px;}
 .inactive-news-action{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font-size:10px;font-weight:1000;text-decoration:none;}
 .inactive-news-action.primary{border-color:rgba(182,255,59,.22);background:rgba(182,255,59,.09);color:#b6ff3b;}
-.news-modal-body{display:grid;gap:12px;}.news-modal-body p{margin:0;color:#c7c7cb;font-size:13px;line-height:1.62;font-weight:700;}
+.news-modal-body{display:grid;gap:12px;}.news-modal-body p{;color:#c7c7cb;line-height:1.62;}
 @media(max-width:900px){.inactive-welcome{grid-template-columns:1fr;}.inactive-welcome-media{min-height:180px;}.inactive-welcome-media img{max-height:190px;}}
 @media(max-width:699px){.inactive-home-shell{gap:12px;margin-top:12px;}.inactive-welcome{min-height:0;padding:18px;border-radius:24px;gap:14px;}.inactive-welcome-media{min-height:140px;}.inactive-welcome-media img{max-height:150px;}.inactive-welcome h2{font-size:30px;}.inactive-welcome p{font-size:12px;line-height:1.55;}.inactive-news-grid{grid-template-columns:1fr;}}
 </style>
 
 
 <style>
-.news-modal-body .news-article-heading{
-  margin:8px 0 2px;color:#fff;font-size:18px;line-height:1.2;font-weight:1000;
+.news-modal-body .news-article-heading{;color:#fff;line-height:1.2;
 }
-.news-modal-body .news-article-bold{font-weight:1000;color:#f1f1f3;}
-.news-modal-body .news-article-italic{font-style:italic;color:#c7c7cb;}
-.news-modal-body .news-article-quote{
-  margin:2px 0;padding:10px 12px;border-left:3px solid #b6ff3b;
-  border-radius:0 12px 12px 0;background:rgba(182,255,59,.055);color:#d5d5d8;
+.news-modal-body .news-article-bold{;color:#f1f1f3;}
+.news-modal-body .news-article-italic{;color:#c7c7cb;}
+.news-modal-body .news-article-quote{;padding:10px 12px;;background:rgba(182,255,59,.055);
 }
 .news-modal-body .news-telegram-link{
   display:inline-flex;align-items:center;width:fit-content;margin-top:6px;
@@ -6966,12 +6910,7 @@ button.achievement-item {
 }
 
 /* Give the on-site article sheet the same subtle X League green separation. */
-#newsModal .info-sheet {
-  border-color: rgba(182,255,59,.15) !important;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(182,255,59,.05), transparent 30%),
-    #121512 !important;
-}
+
 </style>
 
 
@@ -7037,36 +6976,22 @@ button.achievement-item {
   color:#8f9490;
 }
 
-.news-modal-body{
-  gap:16px !important;
-}
-.news-modal-body p{
-  margin:0;
+
+.news-modal-body p{;
   color:#d0d2d0;
   font-size:14px;
-  line-height:1.72;
   font-weight:650;
   letter-spacing:.002em;
 }
-.news-modal-body .news-article-heading{
-  margin:10px 0 0;
-  color:#fff;
-  font-size:20px;
-  line-height:1.22;
-  font-weight:1000;
-  letter-spacing:-.02em;
-}
-.news-modal-body .news-article-bold{
-  color:#f4f5f3;
+
+.news-modal-body .news-article-bold{;
   font-size:14px;
   line-height:1.65;
-  font-weight:1000;
 }
 .news-modal-body .news-article-italic{
   color:#c5c8c4;
   font-size:14px;
   line-height:1.68;
-  font-style:italic;
   font-weight:600;
 }
 .news-modal-body .news-article-quote{
@@ -7160,11 +7085,7 @@ button.achievement-item {
 <style>
 /* v6: explicit article formatting */
 .news-modal-body .news-article-heading{
-  padding-top:4px !important;
-  color:#b6ff3b !important;
-  font-size:21px !important;
-  line-height:1.22 !important;
-  font-weight:1000 !important;
+  padding-top:4px !important;;;
 }
 .news-modal-body .news-article-bold{
   color:#fff !important;
@@ -7188,16 +7109,8 @@ button.achievement-item {
   font-style:italic;
   font-weight:650;
 }
-.news-modal-body .news-article-heading{
-  display:flex;
-  align-items:baseline;
-  gap:8px;
-}
-.news-modal-body .news-heading-mark{
-  color:#b6ff3b;
-  font-size:.78em;
-  line-height:1;
-  flex:0 0 auto;
+
+.news-modal-body .news-heading-mark{;;
   transform:translateY(-1px);
 }
 </style>
@@ -7235,7 +7148,6 @@ button.achievement-item {
 .goal-toast-close::before {
   content: "×";
   display: block;
-  font-size: 18px;
   font-weight: 700;
   line-height: 1;
   transform: translateY(-1px);
@@ -7251,11 +7163,8 @@ button.achievement-item {
   margin:0;
   border:0;
   background:none;
-  color:#b6ff3b;
   font:inherit;
-  font-weight:950;
   line-height:inherit;
-  text-decoration:none;
   cursor:pointer;
   vertical-align:baseline;
 }
@@ -7268,15 +7177,9 @@ button.achievement-item {
 
 <style>
 /* v11 — tighter article rhythm and working inline user links */
-.news-modal-body{
-  gap:10px !important;
-}
-.news-modal-body p{
-  margin:0 !important;
-}
-.news-modal-body .news-article-heading{
-  margin:12px 0 4px !important;
-}
+
+
+
 .news-user-link-bold{
   font-weight:1000 !important;
 }
@@ -7298,9 +7201,7 @@ button.achievement-item {
 .news-modal-body p + p{
   margin-top:4px !important;
 }
-.news-modal-body .news-article-heading{
-  margin:12px 0 5px !important;
-}
+
 .news-user-link{
   color:#b6ff3b !important;
   font-weight:950 !important;
