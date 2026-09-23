@@ -6637,6 +6637,19 @@ button.achievement-item {
 
 
 <style>
+/* ===== News achievement embeds ===== */
+.news-achievement-inline{display:inline-flex;align-items:center;vertical-align:-.28em;margin:0 .16em;}
+.news-achievement-inline img,.news-achievement-chip img{display:block;width:28px;height:28px;object-fit:cover;border-radius:7px;background:#111;}
+.news-achievement-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 10px;}
+.news-achievement-chip{display:inline-flex;align-items:center;justify-content:center;padding:3px;border:2px solid rgba(139,146,154,.72);border-radius:10px;background:#111;box-shadow:0 3px 10px rgba(0,0,0,.22);}
+.news-achievement-inline.news-achievement-norm,.news-achievement-chip.news-achievement-norm{border-color:#8B929A;}
+.news-achievement-inline.news-achievement-rare,.news-achievement-chip.news-achievement-rare{border:2px solid #A970FF;border-radius:10px;padding:2px;box-shadow:0 0 10px rgba(169,112,255,.16);}
+.news-achievement-inline.news-achievement-legendary,.news-achievement-chip.news-achievement-legendary{border:2px solid #FFBF3F;border-radius:10px;padding:2px;box-shadow:0 0 11px rgba(255,191,63,.18);}
+.news-achievement-missing{display:inline-flex;align-items:center;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.05);color:#8d8d93;font-size:10px;font-weight:900;}
+@media(max-width:699px){.news-achievement-inline img,.news-achievement-chip img{width:26px;height:26px;}.news-achievement-row{gap:7px;}}
+</style>
+
+<style>
 .news-modal-body .news-telegram-link{
   display:inline-flex;align-items:center;width:fit-content;margin-top:6px;
   min-height:34px;padding:8px 12px;border-radius:999px;
@@ -12470,8 +12483,45 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }).format(d);
   }
 
+  function newsAchievementRow(code) {
+    const target = String(code || "").trim().toUpperCase();
+    if (!target) return null;
+    return (Array.isArray(siteAchievements) ? siteAchievements : []).find(row =>
+      String(achievementCode(row) || "").trim().toUpperCase() === target
+    ) || null;
+  }
+
+  function newsAchievementHtml(code, inline = false) {
+    const target = String(code || "").trim().toUpperCase();
+    if (!target) return "";
+
+    const row = newsAchievementRow(target);
+    if (!row) return `<span class="news-achievement-missing" title="Ачивка ${esc(target)} не найдена">${esc(target)}</span>`;
+
+    const rawIcon = achievementIcon(row);
+    const iconUrl = normalizeFlagUrl(rawIcon);
+    if (!iconUrl) return `<span class="news-achievement-missing" title="У ачивки ${esc(target)} нет картинки">${esc(target)}</span>`;
+
+    const rarity = achievementRarity(row);
+    const rarityClass = rarity ? ` news-achievement-${rarity}` : "";
+    const title = achievementTitle(row) || target;
+    const cls = inline ? "news-achievement-inline" : "news-achievement-chip";
+    return `<span class="${cls}${rarityClass}" title="${esc(title)}"><img src="${esc(iconUrl)}" alt="${esc(target)}" loading="lazy"></span>`;
+  }
+
   function formatBody(raw) {
     let source = String(raw ?? "").replace(/\r\n?/g, "\n");
+
+    // Achievement embeds written directly in the site_news body cell.
+    // [achievement: SOTKA] -> one inline icon
+    // [achievements: SOTKA, AMEN, SAPA] -> a separate icon row
+    source = source.replace(/\[achievements\s*:\s*([^\]\n]+)\]/gi, (_, codes) => {
+      const safeCodes = String(codes || "").split(",").map(code => code.trim()).filter(Boolean).join(",");
+      return `<achievements data-codes="${esc(safeCodes)}"></achievements>`;
+    });
+    source = source.replace(/\[achievement\s*:\s*([^\]\n,]+)\]/gi, (_, code) =>
+      `<achievement data-code="${esc(String(code || "").trim())}"></achievement>`
+    );
 
     const USER_ALIASES = {
       "Анатолий": "Анатолий (Синдикат)"
@@ -12527,6 +12577,10 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         if (!display) return "";
         const target = USER_ALIASES[display] || display;
         return `<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`;
+      }
+
+      if (tag === "achievement") {
+        return newsAchievementHtml(node.getAttribute("data-code"), true);
       }
 
       return Array.from(node.childNodes).map(renderInlineNode).join("");
@@ -12585,6 +12639,15 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       if (tag === "blockquote") {
         flushParagraph();
         out.push(`<div class="news-article-quote">${renderChildren(node)}</div>`);
+        continue;
+      }
+
+      if (tag === "achievements") {
+        flushParagraph();
+        const codes = String(node.getAttribute("data-codes") || "").split(",").map(code => code.trim()).filter(Boolean);
+        if (codes.length) {
+          out.push(`<div class="news-achievement-row">${codes.map(code => newsAchievementHtml(code, false)).join("")}</div>`);
+        }
         continue;
       }
 
