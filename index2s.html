@@ -8957,6 +8957,13 @@ function mapPredictionRow(row) {
       if (siteAchievementCatalog.length) return siteAchievementCatalog;
       if (!achievementCatalogPromise) {
         achievementCatalogPromise = loadTab(TABS.achievementCatalog)
+          .catch(async (err) => {
+            // The VPS sheet proxy may expose only the site_* tabs and reject the
+            // raw Cyrillic sheet name. Fall back to the public sheet JSON endpoint.
+            console.warn("VPS achievement catalog endpoint failed; trying direct sheet catalog.", err);
+            const directUrl = `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(TABS.achievementCatalog)}`;
+            return fetchJsonWithTimeout(directUrl);
+          })
           .then(rows => {
             siteAchievementCatalog = Array.isArray(rows) ? rows : [];
             return siteAchievementCatalog;
