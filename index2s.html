@@ -12514,22 +12514,33 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }).format(d);
   }
 
+  // Historical/reference-only achievements that may be absent from
+  // site_player_achievements and from the public raw-sheet endpoint.
+  // Keep this tiny: it is only a final fallback for news embeds.
+  const NEWS_ACHIEVEMENT_FALLBACKS = Object.freeze({
+    GIRLS: {
+      "Код": "GIRLS",
+      "Название": "Герлз-бэнд",
+      "Ссылка": "https://drive.google.com/file/d/1NiViOF1da2w0PS5j1kLQpNYp_6q3nKqX/view?usp=drive_link",
+      "Редкость": "RARE"
+    }
+  });
+
   function newsAchievementRow(code) {
     const target = String(code || "").trim().toUpperCase();
     if (!target) return null;
 
-    // News embeds must use the full achievement reference catalog first.
-    // This makes [achievement: CODE] work even when that achievement has not
-    // been awarded in the current season (for example GIRLS).
     const catalogRow = (Array.isArray(siteAchievementCatalog) ? siteAchievementCatalog : []).find(row =>
       String(achievementCode(row) || "").trim().toUpperCase() === target
     );
     if (catalogRow) return catalogRow;
 
-    // Safe fallback for temporary catalog/API failures.
-    return (Array.isArray(siteAchievements) ? siteAchievements : []).find(row =>
+    const awardedRow = (Array.isArray(siteAchievements) ? siteAchievements : []).find(row =>
       String(achievementCode(row) || "").trim().toUpperCase() === target
-    ) || null;
+    );
+    if (awardedRow) return awardedRow;
+
+    return NEWS_ACHIEVEMENT_FALLBACKS[target] || null;
   }
 
   function newsAchievementHtml(code, inline = false) {
