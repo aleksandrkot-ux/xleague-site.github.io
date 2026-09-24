@@ -7327,7 +7327,7 @@ button.achievement-item {
         <div class="inactive-news-title">Итоги второго тура</div>
         <div class="inactive-news-text">Короткий анонс новости: кто поднялся в таблице, какие матчи решили тур и чем запомнился игровой уикенд.</div>
         <div class="inactive-news-actions">
-          <button type="button" class="inactive-news-action primary" data-news-open="tour2">Читать на сайте</button>
+          <a class="inactive-news-action primary" href="#news-tour2" data-news-open="tour2">Читать на сайте</a>
           <a class="inactive-news-action" href="https://t.me/panpopan/3518" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
         </div>
       </div>
@@ -7339,14 +7339,14 @@ button.achievement-item {
         <div class="inactive-news-title">Что дальше: неделя между турами</div>
         <div class="inactive-news-text">На неделе X League живёт не только матчами: новости, обновления, ачивки и подготовка к следующему игровому уикенду.</div>
         <div class="inactive-news-actions">
-          <button type="button" class="inactive-news-action primary" data-news-open="between">Читать на сайте</button>
+          <a class="inactive-news-action primary" href="#news-between" data-news-open="between">Читать на сайте</a>
           <a class="inactive-news-action" href="https://t.me/panpopan/3527" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
         </div>
       </div>
     </article>
   </div>
   <div class="inactive-news-more-wrap">
-    <button type="button" class="inactive-news-more" id="allNewsBtn">Все новости →</button>
+    <a class="inactive-news-more" id="allNewsBtn" href="#all-news">Все новости →</a>
   </div>
 </div>
 
@@ -12463,13 +12463,6 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   const modalSubtitle = document.getElementById("newsModalSubtitle");
   const modalBody = document.getElementById("newsModalBody");
 
-  // Keep the news modal at the document root.
-  // The main .app is a clipped responsive shell; nesting a fixed modal inside it
-  // can make the modal unavailable on mobile browsers even though the tap fires.
-  if (modal && modal.parentElement !== document.body) {
-    document.body.appendChild(modal);
-  }
-
   let liveNews = [];
 
   const esc = (value) => String(value ?? "")
@@ -12746,7 +12739,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
             <div class="inactive-news-title">${esc(row.title || "Новость X League")}</div>
             <div class="inactive-news-text">${esc(row.preview || "")}</div>
             <div class="inactive-news-actions">
-              <button type="button" class="inactive-news-action primary" data-live-news="${index}">Читать на сайте</button>
+              <a class="inactive-news-action primary" href="#news-${index}" data-live-news="${index}">Читать на сайте</a>
               ${tgHtml}
             </div>
           </div>
@@ -12848,6 +12841,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
     const btn = event.target.closest("[data-live-news]");
     if (btn) {
+      event.preventDefault();
       openNews(Number(btn.dataset.liveNews));
       return;
     }
@@ -12896,7 +12890,10 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
   });
 
-  document.getElementById("allNewsBtn")?.addEventListener("click", renderArchive);
+  document.getElementById("allNewsBtn")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    renderArchive();
+  });
 
   document.getElementById("newsClose")?.addEventListener("click", closeNews);
   document.getElementById("newsBackdrop")?.addEventListener("click", closeNews);
