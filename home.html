@@ -368,6 +368,20 @@ body {
 .news-body .news-user-link:hover{color:#b6ff3b;text-decoration-color:#b6ff3b}
 </style>
 
+
+<style>
+/* Achievement embeds in home news */
+.news-achievement-inline{display:inline-flex;align-items:center;vertical-align:-.28em;margin:0 .16em;}
+.news-achievement-inline img,.news-achievement-chip img{display:block;width:28px;height:28px;object-fit:cover;border-radius:7px;background:#111;}
+.news-achievement-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0 10px;}
+.news-achievement-chip{display:inline-flex;align-items:center;justify-content:center;padding:3px;border:2px solid rgba(139,146,154,.72);border-radius:10px;background:#111;box-shadow:0 3px 10px rgba(0,0,0,.22);}
+.news-achievement-inline.news-achievement-norm,.news-achievement-chip.news-achievement-norm{border:2px solid #8B929A;border-radius:10px;padding:2px;}
+.news-achievement-inline.news-achievement-rare,.news-achievement-chip.news-achievement-rare{border:2px solid #A970FF;border-radius:10px;padding:2px;box-shadow:0 0 10px rgba(169,112,255,.16);}
+.news-achievement-inline.news-achievement-legendary,.news-achievement-chip.news-achievement-legendary{border:2px solid #FFBF3F;border-radius:10px;padding:2px;box-shadow:0 0 11px rgba(255,191,63,.18);}
+.news-achievement-missing{display:inline-flex;align-items:center;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.05);color:#8d8d93;font-size:10px;font-weight:900;}
+@media(max-width:650px){.news-achievement-inline img,.news-achievement-chip img{width:26px;height:26px}.news-achievement-row{gap:7px}}
+</style>
+
 </head>
 
 <body>
@@ -514,13 +528,33 @@ body {
   const bodyEl = document.getElementById('homeNewsBody');
   const tgEl = document.getElementById('homeNewsTelegram');
   let news = [];
+  let achievementRows = [];
+  const ACHIEVEMENT_RARITY = Object.freeze({
+    DREAMER:'norm', NEXTT:'norm', SAPA:'norm', INSIDER:'norm', SOTKA:'norm', NISHA:'norm', BATYA:'norm',
+    DOEXALI:'rare', GIRLS:'rare', SHAMAN:'rare', DVESTI:'rare', KAZINO:'rare', HARD:'rare', SLOW:'rare', SHKOLA:'rare', AMEN:'rare', NEPOPLANU:'rare', KUSH:'rare', OBIDNO:'rare', ZAXLEBOM:'rare', PERVONAX:'rare', PORA:'rare',
+    FANID:'legendary', VJUH:'legendary', BOGACH:'legendary', GIGACHAD:'legendary', OHUELI:'legendary', '300':'legendary', GASTROLER:'legendary'
+  });
+  const NEWS_ACHIEVEMENT_FALLBACKS = Object.freeze({
+    GIRLS:{'Код':'GIRLS','Название':'Герлз-бэнд','Ссылка':'https://drive.google.com/file/d/1NiViOF1da2w0PS5j1kLQpNYp_6q3nKqX/view?usp=drive_link','Редкость':'RARE'}
+  });
   const esc = v => String(v ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
   const published = v => ['1','true','yes','да','published'].includes(String(v ?? '').trim().toLowerCase());
   function parseDate(v){ const raw=String(v??'').trim(),m=raw.match(/^(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{4})$/); if(m)return new Date(+m[3],+m[2]-1,+m[1]); const d=new Date(raw); return Number.isNaN(d.getTime())?new Date(0):d; }
   function fmtDate(v){ const d=parseDate(v); return d.getTime()?new Intl.DateTimeFormat('ru-RU',{day:'2-digit',month:'long',year:'numeric'}).format(d):String(v??''); }
   function img(row){ return String(row.image_url||row.preview_image||row.image||row.img||'').trim(); }
+  function achievementValue(row, keys, fallback=''){ for(const k of keys){ const v=row?.[k]; if(v!==undefined&&v!==null&&String(v).trim()!=='') return v; } return fallback; }
+  function achievementCode(row){ return achievementValue(row,['achievement_code','achievement code','code','Code','Код','B','J'],''); }
+  function achievementTitle(row){ return achievementValue(row,['achievement_title','achievement title','title','Title','Название','C','M'],'Ачивка'); }
+  function achievementIcon(row){ return achievementValue(row,['achievement_icon','achievement icon','icon','Icon','Ссылка','D','L'],''); }
+  function normalizeFlagUrl(value){ const raw=String(value??'').trim(); if(!raw)return ''; if(/googleusercontent\.com/i.test(raw)||/drive\.google\.com\/thumbnail/i.test(raw))return raw; const m=raw.match(/drive\.google\.com\/file\/d\/([^/]+)/i)||raw.match(/[?&]id=([^&]+)/i); if(m)return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w256`; return /^https?:\/\//i.test(raw)?raw:''; }
+  function achievementRarity(row){ const code=String(achievementCode(row)||'').trim().toUpperCase(); const raw=String(achievementValue(row,['rarity','Rarity','Редкость','G'],'')).trim().toLowerCase(); if(['norm','normal','обычная','обычный'].includes(raw))return 'norm'; if(['rare','редкая','редкий'].includes(raw))return 'rare'; if(['legendary','легендарная','легендарный'].includes(raw))return 'legendary'; return ACHIEVEMENT_RARITY[code]||''; }
+  function newsAchievementRow(code){ const target=String(code||'').trim().toUpperCase(); return achievementRows.find(r=>String(achievementCode(r)||'').trim().toUpperCase()===target)||NEWS_ACHIEVEMENT_FALLBACKS[target]||null; }
+  function newsAchievementHtml(code,inline=false){ const target=String(code||'').trim().toUpperCase(); if(!target)return ''; const row=newsAchievementRow(target); if(!row)return `<span class="news-achievement-missing">${esc(target)}</span>`; const iconUrl=normalizeFlagUrl(achievementIcon(row)); if(!iconUrl)return `<span class="news-achievement-missing">${esc(target)}</span>`; const rarity=achievementRarity(row); const cls=inline?'news-achievement-inline':'news-achievement-chip'; return `<span class="${cls}${rarity?' news-achievement-'+rarity:''}" title="${esc(achievementTitle(row)||target)}"><img src="${esc(iconUrl)}" alt="${esc(target)}" loading="lazy"></span>`; }
   function bodyHtml(raw){
     let source=String(raw??'').replace(/\r\n?/g,'\n');
+
+    source=source.replace(/\[achievements\s*:\s*([^\]\n]+)\]/gi,(_,codes)=>`<achievements data-codes="${esc(String(codes||'').split(',').map(x=>x.trim()).filter(Boolean).join(','))}"></achievements>`);
+    source=source.replace(/\[achievement\s*:\s*([^\]\n,]+)\]/gi,(_,code)=>`<achievement data-code="${esc(String(code||'').trim())}"></achievement>`);
 
     const USER_ALIASES={
       'Анатолий':'Анатолий (Синдикат)'
@@ -567,6 +601,7 @@ body {
         const target=USER_ALIASES[display]||display;
         return `<button type="button" class="news-user-link" data-news-user="${esc(target)}">${esc(display)}</button>`;
       }
+      if(tag==='achievement')return newsAchievementHtml(node.getAttribute('data-code'),true);
       return Array.from(node.childNodes).map(renderInlineNode).join('');
     }
 
@@ -608,6 +643,12 @@ body {
         out.push(`<div class="news-article-quote">${renderChildren(node)}</div>`);
         continue;
       }
+      if(tag==='achievements'){
+        flushParagraph();
+        const codes=String(node.getAttribute('data-codes')||'').split(',').map(x=>x.trim()).filter(Boolean);
+        if(codes.length)out.push(`<div class="news-achievement-row">${codes.map(c=>newsAchievementHtml(c,false)).join('')}</div>`);
+        continue;
+      }
       paragraphParts.push(renderInlineNode(node));
     }
 
@@ -633,7 +674,7 @@ body {
   });
 
   document.getElementById('homeNewsClose').addEventListener('click',close);modal.addEventListener('click',e=>{if(e.target===modal)close();});document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
-  fetch(API+'?home_ts='+Date.now(),{cache:'no-store',headers:{'Cache-Control':'no-cache'}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(b=>{const rows=Array.isArray(b?.data?.site_news)?b.data.site_news:[];news=rows.filter(r=>published(r.published)).sort((a,b)=>parseDate(b.date)-parseDate(a.date));render();}).catch(err=>{console.error('HOME NEWS LOAD ERROR',err);list.innerHTML='<div class="news-empty">Новости временно не загрузились. Обновите страницу чуть позже.</div>';});
+  fetch(API+'?home_ts='+Date.now(),{cache:'no-store',headers:{'Cache-Control':'no-cache'}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(b=>{achievementRows=Array.isArray(b?.data?.site_player_achievements)?b.data.site_player_achievements:[];const rows=Array.isArray(b?.data?.site_news)?b.data.site_news:[];news=rows.filter(r=>published(r.published)).sort((a,b)=>parseDate(b.date)-parseDate(a.date));render();}).catch(err=>{console.error('HOME NEWS LOAD ERROR',err);list.innerHTML='<div class="news-empty">Новости временно не загрузились. Обновите страницу чуть позже.</div>';});
 })();
 </script>
 
