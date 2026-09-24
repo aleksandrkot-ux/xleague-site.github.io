@@ -7909,6 +7909,11 @@ button.achievement-item {
     let siteOverall = [];
     let sitePlayers = [];
     let siteAchievements = [];
+    // Full achievement reference catalog from the raw "Ачивки" sheet.
+    // Unlike site_player_achievements, this also contains achievements that
+    // have not been awarded in the current season.
+    let siteAchievementCatalog = [];
+    let achievementCatalogPromise = null;
     let siteTours = [];
     let sitePlayoff = [];
     let rankHistory = [];
@@ -8625,6 +8630,7 @@ button.achievement-item {
   players: "site_players",
   stats: "site_stats",
   achievements: "site_player_achievements",
+  achievementCatalog: "Ачивки",
   rankHistory: "site_rank_history",
   tours: "site_tours",
   playoff: "play_off",
@@ -8945,6 +8951,24 @@ function mapPredictionRow(row) {
 
     async function loadTab(tab) {
       return fetchJsonWithTimeout(SHEET_API(tab));
+    }
+
+    async function loadAchievementCatalog() {
+      if (siteAchievementCatalog.length) return siteAchievementCatalog;
+      if (!achievementCatalogPromise) {
+        achievementCatalogPromise = loadTab(TABS.achievementCatalog)
+          .then(rows => {
+            siteAchievementCatalog = Array.isArray(rows) ? rows : [];
+            return siteAchievementCatalog;
+          })
+          .catch(err => {
+            // News can still fall back to already-awarded achievements.
+            achievementCatalogPromise = null;
+            console.warn("Achievement catalog loading failed; using awarded achievements as fallback.", err);
+            return [];
+          });
+      }
+      return achievementCatalogPromise;
     }
 
     async function loadSheetsData() {
@@ -12486,6 +12510,16 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
   function newsAchievementRow(code) {
     const target = String(code || "").trim().toUpperCase();
     if (!target) return null;
+
+    // News embeds must use the full achievement reference catalog first.
+    // This makes [achievement: CODE] work even when that achievement has not
+    // been awarded in the current season (for example GIRLS).
+    const catalogRow = (Array.isArray(siteAchievementCatalog) ? siteAchievementCatalog : []).find(row =>
+      String(achievementCode(row) || "").trim().toUpperCase() === target
+    );
+    if (catalogRow) return catalogRow;
+
+    // Safe fallback for temporary catalog/API failures.
     return (Array.isArray(siteAchievements) ? siteAchievements : []).find(row =>
       String(achievementCode(row) || "").trim().toUpperCase() === target
     ) || null;
@@ -12849,6 +12883,10 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     try {
       // Reuse the exact same bootstrap request as the main application.
       const bootstrap = latestBootstrap || await getBootstrap();
+
+      // Load the full achievement catalog before formatting news embeds.
+      // If it fails, newsAchievementRow() falls back to awarded achievements.
+      await loadAchievementCatalog();
 
       const rows = Array.isArray(bootstrap?.data?.site_news)
         ? bootstrap.data.site_news
