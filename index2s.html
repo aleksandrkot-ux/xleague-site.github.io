@@ -6898,6 +6898,27 @@ button.achievement-item {
   }
   .news-archive-thumb{width:78px;}
   #newsModal .info-title{font-size:21px;}
+
+  /* Mobile news modal must be anchored to the viewport, not the document flow. */
+  #newsModal{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100dvh;
+    z-index:60;
+    overflow:hidden;
+  }
+  #newsModal .info-backdrop{
+    position:fixed;
+    inset:0;
+  }
+  #newsModal .info-sheet{
+    position:fixed;
+    left:50%;
+    bottom:0;
+    transform:translateX(-50%);
+    max-height:82dvh;
+  }
 }
 </style>
 
@@ -7327,7 +7348,7 @@ button.achievement-item {
         <div class="inactive-news-title">Итоги второго тура</div>
         <div class="inactive-news-text">Короткий анонс новости: кто поднялся в таблице, какие матчи решили тур и чем запомнился игровой уикенд.</div>
         <div class="inactive-news-actions">
-          <a class="inactive-news-action primary" href="#news-tour2" data-news-open="tour2">Читать на сайте</a>
+          <button type="button" class="inactive-news-action primary" data-news-open="tour2">Читать на сайте</button>
           <a class="inactive-news-action" href="https://t.me/panpopan/3518" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
         </div>
       </div>
@@ -7339,14 +7360,14 @@ button.achievement-item {
         <div class="inactive-news-title">Что дальше: неделя между турами</div>
         <div class="inactive-news-text">На неделе X League живёт не только матчами: новости, обновления, ачивки и подготовка к следующему игровому уикенду.</div>
         <div class="inactive-news-actions">
-          <a class="inactive-news-action primary" href="#news-between" data-news-open="between">Читать на сайте</a>
+          <button type="button" class="inactive-news-action primary" data-news-open="between">Читать на сайте</button>
           <a class="inactive-news-action" href="https://t.me/panpopan/3527" target="_blank" rel="noopener noreferrer">Telegram ↗</a>
         </div>
       </div>
     </article>
   </div>
   <div class="inactive-news-more-wrap">
-    <a class="inactive-news-more" id="allNewsBtn" href="#all-news">Все новости →</a>
+    <button type="button" class="inactive-news-more" id="allNewsBtn">Все новости →</button>
   </div>
 </div>
 
@@ -12739,7 +12760,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
             <div class="inactive-news-title">${esc(row.title || "Новость X League")}</div>
             <div class="inactive-news-text">${esc(row.preview || "")}</div>
             <div class="inactive-news-actions">
-              <a class="inactive-news-action primary" href="#news-${index}" data-live-news="${index}">Читать на сайте</a>
+              <button type="button" class="inactive-news-action primary" data-live-news="${index}">Читать на сайте</button>
               ${tgHtml}
             </div>
           </div>
@@ -12841,7 +12862,6 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
     const btn = event.target.closest("[data-live-news]");
     if (btn) {
-      event.preventDefault();
       openNews(Number(btn.dataset.liveNews));
       return;
     }
@@ -12890,10 +12910,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
   });
 
-  document.getElementById("allNewsBtn")?.addEventListener("click", (event) => {
-    event.preventDefault();
-    renderArchive();
-  });
+  document.getElementById("allNewsBtn")?.addEventListener("click", renderArchive);
 
   document.getElementById("newsClose")?.addEventListener("click", closeNews);
   document.getElementById("newsBackdrop")?.addEventListener("click", closeNews);
