@@ -12841,6 +12841,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
     const btn = event.target.closest("[data-live-news]");
     if (btn) {
+      if (Date.now() - lastNewsTouchAt < 700) return;
       openNews(Number(btn.dataset.liveNews));
       return;
     }
@@ -12889,7 +12890,36 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     }
   });
 
-  document.getElementById("allNewsBtn")?.addEventListener("click", renderArchive);
+  // Mobile touch safety for news controls. Some touch layouts can swallow the
+  // synthetic click after a tap, so handle the real pointer release as well.
+  let lastNewsTouchAt = 0;
+  document.addEventListener("pointerup", (event) => {
+    if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+
+    const openBtn = event.target.closest?.("[data-live-news]");
+    const allBtn = event.target.closest?.("#allNewsBtn");
+    if (!openBtn && !allBtn) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    lastNewsTouchAt = Date.now();
+
+    if (openBtn) {
+      openNews(Number(openBtn.dataset.liveNews));
+    } else {
+      renderArchive();
+    }
+  }, { passive: false });
+
+  // Keep ordinary mouse/desktop clicks, but suppress the duplicate synthetic
+  // click that Android/iOS may emit immediately after pointerup.
+  document.getElementById("allNewsBtn")?.addEventListener("click", (event) => {
+    if (Date.now() - lastNewsTouchAt < 700) {
+      event.preventDefault();
+      return;
+    }
+    renderArchive();
+  });
 
   document.getElementById("newsClose")?.addEventListener("click", closeNews);
   document.getElementById("newsBackdrop")?.addEventListener("click", closeNews);
