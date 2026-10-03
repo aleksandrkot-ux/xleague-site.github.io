@@ -7115,7 +7115,15 @@ button.achievement-item {
 }
 .info-close::before, .achievement-modal-close::before, .country-history-close::before { font-size:24px; font-weight:700; }
 .news-image-lightbox-close::before { font-size:28px; font-weight:600; }
-.goal-toast-close::before { font-size:18px; font-weight:700; transform:translateY(0) !important; }
+.goal-toast-close::before {
+  font-size:18px;
+  font-weight:700;
+  position:absolute;
+  left:50%;
+  top:50%;
+  line-height:1;
+  transform:translate(-50%, -46%) !important;
+}
 
 /* 2: player chip in achievement modal is a real profile action. */
 .achievement-profile-link {
