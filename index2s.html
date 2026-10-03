@@ -8714,7 +8714,9 @@ function scoreByMatchId(id) {
       const resultNum = toNum(res, NaN);
 
       // A void result from Sheets is authoritative even if a stale machine status still says pending.
-      if (res.toLowerCase() === "x" || raw.includes("🚫")) return "cancelled";
+      // Sheets can use X, ОТМ or a human-readable cancelled/postponed status.
+      const resLower = res.toLowerCase();
+      if (resLower === "x" || resLower === "отм" || raw === "отм" || raw.includes("🚫")) return "cancelled";
 
       // Machine statuses from site_matches!K: pending / win / lose / cancelled
       if (["pending", "win", "lose", "cancelled"].includes(raw)) return raw;
@@ -9983,10 +9985,25 @@ if (screenMatches) {
       return `<span class="dot ${escapeHtml(status)}"></span>`;
     }
 
+    function resolvedPickResult(pick) {
+      const match = matchById.get(pick?.matchId);
+      const pickResult = String(pick?.result || "").trim().toLowerCase();
+      const matchResult = String(match?.api_status || match?.status || "").trim().toLowerCase();
+      const scoreMarker = String(pick?.score || match?.score || "").trim().toLowerCase();
+
+      // Cancellation is authoritative: an old prediction row may still say pending
+      // while the match/result sheet already contains cancelled / ОТМ.
+      if (pickResult === "cancelled" || matchResult === "cancelled" || scoreMarker === "отм") return "cancelled";
+      if (["win", "lose"].includes(pickResult)) return pickResult;
+      if (["win", "lose"].includes(matchResult)) return matchResult;
+      return "pending";
+    }
+
     function getPickStats(player) {
-      const wins = player.picks.filter(p => p.result === "win").length;
-      const losses = player.picks.filter(p => p.result === "lose").length;
-      const pending = player.picks.filter(p => p.result === "pending").length;
+      const results = player.picks.map(resolvedPickResult);
+      const wins = results.filter(r => r === "win").length;
+      const losses = results.filter(r => r === "lose").length;
+      const pending = results.filter(r => r === "pending").length;
 
       // Simple MVP potential logic:
       // pending players first; more wins and fewer losses higher.
@@ -10016,7 +10033,7 @@ if (screenMatches) {
 
     function playerCard(player) {
       const stats = getPickStats(player);
-      const form = player.picks.map(p => p.result);
+      const form = player.picks.map(resolvedPickResult);
       const badge = stats.alive ? `<span class="live-badge">В ИГРЕ</span>` : `<span class="dead-badge">ОТЫГРАНО</span>`;
       const preview = player.picks.map(p => p.match || matchById.get(p.matchId)?.teams || "Unknown match").join(" / ");
 
@@ -10045,7 +10062,7 @@ if (screenMatches) {
             <div class="pick-list">
             ${player.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
-  const pickResult = pick.result || match?.status || "pending";
+  const pickResult = resolvedPickResult(pick);
 
   const resultClass =
     pickResult === "win" ? "pick-win" :
@@ -11406,7 +11423,8 @@ sourceMatches.forEach(match => {
         } else {
           picksEl.innerHTML = currentPrediction.picks.map((pick, index) => {
             const match = matchById.get(pick.matchId);
-            const resultClass = pick.result === "win" ? "win" : pick.result === "lose" ? "lose" : pick.result === "cancelled" ? "cancelled" : "pending";
+            const resolvedResult = resolvedPickResult(pick);
+            const resultClass = resolvedResult === "win" ? "win" : resolvedResult === "lose" ? "lose" : resolvedResult === "cancelled" ? "cancelled" : "pending";
             return `
               <div class="profile-pick-card ${resultClass}">
                 <div class="profile-pick-top">
@@ -11486,10 +11504,13 @@ sourceMatches.forEach(match => {
       if (pastEl) {
         const past = history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
         pastEl.innerHTML = past.length ? past.map(p => {
-          const form = p.picks.map(pick => pick.result === "win" ? "🟢" : pick.result === "lose" ? "🔴" : pick.result === "cancelled" ? "🟡" : "⏳").join("");
+          const form = p.picks.map(pick => {
+            const result = resolvedPickResult(pick);
+            return result === "win" ? "🟢" : result === "lose" ? "🔴" : result === "cancelled" ? "🟡" : "⏳";
+          }).join("");
 const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
-  const pickResult = pick.result || match?.status || "pending";
+  const pickResult = resolvedPickResult(pick);
   const score = pick.score || match?.score || "";
   const scoreText = score ? " | " + escapeHtml(score) : "";
 
