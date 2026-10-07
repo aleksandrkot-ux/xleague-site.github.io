@@ -7088,6 +7088,23 @@ button.achievement-item {
 @media(max-width:699px){.news-image-lightbox{padding:10px;}.news-image-lightbox-img{max-width:100%;max-height:90vh;}.news-image-lightbox-close{top:10px;right:10px;}}
 </style>
 
+<style id="xleague-country-close-fix-20261007">
+/* Country history modal: geometric centering for the close glyph only. */
+.country-history-close {
+  position: absolute;
+}
+.country-history-close::before {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  line-height: 1 !important;
+  transform: translate(-50%, -54%) !important;
+}
+</style>
+
 <style id="xleague-fixes-20260915">
 /* 1: optically center every circular close X, including notifications. */
 .info-close,
