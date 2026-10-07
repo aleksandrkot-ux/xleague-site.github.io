@@ -7311,11 +7311,19 @@ button.achievement-item {
   #infoModal .info-backdrop {
     position: fixed !important;
     inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    background: rgba(0,0,0,.86) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    z-index: 0 !important;
   }
 
   #prizeModal .info-sheet,
   #infoModal .info-sheet {
     position: fixed !important;
+    z-index: 1 !important;
+    background: #111 !important;
     left: 50% !important;
     bottom: 0 !important;
     top: auto !important;
