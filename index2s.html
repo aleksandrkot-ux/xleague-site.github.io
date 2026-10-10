@@ -8842,7 +8842,12 @@ function scoreByMatchId(id) {
         sortDate: normalizeDate(dateRaw),
         time: get(row, ["time", "Time", "Время", "время"], ""),
         teams: get(row, ["match", "Match", "Матч", "Матчи", "match_name", "teams"], "Unknown match"),
-        matchUid: String(get(row, ["match_uid", "match uid", "uid", "Match UID", "M"], "")).trim(),
+        // site_matches may omit match_uid; reconstruct the stable Season 2 UID.
+        // This links cards to tech_live without relying on names or kickoff times.
+        matchUid: String(get(row, ["match_uid", "match uid", "uid", "Match UID", "M"], "")).trim()
+          || (Number.isInteger(id) && id > 0 && Number.isInteger(toNum(get(row, ["tour", "Tour", "Тур", "тур"])))
+            ? `S2-T${String(toNum(get(row, ["tour", "Tour", "Тур", "тур"]))).padStart(2, "0")}-${id}`
+            : ""),
         score: get(row, ["score", "Score", "Счёт", "Счет", "счёт"], ""),
         status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
         api_status: normalizeStatus(apiStatusRaw || statusRaw, resultRaw),
@@ -9420,12 +9425,9 @@ function mapPredictionRow(row) {
 
     function matchStatus(match) {
       const status = match.api_status || match.status || "pending";
-      // tech_live is authoritative for an active match even if site_matches
-      // still carries a stale status. Never override a settled result.
-      const liveData = status === "cancelled" || status === "win" || status === "lose"
-        ? null : liveScoreData(match);
 
-      if (liveData || status === "pending") {
+      if (status === "pending") {
+        const liveData = liveScoreData(match);
         if (liveData) {
           const clockClass = liveData.live ? "live-minute" : "live-minute live-label";
           const clockHtml = liveData.minuteNumber
