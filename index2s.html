@@ -9420,9 +9420,12 @@ function mapPredictionRow(row) {
 
     function matchStatus(match) {
       const status = match.api_status || match.status || "pending";
+      // tech_live is authoritative for an active match even if site_matches
+      // still carries a stale status. Never override a settled result.
+      const liveData = status === "cancelled" || status === "win" || status === "lose"
+        ? null : liveScoreData(match);
 
-      if (status === "pending") {
-        const liveData = liveScoreData(match);
+      if (liveData || status === "pending") {
         if (liveData) {
           const clockClass = liveData.live ? "live-minute" : "live-minute live-label";
           const clockHtml = liveData.minuteNumber
