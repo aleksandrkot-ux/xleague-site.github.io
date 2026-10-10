@@ -12379,7 +12379,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         const liveRow = rawLiveDataForMatch(m);
         const finished = isMatchLiveFinished(m) || ["win","lose","cancelled"].includes(m.status) || ["win","lose","cancelled"].includes(m.api_status);
         if (finished) done += 1;
-        else if (liveRow && liveRow.phase && liveRow.phase !== "FINISHED") live += 1;
+        else if (liveRow && liveRow.phase === "LIVE") live += 1;
       });
       return { done, live, next: Math.max(0, scoped.length - done - live), total: scoped.length };
     }
