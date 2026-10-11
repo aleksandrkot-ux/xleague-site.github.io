@@ -7335,6 +7335,33 @@ button.achievement-item {
 }
 </style>
 
+<style id="xleague-info-close-centering-20261011">
+/* Prize fund and help dialogs: geometric X, independent of font glyph metrics.
+   Scoped to these two buttons so other modal close controls remain unchanged. */
+#prizeClose, #infoClose {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+#prizeClose::before, #infoClose::before {
+  content: "" !important;
+  display: block !important;
+  position: static !important;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  background:
+    linear-gradient(45deg, transparent calc(50% - 1.5px), currentColor calc(50% - 1.5px), currentColor calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(-45deg, transparent calc(50% - 1.5px), currentColor calc(50% - 1.5px), currentColor calc(50% + 1.5px), transparent calc(50% + 1.5px));
+  transform: none !important;
+  margin: 0 !important;
+  font-size: 0 !important;
+}
+</style>
+
 </head>
 <body>
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
