@@ -9209,18 +9209,39 @@ function mapPredictionRow(row) {
       }[char]));
     }
 
-    // Historical medals from Players are display-only; nicknames and profile keys stay untouched.
+    // Historical awards: display only. Never change keys used by predictions or profiles.
+    function playerAwardRecord(name) {
+      const raw = String(name ?? "").trim();
+      const registry = Array.isArray(playerRegistry) ? playerRegistry : [];
+      // The legacy nickname can already end in a medal from the Predictions sheet.
+      const withoutOldMedals = raw.replace(/(?:\s*[🥇🥈🥉🏆⚔️])+\s*$/gu, "").trim();
+      const candidates = [raw, withoutOldMedals];
+      let record = registry.find(row => candidates.includes(String(row.Current_nick || "").trim()));
+      if (record) return record;
+      // AB is sometimes entered using visually identical Cyrillic А/В.
+      const foldAB = value => String(value).replace(/[АA]/g, "A").replace(/[ВB]/g, "B");
+      if (foldAB(withoutOldMedals) === "AB") {
+        return registry.find(row => foldAB(String(row.Current_nick || "").trim()) === "AB") || null;
+      }
+      return null;
+    }
+
+    function playerAwardItems(name) {
+      const record = playerAwardRecord(name);
+      const emojis = String(record?.Emoji || "").split(";").map(v => v.trim()).filter(Boolean);
+      const titles = String(record?.Title || "").split(";").map(v => v.trim());
+      return emojis.map((emoji, i) => ({ emoji, title: titles[i] || emoji }));
+    }
+
+    function playerAwardHtml(name) {
+      const items = playerAwardItems(name);
+      return items.length ? ` <span class="player-history-medals">${items.map(item =>
+        `<span class="player-history-medal" title="${escapeHtml(item.title)}" aria-label="${escapeHtml(item.title)}">${escapeHtml(item.emoji)}</span>`
+      ).join("")}</span>` : "";
+    }
+
     function playerNameHtml(name) {
-      const raw = String(name ?? "");
-      const normalized = raw.trim();
-      const record = playerRegistry.find(row => (String(row.Current_nick || "").trim() === normalized || normalized === `${String(row.Current_nick || "").trim()} ${String(row.Emoji || "").trim()}`));
-      const emoji = String(record?.Emoji || "").trim();
-      const titles = String(record?.Title || "").split(";").map(x => x.trim());
-      const medals = emoji.split(";").map(x => x.trim()).filter(Boolean);
-      const additions = medals.map((medal, i) =>
-        `<span class="player-history-medal" title="${escapeHtml(titles[i] || "")}" aria-label="${escapeHtml(titles[i] || medal)}">${escapeHtml(medal)}</span>`
-      ).join("");
-      return escapeHtml(raw) + (additions ? ` <span class="player-history-medals">${additions}</span>` : "");
+      return escapeHtml(name) + playerAwardHtml(name);
     }
 
     function normalizeTime(value) {
@@ -10604,7 +10625,7 @@ sourceMatches.forEach(match => {
       pop.innerHTML = `
         <strong>Выбрали матч (${names.length})</strong>
         ${names.length
-          ? names.map(name => `<div class="picker-name">${escapeHtml(name)}</div>`).join("")
+          ? names.map(name => `<div class="picker-name">${playerNameHtml(name)}</div>`).join("")
           : `<div class="picker-name">Пока никто не выбрал этот матч</div>`
         }
       `;
@@ -10993,7 +11014,7 @@ sourceMatches.forEach(match => {
   </strong>
 
   <small class="achievement-player">
-    ${escapeHtml(row.player || "")}
+    ${playerNameHtml(row.player || "")}
   </small>
 
 <small class="achievement-desc">
@@ -11266,13 +11287,15 @@ sourceMatches.forEach(match => {
       const previous = selectedPlayerName || select.value || names[0] || "";
 
       select.innerHTML = names
-        .map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
+        .map(name => `<option value="${escapeHtml(name)}" title="${escapeHtml(playerAwardItems(name).map(x => x.title).join("; "))}">${escapeHtml(name)}${playerAwardItems(name).length ? " " + escapeHtml(playerAwardItems(name).map(x => x.emoji).join(" ")) : ""}</option>`)
         .join("");
 
       const next = names.includes(previous) ? previous : (names[0] || "");
       select.value = next;
+      select.title = playerAwardItems(next).map(x => x.title).join("; ");
       selectedPlayerName = next;
       select.onchange = () => {
+        select.title = playerAwardItems(select.value).map(x => x.title).join("; ");
         selectedPlayerName = select.value;
         renderPlayerProfile();
       };
@@ -11440,6 +11463,7 @@ sourceMatches.forEach(match => {
       if (!playerName) return;
       selectedPlayerName = playerName;
       if (select && select.value !== playerName && [...select.options].some(o => o.value === playerName)) select.value = playerName;
+      if (select) select.title = playerAwardItems(playerName).map(x => x.title).join("; ");
 
       const history = predictionsForPlayer(playerName);
       const regularHistory = history.filter(p => isRegularTour(p.tour));
@@ -11898,7 +11922,7 @@ function achievementDescription(row) {
       if (kickerEl) kickerEl.textContent = code ? `Достижение · ${code}` : "Достижение X League";
 
       const meta = [];
-      if (player) meta.push(`<button type="button" class="achievement-profile-link" data-profile-player="${escapeHtml(player)}">👤 ${escapeHtml(player)}</button>`);
+      if (player) meta.push(`<button type="button" class="achievement-profile-link" data-profile-player="${escapeHtml(player)}">👤 ${playerNameHtml(player)}</button>`);
       if (tour) meta.push(`<span>🏁 ${escapeHtml(tourLabel(tour))}</span>`);
       metaEl.innerHTML = meta.join("");
       metaEl.classList.toggle("hidden", !meta.length);
@@ -12023,7 +12047,7 @@ function achievementDescription(row) {
 
       const playerHtml = (p, cls) => `
         <div class="playoff-player${cls}">
-          <div class="playoff-player-name ${p.source ? "playoff-source" : ""}">${escapeHtml(p.name || "—")}</div>
+          <div class="playoff-player-name ${p.source ? "playoff-source" : ""}">${playerNameHtml(p.name || "—")}</div>
           <div class="playoff-player-score">${p.score ? escapeHtml(p.score) : ""}</div>
         </div>`;
 
