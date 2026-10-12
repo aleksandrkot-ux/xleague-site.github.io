@@ -1487,6 +1487,9 @@ html, body {
       word-break: break-word;
     }
 
+    .player-history-medals { display: inline; white-space: nowrap; }
+    .player-history-medal { display: inline-block; margin-left: 2px; cursor: help; }
+
     .player-name-link:active {
       color: var(--accent);
     }
@@ -2311,6 +2314,9 @@ html, body {
       -webkit-box-orient: vertical;
       word-break: break-word;
     }
+
+    .player-history-medals { display: inline; white-space: nowrap; }
+    .player-history-medal { display: inline-block; margin-left: 2px; cursor: help; }
 
     .player-name-link:active {
       color: var(--accent);
@@ -8020,6 +8026,7 @@ button.achievement-item {
     let siteTable = [];
     let siteOverall = [];
     let sitePlayers = [];
+    let playerRegistry = [];
     let siteAchievements = [];
     // Full achievement reference catalog from the raw "Ачивки" sheet.
     // Unlike site_player_achievements, this also contains achievements that
@@ -8696,12 +8703,13 @@ button.achievement-item {
     }
 
     function applySheetsPayload(payload) {
-     const { m = [], p = [], t = [], o = [], pl = [], a = [], rh = [], toursRows = [], playoffRows = [], cfgRows = [] } = payload || {};
+     const { m = [], p = [], t = [], o = [], pl = [], registry = [], a = [], rh = [], toursRows = [], playoffRows = [], cfgRows = [] } = payload || {};
       matches = m.map(mapMatchRow).filter(x => x.id && x.teams);
       predictions = p.map(mapPredictionRow).filter(x => x.name && x.picks.length);
       siteTable = t;
       siteOverall = o.map(mapOverallRow).filter(x => x.name);
       sitePlayers = pl;
+      playerRegistry = registry;
       siteAchievements = a;
       rankHistory = rh;
       siteTours = toursRows;
@@ -8740,6 +8748,7 @@ button.achievement-item {
   table: "site_table",
   overall: "site_overall",
   players: "site_players",
+  registry: "Players",
   stats: "site_stats",
   achievements: "site_player_achievements",
   achievementCatalog: "Ачивки",
@@ -9112,6 +9121,7 @@ function mapPredictionRow(row) {
           t: d[TABS.table] || [],
           o: d[TABS.overall] || [],
           pl: d[TABS.players] || [],
+          registry: d[TABS.registry] || [],
           a: d[TABS.achievements] || [],
           rh: d[TABS.rankHistory] || [],
           toursRows: d[TABS.tours] || [],
@@ -9136,6 +9146,7 @@ function mapPredictionRow(row) {
         siteTable = [];
         siteOverall = [];
         sitePlayers = [];
+        playerRegistry = [];
         siteAchievements = [];
         siteTours = [];
         sitePlayoff = [];
@@ -9196,6 +9207,20 @@ function mapPredictionRow(row) {
       return String(value ?? "").replace(/[&<>"']/g, (char) => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
       }[char]));
+    }
+
+    // Historical medals from Players are display-only; nicknames and profile keys stay untouched.
+    function playerNameHtml(name) {
+      const raw = String(name ?? "");
+      const normalized = raw.trim();
+      const record = playerRegistry.find(row => (String(row.Current_nick || "").trim() === normalized || normalized === `${String(row.Current_nick || "").trim()} ${String(row.Emoji || "").trim()}`));
+      const emoji = String(record?.Emoji || "").trim();
+      const titles = String(record?.Title || "").split(";").map(x => x.trim());
+      const medals = emoji.split(";").map(x => x.trim()).filter(Boolean);
+      const additions = medals.map((medal, i) =>
+        `<span class="player-history-medal" title="${escapeHtml(titles[i] || "")}" aria-label="${escapeHtml(titles[i] || medal)}">${escapeHtml(medal)}</span>`
+      ).join("");
+      return escapeHtml(raw) + (additions ? ` <span class="player-history-medals">${additions}</span>` : "");
     }
 
     function normalizeTime(value) {
@@ -10137,7 +10162,7 @@ if (screenMatches) {
           <div class="player-main">
             <div class="player-top">
               <div class="player-name-wrap">
-                <button class="player-name-link" data-open-player="${escapeHtml(player.name)}">${escapeHtml(player.name)}</button>
+                <button class="player-name-link" data-open-player="${escapeHtml(player.name)}">${playerNameHtml(player.name)}</button>
                 ${badge}
               </div>
               <button type="button" class="favorite-toggle player-favorite-toggle ${favoritePlayerState(player) === "all" ? "is-active" : favoritePlayerState(player) === "partial" ? "is-partial" : ""}" data-favorite-player="${escapeHtml(player.name)}" title="Добавить/убрать матчи участника из избранного" aria-label="Матчи участника в избранном">📝</button>
@@ -11456,7 +11481,7 @@ sourceMatches.forEach(match => {
         const mainName = (atIndex > 0 ? playerName.slice(0, atIndex) : playerName).trim();
         const handle = atIndex > 0 ? playerName.slice(atIndex).trim() : "";
         nameEl.innerHTML = `
-          <span class="profile-name-main">${escapeHtml(mainName)}</span>
+          <span class="profile-name-main">${playerNameHtml(mainName)}</span>
           ${handle ? `<span class="profile-name-handle">${escapeHtml(handle)}</span>` : ""}
         `;
       }
@@ -12182,7 +12207,7 @@ document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
   r.move === "NEW" ? "gold" :
   "";
   const rank = r.rank || i + 1;
-  return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
+  return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${playerNameHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
 }).join("");
       bindTablePlayerLinks();
     }
@@ -12200,7 +12225,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
         const rank = i + 1;
         return `<tr>
   <td>${rankMedalHtml(rank)}</td>
-  <td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${escapeHtml(r.name)}</button></td>
+  <td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${playerNameHtml(r.name)}</button></td>
   <td>${escapeHtml(r.pts)}</td>
   ${isOverall ? `<td class="${moveClass}">${escapeHtml(r.move || "—")}</td>` : ""}
 </tr>`;
