@@ -4029,6 +4029,12 @@ main,
   }
 }
 
+
+/* Compact prize annotations below the decisive playoff duels. */
+.playoff-prize-note{margin:5px 0 0;padding:0 3px;color:#bfc6b7;font-size:10px;font-weight:750;line-height:1.3;white-space:nowrap;text-align:center}
+.playoff-prize-note .prize-w{color:#b6ff3b}
+.playoff-prize-note .prize-l{color:#d6d6d6}
+.playoff-prize-note .prize-sep{color:#747b73;padding:0 3px}
 </style>
 
 <style>
@@ -12100,16 +12106,30 @@ function achievementDescription(row) {
         </div>`;
     }
 
+    function playoffPrizeNote(slot) {
+      // Prize belongs to the loser of the corresponding elimination duel.
+      // In the grand final both the champion and runner-up receive prizes.
+      const labels = {
+        "L3-1": "💵 L +1 000 ₽", "L3-2": "💵 L +1 000 ₽",
+        "L4-1": "💵 L +1 500 ₽", "L4-2": "💵 L +1 500 ₽",
+        "L5-1": "💵 L +2 000 ₽",
+        "L6-1": "🥉 L +2 500 ₽",
+        "GF-1": '<span class="prize-w">🏆 W +6 500 ₽</span><span class="prize-sep">·</span><span class="prize-l">L +4 000 ₽</span>'
+      };
+      const label = labels[slot];
+      return label ? `<div class="playoff-prize-note">${label}</div>` : "";
+    }
+
     function playoffStoredMatch(slot, rows, fallback1 = "—", fallback2 = "—") {
       const row = rows.get(slot);
-      if (!row) {
-        return playoffMatchHtml(slot, playoffSource(fallback1), playoffSource(fallback2));
-      }
-      return playoffMatchHtml(
-        slot,
-        playoffRealPlayer(row.player1 || fallback1, row.score1, row.winner),
-        playoffRealPlayer(row.player2 || fallback2, row.score2, row.winner)
-      );
+      const match = !row
+        ? playoffMatchHtml(slot, playoffSource(fallback1), playoffSource(fallback2))
+        : playoffMatchHtml(
+            slot,
+            playoffRealPlayer(row.player1 || fallback1, row.score1, row.winner),
+            playoffRealPlayer(row.player2 || fallback2, row.score2, row.winner)
+          );
+      return match + playoffPrizeNote(slot);
     }
 
     function playoffRoundHtml(title, matches, date = "") {
@@ -12227,10 +12247,6 @@ function achievementDescription(row) {
         </section>
 
 
-        <div class="x-playoff-prizes">
-          <strong>💰 Призовой фонд плей-офф · 20 000 ₽</strong>
-          <div class="x-prize-grid"><span>🥇 1 место <b>6 500 ₽</b></span><span>🥈 2 место <b>4 000 ₽</b></span><span>🥉 3 место <b>2 500 ₽</b></span><span>4 место <b>2 000 ₽</b></span><span>5–6 места <b>1 500 ₽</b> каждому</span><span>7–8 места <b>1 000 ₽</b> каждому</span></div>
-        </div>
         <div class="playoff-help">
           Сейчас из Google Sheets читается лист <b>play_off</b>. Заполненные строки с соответствующим slot заменяют подписи-заглушки; остальные позиции показывают маршрут участника по сетке.
         </div>
