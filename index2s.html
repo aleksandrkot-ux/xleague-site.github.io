@@ -7368,6 +7368,9 @@ button.achievement-item {
 }
 </style>
 
+<style>
+.x-calendar{display:grid;gap:0;margin-top:10px}.x-calendar>div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid rgba(255,255,255,.08);font-size:12px;line-height:1.4}.x-calendar b{color:#fff;flex:0 0 auto}.x-calendar span{color:#bdbdbd;text-align:right;display:block}.x-playoff-date{display:block;font-size:11px;font-weight:650;color:#b6ff3b;margin-top:5px;white-space:nowrap}.x-playoff-prizes{margin-top:22px;padding:18px;border:1px solid rgba(182,255,59,.3);border-radius:18px;background:rgba(182,255,59,.05)}.x-playoff-prizes>strong{display:block;font-size:16px;margin-bottom:12px}.x-prize-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.x-prize-grid span{font-size:12px;color:#ccc;padding:10px;background:rgba(255,255,255,.04);border-radius:10px}.x-prize-grid b{color:#fff;white-space:nowrap}@media(max-width:700px){.x-prize-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 </head>
 <body>
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
@@ -7883,12 +7886,24 @@ button.achievement-item {
    
   <div class="rule-card">
     <strong>📅 Регулярный сезон</strong>
-    <span>Регулярный сезон состоит из 15 туров и проходит с 29 августа по 5 декабря.</span>
+    <span>Регулярный сезон состоит из 14 туров и завершается 29 ноября.</span>
+  </div>
+  <div class="rule-card">
+    <strong>📅 Расписание туров</strong>
+    <div class="x-calendar">
+      <div><b>Тур 8</b><span>17–18 октября · сб–вс</span></div>
+      <div><b>Тур 9</b><span>24–25 октября · сб–вс</span></div>
+      <div><b>Тур 10</b><span>31 октября – 1 ноября · сб–вс</span></div>
+      <div><b>Тур 11</b><span>7–8 ноября · сб–вс</span></div>
+      <div><b>Тур 12</b><span>14–15 ноября · сб–вс</span></div>
+      <div><b>Тур 13</b><span>21–22 ноября · сб–вс</span></div>
+      <div><b>Тур 14</b><span>28–29 ноября · сб–вс</span></div>
+    </div>
   </div>
   <div class="rule-card">
     <strong>⚔️ Плей-офф</strong>
     <span>
-      По итогам регулярного сезона турнир продолжается в формате плей-офф. Финал 22 декабря. В Будапеште (шутка). Все раунды плей-офф, кроме гранд-финала, проводятся в формате BO1: победитель пары определяется по результату одного игрового раунда. Даты проведения раундов утверждаются и публикуются в Telegram-канале X League.
+      По итогам регулярного сезона турнир продолжается в формате плей-офф. Плей-офф проходит с 1 по 20 декабря. Все раунды плей-офф, кроме гранд-финала, проводятся в формате BO1: победитель пары определяется по результату одного игрового раунда. Расписание раундов приведено ниже.
       <br><br>
       Гранд-финал проводится в формате BO3 с начальной форой 1:0 в пользу фаворита. Для победы в гранд-финале учитываются результаты отдельных игровых раундов серии.
       <br><br>
@@ -7897,6 +7912,32 @@ button.achievement-item {
       Если выбранный участником матч отменён, перенесён или не может быть рассчитан в рамках текущего раунда, он не переносится на следующую дату и рассчитывается с коэффициентом 1,00.
     </span>
   </div>  
+  <div class="rule-card">
+    <strong>🗓️ Календарь плей-офф</strong>
+    <div class="x-calendar">
+      <div><b>1 декабря · вт</b><span>Верхняя сетка · раунд 1</span></div>
+      <div><b>3 декабря · чт</b><span>Нижняя сетка · раунд 1</span></div>
+      <div><b>5 декабря · сб</b><span>Верхняя сетка · раунд 2</span></div>
+      <div><b>6 декабря · вс</b><span>Нижняя сетка · раунд 2</span></div>
+      <div><b>8–9 декабря · вт–ср</b><span>Верхняя и нижняя сетки · раунд 3</span></div>
+      <div><b>11 декабря · пт</b><span>Нижняя сетка · раунд 4</span></div>
+      <div><b>13 декабря · вс</b><span>Финал верхней / нижняя · раунд 5</span></div>
+      <div><b>16 декабря · ср</b><span>Финал нижней сетки</span></div>
+      <div><b>19 декабря · сб</b><span>Гранд-финал · встреча 1</span></div>
+      <div><b>20 декабря · вс</b><span>Гранд-финал · встреча 2 (при необходимости)</span></div>
+    </div>
+  </div>
+  <div class="rule-card">
+    <strong>💰 Призы плей-офф · 20 000 ₽</strong>
+    <div class="x-calendar">
+      <div><b>🥇 1 место</b><span>6 500 ₽</span></div>
+      <div><b>🥈 2 место</b><span>4 000 ₽</span></div>
+      <div><b>🥉 3 место</b><span>2 500 ₽</span></div>
+      <div><b>4 место</b><span>2 000 ₽</span></div>
+      <div><b>5–6 места</b><span>1 500 ₽ каждому</span></div>
+      <div><b>7–8 места</b><span>1 000 ₽ каждому</span></div>
+    </div>
+  </div>
   <div class="rule-card">
     <strong>⛔ Отменённые и прерванные матчи</strong>
     <span>
@@ -12071,10 +12112,10 @@ function achievementDescription(row) {
       );
     }
 
-    function playoffRoundHtml(title, matches) {
+    function playoffRoundHtml(title, matches, date = "") {
       return `
         <div class="playoff-round">
-          <div class="playoff-round-title">${escapeHtml(title)}</div>
+          <div class="playoff-round-title">${escapeHtml(title)}${date ? `<small class="x-playoff-date">${escapeHtml(date)}</small>` : ""}</div>
           <div class="playoff-matches">${matches.join("")}</div>
         </div>`;
     }
@@ -12157,12 +12198,12 @@ function achievementDescription(row) {
           <div class="playoff-section-label">Верхняя сетка</div>
           <div class="playoff-upper-with-final">
             <div class="playoff-rounds">
-            ${playoffRoundHtml("Раунд 1 · 1/8", upper1)}
-            ${playoffRoundHtml("Раунд 2 · 1/4", upper2)}
-            ${playoffRoundHtml("Раунд 3 · 1/2", upper3)}
-            ${playoffRoundHtml("Финал верхней", upper4)}
+            ${playoffRoundHtml("Раунд 1 · 1/8", upper1, "1 дек · вт")}
+            ${playoffRoundHtml("Раунд 2 · 1/4", upper2, "5 дек · сб")}
+            ${playoffRoundHtml("Раунд 3 · 1/2", upper3, "8–9 дек · вт–ср")}
+            ${playoffRoundHtml("Финал верхней", upper4, "13 дек · вс")}
             <div class="playoff-round playoff-grand-final-column">
-              <div class="playoff-round-title">🏆 Гранд-финал</div>
+              <div class="playoff-round-title">🏆 Гранд-финал<small class="x-playoff-date">19–20 дек · сб–вс</small></div>
               <div class="playoff-matches">
                 <div class="playoff-grand-final-hero">
                   ${grandFinal}
@@ -12176,16 +12217,20 @@ function achievementDescription(row) {
         <section class="playoff-section lower">
           <div class="playoff-section-label">Нижняя сетка</div>
           <div class="playoff-rounds">
-            ${playoffRoundHtml("Нижний · Раунд 1", lower1)}
-            ${playoffRoundHtml("Нижний · Раунд 2", lower2)}
-            ${playoffRoundHtml("Нижний · Раунд 3", lower3)}
-            ${playoffRoundHtml("Нижний · Раунд 4", lower4)}
-            ${playoffRoundHtml("Нижний · Раунд 5", lower5)}
-            ${playoffRoundHtml("Финал нижней", lower6)}
+            ${playoffRoundHtml("Нижний · Раунд 1", lower1, "3 дек · чт")}
+            ${playoffRoundHtml("Нижний · Раунд 2", lower2, "6 дек · вс")}
+            ${playoffRoundHtml("Нижний · Раунд 3", lower3, "8–9 дек · вт–ср")}
+            ${playoffRoundHtml("Нижний · Раунд 4", lower4, "11 дек · пт")}
+            ${playoffRoundHtml("Нижний · Раунд 5", lower5, "13 дек · вс")}
+            ${playoffRoundHtml("Финал нижней", lower6, "16 дек · ср")}
           </div>
         </section>
 
 
+        <div class="x-playoff-prizes">
+          <strong>💰 Призовой фонд плей-офф · 20 000 ₽</strong>
+          <div class="x-prize-grid"><span>🥇 1 место <b>6 500 ₽</b></span><span>🥈 2 место <b>4 000 ₽</b></span><span>🥉 3 место <b>2 500 ₽</b></span><span>4 место <b>2 000 ₽</b></span><span>5–6 места <b>1 500 ₽</b> каждому</span><span>7–8 места <b>1 000 ₽</b> каждому</span></div>
+        </div>
         <div class="playoff-help">
           Сейчас из Google Sheets читается лист <b>play_off</b>. Заполненные строки с соответствующим slot заменяют подписи-заглушки; остальные позиции показывают маршрут участника по сетке.
         </div>
