@@ -7378,9 +7378,29 @@ button.achievement-item {
 .x-calendar{display:grid;gap:0;margin-top:10px}.x-calendar>div{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid rgba(255,255,255,.08);font-size:12px;line-height:1.4}.x-calendar b{color:#fff;flex:0 0 auto}.x-calendar span{color:#bdbdbd;text-align:right;display:block}.x-playoff-date{display:block;font-size:11px;font-weight:650;color:#b6ff3b;margin-top:5px;white-space:nowrap}.x-playoff-prizes{margin-top:22px;padding:18px;border:1px solid rgba(182,255,59,.3);border-radius:18px;background:rgba(182,255,59,.05)}.x-playoff-prizes>strong{display:block;font-size:16px;margin-bottom:12px}.x-prize-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.x-prize-grid span{font-size:12px;color:#ccc;padding:10px;background:rgba(255,255,255,.04);border-radius:10px}.x-prize-grid b{color:#fff;white-space:nowrap}@media(max-width:700px){.x-prize-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <style id="xleague-news-close-centering-20261013">
-/* Scope the optical centering fix to the news dialog only. */
-#newsModal #newsClose { position:relative; display:block !important; padding:0 !important; font-size:0 !important; line-height:0 !important; }
-#newsModal #newsClose::before { position:absolute !important; left:50% !important; top:50% !important; margin:0 !important; font-size:24px; font-weight:700; line-height:1 !important; transform:translate(-50%, -53%) !important; }
+/* Match the geometric, genuinely centered X used by prize/help dialogs. */
+#newsClose {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+#newsClose::before {
+  content: "" !important;
+  display: block !important;
+  position: static !important;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  background:
+    linear-gradient(45deg, transparent calc(50% - 1.5px), currentColor calc(50% - 1.5px), currentColor calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(-45deg, transparent calc(50% - 1.5px), currentColor calc(50% - 1.5px), currentColor calc(50% + 1.5px), transparent calc(50% + 1.5px));
+  transform: none !important;
+  margin: 0 !important;
+  font-size: 0 !important;
+}
 </style>
 </head>
 <body>
