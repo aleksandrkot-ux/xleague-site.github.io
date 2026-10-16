@@ -8776,16 +8776,49 @@ button.achievement-item {
       }
     }
 
+    function registryNickParts(value) {
+      return String(value ?? "")
+        .split(/[;|\n]+/)
+        .map(v => v.trim())
+        .filter(Boolean);
+    }
+
+    function canonicalPlayerName(name) {
+      const raw = String(name ?? "").trim();
+      if (!raw) return raw;
+      const clean = raw.replace(/(?:\s*[🥇🥈🥉🏆⚔️])+\s*$/gu, "").trim();
+      const registry = Array.isArray(playerRegistry) ? playerRegistry : [];
+      const record = registry.find(row => {
+        const current = String(row.Current_nick || "").trim();
+        const previous = registryNickParts(row.Prev_nick);
+        return current === clean || previous.includes(clean);
+      });
+      return String(record?.Current_nick || clean).trim();
+    }
+
+    function canonicalizePlayerRows(rows) {
+      return (Array.isArray(rows) ? rows : []).map(row => {
+        const copy = { ...row };
+        Object.keys(copy).forEach(key => {
+          const normalized = normalizeKeyName(key);
+          if (normalized === "player" || normalized === "игрок") {
+            copy[key] = canonicalPlayerName(copy[key]);
+          }
+        });
+        return copy;
+      });
+    }
+
     function applySheetsPayload(payload) {
      const { m = [], p = [], t = [], o = [], pl = [], registry = [], a = [], rh = [], toursRows = [], playoffRows = [], cfgRows = [] } = payload || {};
-      matches = m.map(mapMatchRow).filter(x => x.id && x.teams);
-      predictions = p.map(mapPredictionRow).filter(x => x.name && x.picks.length);
-      siteTable = t;
-      siteOverall = o.map(mapOverallRow).filter(x => x.name);
-      sitePlayers = pl;
       playerRegistry = registry;
-      siteAchievements = a;
-      rankHistory = rh;
+      matches = m.map(mapMatchRow).filter(x => x.id && x.teams);
+      predictions = canonicalizePlayerRows(p).map(mapPredictionRow).filter(x => x.name && x.picks.length);
+      siteTable = canonicalizePlayerRows(t);
+      siteOverall = canonicalizePlayerRows(o).map(mapOverallRow).filter(x => x.name);
+      sitePlayers = canonicalizePlayerRows(pl);
+      siteAchievements = canonicalizePlayerRows(a);
+      rankHistory = canonicalizePlayerRows(rh);
       siteTours = toursRows;
       sitePlayoff = playoffRows;
       siteConfig = rowsToConfig(cfgRows);
@@ -9290,7 +9323,11 @@ function mapPredictionRow(row) {
       // The legacy nickname can already end in a medal from the Predictions sheet.
       const withoutOldMedals = raw.replace(/(?:\s*[🥇🥈🥉🏆⚔️])+\s*$/gu, "").trim();
       const candidates = [raw, withoutOldMedals];
-      let record = registry.find(row => candidates.includes(String(row.Current_nick || "").trim()));
+      let record = registry.find(row => {
+        const current = String(row.Current_nick || "").trim();
+        const previous = registryNickParts(row.Prev_nick);
+        return candidates.includes(current) || previous.some(nick => candidates.includes(nick));
+      });
       if (record) return record;
       // AB is sometimes entered using visually identical Cyrillic А/В.
       const foldAB = value => String(value).replace(/[АA]/g, "A").replace(/[ВB]/g, "B");
