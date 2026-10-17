@@ -3496,9 +3496,6 @@ main,
 .country-flat-v2.is-positive { color: #52d273; }
 .country-flat-v2.is-negative { color: #ff6464; }
 .country-flat-v2.is-zero { color: rgba(255,255,255,.62); }
-.country-table-v2 tbody tr {
-  will-change: transform;
-}
 .country-table-v2 th:first-child,
 .country-table-v2 td:first-child {
   
@@ -3560,9 +3557,6 @@ main,
   background: rgba(255,255,255,.006);
 }
 
-.country-table-v2 tbody tr:hover td {
-  background: rgba(255,255,255,.04);
-}
 
 .country-table-v2 tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
 .country-table-v2 tbody tr:last-child td:last-child { border-radius: 0 0 10px 0; }
@@ -5408,11 +5402,7 @@ button.achievement-item {
 }
 
 @media (hover:hover) and (pointer:fine) {
-  .country-table-v2 tbody tr {
-    transition: background-color .16s ease;
-  }
-
-  .country-table-v2 tbody tr:hover {
+  .country-table-v2 tbody tr:hover td {
     background: rgba(255,255,255,.027);
   }
 }
