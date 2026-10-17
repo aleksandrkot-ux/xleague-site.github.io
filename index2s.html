@@ -7,6 +7,11 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#05070a">
 
+  <!-- Primary UI font: load Inter explicitly instead of relying on local fallback fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
   <title>X League — турнир прогнозов на ничьи</title>
 
   <meta name="description" content="X League — турнир прогнозов на ничьи. Матчи, прогнозы участников, турнирная таблица, статистика игроков и результаты туров.">
@@ -133,6 +138,7 @@ html, body {
       color: var(--text);
       font-family: Inter, Manrope, Roboto, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
+    font-optical-sizing: auto;
     }
 
     body { overflow-x: hidden; }
