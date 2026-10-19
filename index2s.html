@@ -7,11 +7,6 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#05070a">
 
-  <!-- Primary UI font: load Inter explicitly instead of relying on local fallback fonts. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-
   <title>X League — турнир прогнозов на ничьи</title>
 
   <meta name="description" content="X League — турнир прогнозов на ничьи. Матчи, прогнозы участников, турнирная таблица, статистика игроков и результаты туров.">
@@ -138,7 +133,6 @@ html, body {
       color: var(--text);
       font-family: Inter, Manrope, Roboto, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
-    font-optical-sizing: auto;
     }
 
     body { overflow-x: hidden; }
@@ -3496,6 +3490,9 @@ main,
 .country-flat-v2.is-positive { color: #52d273; }
 .country-flat-v2.is-negative { color: #ff6464; }
 .country-flat-v2.is-zero { color: rgba(255,255,255,.62); }
+.country-table-v2 tbody tr {
+  will-change: transform;
+}
 .country-table-v2 th:first-child,
 .country-table-v2 td:first-child {
   
@@ -3557,6 +3554,9 @@ main,
   background: rgba(255,255,255,.006);
 }
 
+.country-table-v2 tbody tr:hover td {
+  background: rgba(255,255,255,.04);
+}
 
 .country-table-v2 tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
 .country-table-v2 tbody tr:last-child td:last-child { border-radius: 0 0 10px 0; }
@@ -5402,7 +5402,11 @@ button.achievement-item {
 }
 
 @media (hover:hover) and (pointer:fine) {
-  .country-table-v2 tbody tr:hover td {
+  .country-table-v2 tbody tr {
+    transition: background-color .16s ease;
+  }
+
+  .country-table-v2 tbody tr:hover {
     background: rgba(255,255,255,.027);
   }
 }
@@ -7425,7 +7429,7 @@ button.achievement-item {
           <div class="desktop-mode-wrap" id="notifyModeWrap"><button class="live-notify-toggle-btn is-on" id="liveNotifyToggleBtn" type="button" aria-haspopup="menu" aria-expanded="false">
             <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span><span class="live-notify-toggle-text">Увед. все</span></button>
             <div class="mode-popover" role="menu" aria-label="Режим уведомлений"><button class="mode-option" data-notify-mode="all" title="Уведомления: все матчи" aria-label="Уведомления: все матчи">🔔</button><button class="mode-option" data-notify-mode="favorites" title="Уведомления: только избранное" aria-label="Уведомления: только избранное">🔔📝</button><button class="mode-option" data-notify-mode="off" title="Уведомления выключены" aria-label="Уведомления выключены">🔕</button></div></div>
-          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">34,9K</span></button>
+          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">35,9K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
@@ -7805,19 +7809,19 @@ button.achievement-item {
 
         <div class="prize-hero">
           <div class="prize-kicker">Текущий фонд</div>
-          <div class="prize-total">34 900 ₽</div>
-          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+4 900 ₽</strong> добавили участники</div>
+          <div class="prize-total">35 900 ₽</div>
+          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+5 900 ₽</strong> добавили участники</div>
         </div>
 
         <div class="prize-grid">
           <div class="prize-card">
             <div class="prize-card-title">🏆 Регулярный сезон</div>
-            <div class="prize-place-row top"><span>🥇 1 место</span><strong>11 630 ₽</strong></div>
-            <div class="prize-place-row"><span>🥈 2 место</span><strong>8 140 ₽</strong></div>
-            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 650 ₽</strong></div>
-            <div class="prize-place-row"><span>4 место</span><strong>3 490 ₽</strong></div>
-            <div class="prize-place-row"><span>5 место</span><strong>1 160 ₽</strong></div>
-            <div class="prize-place-row"><span>6–15 места</span><strong>583 ₽</strong></div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>11 970 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>8 380 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 790 ₽</strong></div>
+            <div class="prize-place-row"><span>4 место</span><strong>3 590 ₽</strong></div>
+            <div class="prize-place-row"><span>5 место</span><strong>1 200 ₽</strong></div>
+            <div class="prize-place-row"><span>6–15 места</span><strong>597 ₽</strong></div>
           </div>
 
           <div class="prize-card">
@@ -7835,19 +7839,20 @@ button.achievement-item {
 
         <div class="prize-card">
           <div class="prize-card-title">🦆 Меценаты X League</div>
+          <div class="patron-row"><span>Дмитрий</span><strong>800 ₽</strong></div>
           <div class="patron-row"><span>Дмитрий @Tabik36</span><strong>800 ₽</strong></div>
+          <div class="patron-row"><span>Владимир</span><strong>800 ₽</strong></div>
           <div class="patron-row"><span>AB</span><strong>600 ₽</strong></div>
-          <div class="patron-row"><span>Дмитрий</span><strong>500 ₽</strong></div>
           <div class="patron-row"><span>Андрей Ка</span><strong>500 ₽</strong></div>
           <div class="patron-row"><span>ТМ</span><strong>500 ₽</strong></div>
           <div class="patron-row"><span>PaVeL</span><strong>300 ₽</strong></div>
           <div class="patron-row"><span>Arthur (Flatbet)</span><strong>300 ₽</strong></div>
-          <div class="patron-row"><span>Владимир</span><strong>300 ₽</strong></div>
           <div class="patron-row"><span>Денис</span><strong>300 ₽</strong></div>
           <div class="patron-row"><span>Евгений Анатольевич (Draw Master)</span><strong>200 ₽</strong></div>
           <div class="patron-row"><span>Faylen</span><strong>200 ₽</strong></div>
           <div class="patron-row"><span>Viktor Zaytsev</span><strong>200 ₽</strong></div>
           <div class="patron-row"><span>Alexandr Kulikov (Фан или профан)</span><strong>200 ₽</strong></div>
+          <div class="patron-row"><span>Олег</span><strong>200 ₽</strong></div>
           <div class="patron-note">Отдельное спасибо участникам турнира, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
         </div>
       </div>
