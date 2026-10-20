@@ -4100,6 +4100,26 @@ main,
 }
 </style>
 
+<style>
+/* ===== Final mobile Firefox rendering fixes ===== */
+@media (max-width: 979px) {
+  /* Firefox/Android can clip color-circle emoji against the closed details box. */
+  .player-history-v2 .past-tour-summary > span {
+    line-height: 1.55;
+    padding-block: 1px;
+  }
+
+  /* Keep the fixed dock out of a transformed/composited containing block. */
+  .bottom-nav {
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    transform: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+</style>
 
 <style>
 /* ===== Player dashboard v2.13: mobile clearance + reconciled flat profit ===== */
