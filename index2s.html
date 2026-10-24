@@ -700,6 +700,30 @@ html, body {
     .tour-table th:nth-child(3), .tour-table td:nth-child(3) { width: 52px; color: var(--accent); font-weight: 1000; }
     .tour-table th:nth-child(4), .tour-table td:nth-child(4) { width: 48px; font-weight: 1000; }
 
+    .tour-table .playoff-cut-row td {
+      padding: 7px 6px;
+      border-top: 0;
+    }
+
+    .playoff-cut-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,.38);
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .playoff-cut-line::before,
+    .playoff-cut-line::after {
+      content: "";
+      flex: 1;
+      border-top: 1px dashed rgba(182,255,59,.34);
+    }
+
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .stat-card { padding: 12px; text-align: center; }
     .stat-label { color: var(--muted2); font-size: 10px; font-weight: 1000; text-transform: uppercase; }
@@ -12377,7 +12401,11 @@ document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
   r.move === "NEW" ? "gold" :
   "";
   const rank = r.rank || i + 1;
-  return `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${playerNameHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
+  const rowHtml = `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${playerNameHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
+  const playoffCut = isOverall && Number(rank) === 16
+    ? `<tr class="playoff-cut-row" aria-hidden="true"><td colspan="4"><div class="playoff-cut-line">Зона плей-офф · Топ-16</div></td></tr>`
+    : "";
+  return rowHtml + playoffCut;
 }).join("");
       bindTablePlayerLinks();
     }
