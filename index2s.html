@@ -1739,6 +1739,26 @@ html, body {
 
     .past-tour-summary strong { color: var(--accent); }
 
+    .past-tour-summary > span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .past-tour-form-dot {
+      display: inline-block;
+      flex: 0 0 10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .past-tour-form-dot.win { background: #34d399; }
+    .past-tour-form-dot.lose { background: #ef4444; }
+    .past-tour-form-dot.cancelled { background: #d8c36a; }
+    .past-tour-form-dot.pending { background: #71717a; }
+
     .past-tour-picks {
       display: grid;
       gap: 7px;
@@ -1795,16 +1815,16 @@ html, body {
 
     .bottom-nav {
       position: fixed;
-      left: 50%;
+      left: 0;
+      right: 0;
       bottom: 0;
       z-index: 30;
-      transform: translateX(-50%);
+      margin-inline: auto;
       width: 100%;
       max-width: 430px;
       padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
       background: rgba(17,17,17,.97);
       border-top: 1px solid var(--line);
-      backdrop-filter: blur(16px);
     }
 
     .bottom-nav-grid {
@@ -4097,27 +4117,6 @@ main,
 @media (max-width: 640px) {
   .player-form-v2 .profile-form-tour { gap: 4px !important; }
   .player-form-v2 .profile-form-separator { margin: 0 7px !important; }
-}
-</style>
-
-<style>
-/* ===== Final mobile Firefox rendering fixes ===== */
-@media (max-width: 979px) {
-  /* Firefox/Android can clip color-circle emoji against the closed details box. */
-  .player-history-v2 .past-tour-summary > span {
-    line-height: 1.55;
-    padding-block: 1px;
-  }
-
-  /* Keep the fixed dock out of a transformed/composited containing block. */
-  .bottom-nav {
-    left: 0;
-    right: 0;
-    margin-inline: auto;
-    transform: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
 }
 </style>
 
@@ -11782,7 +11781,8 @@ sourceMatches.forEach(match => {
         pastEl.innerHTML = past.length ? past.map(p => {
           const form = p.picks.map(pick => {
             const result = resolvedPickResult(pick);
-            return result === "win" ? "🟢" : result === "lose" ? "🔴" : result === "cancelled" ? "🟡" : "⏳";
+            const cls = result === "win" ? "win" : result === "lose" ? "lose" : result === "cancelled" ? "cancelled" : "pending";
+            return `<span class="past-tour-form-dot ${cls}" aria-label="${escapeHtml(result)}"></span>`;
           }).join("");
 const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
