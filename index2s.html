@@ -12978,32 +12978,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
     // Parse the whole article once. This is the important fix:
     // <h3> can now appear anywhere in the source, without requiring
     // surrounding blank lines or being the only thing in a paragraph.
-    const doc = new DOMParser().parseFromString(`<body>${source}
-<script id="xleague-firefox-mobile-nav-viewport-fix">
-(() => {
-  const isFirefox = /Firefox\//i.test(navigator.userAgent);
-  if (!isFirefox || !window.visualViewport || !matchMedia('(max-width: 979px)').matches) return;
-
-  const nav = document.querySelector('.bottom-nav');
-  if (!nav) return;
-
-  let raf = 0;
-  const pinNavToVisualViewport = () => {
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(() => {
-      const vv = window.visualViewport;
-      nav.style.bottom = 'auto';
-      nav.style.top = `${Math.round(vv.offsetTop + vv.height - nav.offsetHeight)}px`;
-    });
-  };
-
-  pinNavToVisualViewport();
-  window.visualViewport.addEventListener('resize', pinNavToVisualViewport, { passive: true });
-  window.visualViewport.addEventListener('scroll', pinNavToVisualViewport, { passive: true });
-  window.addEventListener('orientationchange', pinNavToVisualViewport, { passive: true });
-})();
-</script>
-</body>`, "text/html");
+    const doc = new DOMParser().parseFromString(`<body>${source}</body>`, "text/html");
     const out = [];
     let paragraphParts = [];
 
