@@ -12477,7 +12477,7 @@ document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
   "";
   const rank = r.rank || i + 1;
   const rowHtml = `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${playerNameHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
-  const playoffCut = isOverall && Number(rank) === 16
+  const playoffCut = isOverall && i === 15
     ? `<tr class="playoff-cut-row" aria-hidden="true"><td colspan="4"><div class="playoff-cut-line">Зона плей-офф · Топ-16</div></td></tr>`
     : "";
   return rowHtml + playoffCut;
