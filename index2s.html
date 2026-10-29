@@ -7525,7 +7525,7 @@ button.achievement-item {
           <div class="desktop-mode-wrap" id="notifyModeWrap"><button class="live-notify-toggle-btn is-on" id="liveNotifyToggleBtn" type="button" aria-haspopup="menu" aria-expanded="false">
             <span class="live-notify-toggle-icon" aria-hidden="true">🔔</span><span class="live-notify-toggle-text">Увед. все</span></button>
             <div class="mode-popover" role="menu" aria-label="Режим уведомлений"><button class="mode-option" data-notify-mode="all" title="Уведомления: все матчи" aria-label="Уведомления: все матчи">🔔</button><button class="mode-option" data-notify-mode="favorites" title="Уведомления: только избранное" aria-label="Уведомления: только избранное">🔔📝</button><button class="mode-option" data-notify-mode="off" title="Уведомления выключены" aria-label="Уведомления выключены">🔕</button></div></div>
-          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">36,4K</span></button>
+          <button class="prize-btn" id="prizeBtn" aria-label="Призовой фонд"><span class="prize-ruble">₽</span><span class="prize-btn-amount">35,9K</span></button>
           <button class="info-btn" id="infoBtn" aria-label="Rules and info">?</button>
           <div class="tour-select tour-indicator" id="currentTourIndicator" aria-label="Текущий этап">—</div>
         </div>
@@ -7906,19 +7906,19 @@ button.achievement-item {
 
         <div class="prize-hero">
           <div class="prize-kicker">Текущий фонд</div>
-          <div class="prize-total">36 400 ₽</div>
-          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+6 400 ₽</strong> добавили участники</div>
+          <div class="prize-total">35 900 ₽</div>
+          <div class="prize-growth"><strong>30 000 ₽</strong> базовый фонд · <strong>+5 900 ₽</strong> добавили участники</div>
         </div>
 
         <div class="prize-grid">
           <div class="prize-card">
             <div class="prize-card-title">🏆 Регулярный сезон</div>
-            <div class="prize-place-row top"><span>🥇 1 место</span><strong>12 130 ₽</strong></div>
-            <div class="prize-place-row"><span>🥈 2 место</span><strong>8 490 ₽</strong></div>
-            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 850 ₽</strong></div>
-            <div class="prize-place-row"><span>4 место</span><strong>3 640 ₽</strong></div>
-            <div class="prize-place-row"><span>5 место</span><strong>1 210 ₽</strong></div>
-            <div class="prize-place-row"><span>6–15 места</span><strong>608 ₽</strong></div>
+            <div class="prize-place-row top"><span>🥇 1 место</span><strong>11 970 ₽</strong></div>
+            <div class="prize-place-row"><span>🥈 2 место</span><strong>8 380 ₽</strong></div>
+            <div class="prize-place-row"><span>🥉 3 место</span><strong>4 790 ₽</strong></div>
+            <div class="prize-place-row"><span>4 место</span><strong>3 590 ₽</strong></div>
+            <div class="prize-place-row"><span>5 место</span><strong>1 200 ₽</strong></div>
+            <div class="prize-place-row"><span>6–15 места</span><strong>597 ₽</strong></div>
           </div>
 
           <div class="prize-card">
@@ -7939,7 +7939,6 @@ button.achievement-item {
           <div class="patron-row"><span>Дмитрий</span><strong>800 ₽</strong></div>
           <div class="patron-row"><span>Дмитрий @Tabik36</span><strong>800 ₽</strong></div>
           <div class="patron-row"><span>Владимир</span><strong>800 ₽</strong></div>
-          <div class="patron-row"><span>Alexandr Kulikov (Фан или профан)</span><strong>700 ₽</strong></div>
           <div class="patron-row"><span>AB</span><strong>600 ₽</strong></div>
           <div class="patron-row"><span>Андрей Ка</span><strong>500 ₽</strong></div>
           <div class="patron-row"><span>ТМ</span><strong>500 ₽</strong></div>
@@ -7949,6 +7948,7 @@ button.achievement-item {
           <div class="patron-row"><span>Евгений Анатольевич (Draw Master)</span><strong>200 ₽</strong></div>
           <div class="patron-row"><span>Faylen</span><strong>200 ₽</strong></div>
           <div class="patron-row"><span>Viktor Zaytsev</span><strong>200 ₽</strong></div>
+          <div class="patron-row"><span>Alexandr Kulikov (Фан или профан)</span><strong>200 ₽</strong></div>
           <div class="patron-row"><span>Олег</span><strong>200 ₽</strong></div>
           <div class="patron-note">Отдельное спасибо участникам турнира, добровольно отказавшимся от честно выигранных денег ради непосильного вклада в игровое сообщество.</div>
         </div>
@@ -11730,12 +11730,20 @@ sourceMatches.forEach(match => {
             text: "Ищу валуйные ничьи в футболе, лучшими делюсь с вами",
             url: "https://t.me/haos_controll",
             label: "t.me/haos_controll"
+          },
+          "ак": {
+            text: "МОДЕРАТОР ТУРНИРА",
+            url: "https://t.me/akotakot01",
+            label: "t.me/akotakot01",
+            moderator: true
           }
         };
         const promo = profilePromos[playerName.trim().toLowerCase()];
         promoEl.hidden = !promo;
         promoEl.innerHTML = promo
-          ? `${escapeHtml(promo.text)}<br><a href="${escapeHtml(promo.url)}" target="_blank" rel="noopener noreferrer"><svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path d="M17.7 6.8 15.9 17c-.1.7-.5.9-1 .6l-2.8-2.1-1.3 1.3c-.1.1-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2-.1-.3-.4-.1l-6.5 4.1-2.8-.9c-.6-.2-.6-.6.1-.9l10.9-4.2c.5-.2.9.1.7.8Z" fill="white"/></svg><span>${escapeHtml(promo.label)}</span></a>`
+          ? (promo.moderator
+              ? `<span style="color:#b7ff63;font-weight:1000;letter-spacing:.04em;">МОДЕРАТОР ТУРНИРА</span><br><span style="color:#b7ff63;">По всем интересующим вопросам:</span><br><a href="${escapeHtml(promo.url)}" target="_blank" rel="noopener noreferrer" style="color:#b7ff63;"><svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path d="M17.7 6.8 15.9 17c-.1.7-.5.9-1 .6l-2.8-2.1-1.3 1.3c-.1.1-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2-.1-.3-.4-.1l-6.5 4.1-2.8-.9c-.6-.2-.6-.6.1-.9l10.9-4.2c.5-.2.9.1.7.8Z" fill="white"/></svg><span>${escapeHtml(promo.label)}</span></a>`
+              : `${escapeHtml(promo.text)}<br><a href="${escapeHtml(promo.url)}" target="_blank" rel="noopener noreferrer"><svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path d="M17.7 6.8 15.9 17c-.1.7-.5.9-1 .6l-2.8-2.1-1.3 1.3c-.1.1-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2-.1-.3-.4-.1l-6.5 4.1-2.8-.9c-.6-.2-.6-.6.1-.9l10.9-4.2c.5-.2.9.1.7.8Z" fill="white"/></svg><span>${escapeHtml(promo.label)}</span></a>`)
           : "";
       }
 
@@ -12048,7 +12056,7 @@ function achievementDescription(row) {
       DREAMER: "norm", NEXTT: "norm", SAPA: "norm", INSIDER: "norm", SOTKA: "norm", NISHA: "norm", BATYA: "norm",
       DOEXALI: "rare", GIRLS: "rare", SHAMAN: "rare", DVESTI: "rare", KAZINO: "rare", HARD: "rare",
       SLOW: "rare", SHKOLA: "rare", AMEN: "rare", NEPOPLANU: "rare", KUSH: "rare", OBIDNO: "rare", ZAXLEBOM: "rare", PERVONAX: "rare", PORA: "rare",
-      FANID: "legendary", VJUH: "legendary", BOGACH: "legendary", GIGACHAD: "legendary", OHUELI: "legendary", "300": "legendary", GASTROLER: "legendary", BEZUMIE: "legendary", VSERAVNO: "legendary", CHASY: "norm"
+      FANID: "legendary", VJUH: "legendary", BOGACH: "legendary", GIGACHAD: "legendary", OHUELI: "legendary", "300": "legendary", GASTROLER: "legendary", BEZUMIE: "legendary", CHASY: "norm"
     });
 
     function achievementRarity(row) {
@@ -12477,7 +12485,7 @@ document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
   "";
   const rank = r.rank || i + 1;
   const rowHtml = `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${playerNameHtml(r.name)}</button></td><td>${escapeHtml(r.total)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
-  const playoffCut = isOverall && i === 15
+  const playoffCut = isOverall && Number(rank) === 16
     ? `<tr class="playoff-cut-row" aria-hidden="true"><td colspan="4"><div class="playoff-cut-line">Зона плей-офф · Топ-16</div></td></tr>`
     : "";
   return rowHtml + playoffCut;
