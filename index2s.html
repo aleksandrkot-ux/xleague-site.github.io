@@ -1814,6 +1814,16 @@ html, body {
     .past-tour-form-dot.cancelled { background: #d8c36a; }
     .past-tour-form-dot.pending { background: #71717a; }
 
+    .past-tour-kickoff {
+      color: rgba(255,255,255,.58);
+      font-weight: 800;
+    }
+
+    .past-tour-kickoff-time {
+      font-size: .88em;
+      color: rgba(255,255,255,.50);
+    }
+
     .profile-pending-hourglass,
     .past-tour-live-label {
       color: #b7ff63;
@@ -11929,8 +11939,11 @@ const picksHtml = p.picks.map((pick, index) => {
     const isoMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if (isoMatch) dateLabel = `${isoMatch[3]}.${isoMatch[2]}`;
     const timeLabel = String(match.time || "").trim().slice(0, 5);
-    const kickoff = [dateLabel, timeLabel].filter(Boolean).join(" ");
-    tailText = kickoff ? " | " + escapeHtml(kickoff) : "";
+    const kickoff = [
+      dateLabel ? `<span class="past-tour-kickoff">${escapeHtml(dateLabel)}</span>` : "",
+      timeLabel ? `<span class="past-tour-kickoff past-tour-kickoff-time">${escapeHtml(timeLabel)}</span>` : ""
+    ].filter(Boolean).join(" ");
+    tailText = kickoff ? " | " + kickoff : "";
     if (isLive) tailText += ` | <span class="past-tour-live-label">LIVE${liveStatus && liveStatus !== "LIVE" ? ` · ${escapeHtml(liveStatus)}` : ""}</span>`;
   }
 
