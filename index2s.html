@@ -1815,6 +1815,12 @@ html, body {
     .past-tour-form-dot.pending { background: #71717a; }
 
     .profile-pending-hourglass,
+    .past-tour-live-label {
+      color: #b7ff63;
+      font-weight: 1000;
+      letter-spacing: .04em;
+    }
+
     .past-tour-pending-hourglass {
       display: inline-flex;
       align-items: center;
@@ -11912,7 +11918,21 @@ const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
   const pickResult = resolvedPickResult(pick);
   const score = pick.score || match?.score || "";
-  const scoreText = score ? " | " + escapeHtml(score) : "";
+  const liveData = match ? rawLiveDataForMatch(match) : null;
+  const liveStatus = String(liveData?.status || "").trim().toUpperCase();
+  const isLive = !!liveData && liveData.phase === "ACTIVE";
+
+  let tailText = score ? " | " + escapeHtml(score) : "";
+  if (pickResult === "pending" && match) {
+    const rawDate = String(match.sortDate || match.date || "").trim();
+    let dateLabel = String(match.date || "").trim();
+    const isoMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) dateLabel = `${isoMatch[3]}.${isoMatch[2]}`;
+    const timeLabel = String(match.time || "").trim().slice(0, 5);
+    const kickoff = [dateLabel, timeLabel].filter(Boolean).join(" ");
+    tailText = kickoff ? " | " + escapeHtml(kickoff) : "";
+    if (isLive) tailText += ` | <span class="past-tour-live-label">LIVE${liveStatus && liveStatus !== "LIVE" ? ` · ${escapeHtml(liveStatus)}` : ""}</span>`;
+  }
 
   const resultClass =
     pickResult === "win" ? "pick-win" :
@@ -11923,7 +11943,7 @@ const picksHtml = p.picks.map((pick, index) => {
   return `
     <div class="past-tour-pick">
       <span class="past-tour-pick-name ${resultClass}">
-        ${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}${scoreText}
+        ${index + 1}. ${escapeHtml(pick.match || match?.teams || "Unknown match")}${tailText}
       </span>
       <span class="past-tour-pick-odd">x${escapeHtml(pick.odd)}</span>
     </div>
