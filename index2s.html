@@ -11770,6 +11770,11 @@ sourceMatches.forEach(match => {
             url: "https://t.me/akotakot01",
             label: "t.me/akotakot01",
             moderator: true
+          },
+          "pavel (моя игра)": {
+            url: "https://t.me/my88game",
+            label: "t.me/my88game",
+            myGame: true
           }
         };
         const promo = profilePromos[playerName.trim().toLowerCase()];
@@ -11777,7 +11782,9 @@ sourceMatches.forEach(match => {
         promoEl.innerHTML = promo
           ? (promo.moderator
               ? `<span style="color:#b7ff63;font-weight:1000;letter-spacing:.04em;">МОДЕРАТОР ТУРНИРА</span><br><span>По всем интересующим вопросам:</span><br><a href="${escapeHtml(promo.url)}" target="_blank" rel="noopener noreferrer"><svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path d="M17.7 6.8 15.9 17c-.1.7-.5.9-1 .6l-2.8-2.1-1.3 1.3c-.1.1-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2-.1-.3-.4-.1l-6.5 4.1-2.8-.9c-.6-.2-.6-.6.1-.9l10.9-4.2c.5-.2.9.1.7.8Z" fill="white"/></svg><span>${escapeHtml(promo.label)}</span></a>`
-              : `${escapeHtml(promo.text)}<br><a href="${escapeHtml(promo.url)}" target="_blank" rel="noopener noreferrer"><svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path d="M17.7 6.8 15.9 17c-.1.7-.5.9-1 .6l-2.8-2.1-1.3 1.3c-.1.1-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2-.1-.3-.4-.1l-6.5 4.1-2.8-.9c-.6-.2-.6-.6.1-.9l10.9-4.2c.5-.2.9.1.7.8Z" fill="white"/></svg><span>${escapeHtml(promo.label)}</span></a>`)
+              : promo.myGame
+                ? `✅ Канал по которому реально проставлять позиции по заявленным коэффициентам<br><br>✅ Верифицированная статистика: <strong>39 месяцев в рейтингах с ROI более +15%</strong><br><a href="${escapeHtml(promo.url)}" target="_blank" rel="noopener noreferrer"><svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path d="M17.7 6.8 15.9 17c-.1.7-.5.9-1 .6l-2.8-2.1-1.3 1.3c-.1.1-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2-.1-.3-.4-.1l-6.5 4.1-2.8-.9c-.6-.2-.6-.6.1-.9l10.9-4.2c.5-.2.9.1.7.8Z" fill="white"/></svg><span>${escapeHtml(promo.label)}</span></a>`
+                : `${escapeHtml(promo.text)}<br><a href="${escapeHtml(promo.url)}" target="_blank" rel="noopener noreferrer"><svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path d="M17.7 6.8 15.9 17c-.1.7-.5.9-1 .6l-2.8-2.1-1.3 1.3c-.1.1-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2-.1-.3-.4-.1l-6.5 4.1-2.8-.9c-.6-.2-.6-.6.1-.9l10.9-4.2c.5-.2.9.1.7.8Z" fill="white"/></svg><span>${escapeHtml(promo.label)}</span></a>`)
           : "";
       }
 
