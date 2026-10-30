@@ -1814,6 +1814,18 @@ html, body {
     .past-tour-form-dot.cancelled { background: #d8c36a; }
     .past-tour-form-dot.pending { background: #71717a; }
 
+    .profile-pending-hourglass,
+    .past-tour-pending-hourglass {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      flex: 0 0 15px;
+      font-size: 13px;
+      line-height: 1;
+    }
+
 
     .past-tour-picks {
       display: grid;
@@ -11480,6 +11492,9 @@ sourceMatches.forEach(match => {
     };
 
     function profileDot(status) {
+      if (status === "pending") {
+        return `<span class="profile-pending-hourglass" aria-label="Ожидание результата" title="Ожидание результата">⏳</span>`;
+      }
       return `<span class="profile-dot ${escapeHtml(status)}"></span>`;
     }
 
@@ -11889,7 +11904,9 @@ sourceMatches.forEach(match => {
           const form = p.picks.map(pick => {
             const result = resolvedPickResult(pick);
             const cls = result === "win" ? "win" : result === "lose" ? "lose" : result === "cancelled" ? "cancelled" : "pending";
-            return `<span class="past-tour-form-dot ${cls}" aria-label="${escapeHtml(result)}"></span>`;
+            return result === "pending"
+              ? `<span class="past-tour-pending-hourglass" aria-label="Ожидание результата" title="Ожидание результата">⏳</span>`
+              : `<span class="past-tour-form-dot ${cls}" aria-label="${escapeHtml(result)}"></span>`;
           }).join("");
 const picksHtml = p.picks.map((pick, index) => {
   const match = matchById.get(pick.matchId);
