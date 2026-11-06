@@ -10267,23 +10267,66 @@ if (screenMatches) {
       document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= 5);
     }
 
+   // The source tables still contain separate rows for old nicknames.
+   // Rebuild the rank from the combined totals of each canonical player.
+   function mergedOverallRank(playerName) {
+     const canonicalName = String(playerName).trim();
+     const ownRows = siteOverall.filter(row => String(row.name || "").trim() === canonicalName);
+     // Do not change the recorded ranking of players without merged aliases.
+     if (ownRows.length === 1) return toNum(ownRows[0].rank, 0);
+     if (!ownRows.length) return 0;
+     const totals = new Map();
+     siteOverall.forEach(row => {
+       const name = String(row.name || "").trim();
+       if (!name) return;
+       totals.set(name, (totals.get(name) || 0) + toNum(row.total, 0));
+     });
+     const total = totals.get(String(playerName).trim());
+     if (total === undefined) return 0;
+     return 1 + [...totals.values()].filter(value => value > total + 0.000001).length;
+   }
+
    function renderRankHistory(playerName) {
   const el = document.getElementById("profileRankChart");
   if (!el) return;
 
-  // Completed regular tours come from the frozen historical table.
-  let rows = rankHistory
-    .filter(r =>
-      String(r.player).trim() === String(playerName).trim() &&
-      isRegularTour(r.tour)
-    )
-    .map(r => ({
-      ...r,
-      tour: Number(r.tour),
-      rank: Number(r.rank),
-      liveCurrent: false
-    }))
-    .filter(r => Number.isFinite(r.tour) && Number.isFinite(r.rank) && r.rank > 0);
+  // site_rank_history can contain several aliases for the same player/tour.
+  // All player names were canonicalized when the bootstrap data was loaded.
+  // Sum their cumulative totals, then calculate ONE rank for each tour.
+  const canonicalName = String(playerName).trim();
+  const totalsByTour = new Map();
+  rankHistory.forEach(r => {
+    const tour = Number(r.tour);
+    const name = String(r.player || "").trim();
+    const total = toNum(r.total, NaN);
+    if (!isRegularTour(tour) || !name || !Number.isFinite(total)) return;
+    if (!totalsByTour.has(tour)) totalsByTour.set(tour, new Map());
+    const tourTotals = totalsByTour.get(tour);
+    tourTotals.set(name, (tourTotals.get(name) || 0) + total);
+  });
+
+  // Keep the frozen rank for a single historical identity. Recalculate only
+  // tours with multiple alias rows, where the original ranks are incompatible.
+  const ownHistoryByTour = new Map();
+  rankHistory.forEach(r => {
+    const tour = Number(r.tour);
+    if (!isRegularTour(tour) || String(r.player || "").trim() !== canonicalName) return;
+    if (!ownHistoryByTour.has(tour)) ownHistoryByTour.set(tour, []);
+    ownHistoryByTour.get(tour).push(r);
+  });
+
+  let rows = [...totalsByTour].filter(([, totals]) => totals.has(canonicalName))
+    .map(([tour, totals]) => {
+      const originals = ownHistoryByTour.get(tour) || [];
+      const recordedRank = originals.length === 1 ? toNum(originals[0].rank, 0) : 0;
+      return {
+        tour,
+        rank: recordedRank > 0 ? recordedRank : 1 + [...totals.values()].filter(
+          value => value > totals.get(canonicalName) + 0.000001
+        ).length,
+        liveCurrent: false
+      };
+    });
 
   // The active tour is different: its point must show the player's ACTUAL
   // overall position right now. If rank_history already contains a row for
@@ -10299,11 +10342,7 @@ if (screenMatches) {
     ? toNum(get(activeTourRow, ["tour", "Tour", "Тур", "A"], 0), 0)
     : 0;
 
-  const overall = siteOverall.find(p =>
-    String(p.name).trim() === String(playerName).trim()
-  ) || {};
-
-  const currentRank = Number(overall.rank);
+  const currentRank = mergedOverallRank(playerName);
 
   if (
     activeTour &&
@@ -11733,12 +11772,12 @@ sourceMatches.forEach(match => {
       const avgPts = toursPlayed ? (totalPts / toursPlayed).toFixed(1).replace(".", ",") : "0";
       const wr = settledPicks.length ? Math.round(wins / settledPicks.length * 100) : 0;
 
-      const overall = siteOverall.find(p => String(p.name).trim() === String(playerName).trim()) || {};
+      const currentOverallRank = mergedOverallRank(playerName);
 
       const heroEl = document.querySelector(".player-hero-v2");
       if (heroEl) {
         heroEl.classList.remove("hero-rank-1", "hero-rank-2", "hero-rank-3");
-        const currentRank = Number(overall.rank);
+        const currentRank = currentOverallRank;
         if (currentRank >= 1 && currentRank <= 3) {
           heroEl.classList.add(`hero-rank-${currentRank}`);
         }
@@ -11792,7 +11831,7 @@ sourceMatches.forEach(match => {
       const heroAwardsEl = document.getElementById("profileHeroAwards");
       if (heroAwardsEl) heroAwardsEl.innerHTML = playerInlineAchievementsHtml(playerName);
      
-      setText("profileSub", `#${overall.rank || "-"} в общем зачёте`);
+      setText("profileSub", `#${currentOverallRank || "-"} в общем зачёте`);
       renderRankHistory(playerName);
     
 
