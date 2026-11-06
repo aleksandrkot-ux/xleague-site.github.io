@@ -9198,8 +9198,7 @@ function scoreByMatchId(id) {
       const showOverall = !activeTour || currentResults.length === 0;
 
       if (showOverall && siteOverall.length) {
-        const rows = siteOverall.slice()
-          .sort((a,b) => (a.rank || 9999) - (b.rank || 9999) || b.total - a.total);
+        const rows = mergedOverallStandings();
 
         const moveHtml = (value) => {
           const raw = String(value || "—").trim();
@@ -10267,23 +10266,48 @@ if (screenMatches) {
       document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= 5);
     }
 
-   // The source tables still contain separate rows for old nicknames.
-   // Rebuild the rank from the combined totals of each canonical player.
-   function mergedOverallRank(playerName) {
-     const canonicalName = String(playerName).trim();
-     const ownRows = siteOverall.filter(row => String(row.name || "").trim() === canonicalName);
-     // Do not change the recorded ranking of players without merged aliases.
-     if (ownRows.length === 1) return toNum(ownRows[0].rank, 0);
-     if (!ownRows.length) return 0;
-     const totals = new Map();
+   // site_overall can still contain separate cumulative totals for old nicks.
+   // Merge aliases before sorting and assigning seasonal ranks, so a player
+   // appears only once and is placed by the sum of all their nick histories.
+   function mergedOverallStandings() {
+     const players = new Map();
      siteOverall.forEach(row => {
-       const name = String(row.name || "").trim();
+       const name = canonicalPlayerName(row.name);
        if (!name) return;
-       totals.set(name, (totals.get(name) || 0) + toNum(row.total, 0));
+       const existing = players.get(name);
+       if (existing) {
+         existing.total += toNum(row.total, 0);
+         existing.aliasRows++;
+         existing.move = "—"; // Old per-alias movement is no longer meaningful.
+       } else {
+         players.set(name, {
+           name,
+           total: toNum(row.total, 0),
+           move: row.move || "—",
+           aliasRows: 1
+         });
+       }
      });
-     const total = totals.get(String(playerName).trim());
-     if (total === undefined) return 0;
-     return 1 + [...totals.values()].filter(value => value > total + 0.000001).length;
+
+     const standings = [...players.values()].sort((a, b) =>
+       b.total - a.total || a.name.localeCompare(b.name, "ru")
+     );
+     let previousTotal = null;
+     let rank = 0;
+     standings.forEach((row, index) => {
+       if (previousTotal === null || Math.abs(row.total - previousTotal) > 0.000001) {
+         rank = index + 1;
+       }
+       row.rank = rank;
+       previousTotal = row.total;
+       delete row.aliasRows;
+     });
+     return standings;
+   }
+
+   function mergedOverallRank(playerName) {
+     const canonicalName = canonicalPlayerName(playerName);
+     return mergedOverallStandings().find(row => row.name === canonicalName)?.rank || 0;
    }
 
    function renderRankHistory(playerName) {
@@ -12565,7 +12589,7 @@ function renderTableByMode() {
 
       if (mode === "overall") {
         rows = siteOverall.length
-          ? siteOverall.slice().sort((a, b) => b.total - a.total)
+          ? mergedOverallStandings()
           : regularPredictions().sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
       } else {
         rows = [...predictions]
