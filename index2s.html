@@ -10266,26 +10266,19 @@ if (screenMatches) {
       document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= 5);
     }
 
-   // site_overall can still contain separate cumulative totals for old nicks.
-   // Merge aliases before sorting and assigning seasonal ranks, so a player
-   // appears only once and is placed by the sum of all their nick histories.
+   // Canonical names let all previous nicknames count as one participant.
+   // Movement is measured against the last completed tour, NOT read from
+   // site_overall.move (which can contain "—" for every player).
    function mergedOverallStandings() {
      const players = new Map();
      siteOverall.forEach(row => {
        const name = canonicalPlayerName(row.name);
        if (!name) return;
-       const existing = players.get(name);
-       if (existing) {
-         existing.total += toNum(row.total, 0);
-         existing.aliasRows++;
-         existing.move = "—"; // Old per-alias movement is no longer meaningful.
+       const total = toNum(row.total, 0);
+       if (players.has(name)) {
+         players.get(name).total += total;
        } else {
-         players.set(name, {
-           name,
-           total: toNum(row.total, 0),
-           move: row.move || "—",
-           aliasRows: 1
-         });
+         players.set(name, { name, total, move: "—" });
        }
      });
 
@@ -10300,7 +10293,49 @@ if (screenMatches) {
        }
        row.rank = rank;
        previousTotal = row.total;
-       delete row.aliasRows;
+     });
+
+     // The active tour's rank_history rows may be stale snapshots. Compare
+     // today's live overall standings with the latest PRIOR regular tour.
+     const currentTour = getDefaultTour();
+     const previousTours = [...new Set(rankHistory
+       .map(row => toNum(row.tour, 0))
+       .filter(tour => isRegularTour(tour) && (!currentTour || tour < currentTour))
+     )].sort((a, b) => b - a);
+     const previousTour = previousTours[0];
+     if (!previousTour) return standings;
+
+     const previousTotals = new Map();
+     rankHistory.forEach(row => {
+       if (toNum(row.tour, 0) !== previousTour) return;
+       const name = canonicalPlayerName(row.player);
+       const total = toNum(row.total, NaN);
+       if (!name || !Number.isFinite(total)) return;
+       previousTotals.set(name, (previousTotals.get(name) || 0) + total);
+     });
+
+     const previousStandings = [...previousTotals.entries()].sort((a, b) =>
+       b[1] - a[1] || a[0].localeCompare(b[0], "ru")
+     );
+     const previousRanks = new Map();
+     let lastTotal = null;
+     let previousRank = 0;
+     previousStandings.forEach(([name, total], index) => {
+       if (lastTotal === null || Math.abs(total - lastTotal) > 0.000001) {
+         previousRank = index + 1;
+       }
+       previousRanks.set(name, previousRank);
+       lastTotal = total;
+     });
+
+     standings.forEach(row => {
+       const oldRank = previousRanks.get(row.name);
+       if (oldRank === undefined) {
+         row.move = "NEW";
+       } else {
+         const change = oldRank - row.rank;
+         row.move = change > 0 ? `⬆${change}` : change < 0 ? `⬇${-change}` : "—";
+       }
      });
      return standings;
    }
