@@ -1,0 +1,54 @@
+name: Deploy website to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xleague-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Publish website
+        shell: bash
+        env:
+          DEPLOY_KEY: ${{ secrets.XLEAGUE_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          umask 077
+
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "Repository secret XLEAGUE_DEPLOY_KEY is missing."
+            exit 1
+          fi
+
+          KEY_FILE="$RUNNER_TEMP/xleague_key"
+          HOSTS_FILE="$RUNNER_TEMP/xleague_known_hosts"
+          trap 'rm -f "$KEY_FILE" "$HOSTS_FILE"' EXIT
+
+          printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE"
+
+          printf '%s\n' \
+            '212.147.236.228 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE8N9WFqyZN3oynzSyFN/zifKvleAMfyF/y18oZsxCZu' \
+            > "$HOSTS_FILE"
+
+          ssh -n -T \
+            -p 22 \
+            -i "$KEY_FILE" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o "UserKnownHostsFile=$HOSTS_FILE" \
+            -o ConnectTimeout=20 \
+            -o ServerAliveInterval=15 \
+            -o ServerAliveCountMax=3 \
+            xleague-deploy@212.147.236.228
