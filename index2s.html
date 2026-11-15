@@ -7634,7 +7634,7 @@ button.achievement-item {
     <div id="upcomingSection">
       <div class="section-title">
         <div class="section-title-left">Предстоящие</div>
-        <div class="section-title-right">Ближайшие 6</div>
+        <div class="section-title-right" id="upcomingLimitLabel">Ближайшие 6</div>
       </div>
 
       <div class="stack" id="upcomingList"></div>
@@ -10252,6 +10252,8 @@ if (screenMatches) {
 }
 
   const homeLimit = matchMode === "home";
+  const upcomingLimit = desktopMatchesMedia.matches ? 6 : 5;
+  document.getElementById("upcomingLimitLabel").textContent = `Ближайшие ${upcomingLimit}`;
   const finishedLimit = desktopMatchesMedia.matches ? 6 : 5;
   document.getElementById("finishedLimitLabel").textContent = `Последние ${finishedLimit}`;
   const showUpcoming = matchMode !== "finished";
@@ -10260,7 +10262,7 @@ if (screenMatches) {
       document.getElementById("upcomingList").innerHTML = showUpcoming
   ? (
       upcoming.length
-        ? (homeLimit ? upcoming.slice(0, 6) : upcoming).map(matchCard).join("")
+        ? (homeLimit ? upcoming.slice(0, upcomingLimit) : upcoming).map(matchCard).join("")
         : `<div class="empty-state">Текущие матчи отсутствуют</div>`
     )
   : "";
@@ -10269,7 +10271,7 @@ if (screenMatches) {
         ? (homeLimit ? finished.slice(0, finishedLimit) : finished).map(matchCard).join("")
         : "";
 
-      document.getElementById("allUpcomingBtn").classList.toggle("hidden", !homeLimit || upcoming.length <= 6);
+      document.getElementById("allUpcomingBtn").classList.toggle("hidden", !homeLimit || upcoming.length <= upcomingLimit);
       document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= finishedLimit);
     }
 
