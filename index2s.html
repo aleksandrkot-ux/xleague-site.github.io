@@ -7646,7 +7646,7 @@ button.achievement-item {
     <div id="finishedSection">
   <div class="section-title">
     <div class="section-title-left">🏁 Сыгравшие</div>
-    <div class="section-title-right">Последние 5</div>
+    <div class="section-title-right" id="finishedLimitLabel">Последние 5</div>
   </div>
 
   <div class="stack" id="finishedList"></div>
@@ -10214,6 +10214,10 @@ function mapPredictionRow(row) {
       return !!live && live.phase === "FINISHED";
     }
 
+   // Keep the preview limit aligned with the two-column desktop match grid.
+   const desktopMatchesMedia = window.matchMedia("(min-width: 980px)");
+   desktopMatchesMedia.addEventListener("change", () => renderMatches());
+
    function renderMatches() {
   const scopedMatches = currentTourMatches();
   setTimeout(renderFavorites, 0);
@@ -10248,6 +10252,8 @@ if (screenMatches) {
 }
 
   const homeLimit = matchMode === "home";
+  const finishedLimit = desktopMatchesMedia.matches ? 6 : 5;
+  document.getElementById("finishedLimitLabel").textContent = `Последние ${finishedLimit}`;
   const showUpcoming = matchMode !== "finished";
   const showFinished = matchMode !== "upcoming";
 
@@ -10260,11 +10266,11 @@ if (screenMatches) {
   : "";
 
       document.getElementById("finishedList").innerHTML = showFinished
-        ? (homeLimit ? finished.slice(0, 5) : finished).map(matchCard).join("")
+        ? (homeLimit ? finished.slice(0, finishedLimit) : finished).map(matchCard).join("")
         : "";
 
       document.getElementById("allUpcomingBtn").classList.toggle("hidden", !homeLimit || upcoming.length <= 6);
-      document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= 5);
+      document.getElementById("allFinishedBtn").classList.toggle("hidden", !homeLimit || finished.length <= finishedLimit);
     }
 
    // Canonical names let all previous nicknames count as one participant.
