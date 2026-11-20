@@ -7531,6 +7531,19 @@ button.achievement-item {
 </style>
 </head>
 <body>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114390041', 'ym');
+
+    ym(114390041, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114390041" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
   <aside class="tour-stage-board" id="tourStageBoard" aria-label="Статус тура">
     <div class="tour-stage-caption" id="tourStageCaption">Тур</div>
     <div class="tour-stage-title-row">
@@ -12727,6 +12740,37 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
       }
     }
 
+    // init records the first page view; only actual SPA navigation sends hit.
+    let metrikaLastScreen = "matches";
+    let metrikaLastUrl = location.href;
+
+    function trackMetrikaScreen(name) {
+      const titles = {
+        matches: "Матчи",
+        picks: "Прогнозы",
+        table: "Общая таблица",
+        stats: "Статистика",
+        players: "Профили участников",
+        favorites: "Избранное"
+      };
+      if (!titles[name] || typeof window.ym !== "function") return;
+      if (!document.getElementById(`screen-${name}`)?.classList.contains("active")) return;
+      const player = name === "players" ? String(selectedPlayerName || "").trim() : "";
+      const screen = player ? `players/${encodeURIComponent(player)}` : name;
+      if (screen === metrikaLastScreen) return;
+      const url = `${location.origin}${location.pathname}#${screen}`;
+      try {
+        window.ym(114390041, "hit", url, {
+          title: `X League — ${titles[name]}${player ? " — " + player : ""}`,
+          referer: metrikaLastUrl
+        });
+        metrikaLastScreen = screen;
+        metrikaLastUrl = url;
+      } catch (_) {
+        // Analytics must never interrupt navigation.
+      }
+    }
+
     function showScreen(name) {
       document.body.classList.toggle("favorites-screen-active", name === "favorites");
       document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
@@ -12741,6 +12785,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
       renderFilter(name);
       window.scrollTo({ top: 0, behavior: "instant" });
+      trackMetrikaScreen(name);
     }
 
     document.querySelectorAll(".nav-btn").forEach(btn => {
@@ -12825,7 +12870,7 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
     const playerSelect = document.getElementById("playerSelect");
     if (playerSelect) {
-      playerSelect.addEventListener("change", () => { selectedPlayerName = playerSelect.value; renderPlayerProfile(); });
+      playerSelect.addEventListener("change", () => { selectedPlayerName = playerSelect.value; renderPlayerProfile(); trackMetrikaScreen("players"); });
     }
 
 
