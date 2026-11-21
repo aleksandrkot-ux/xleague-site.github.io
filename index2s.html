@@ -9288,22 +9288,23 @@ function mapPredictionRow(row) {
   const player = get(row, ["player", "Player", "Игрок", "игрок", "B"], "Unknown");
 
  const pick = (n) => {
-  const id = toNum(get(row, [`match${n}_id`, `match_${n}_id`, `id${n}`, `match${n}id`]));
-  const matchName = get(row, [`match${n}`, `match_${n}`, `match${n}_name`, `match_${n}_name`, `Матч${n}`], "");
-  const resultRaw = get(row, [`res${n}`, `result${n}`, `result_${n}`], "pending");
+  const id = toNum(get(row, [`match${n}_id`, `match_${n}_id`, `id${n}`, `match${n}id`, ...(n === 4 ? ["O"] : [])]));
+  const matchName = get(row, [`match${n}`, `match_${n}`, `match${n}_name`, `match_${n}_name`, `Матч${n}`, ...(n === 4 ? ["P"] : [])], "");
+  const resultRaw = get(row, [`res${n}`, `result${n}`, `result_${n}`, ...(n === 4 ? ["R"] : [])], "pending");
   const result = normalizeStatus(resultRaw, resultRaw);
-  const odd = get(row, [`odd${n}`, `odds${n}`, `coef${n}`, `коэф${n}`], "");
+  const odd = get(row, [`odd${n}`, `odds${n}`, `coef${n}`, `коэф${n}`, ...(n === 4 ? ["Q"] : [])], "");
   const score = get(row, [`score${n}`, `score_${n}`, `счет${n}`, `счёт${n}`, `Счет${n}`, `Счёт${n}`], "");
 
-  return { matchId: id, match: matchName, result, odd, score };
+  return { matchId: id, match: matchName, result, odd, score, isExtra: n === 4 };
 };
 
   return {
     name: player,
     tour: toNum(get(row, ["tour", "Tour", "Тур"])),
-    pts: toNum(get(row, ["total", "Total", "R", "points", "Points", "P"])),
-    bonus: toNum(get(row, ["bonus", "Bonus", "Q"])),
-    odd: toNum(get(row, ["total_odd", "total odd", "S", "express_odd"])),
+    pts: toNum(get(row, ["total", "Total", "V", "points", "Points", "T"])),
+    bonus: toNum(get(row, ["bonus", "Bonus", "U"])),
+    odd: toNum(get(row, ["total_odd", "total odd", "W", "express_odd"])),
+    extraPoints: toNum(get(row, ["extra_points", "extra points", "Y"])),
     move: get(row, ["move", "movement", "status"], "—"),
     picks: [pick(1), pick(2), pick(3),pick(4)].filter(p => p.matchId || p.match)
   };
@@ -10502,7 +10503,7 @@ if (screenMatches) {
     }
 
     function getPickStats(player) {
-      const results = player.picks.map(resolvedPickResult);
+      const results = player.picks.filter(pick => !pick.isExtra).map(resolvedPickResult);
       const wins = results.filter(r => r === "win").length;
       const losses = results.filter(r => r === "lose").length;
       const pending = results.filter(r => r === "pending").length;
@@ -10768,44 +10769,38 @@ return `
     function buildMetaCharts(tour) {
     const tourKey = String(tour || getCurrentTour() || "");
 
-const sourceMatches = tourKey === "overall"
-  ? matches
-  : matches.filter(match => String(match.tour) === tourKey);
-
 const continentCounts = Object.fromEntries(FIXED_CONTINENTS.map(c => [c, 0]));
 const countryVolume = new Map();
 const countryWins = new Map();
+const countrySettled = new Map();
 const countryFlags = new Map();
 
-sourceMatches.forEach(match => {
-  if (!match || match.api_status === "cancelled" || match.status === "cancelled") return;
+getPredictionsForStats(tourKey).forEach(prediction => {
+  (prediction.picks || []).forEach(pick => {
+    const match = matchById.get(pick.matchId);
+    const result = resolvedPickResult(pick);
+    if (!match || result === "cancelled") return;
 
-  const country = cleanCountryName(match.country || "");
-  const continent = normalizeContinentName(match.continent, country);
-  const flagUrl = match.flag_url || "";
-  const popularity = Number(match.popularity || 0);
+    const country = cleanCountryName(match.country || "") || "Не указана";
+    const continent = normalizeContinentName(match.continent, country) || "Не указан";
+    const flagUrl = match.flag_url || "";
 
-  if (popularity <= 0) return;
-
-  if (continent && continentCounts[continent] !== undefined) {
-    continentCounts[continent] += popularity;
-  }
-
-  if (country) {
-    countryVolume.set(country, (countryVolume.get(country) || 0) + popularity);
-
-    if (match.api_status === "win" || match.status === "win") {
-      countryWins.set(country, (countryWins.get(country) || 0) + popularity);
+    continentCounts[continent] = (continentCounts[continent] || 0) + 1;
+    if (country) {
+      countryVolume.set(country, (countryVolume.get(country) || 0) + 1);
+      if (result === "win" || result === "lose") {
+        countrySettled.set(country, (countrySettled.get(country) || 0) + 1);
+      }
+      if (result === "win") {
+        countryWins.set(country, (countryWins.get(country) || 0) + 1);
+      }
+      if (flagUrl && !countryFlags.has(country)) countryFlags.set(country, flagUrl);
     }
-
-    if (flagUrl && !countryFlags.has(country)) {
-      countryFlags.set(country, flagUrl);
-    }
-  }
+  });
 });
 
       const totalContinent = Object.values(continentCounts).reduce((a, b) => a + b, 0) || 1;
-      const continentRows = FIXED_CONTINENTS.map(name => ({
+      const continentRows = Object.keys(continentCounts).map(name => ({
         name,
         value: continentCounts[name] || 0,
         pct: `${(((continentCounts[name] || 0) / totalContinent) * 100).toFixed(1).replace(".", ",")}%`
@@ -10829,7 +10824,7 @@ sourceMatches.forEach(match => {
           name,
           flagUrl: countryFlags.get(name) || "",
           value,
-          pct: `${((value / (countryVolume.get(name) || 1)) * 100).toFixed(1).replace(".", ",")}%`
+          pct: `${((value / (countrySettled.get(name) || 1)) * 100).toFixed(1).replace(".", ",")}%`
         }));
 
       return { continents: continentRows, countriesVolume: countryVolumeRows, countriesWinrate: countryWinRows };
@@ -11039,23 +11034,22 @@ sourceMatches.forEach(match => {
       const isContinent = mode === "continent";
       if (kicker) kicker.textContent = isContinent ? "Матчи континента в X League" : "Матчи страны в X League";
 
-      let geoMatches = matches.filter(match => {
-        if (!match) return false;
-        if (Number(match.popularity || 0) <= 0) return false;
-
-        const country = cleanCountryName(match.country || "");
-        const continent = normalizeContinentName(match.continent, country);
-
-        if (isContinent) {
-          if (continent !== name) return false;
-        } else {
-          if (country !== name) return false;
-        }
-
-        if (statsMode === "overall") return true;
-        if (statsMode === "playoff") return isPlayoffTour(match.tour);
-        return String(match.tour) === String(statsMode);
+      const pickedMatches = new Map();
+      getPredictionsForStats(statsMode).forEach(prediction => {
+        (prediction.picks || []).forEach(pick => {
+          const match = matchById.get(pick.matchId);
+          const result = resolvedPickResult(pick);
+          if (!match || result === "cancelled") return;
+          const country = cleanCountryName(match.country || "") || "Не указана";
+          const continent = normalizeContinentName(match.continent, country) || "Не указан";
+          if (isContinent ? continent !== name : country !== name) return;
+          if (!pickedMatches.has(match.id)) {
+            pickedMatches.set(match.id, { ...match, geoResults: [] });
+          }
+          pickedMatches.get(match.id).geoResults.push(result);
+        });
       });
+      const geoMatches = [...pickedMatches.values()];
 
       geoMatches.sort((a, b) =>
         Number(a.tour) - Number(b.tour) ||
@@ -11071,11 +11065,12 @@ sourceMatches.forEach(match => {
       }
 
       const total = geoMatches.length;
-      const wins = geoMatches.filter(m => (m.api_status || m.status) === "win").length;
-      const losses = geoMatches.filter(m => (m.api_status || m.status) === "lose").length;
+      const geoResults = geoMatches.flatMap(match => match.geoResults);
+      const wins = geoResults.filter(result => result === "win").length;
+      const losses = geoResults.filter(result => result === "lose").length;
       const settled = wins + losses;
       const drawPct = settled ? (wins / settled * 100).toFixed(1).replace(".", ",") : "0,0";
-      summary.textContent = `${total} матч${total === 1 ? "" : total >= 2 && total <= 4 ? "а" : "ей"} · ничьих ${wins} · ${drawPct}%`;
+      summary.textContent = `${total} матч${total === 1 ? "" : total >= 2 && total <= 4 ? "а" : "ей"} · прогнозов ${geoResults.length} · побед ${wins} · ${drawPct}%`;
 
       if (!geoMatches.length) {
         body.innerHTML = `<div class="country-history-empty">Для выбранного периода матчей нет.</div>`;
@@ -11113,7 +11108,7 @@ sourceMatches.forEach(match => {
       if (isContinent) {
         const countries = new Map();
         geoMatches.forEach(match => {
-          const country = cleanCountryName(match.country || "") || "Без страны";
+          const country = cleanCountryName(match.country || "") || "Не указана";
           if (!countries.has(country)) countries.set(country, []);
           countries.get(country).push(match);
         });
@@ -11398,9 +11393,15 @@ sourceMatches.forEach(match => {
 
     function getPredictionsForStats(tour) {
       const mode = String(tour);
-      if (mode === "overall") return predictions;
-      if (mode === "playoff") return playoffPredictions();
-      return predictions.filter(p => Number(p.tour) === Number(tour));
+      const rows = mode === "overall" ? predictions
+        : mode === "playoff" ? playoffPredictions()
+        : predictions.filter(p => Number(p.tour) === Number(tour));
+      return rows.map(p => ({
+        ...p,
+        picks: (p.picks || [])
+          .filter(pick => mode === "overall" || !pick.isExtra)
+          .map(pick => ({ ...pick, result: resolvedPickResult(pick) }))
+      }));
     }
 
     function calculateRealStats(tour) {
@@ -11410,7 +11411,10 @@ sourceMatches.forEach(match => {
         ? new Set(rows.map(p => String(p.name || "").trim()).filter(Boolean)).size
         : rows.length;
       const triples = rows.length;
-      const points = rows.map(p => Number(p.pts) || 0);
+      const points = String(tour) === "overall"
+        ? (siteOverall.length ? mergedOverallStandings().map(row => row.total)
+          : rows.map(p => toNum(p.pts, 0) + toNum(p.extraPoints, 0)))
+        : rows.map(p => Number(p.pts) || 0);
       const avgPts = players ? points.reduce((sum, v) => sum + v, 0) / players : 0;
       const maxPts = points.length ? Math.max(...points) : 0;
       // Minimum score is almost always zero and says little about the tour.
@@ -11420,9 +11424,8 @@ sourceMatches.forEach(match => {
       const top3Pts = sortedPoints.length ? sortedPoints[Math.min(2, sortedPoints.length - 1)] : 0;
 
       const picks = rows.flatMap(p => Array.isArray(p.picks) ? p.picks : []);
-      const statsPicks = picks.filter(p => p.result !== "cancelled");
-      const odds = statsPicks.map(p => toNum(p.odd, NaN)).filter(Number.isFinite);
       const settled = picks.filter(p => p.result === "win" || p.result === "lose");
+      const odds = settled.map(p => toNum(p.odd, NaN)).filter(Number.isFinite);
       const wins = settled.filter(p => p.result === "win");
       const losses = settled.filter(p => p.result === "lose");
       const turnover = settled.length;
@@ -11700,7 +11703,7 @@ sourceMatches.forEach(match => {
           const row = map.get(key);
           if (!row.flag_url && match?.flag_url) row.flag_url = match.flag_url;
           if ((!row.flag || row.flag === "🌍") && match?.flag) row.flag = match.flag;
-          const result = pick.result || match?.status || "pending";
+          const result = resolvedPickResult(pick);
           const odd = toNum(pick.odd, 0);
           if (result === "win") {
             row.picks += 1;
@@ -11843,12 +11846,16 @@ sourceMatches.forEach(match => {
       const displayPrediction = currentPrediction || history[history.length - 1];
       if (!displayPrediction) return;
 
-      const settledPicks = history.flatMap(p => p.picks).filter(p => p.result === "win" || p.result === "lose");
+      const settledPicks = history.flatMap(p => p.picks)
+        .map(pick => ({ ...pick, result: resolvedPickResult(pick) }))
+        .filter(pick => pick.result === "win" || pick.result === "lose");
       currentCountryRows = playerCountryStats(history);
       bindCountrySorting();
       renderCountryStats(false);
       const wins = settledPicks.filter(p => p.result === "win").length;
-      const totalPts = regularHistory.reduce((sum, p) => sum + toNum(p.pts, 0), 0);
+      const overallStanding = mergedOverallStandings().find(row => row.name === canonicalPlayerName(playerName));
+      const totalPts = overallStanding ? overallStanding.total
+        : regularHistory.reduce((sum, p) => sum + toNum(p.pts, 0) + toNum(p.extraPoints, 0), 0);
       const toursPlayed = new Set(regularHistory.map(p => Number(p.tour)).filter(Boolean)).size;
       const avgPts = toursPlayed ? (totalPts / toursPlayed).toFixed(1).replace(".", ",") : "0";
       const wr = settledPicks.length ? Math.round(wins / settledPicks.length * 100) : 0;
@@ -11919,19 +11926,13 @@ sourceMatches.forEach(match => {
       const countryEl = document.getElementById("profileCountry");
       if (countryEl) countryEl.innerHTML = `<div class="prefer-flags">${playerPreferredCountriesHtml(playerName)}</div>`;
 
-      const displayTour = Number(displayPrediction?.tour || currentTour || 0);
-      const previousToursForForm = history
-        .filter(p => !displayTour || Number(p.tour) < displayTour)
-        .sort((a, b) => Number(b.tour) - Number(a.tour));
-      const formTourSource = previousToursForForm.length
-        ? previousToursForForm
-        : history.slice().sort((a, b) => Number(b.tour) - Number(a.tour));
-      const formTours = formTourSource
-        .filter(tour => (tour.picks || []).some(pick => pick && pick.result))
-        .slice(0, 3)
+      const formTours = history.slice()
+        .sort((a, b) => Number(b.tour) - Number(a.tour))
         .map(tour => (tour.picks || [])
-          .filter(pick => pick && pick.result)
-          .slice(0, 3));
+          .map(pick => ({ ...pick, result: resolvedPickResult(pick) }))
+          .filter(pick => ["win", "lose", "cancelled"].includes(pick.result)))
+        .filter(picks => picks.length)
+        .slice(0, 3);
       const formEl = document.getElementById("profileForm");
       if (formEl) {
         formEl.innerHTML = formTours.map((picks, tourIndex) => {
@@ -12402,7 +12403,7 @@ function achievementDescription(row) {
     function tourResultClass(prediction) {
       if (!prediction) return "pending";
       const stats = getPickStats(prediction);
-      if (stats.pending === prediction.picks.length) return "pending";
+      if (stats.pending === prediction.picks.filter(pick => !pick.isExtra).length) return "pending";
       return stats.wins > 0 ? "win" : "lose";
     }
 
@@ -12649,10 +12650,18 @@ function renderTableByMode() {
           ? mergedOverallStandings()
           : regularPredictions().sort((a,b) => b.pts - a.pts).map(p => ({ name: p.name, total: p.pts, move: p.move }));
       } else {
-        rows = [...predictions]
-          .filter(p => !p.tour || String(p.tour) === String(mode))
-          .sort((a,b) => b.pts - a.pts)
-          .map(p => ({ name: p.name, total: p.pts, move: p.move }));
+        const tourRows = siteTable.filter(row => String(get(row, ["tour", "Tour", "Тур"])) === String(mode));
+        rows = tourRows.length
+          ? tourRows.map(row => ({
+              name: get(row, ["player", "Player", "Игрок"]),
+              total: toNum(get(row, ["total", "Total"])),
+              rank: toNum(get(row, ["rank", "Rank"])),
+              move: get(row, ["movement / status", "move", "movement", "status"], "—")
+            })).sort((a, b) => b.total - a.total)
+          : [...predictions]
+              .filter(p => !p.tour || String(p.tour) === String(mode))
+              .sort((a,b) => b.pts - a.pts)
+              .map(p => ({ name: p.name, total: p.pts, move: p.move }));
       }
 
     const isOverall = document.getElementById("tableSelect")?.value === "overall";
@@ -13780,3 +13789,4 @@ document.getElementById("tableMoveHead").style.display = isOverall ? "" : "none"
 
 </body>
 </html>
+
