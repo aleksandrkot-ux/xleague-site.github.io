@@ -12673,7 +12673,7 @@ document.getElementById("tourTableBody").innerHTML = rows.map((r, i) => {
   r.move?.startsWith("⬇") ? "lose" :
   r.move === "NEW" ? "gold" :
   "";
-  const rank = r.rank || i + 1;
+  const rank = isOverall ? (r.rank || i + 1) : i + 1;
   const totalText = isOverall ? (Number(r.total) === 0 ? "0" : Number(r.total).toFixed(1)) : r.total;
   const rowHtml = `<tr><td>${rankMedalHtml(rank)}</td><td><button class="table-player-link" data-table-player="${escapeHtml(r.name)}">${playerNameHtml(r.name)}</button></td><td>${escapeHtml(totalText)}</td><td class="${moveClass}">${escapeHtml(r.move || "—")}</td></tr>`;
   const playoffCut = isOverall && i === 15
